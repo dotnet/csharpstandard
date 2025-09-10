@@ -342,7 +342,8 @@
     - [§12.8.12](expressions.md#12812-element-access)  Element access
       - [§12.8.12.1](expressions.md#128121-general)  General
       - [§12.8.12.2](expressions.md#128122-array-access)  Array access
-      - [§12.8.12.3](expressions.md#128123-indexer-access)  Indexer access
+      - [§12.8.12.3](expressions.md#128123-string-access)  String access
+      - [§12.8.12.4](expressions.md#128124-indexer-access)  Indexer access
     - [§12.8.13](expressions.md#12813-null-conditional-element-access)  Null Conditional Element Access
     - [§12.8.14](expressions.md#12814-this-access)  This access
     - [§12.8.15](expressions.md#12815-base-access)  Base access
@@ -369,85 +370,87 @@
     - [§12.9.3](expressions.md#1293-unary-minus-operator)  Unary minus operator
     - [§12.9.4](expressions.md#1294-logical-negation-operator)  Logical negation operator
     - [§12.9.5](expressions.md#1295-bitwise-complement-operator)  Bitwise complement operator
-    - [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
-    - [§12.9.7](expressions.md#1297-cast-expressions)  Cast expressions
-    - [§12.9.8](expressions.md#1298-await-expressions)  Await expressions
-      - [§12.9.8.1](expressions.md#12981-general)  General
-      - [§12.9.8.2](expressions.md#12982-awaitable-expressions)  Awaitable expressions
-      - [§12.9.8.3](expressions.md#12983-classification-of-await-expressions)  Classification of await expressions
-      - [§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
-  - [§12.10](expressions.md#1210-arithmetic-operators)  Arithmetic operators
-    - [§12.10.1](expressions.md#12101-general)  General
-    - [§12.10.2](expressions.md#12102-multiplication-operator)  Multiplication operator
-    - [§12.10.3](expressions.md#12103-division-operator)  Division operator
-    - [§12.10.4](expressions.md#12104-remainder-operator)  Remainder operator
-    - [§12.10.5](expressions.md#12105-addition-operator)  Addition operator
-    - [§12.10.6](expressions.md#12106-subtraction-operator)  Subtraction operator
-  - [§12.11](expressions.md#1211-shift-operators)  Shift operators
-  - [§12.12](expressions.md#1212-relational-and-type-testing-operators)  Relational and type-testing operators
-    - [§12.12.1](expressions.md#12121-general)  General
-    - [§12.12.2](expressions.md#12122-integer-comparison-operators)  Integer comparison operators
-    - [§12.12.3](expressions.md#12123-floating-point-comparison-operators)  Floating-point comparison operators
-    - [§12.12.4](expressions.md#12124-decimal-comparison-operators)  Decimal comparison operators
-    - [§12.12.5](expressions.md#12125-boolean-equality-operators)  Boolean equality operators
-    - [§12.12.6](expressions.md#12126-enumeration-comparison-operators)  Enumeration comparison operators
-    - [§12.12.7](expressions.md#12127-reference-type-equality-operators)  Reference type equality operators
-    - [§12.12.8](expressions.md#12128-string-equality-operators)  String equality operators
-    - [§12.12.9](expressions.md#12129-delegate-equality-operators)  Delegate equality operators
-    - [§12.12.10](expressions.md#121210-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
-    - [§12.12.11](expressions.md#121211-tuple-equality-operators)  Tuple equality operators
-    - [§12.12.12](expressions.md#121212-the-is-operator)  The is operator
-      - [§12.12.12.1](expressions.md#1212121-the-is-type-operator)  The is-type operator
-      - [§12.12.12.2](expressions.md#1212122-the-is-pattern-operator)  The is-pattern operator
-    - [§12.12.13](expressions.md#121213-the-as-operator)  The as operator
-  - [§12.13](expressions.md#1213-logical-operators)  Logical operators
+    - [§12.9.6](expressions.md#1296-hat-operator)  Hat operator
+    - [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
+    - [§12.9.8](expressions.md#1298-cast-expressions)  Cast expressions
+    - [§12.9.9](expressions.md#1299-await-expressions)  Await expressions
+      - [§12.9.9.1](expressions.md#12991-general)  General
+      - [§12.9.9.2](expressions.md#12992-awaitable-expressions)  Awaitable expressions
+      - [§12.9.9.3](expressions.md#12993-classification-of-await-expressions)  Classification of await expressions
+      - [§12.9.9.4](expressions.md#12994-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
+  - [§12.10](expressions.md#1210-range-operator)  Range operator
+  - [§12.11](expressions.md#1211-arithmetic-operators)  Arithmetic operators
+    - [§12.11.1](expressions.md#12111-general)  General
+    - [§12.11.2](expressions.md#12112-multiplication-operator)  Multiplication operator
+    - [§12.11.3](expressions.md#12113-division-operator)  Division operator
+    - [§12.11.4](expressions.md#12114-remainder-operator)  Remainder operator
+    - [§12.11.5](expressions.md#12115-addition-operator)  Addition operator
+    - [§12.11.6](expressions.md#12116-subtraction-operator)  Subtraction operator
+  - [§12.12](expressions.md#1212-shift-operators)  Shift operators
+  - [§12.13](expressions.md#1213-relational-and-type-testing-operators)  Relational and type-testing operators
     - [§12.13.1](expressions.md#12131-general)  General
-    - [§12.13.2](expressions.md#12132-integer-logical-operators)  Integer logical operators
-    - [§12.13.3](expressions.md#12133-enumeration-logical-operators)  Enumeration logical operators
-    - [§12.13.4](expressions.md#12134-boolean-logical-operators)  Boolean logical operators
-    - [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)  Nullable Boolean & and | operators
-  - [§12.14](expressions.md#1214-conditional-logical-operators)  Conditional logical operators
+    - [§12.13.2](expressions.md#12132-integer-comparison-operators)  Integer comparison operators
+    - [§12.13.3](expressions.md#12133-floating-point-comparison-operators)  Floating-point comparison operators
+    - [§12.13.4](expressions.md#12134-decimal-comparison-operators)  Decimal comparison operators
+    - [§12.13.5](expressions.md#12135-boolean-equality-operators)  Boolean equality operators
+    - [§12.13.6](expressions.md#12136-enumeration-comparison-operators)  Enumeration comparison operators
+    - [§12.13.7](expressions.md#12137-reference-type-equality-operators)  Reference type equality operators
+    - [§12.13.8](expressions.md#12138-string-equality-operators)  String equality operators
+    - [§12.13.9](expressions.md#12139-delegate-equality-operators)  Delegate equality operators
+    - [§12.13.10](expressions.md#121310-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
+    - [§12.13.11](expressions.md#121311-tuple-equality-operators)  Tuple equality operators
+    - [§12.13.12](expressions.md#121312-the-is-operator)  The is operator
+      - [§12.13.12.1](expressions.md#1213121-the-is-type-operator)  The is-type operator
+      - [§12.13.12.2](expressions.md#1213122-the-is-pattern-operator)  The is-pattern operator
+    - [§12.13.13](expressions.md#121313-the-as-operator)  The as operator
+  - [§12.14](expressions.md#1214-logical-operators)  Logical operators
     - [§12.14.1](expressions.md#12141-general)  General
-    - [§12.14.2](expressions.md#12142-boolean-conditional-logical-operators)  Boolean conditional logical operators
-    - [§12.14.3](expressions.md#12143-user-defined-conditional-logical-operators)  User-defined conditional logical operators
-  - [§12.15](expressions.md#1215-the-null-coalescing-operator)  The null coalescing operator
-  - [§12.16](expressions.md#1216-the-throw-expression-operator)  The throw expression operator
-  - [§12.17](expressions.md#1217-declaration-expressions)  Declaration expressions
-  - [§12.18](expressions.md#1218-conditional-operator)  Conditional operator
-  - [§12.19](expressions.md#1219-anonymous-function-expressions)  Anonymous function expressions
-    - [§12.19.1](expressions.md#12191-general)  General
-    - [§12.19.2](expressions.md#12192-anonymous-function-signatures)  Anonymous function signatures
-    - [§12.19.3](expressions.md#12193-anonymous-function-bodies)  Anonymous function bodies
-    - [§12.19.4](expressions.md#12194-overload-resolution)  Overload resolution
-    - [§12.19.5](expressions.md#12195-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
-    - [§12.19.6](expressions.md#12196-outer-variables)  Outer variables
-      - [§12.19.6.1](expressions.md#121961-general)  General
-      - [§12.19.6.2](expressions.md#121962-captured-outer-variables)  Captured outer variables
-      - [§12.19.6.3](expressions.md#121963-instantiation-of-local-variables)  Instantiation of local variables
-    - [§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§12.19.8](expressions.md#12198-implementation-example)  Implementation Example
-  - [§12.20](expressions.md#1220-query-expressions)  Query expressions
+    - [§12.14.2](expressions.md#12142-integer-logical-operators)  Integer logical operators
+    - [§12.14.3](expressions.md#12143-enumeration-logical-operators)  Enumeration logical operators
+    - [§12.14.4](expressions.md#12144-boolean-logical-operators)  Boolean logical operators
+    - [§12.14.5](expressions.md#12145-nullable-boolean--and--operators)  Nullable Boolean & and | operators
+  - [§12.15](expressions.md#1215-conditional-logical-operators)  Conditional logical operators
+    - [§12.15.1](expressions.md#12151-general)  General
+    - [§12.15.2](expressions.md#12152-boolean-conditional-logical-operators)  Boolean conditional logical operators
+    - [§12.15.3](expressions.md#12153-user-defined-conditional-logical-operators)  User-defined conditional logical operators
+  - [§12.16](expressions.md#1216-the-null-coalescing-operator)  The null coalescing operator
+  - [§12.17](expressions.md#1217-the-throw-expression-operator)  The throw expression operator
+  - [§12.18](expressions.md#1218-declaration-expressions)  Declaration expressions
+  - [§12.19](expressions.md#1219-conditional-operator)  Conditional operator
+  - [§12.20](expressions.md#1220-anonymous-function-expressions)  Anonymous function expressions
     - [§12.20.1](expressions.md#12201-general)  General
-    - [§12.20.2](expressions.md#12202-ambiguities-in-query-expressions)  Ambiguities in query expressions
-    - [§12.20.3](expressions.md#12203-query-expression-translation)  Query expression translation
-      - [§12.20.3.1](expressions.md#122031-general)  General
-      - [§12.20.3.2](expressions.md#122032-query-expressions-with-continuations)  Query expressions with continuations
-      - [§12.20.3.3](expressions.md#122033-explicit-range-variable-types)  Explicit range variable types
-      - [§12.20.3.4](expressions.md#122034-degenerate-query-expressions)  Degenerate query expressions
-      - [§12.20.3.5](expressions.md#122035-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
-      - [§12.20.3.6](expressions.md#122036-select-clauses)  Select clauses
-      - [§12.20.3.7](expressions.md#122037-group-clauses)  Group clauses
-      - [§12.20.3.8](expressions.md#122038-transparent-identifiers)  Transparent identifiers
-    - [§12.20.4](expressions.md#12204-the-query-expression-pattern)  The query-expression pattern
-  - [§12.21](expressions.md#1221-assignment-operators)  Assignment operators
+    - [§12.20.2](expressions.md#12202-anonymous-function-signatures)  Anonymous function signatures
+    - [§12.20.3](expressions.md#12203-anonymous-function-bodies)  Anonymous function bodies
+    - [§12.20.4](expressions.md#12204-overload-resolution)  Overload resolution
+    - [§12.20.5](expressions.md#12205-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
+    - [§12.20.6](expressions.md#12206-outer-variables)  Outer variables
+      - [§12.20.6.1](expressions.md#122061-general)  General
+      - [§12.20.6.2](expressions.md#122062-captured-outer-variables)  Captured outer variables
+      - [§12.20.6.3](expressions.md#122063-instantiation-of-local-variables)  Instantiation of local variables
+    - [§12.20.7](expressions.md#12207-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
+    - [§12.20.8](expressions.md#12208-implementation-example)  Implementation Example
+  - [§12.21](expressions.md#1221-query-expressions)  Query expressions
     - [§12.21.1](expressions.md#12211-general)  General
-    - [§12.21.2](expressions.md#12212-simple-assignment)  Simple assignment
-    - [§12.21.3](expressions.md#12213-ref-assignment)  Ref assignment
-    - [§12.21.4](expressions.md#12214-compound-assignment)  Compound assignment
-    - [§12.21.5](expressions.md#12215-event-assignment)  Event assignment
-  - [§12.22](expressions.md#1222-expression)  Expression
-  - [§12.23](expressions.md#1223-constant-expressions)  Constant expressions
-  - [§12.24](expressions.md#1224-boolean-expressions)  Boolean expressions
+    - [§12.21.2](expressions.md#12212-ambiguities-in-query-expressions)  Ambiguities in query expressions
+    - [§12.21.3](expressions.md#12213-query-expression-translation)  Query expression translation
+      - [§12.21.3.1](expressions.md#122131-general)  General
+      - [§12.21.3.2](expressions.md#122132-query-expressions-with-continuations)  Query expressions with continuations
+      - [§12.21.3.3](expressions.md#122133-explicit-range-variable-types)  Explicit range variable types
+      - [§12.21.3.4](expressions.md#122134-degenerate-query-expressions)  Degenerate query expressions
+      - [§12.21.3.5](expressions.md#122135-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
+      - [§12.21.3.6](expressions.md#122136-select-clauses)  Select clauses
+      - [§12.21.3.7](expressions.md#122137-group-clauses)  Group clauses
+      - [§12.21.3.8](expressions.md#122138-transparent-identifiers)  Transparent identifiers
+    - [§12.21.4](expressions.md#12214-the-query-expression-pattern)  The query-expression pattern
+  - [§12.22](expressions.md#1222-assignment-operators)  Assignment operators
+    - [§12.22.1](expressions.md#12221-general)  General
+    - [§12.22.2](expressions.md#12222-simple-assignment)  Simple assignment
+    - [§12.22.3](expressions.md#12223-ref-assignment)  Ref assignment
+    - [§12.22.4](expressions.md#12224-compound-assignment)  Compound assignment
+    - [§12.22.5](expressions.md#12225-event-assignment)  Event assignment
+  - [§12.23](expressions.md#1223-expression)  Expression
+  - [§12.24](expressions.md#1224-constant-expressions)  Constant expressions
+  - [§12.25](expressions.md#1225-boolean-expressions)  Boolean expressions
 - [§13](statements.md#13-statements)  Statements
   - [§13.1](statements.md#131-general)  General
   - [§13.2](statements.md#132-end-points-and-reachability)  End points and reachability
@@ -675,121 +678,125 @@
   - [§17.5](arrays.md#175-array-members)  Array members
   - [§17.6](arrays.md#176-array-covariance)  Array covariance
   - [§17.7](arrays.md#177-array-initializers)  Array initializers
-- [§18](interfaces.md#18-interfaces)  Interfaces
-  - [§18.1](interfaces.md#181-general)  General
-  - [§18.2](interfaces.md#182-interface-declarations)  Interface declarations
-    - [§18.2.1](interfaces.md#1821-general)  General
-    - [§18.2.2](interfaces.md#1822-interface-modifiers)  Interface modifiers
-    - [§18.2.3](interfaces.md#1823-variant-type-parameter-lists)  Variant type parameter lists
-      - [§18.2.3.1](interfaces.md#18231-general)  General
-      - [§18.2.3.2](interfaces.md#18232-variance-safety)  Variance safety
-      - [§18.2.3.3](interfaces.md#18233-variance-conversion)  Variance conversion
-    - [§18.2.4](interfaces.md#1824-base-interfaces)  Base interfaces
-  - [§18.3](interfaces.md#183-interface-body)  Interface body
-  - [§18.4](interfaces.md#184-interface-members)  Interface members
-    - [§18.4.1](interfaces.md#1841-general)  General
-    - [§18.4.2](interfaces.md#1842-interface-methods)  Interface methods
-    - [§18.4.3](interfaces.md#1843-interface-properties)  Interface properties
-    - [§18.4.4](interfaces.md#1844-interface-events)  Interface events
-    - [§18.4.5](interfaces.md#1845-interface-indexers)  Interface indexers
-    - [§18.4.6](interfaces.md#1846-interface-member-access)  Interface member access
-  - [§18.5](interfaces.md#185-qualified-interface-member-names)  Qualified interface member names
-  - [§18.6](interfaces.md#186-interface-implementations)  Interface implementations
-    - [§18.6.1](interfaces.md#1861-general)  General
-    - [§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)  Explicit interface member implementations
-    - [§18.6.3](interfaces.md#1863-uniqueness-of-implemented-interfaces)  Uniqueness of implemented interfaces
-    - [§18.6.4](interfaces.md#1864-implementation-of-generic-methods)  Implementation of generic methods
-    - [§18.6.5](interfaces.md#1865-interface-mapping)  Interface mapping
-    - [§18.6.6](interfaces.md#1866-interface-implementation-inheritance)  Interface implementation inheritance
-    - [§18.6.7](interfaces.md#1867-interface-re-implementation)  Interface re-implementation
-    - [§18.6.8](interfaces.md#1868-abstract-classes-and-interfaces)  Abstract classes and interfaces
-- [§19](enums.md#19-enums)  Enums
-  - [§19.1](enums.md#191-general)  General
-  - [§19.2](enums.md#192-enum-declarations)  Enum declarations
-  - [§19.3](enums.md#193-enum-modifiers)  Enum modifiers
-  - [§19.4](enums.md#194-enum-members)  Enum members
-  - [§19.5](enums.md#195-the-systemenum-type)  The System.Enum type
-  - [§19.6](enums.md#196-enum-values-and-operations)  Enum values and operations
-- [§20](delegates.md#20-delegates)  Delegates
-  - [§20.1](delegates.md#201-general)  General
-  - [§20.2](delegates.md#202-delegate-declarations)  Delegate declarations
-  - [§20.3](delegates.md#203-delegate-members)  Delegate members
-  - [§20.4](delegates.md#204-delegate-compatibility)  Delegate compatibility
-  - [§20.5](delegates.md#205-delegate-instantiation)  Delegate instantiation
-  - [§20.6](delegates.md#206-delegate-invocation)  Delegate invocation
-- [§21](exceptions.md#21-exceptions)  Exceptions
-  - [§21.1](exceptions.md#211-general)  General
-  - [§21.2](exceptions.md#212-causes-of-exceptions)  Causes of exceptions
-  - [§21.3](exceptions.md#213-the-systemexception-class)  The System.Exception class
-  - [§21.4](exceptions.md#214-how-exceptions-are-handled)  How exceptions are handled
-  - [§21.5](exceptions.md#215-common-exception-classes)  Common exception classes
-- [§22](attributes.md#22-attributes)  Attributes
-  - [§22.1](attributes.md#221-general)  General
-  - [§22.2](attributes.md#222-attribute-classes)  Attribute classes
-    - [§22.2.1](attributes.md#2221-general)  General
-    - [§22.2.2](attributes.md#2222-attribute-usage)  Attribute usage
-    - [§22.2.3](attributes.md#2223-positional-and-named-parameters)  Positional and named parameters
-    - [§22.2.4](attributes.md#2224-attribute-parameter-types)  Attribute parameter types
-  - [§22.3](attributes.md#223-attribute-specification)  Attribute specification
-  - [§22.4](attributes.md#224-attribute-instances)  Attribute instances
-    - [§22.4.1](attributes.md#2241-general)  General
-    - [§22.4.2](attributes.md#2242-compilation-of-an-attribute)  Compilation of an attribute
-    - [§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)  Run-time retrieval of an attribute instance
-  - [§22.5](attributes.md#225-reserved-attributes)  Reserved attributes
-    - [§22.5.1](attributes.md#2251-general)  General
-    - [§22.5.2](attributes.md#2252-the-attributeusage-attribute)  The AttributeUsage attribute
-    - [§22.5.3](attributes.md#2253-the-conditional-attribute)  The Conditional attribute
-      - [§22.5.3.1](attributes.md#22531-general)  General
-      - [§22.5.3.2](attributes.md#22532-conditional-methods)  Conditional methods
-      - [§22.5.3.3](attributes.md#22533-conditional-attribute-classes)  Conditional attribute classes
-    - [§22.5.4](attributes.md#2254-the-obsolete-attribute)  The Obsolete attribute
-    - [§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)  The AsyncMethodBuilder attribute
-    - [§22.5.6](attributes.md#2256-caller-info-attributes)  Caller-info attributes
-      - [§22.5.6.1](attributes.md#22561-general)  General
-      - [§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)  The CallerLineNumber attribute
-      - [§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)  The CallerFilePath attribute
-      - [§22.5.6.4](attributes.md#22564-the-callermembername-attribute)  The CallerMemberName attribute
-    - [§22.5.7](attributes.md#2257-code-analysis-attributes)  Code analysis attributes
-      - [§22.5.7.1](attributes.md#22571-general)  General
-      - [§22.5.7.2](attributes.md#22572-the-allownull-attribute)  The AllowNull attribute
-      - [§22.5.7.3](attributes.md#22573-the-disallownull-attribute)  The DisallowNull attribute
-      - [§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute)  The DoesNotReturn attribute
-      - [§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute)  The DoesNotReturnIf attribute
-      - [§22.5.7.6](attributes.md#22576-the-maybenull-attribute)  The MaybeNull attribute
-      - [§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute)  The MaybeNullWhen attribute
-      - [§22.5.7.8](attributes.md#22578-the-notnull-attribute)  The NotNull attribute
-      - [§22.5.7.9](attributes.md#22579-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
-      - [§22.5.7.10](attributes.md#225710-the-notnullwhen-attribute)  The NotNullWhen attribute
-  - [§22.6](attributes.md#226-attributes-for-interoperation)  Attributes for interoperation
-- [§23](unsafe-code.md#23-unsafe-code)  Unsafe code
-  - [§23.1](unsafe-code.md#231-general)  General
-  - [§23.2](unsafe-code.md#232-unsafe-contexts)  Unsafe contexts
-  - [§23.3](unsafe-code.md#233-pointer-types)  Pointer types
-  - [§23.4](unsafe-code.md#234-fixed-and-moveable-variables)  Fixed and moveable variables
-  - [§23.5](unsafe-code.md#235-pointer-conversions)  Pointer conversions
-    - [§23.5.1](unsafe-code.md#2351-general)  General
-    - [§23.5.2](unsafe-code.md#2352-pointer-arrays)  Pointer arrays
-  - [§23.6](unsafe-code.md#236-pointers-in-expressions)  Pointers in expressions
-    - [§23.6.1](unsafe-code.md#2361-general)  General
-    - [§23.6.2](unsafe-code.md#2362-pointer-indirection)  Pointer indirection
-    - [§23.6.3](unsafe-code.md#2363-pointer-member-access)  Pointer member access
-    - [§23.6.4](unsafe-code.md#2364-pointer-element-access)  Pointer element access
-    - [§23.6.5](unsafe-code.md#2365-the-address-of-operator)  The address-of operator
-    - [§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement)  Pointer increment and decrement
-    - [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)  Pointer arithmetic
-    - [§23.6.8](unsafe-code.md#2368-pointer-comparison)  Pointer comparison
-    - [§23.6.9](unsafe-code.md#2369-the-sizeof-operator)  The sizeof operator
-  - [§23.7](unsafe-code.md#237-the-fixed-statement)  The fixed statement
-  - [§23.8](unsafe-code.md#238-fixed-size-buffers)  Fixed-size buffers
-    - [§23.8.1](unsafe-code.md#2381-general)  General
-    - [§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations)  Fixed-size buffer declarations
-    - [§23.8.3](unsafe-code.md#2383-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
-    - [§23.8.4](unsafe-code.md#2384-definite-assignment-checking)  Definite assignment checking
-  - [§23.9](unsafe-code.md#239-stack-allocation)  Stack allocation
-- [§24](ranges.md#24-ranges-and-slicing)  Ranges and Slicing
-  - [§24.1](ranges.md#241-general)  General
-  - [§24.2](ranges.md#242-the-index-type)  The Index type
-  - [§24.3](ranges.md#243-the-range-type)  The Range type
+- [§18](ranges.md#18-extended-indexing-and-slicing)  Extended indexing and slicing
+  - [§18.1](ranges.md#181-general)  General
+  - [§18.2](ranges.md#182-the-index-type)  The Index type
+  - [§18.3](ranges.md#183-the-range-type)  The Range type
+  - [§18.4](ranges.md#184-pattern-based-implicit-support-for-index-and-range)  Pattern-based implicit support for Index and Range
+    - [§18.4.1](ranges.md#1841-general)  General
+    - [§18.4.2](ranges.md#1842-implicit-index-support)  Implicit Index support
+    - [§18.4.3](ranges.md#1843-implicit-range-support)  Implicit Range support
+- [§19](interfaces.md#19-interfaces)  Interfaces
+  - [§19.1](interfaces.md#191-general)  General
+  - [§19.2](interfaces.md#192-interface-declarations)  Interface declarations
+    - [§19.2.1](interfaces.md#1921-general)  General
+    - [§19.2.2](interfaces.md#1922-interface-modifiers)  Interface modifiers
+    - [§19.2.3](interfaces.md#1923-variant-type-parameter-lists)  Variant type parameter lists
+      - [§19.2.3.1](interfaces.md#19231-general)  General
+      - [§19.2.3.2](interfaces.md#19232-variance-safety)  Variance safety
+      - [§19.2.3.3](interfaces.md#19233-variance-conversion)  Variance conversion
+    - [§19.2.4](interfaces.md#1924-base-interfaces)  Base interfaces
+  - [§19.3](interfaces.md#193-interface-body)  Interface body
+  - [§19.4](interfaces.md#194-interface-members)  Interface members
+    - [§19.4.1](interfaces.md#1941-general)  General
+    - [§19.4.2](interfaces.md#1942-interface-methods)  Interface methods
+    - [§19.4.3](interfaces.md#1943-interface-properties)  Interface properties
+    - [§19.4.4](interfaces.md#1944-interface-events)  Interface events
+    - [§19.4.5](interfaces.md#1945-interface-indexers)  Interface indexers
+    - [§19.4.6](interfaces.md#1946-interface-member-access)  Interface member access
+  - [§19.5](interfaces.md#195-qualified-interface-member-names)  Qualified interface member names
+  - [§19.6](interfaces.md#196-interface-implementations)  Interface implementations
+    - [§19.6.1](interfaces.md#1961-general)  General
+    - [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)  Explicit interface member implementations
+    - [§19.6.3](interfaces.md#1963-uniqueness-of-implemented-interfaces)  Uniqueness of implemented interfaces
+    - [§19.6.4](interfaces.md#1964-implementation-of-generic-methods)  Implementation of generic methods
+    - [§19.6.5](interfaces.md#1965-interface-mapping)  Interface mapping
+    - [§19.6.6](interfaces.md#1966-interface-implementation-inheritance)  Interface implementation inheritance
+    - [§19.6.7](interfaces.md#1967-interface-re-implementation)  Interface re-implementation
+    - [§19.6.8](interfaces.md#1968-abstract-classes-and-interfaces)  Abstract classes and interfaces
+- [§20](enums.md#20-enums)  Enums
+  - [§20.1](enums.md#201-general)  General
+  - [§20.2](enums.md#202-enum-declarations)  Enum declarations
+  - [§20.3](enums.md#203-enum-modifiers)  Enum modifiers
+  - [§20.4](enums.md#204-enum-members)  Enum members
+  - [§20.5](enums.md#205-the-systemenum-type)  The System.Enum type
+  - [§20.6](enums.md#206-enum-values-and-operations)  Enum values and operations
+- [§21](delegates.md#21-delegates)  Delegates
+  - [§21.1](delegates.md#211-general)  General
+  - [§21.2](delegates.md#212-delegate-declarations)  Delegate declarations
+  - [§21.3](delegates.md#213-delegate-members)  Delegate members
+  - [§21.4](delegates.md#214-delegate-compatibility)  Delegate compatibility
+  - [§21.5](delegates.md#215-delegate-instantiation)  Delegate instantiation
+  - [§21.6](delegates.md#216-delegate-invocation)  Delegate invocation
+- [§22](exceptions.md#22-exceptions)  Exceptions
+  - [§22.1](exceptions.md#221-general)  General
+  - [§22.2](exceptions.md#222-causes-of-exceptions)  Causes of exceptions
+  - [§22.3](exceptions.md#223-the-systemexception-class)  The System.Exception class
+  - [§22.4](exceptions.md#224-how-exceptions-are-handled)  How exceptions are handled
+  - [§22.5](exceptions.md#225-common-exception-classes)  Common exception classes
+- [§23](attributes.md#23-attributes)  Attributes
+  - [§23.1](attributes.md#231-general)  General
+  - [§23.2](attributes.md#232-attribute-classes)  Attribute classes
+    - [§23.2.1](attributes.md#2321-general)  General
+    - [§23.2.2](attributes.md#2322-attribute-usage)  Attribute usage
+    - [§23.2.3](attributes.md#2323-positional-and-named-parameters)  Positional and named parameters
+    - [§23.2.4](attributes.md#2324-attribute-parameter-types)  Attribute parameter types
+  - [§23.3](attributes.md#233-attribute-specification)  Attribute specification
+  - [§23.4](attributes.md#234-attribute-instances)  Attribute instances
+    - [§23.4.1](attributes.md#2341-general)  General
+    - [§23.4.2](attributes.md#2342-compilation-of-an-attribute)  Compilation of an attribute
+    - [§23.4.3](attributes.md#2343-run-time-retrieval-of-an-attribute-instance)  Run-time retrieval of an attribute instance
+  - [§23.5](attributes.md#235-reserved-attributes)  Reserved attributes
+    - [§23.5.1](attributes.md#2351-general)  General
+    - [§23.5.2](attributes.md#2352-the-attributeusage-attribute)  The AttributeUsage attribute
+    - [§23.5.3](attributes.md#2353-the-conditional-attribute)  The Conditional attribute
+      - [§23.5.3.1](attributes.md#23531-general)  General
+      - [§23.5.3.2](attributes.md#23532-conditional-methods)  Conditional methods
+      - [§23.5.3.3](attributes.md#23533-conditional-attribute-classes)  Conditional attribute classes
+    - [§23.5.4](attributes.md#2354-the-obsolete-attribute)  The Obsolete attribute
+    - [§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)  The AsyncMethodBuilder attribute
+    - [§23.5.6](attributes.md#2356-caller-info-attributes)  Caller-info attributes
+      - [§23.5.6.1](attributes.md#23561-general)  General
+      - [§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)  The CallerLineNumber attribute
+      - [§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)  The CallerFilePath attribute
+      - [§23.5.6.4](attributes.md#23564-the-callermembername-attribute)  The CallerMemberName attribute
+    - [§23.5.7](attributes.md#2357-code-analysis-attributes)  Code analysis attributes
+      - [§23.5.7.1](attributes.md#23571-general)  General
+      - [§23.5.7.2](attributes.md#23572-the-allownull-attribute)  The AllowNull attribute
+      - [§23.5.7.3](attributes.md#23573-the-disallownull-attribute)  The DisallowNull attribute
+      - [§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute)  The DoesNotReturn attribute
+      - [§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute)  The DoesNotReturnIf attribute
+      - [§23.5.7.6](attributes.md#23576-the-maybenull-attribute)  The MaybeNull attribute
+      - [§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute)  The MaybeNullWhen attribute
+      - [§23.5.7.8](attributes.md#23578-the-notnull-attribute)  The NotNull attribute
+      - [§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
+      - [§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute)  The NotNullWhen attribute
+  - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
+- [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
+  - [§24.1](unsafe-code.md#241-general)  General
+  - [§24.2](unsafe-code.md#242-unsafe-contexts)  Unsafe contexts
+  - [§24.3](unsafe-code.md#243-pointer-types)  Pointer types
+  - [§24.4](unsafe-code.md#244-fixed-and-moveable-variables)  Fixed and moveable variables
+  - [§24.5](unsafe-code.md#245-pointer-conversions)  Pointer conversions
+    - [§24.5.1](unsafe-code.md#2451-general)  General
+    - [§24.5.2](unsafe-code.md#2452-pointer-arrays)  Pointer arrays
+  - [§24.6](unsafe-code.md#246-pointers-in-expressions)  Pointers in expressions
+    - [§24.6.1](unsafe-code.md#2461-general)  General
+    - [§24.6.2](unsafe-code.md#2462-pointer-indirection)  Pointer indirection
+    - [§24.6.3](unsafe-code.md#2463-pointer-member-access)  Pointer member access
+    - [§24.6.4](unsafe-code.md#2464-pointer-element-access)  Pointer element access
+    - [§24.6.5](unsafe-code.md#2465-the-address-of-operator)  The address-of operator
+    - [§24.6.6](unsafe-code.md#2466-pointer-increment-and-decrement)  Pointer increment and decrement
+    - [§24.6.7](unsafe-code.md#2467-pointer-arithmetic)  Pointer arithmetic
+    - [§24.6.8](unsafe-code.md#2468-pointer-comparison)  Pointer comparison
+    - [§24.6.9](unsafe-code.md#2469-the-sizeof-operator)  The sizeof operator
+  - [§24.7](unsafe-code.md#247-the-fixed-statement)  The fixed statement
+  - [§24.8](unsafe-code.md#248-fixed-size-buffers)  Fixed-size buffers
+    - [§24.8.1](unsafe-code.md#2481-general)  General
+    - [§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)  Fixed-size buffer declarations
+    - [§24.8.3](unsafe-code.md#2483-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
+    - [§24.8.4](unsafe-code.md#2484-definite-assignment-checking)  Definite assignment checking
+  - [§24.9](unsafe-code.md#249-stack-allocation)  Stack allocation
 - [§A](grammar.md#annex-a-grammar)  Grammar
   - [§A.1](grammar.md#a1-general)  General
   - [§A.2](grammar.md#a2-lexical-grammar)  Lexical grammar

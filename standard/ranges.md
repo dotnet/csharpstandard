@@ -1,13 +1,13 @@
-# 24 Extended indexing and slicing
+# 18 Extended indexing and slicing
 
-> **Review Note:** This new clause, currently (§24), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. Its final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§18](interfaces.md#18-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.
+> **Review Note:** This new clause, currently ([§18](ranges.md#18-extended-indexing-and-slicing)), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. Its final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§19](interfaces.md#19-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.
 
-## 24.1 General
+## 18.1 General
 
 This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
 
-- The types introduced in this clause, `System.Index` (§24.2) and `System.Range` (§24.3);
-- The pre-defined unary `^` (§hat-operator) and binary `..` (§range-operator) operators; and
+- The types introduced in this clause, `System.Index` ([§18.2](ranges.md#182-the-index-type)) and `System.Range` ([§18.3](ranges.md#183-the-range-type));
+- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-hat-operator)) and binary `..` ([§12.10](expressions.md#1210-range-operator)) operators; and
 - The *element_access* expression.
 
 Under the model a type is classified as:
@@ -18,11 +18,11 @@ Under the model a type is classified as:
 
 > *Note*: The model does not require that a slice of the type can be set, but a type may support it as an extension of the model. *end note*
 
-The model is supported for single-dimensional arrays (§12.8.12.2) and strings (§string-access).
+The model is supported for single-dimensional arrays ([§12.8.12.2](expressions.md#128122-array-access)) and strings ([§12.8.12.3](expressions.md#128123-string-access)).
 
-The model can be supported by any class, struct or interface type which provides appropriate indexers (§15.9) which implement the model semantics.
+The model can be supported by any class, struct or interface type which provides appropriate indexers ([§15.9](classes.md#159-indexers)) which implement the model semantics.
 
-Implicit support for the model is provided for types which do not directly support it but which provide a certain *pattern* of members (§24.4). This support is pattern-based, rather than semantic-based, as the semantics of the type members upon which it is based are *assumed* – the language does not enforce, or check, the semantics of these type members.
+Implicit support for the model is provided for types which do not directly support it but which provide a certain *pattern* of members ([§18.4](ranges.md#184-pattern-based-implicit-support-for-index-and-range)). This support is pattern-based, rather than semantic-based, as the semantics of the type members upon which it is based are *assumed* – the language does not enforce, or check, the semantics of these type members.
 
 For the purposes of this clause the following terms are defined:
 
@@ -47,7 +47,7 @@ The above definitions are extended for uses of `Index` and `Range` as follows:
 - A type is also a *sequence* if an *element_access* expression taking a single required `Index` argument, rather than an `int` argument, is supported. Where a distinction is required the type is termed ***extended indexable***.
 - A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
 
-Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility (§7.5) and therefore dependent on where the type is being used.
+Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility ([§7.5](basic-concepts.md#75-member-access)) and therefore dependent on where the type is being used.
 
 > *Example*: A type where the countable property and/or the indexer are `protected` is only a sequence to members of itself and any derived types. *end example*
 
@@ -86,7 +86,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 >
 > *end note*
 
-## 24.2 The Index type
+## 18.2 The Index type
 
 The `System.Index` type represents an *abstract* index which is either a *from-start index* or a *from-end index*.
 
@@ -118,7 +118,7 @@ The `System.Index` type represents an *abstract* index which is either a *from-s
 >
 > *end example*
 
-There is an implicit conversion from `int` to `Index` which produces from-start indices, and a language-defined unary operator `^` (§hat-operator) from `int` to `Index` which produces from-end indices.
+There is an implicit conversion from `int` to `Index` which produces from-start indices, and a language-defined unary operator `^` ([§12.9.6](expressions.md#1296-hat-operator)) from `int` to `Index` which produces from-end indices.
 
 > *Example*
 >
@@ -142,14 +142,14 @@ This method does **not** check that the return value is in the valid range of `0
 
 > *Note:* `Index` values are unordered as they are abstract indices, it is in general impossible to determine whether a from-end index comes before or after a from start index without reference to a sequence length. Once converted to concrete indices, e.g. by `GetOffset`, those concrete indices are comparable. *end note*
 
-`Index` values may be directly used in the *argument_list* of an *element_access* expression (§12.8.12) which is:
+`Index` values may be directly used in the *argument_list* of an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) which is:
 
-- an array access and the target is a single-dimensional array (§12.8.12.2);
-- a string access (§string-access)
-- an indexer access and the target type has an indexer with corresponding parameters of either `Index` type (§12.8.12.3) or of a type to which `Index` values are implicitly convertible; or
-- an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified (§24.4.2).
+- an array access and the target is a single-dimensional array ([§12.8.12.2](expressions.md#128122-array-access));
+- a string access ([§12.8.12.3](expressions.md#128123-string-access))
+- an indexer access and the target type has an indexer with corresponding parameters of either `Index` type ([§12.8.12.4](expressions.md#128124-indexer-access)) or of a type to which `Index` values are implicitly convertible; or
+- an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified ([§18.4.2](ranges.md#1842-implicit-index-support)).
 
-## 24.3 The Range type
+## 18.3 The Range type
 
 The `System.Range` type represents the abstract range of `Index`es from a `Start` index up to, but not including, an `End` index.
 
@@ -170,7 +170,7 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 
 > *Example*
 >
-> The following examples use the implicit conversion from `int` to `Index` (§24.2) and the `^` (§hat-operator) operator to create the `Index` values for each `Range`:
+> The following examples use the implicit conversion from `int` to `Index` ([§18.2](ranges.md#182-the-index-type)) and the `^` ([§12.9.6](expressions.md#1296-hat-operator)) operator to create the `Index` values for each `Range`:
 >
 > ```csharp
 > var firstQuad = new Range(0, 4);  // the indices from `0` to `3`
@@ -186,7 +186,7 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 >
 > *end example*
 
-The language-defined operator `..` (§range-operator) creates a `Range` value from `Index` values.
+The language-defined operator `..` ([§12.10](expressions.md#1210-range-operator)) creates a `Range` value from `Index` values.
 
 > *Example*
 >
@@ -233,7 +233,7 @@ The returned concrete `Range` tuple is a pair of the form `(S, N)` where:
 - `N` is the number of items in the range, being the difference between the concrete indices for the `End` and `Start` properties;
 - both values being calculated with respect to `length`.
 
-A concrete range value is *empty* if `N` is zero. An empty concrete range may have an `S` value equal to concrete past-end index (§24.1), a non-empty range may not. When a `Range` which is used to slice (§24.1) a collection is valid and empty with respect to that collection then the resulting slice is an empty collection.
+A concrete range value is *empty* if `N` is zero. An empty concrete range may have an `S` value equal to concrete past-end index ([§18.1](ranges.md#181-general)), a non-empty range may not. When a `Range` which is used to slice ([§18.1](ranges.md#181-general)) a collection is valid and empty with respect to that collection then the resulting slice is an empty collection.
 
 > *Note:* A consequence of the above is that a `Range` value which is valid and empty with respect to a `length` of zero may be used to slice an empty collection and results in an empty slice. This differs from indexing which throws an exception if the collection is empty. *end note**
 <!-- markdownlint-disable MD028 -->
@@ -254,34 +254,34 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 > var (ix6, len6) = lastTwo.GetOffsetAndLength(6);   // ix6 = 4, len6 = 2
 > ```
 
-`Range` implements `IEquatable<Range>` and values may be compared for equality based on the abstract value; two `Range` values are equal if and only if the abstract values of the respective `Start` and `End` properties are equal (§24.2). However `Range` values are not ordered and no other comparison operations are provided.
+`Range` implements `IEquatable<Range>` and values may be compared for equality based on the abstract value; two `Range` values are equal if and only if the abstract values of the respective `Start` and `End` properties are equal ([§18.2](ranges.md#182-the-index-type)). However `Range` values are not ordered and no other comparison operations are provided.
 
 > *Note:* `Range` values are unordered both as they are abstract and there is no unique ordering relation. Once converted to a concrete start and length, e.g. by `GetOffsetAndLength`, an ordering relation could be defined. *end note*
 
-`Range` values can be directly used in the *argument_list* of an *element_access* expression (§12.8.12) which is:
+`Range` values can be directly used in the *argument_list* of an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) which is:
 
-- an array access and the target is a single-dimensional array (§12.8.12.2);
-- a string access (§string-access);
-- an indexer access and the target type has an indexer with corresponding parameters of either `Range` type (§12.8.12.3) or of a type to which `Range` values are implicitly convertible; or
-- an indexer access (§12.8.12.3) and the target type conforms to a sequence pattern for which implicit `Range` support is specified (§24.4.3).
+- an array access and the target is a single-dimensional array ([§12.8.12.2](expressions.md#128122-array-access));
+- a string access ([§12.8.12.3](expressions.md#128123-string-access));
+- an indexer access and the target type has an indexer with corresponding parameters of either `Range` type ([§12.8.12.4](expressions.md#128124-indexer-access)) or of a type to which `Range` values are implicitly convertible; or
+- an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) and the target type conforms to a sequence pattern for which implicit `Range` support is specified ([§18.4.3](ranges.md#1843-implicit-range-support)).
 
-## 24.4 Pattern-based implicit support for Index and Range
+## 18.4 Pattern-based implicit support for Index and Range
 
-### 24.4.1 General
+### 18.4.1 General
 
-If an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index` or `Range`; fails to be identified as:
+If an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index` or `Range`; fails to be identified as:
 
-- an array access (§12.8.12.2),
-- a string access (§string-access), or
-- an indexer access (§12.8.12.3) as `T` provides no suitable accessible indexer
+- an array access ([§12.8.12.2](expressions.md#128122-array-access)),
+- a string access ([§12.8.12.3](expressions.md#128123-string-access)), or
+- an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) as `T` provides no suitable accessible indexer
 
 then implicit support for the expression is provided if `T` conforms to a particular pattern. If `T` does not conform to this pattern then a compile-time error occurs.
 
-### 24.4.2 Implicit Index support
+### 18.4.2 Implicit Index support
 
-If in any context an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid (§24.4.1) then if in the same context:
+If in any context an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid ([§18.4.1](ranges.md#1841-general)) then if in the same context:
 
-- `T` provides accessible members qualifying it as a *sequence* (§24.1); and
+- `T` provides accessible members qualifying it as a *sequence* ([§18.1](ranges.md#181-general)); and
 - the expression `E[0]` is valid and uses the same indexer that qualifies `T` as a sequence
 
 then the expression `E[A]` shall be implicitly supported.
@@ -293,11 +293,11 @@ Without otherwise constraining implementations of this Standard the order of eva
 3. the countable property of `T` is evaluated, if required by the implementation;
 4. the get or set accessor of the `int` based indexer of `T` that would be used by `E[0]` in the same context is invoked.
 
-### 24.4.3 Implicit Range support
+### 18.4.3 Implicit Range support
 
-If in any context an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid (§24.4.1) then if in the same context:
+If in any context an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid ([§18.4.1](ranges.md#1841-general)) then if in the same context:
 
-- `T` provides accessible members qualifying it as both *countable* and *sliceable* (§24.1)
+- `T` provides accessible members qualifying it as both *countable* and *sliceable* ([§18.1](ranges.md#181-general))
 
 then the expression `E[A]` shall be implicitly supported.
 

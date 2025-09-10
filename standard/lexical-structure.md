@@ -59,7 +59,7 @@ The productions for:
 - *null_conditional_member_access* ([§12.8.8](expressions.md#1288-null-conditional-member-access)),
 - *dependent_access* ([§12.8.8](expressions.md#1288-null-conditional-member-access)),
 - *base_access* ([§12.8.15](expressions.md#12815-base-access)) and
-- *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access));
+- *pointer_member_access* ([§24.6.3](unsafe-code.md#2463-pointer-member-access));
 
 (the “disambiguated productions”) can give rise to ambiguities in the grammar for expressions.
 
@@ -134,7 +134,7 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 >
 > *end example*
 
-When recognising a *relational_expression* ([§12.12.1](expressions.md#12121-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+When recognising a *relational_expression* ([§12.13.1](expressions.md#12131-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 ## 6.3 Lexical analysis
 
@@ -616,7 +616,7 @@ In most cases, the syntactic location of contextual keywords is such that they c
 
 In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
-Another example such disambiguation is the contextual keyword `await` ([§12.9.8.1](expressions.md#12981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
+Another example such disambiguation is the contextual keyword `await` ([§12.9.9.1](expressions.md#12991-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
@@ -967,7 +967,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.12.8](expressions.md#12128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.13.8](expressions.md#12138-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1195,7 +1195,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.23](expressions.md#1223-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.24](expressions.md#1224-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1483,7 +1483,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§23.5.6](attributes.md#2356-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1515,7 +1515,7 @@ The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 

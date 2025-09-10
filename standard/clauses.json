@@ -25,6 +25,7 @@
     "classes.md",
     "structs.md",
     "arrays.md",
+    "ranges.md",
     "interfaces.md",
     "enums.md",
     "delegates.md",
@@ -32,8 +33,7 @@
     "attributes.md"
   ],
   "UnsafeClauses": [
-    "unsafe-code.md",
-    "ranges.md"
+    "unsafe-code.md"
   ],
   "Annexes": [
     "grammar.md",
