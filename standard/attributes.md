@@ -1066,7 +1066,7 @@ Specifies the parameter representing the `CancellationToken` for an asynchronous
 
 It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
-- The `EnumeratorCancellation` attribute is applied to a parameter of a different type than `CancellationToken`,
+- The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that isn't an asynchronous iterator (§15.15),
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)).
 

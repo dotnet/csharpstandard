@@ -683,7 +683,6 @@ namespace System.Threading
         public CancellationTokenSource();
         public System.Threading.CancellationToken Token { get; }
         public void Cancel();
-        // optional, see below
         public static CancellationTokenSource CreateLinkedTokenSource
                                              (CancellationToken token1,
                                               CancellationToken token2);
