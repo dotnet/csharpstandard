@@ -495,6 +495,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` (§enumerator-cancellation), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 
 The Nullable static analysis attributes ([§22.5.7](attributes.md#2257-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1064,7 +1065,7 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` (§15.15.5.2). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method (§15.15) in the body of that method.
 
-It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
+It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
 - The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that isn't an asynchronous iterator (§15.15),
@@ -1090,7 +1091,7 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 > }
 > ```
 >
-> The `EnumerationCancellation` attribute indicates that the associated parameter is used for cancellation. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the combined token.
+> The `EnumerationCancellation` attribute indicates that the associated parameter is used for cancellation. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. This combined token that indicates that cancellation was requested when either token indicates cancellation. The async iterator then cancels the operation based on the state of the combined token.
 >
 > ```csharp
 > CancellationTokenSource sourceOne = new CancellationTokenSource();
@@ -1100,6 +1101,22 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 >     if (number == "8") sourceOne.Cancel();
 >     if (number == "5") sourceTwo.Cancel();
 >     Console.WriteLine(number);
+> }
+>
+> public static ValueTask<List<TSource>> ToListAsync<TSource>(
+>     this IAsyncEnumerable<TSource> source,
+>     CancellationToken cancellationToken = default)
+> {
+>     List<TSource> list = new List<TSource>();
+>     await foreach (TSource element in source)
+>     {
+>         if (cancellationToken.IsCancellationRequested)
+>         {
+>             break;
+>         }
+>         list.Add(element);
+>     }
+>     return list;
 > }
 >
 > *end example*

@@ -1360,10 +1360,7 @@ try
 }
 finally
 {
-    // enumerator.Dispose() if enumerator is a `ref struct` type and supports synchronous disposal 
-    await enumerator.DisposeAsync(); 
-    // omitted, along with the try/finally,
-    // if the enumerator doesn't expose a dispose method
+    // dispose of enumerator as described later in this clause.
 }
 ```
 
