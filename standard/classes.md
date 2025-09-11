@@ -2051,7 +2051,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.4](structs.md#164-class-and-struct-differences)) and interfaces ([§18.4.2](interfaces.md#1842-interface-methods)).
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.4](structs.md#164-class-and-struct-differences)) and interfaces ([§19.4.2](interfaces.md#1942-interface-methods)).
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2920,7 +2920,7 @@ When an instance method declaration includes an `abstract` modifier, that method
 
 An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. The *method_body* of an abstract method simply consists of a semicolon.
 
-Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.2](interfaces.md#1842-interface-methods)).
+Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.2](interfaces.md#1942-interface-methods)).
 
 > *Example*: In the following code
 >
@@ -3936,7 +3936,7 @@ An abstract property declaration specifies that the accessors of the property ar
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
-Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.3](interfaces.md#1843-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.3](interfaces.md#1943-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
 The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 

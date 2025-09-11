@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
 
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
 
@@ -351,7 +351,7 @@ This clause augments the description of methods in classes [§15.6](classes.md#1
 Interface properties are declared using *method_declaration*s (§15.6)). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
 
 - *method_modifier* shall not include `override`.
-- An interface method declaration that has a block body or expression body as a *method_body* has an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
+- An interface method declaration that has a block body or expression body as a *method_body* has an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract.
 - A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 - The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
   - A static declaration that is not extern shall have a block body or expression body as a *method_body*.
@@ -442,7 +442,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
-- A *property_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- A *property_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 19.4.4 Interface events
 
@@ -476,7 +476,7 @@ Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.m
 
 This clause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
 
-An *operator_declaration* in an interface is the implementation ([§18.1](interfaces.md#181-general)).
+An *operator_declaration* in an interface is the implementation ([§19.1](interfaces.md#191-general)).
 
 It is a compile-time error for an interface to declare a conversion, equality, or inequality operator.
 
@@ -574,7 +574,7 @@ It is an error if in a class declaration the most specific override of some inte
 
 ### 19.4.6 Interface member access
 
-Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
+Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
 In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`:
 
@@ -582,7 +582,7 @@ In a class `D`, with direct or indirect base class `B`, where `B` directly or in
 - If `B` contains a method `M` without the `virtual` or `override` modifier, that method hides `I.M()` rather than overriding it.
 - If `B` contains a method `M` with a different parameter list, that method `M` is a distinct overload of `M`.
 
-For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
+For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
 > *Example*: In the following code
 >
