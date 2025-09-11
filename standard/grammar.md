@@ -373,11 +373,11 @@ null_literal
 
 // Source: §6.4.6 Operators and punctuators
 operator_or_punctuator
-    : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!' | '~'
-    | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
-    | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
-    | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>' | '??='
+    : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'   | ','  | ':'  | ';'
+    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'   | '^'  | '!'  | '~'
+    | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++'  | '--' | '&&' | '||'
+    | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-='  | '*=' | '/=' | '%='
+    | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>' | '??=' | '..'
     ;
 
 right_shift
@@ -1162,11 +1162,11 @@ unchecked_expression
 
 // Source: §12.8.21 Default value expressions
 default_value_expression
-    : explictly_typed_default
+    : explicitly_typed_default
     | default_literal
     ;
 
-explictly_typed_default
+explicitly_typed_default
     : 'default' '(' type ')'
     ;
 
@@ -1216,6 +1216,7 @@ unary_expression
     | '-' unary_expression
     | logical_negation_operator unary_expression
     | '~' unary_expression
+    | '^' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
     | cast_expression
@@ -1224,7 +1225,7 @@ unary_expression
     | addressof_expression              // unsafe code support
     ;
 
-// Source: §12.9.6 Prefix increment and decrement operators
+// Source: §12.9.7 Prefix increment and decrement operators
 pre_increment_expression
     : '++' unary_expression
     ;
@@ -1233,22 +1234,28 @@ pre_decrement_expression
     : '--' unary_expression
     ;
 
-// Source: §12.9.7 Cast expressions
+// Source: §12.9.8 Cast expressions
 cast_expression
     : '(' type ')' unary_expression
     ;
 
-// Source: §12.9.8.1 General
+// Source: §12.9.9.1 General
 await_expression
     : 'await' unary_expression
     ;
 
-// Source: §12.10.1 General
-multiplicative_expression
+// Source: §12.10 Range operator
+range_expression
     : unary_expression
-    | multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
+    | unary_expression? '..' unary_expression?
+    ;
+
+// Source: §12.11.1 General
+multiplicative_expression
+    : range_expression
+    | multiplicative_expression '*' range_expression
+    | multiplicative_expression '/' range_expression
+    | multiplicative_expression '%' range_expression
     ;
 
 additive_expression
@@ -1257,14 +1264,14 @@ additive_expression
     | additive_expression '-' multiplicative_expression
     ;
 
-// Source: §12.11 Shift operators
+// Source: §12.12 Shift operators
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
     ;
 
-// Source: §12.12.1 General
+// Source: §12.13.1 General
 relational_expression
     : shift_expression
     | relational_expression '<' shift_expression
@@ -1282,7 +1289,7 @@ equality_expression
     | equality_expression '!=' relational_expression
     ;
 
-// Source: §12.13.1 General
+// Source: §12.14.1 General
 and_expression
     : equality_expression
     | and_expression '&' equality_expression
@@ -1298,7 +1305,7 @@ inclusive_or_expression
     | inclusive_or_expression '|' exclusive_or_expression
     ;
 
-// Source: §12.14.1 General
+// Source: §12.15.1 General
 conditional_and_expression
     : inclusive_or_expression
     | conditional_and_expression '&&' inclusive_or_expression
@@ -1309,19 +1316,19 @@ conditional_or_expression
     | conditional_or_expression '||' conditional_and_expression
     ;
 
-// Source: §12.15 The null coalescing operator
+// Source: §12.16 The null coalescing operator
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
     | throw_expression
     ;
 
-// Source: §12.16 The throw expression operator
+// Source: §12.17 The throw expression operator
 throw_expression
     : 'throw' null_coalescing_expression
     ;
 
-// Source: §12.17 Declaration expressions
+// Source: §12.18 Declaration expressions
 declaration_expression
     : local_variable_type identifier
     ;
@@ -1331,7 +1338,7 @@ local_variable_type
     | 'var'
     ;
 
-// Source: §12.18 Conditional operator
+// Source: §12.19 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
@@ -1339,7 +1346,7 @@ conditional_expression
       'ref' variable_reference
     ;
 
-// Source: §12.19.1 General
+// Source: §12.20.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -1393,7 +1400,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: §12.20.1 General
+// Source: §12.21.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1467,7 +1474,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: §12.21.1 General
+// Source: §12.22.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1477,7 +1484,7 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: §12.22 Expression
+// Source: §12.23 Expression
 expression
     : non_assignment_expression
     | assignment
@@ -1490,12 +1497,12 @@ non_assignment_expression
     | query_expression
     ;
 
-// Source: §12.23 Constant expressions
+// Source: §12.24 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: §12.24 Boolean expressions
+// Source: §12.25 Boolean expressions
 boolean_expression
     : expression
     ;
@@ -2139,7 +2146,8 @@ default_argument
 
 parameter_modifier
     : parameter_mode_modifier
-    | 'this'
+    | 'this' parameter_mode_modifier?
+    | parameter_mode_modifier? 'this'
     ;
 
 parameter_mode_modifier
@@ -2476,14 +2484,14 @@ variable_initializer
     | array_initializer
     ;
 
-// Source: §18.2.1 General
+// Source: §19.2.1 General
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface'
       identifier variant_type_parameter_list? interface_base?
       type_parameter_constraints_clause* interface_body ';'?
     ;
 
-// Source: §18.2.2 Interface modifiers
+// Source: §19.2.2 Interface modifiers
 interface_modifier
     : 'new'
     | 'public'
@@ -2493,7 +2501,7 @@ interface_modifier
     | unsafe_modifier   // unsafe code support
     ;
 
-// Source: §18.2.3.1 General
+// Source: §19.2.3.1 General
 variant_type_parameter_list
     : '<' variant_type_parameter (',' variant_type_parameter)* '>'
     ;
@@ -2507,17 +2515,17 @@ variance_annotation
     | 'out'
     ;
 
-// Source: §18.2.4 Base interfaces
+// Source: §19.2.4 Base interfaces
 interface_base
     : ':' interface_type_list
     ;
 
-// Source: §18.3 Interface body
+// Source: §19.3 Interface body
 interface_body
     : '{' interface_member_declaration* '}'
     ;
 
-// Source: §18.4.1 General
+// Source: §19.4.1 General
 interface_member_declaration
     : interface_method_declaration
     | interface_property_declaration
@@ -2525,7 +2533,7 @@ interface_member_declaration
     | interface_indexer_declaration
     ;
 
-// Source: §18.4.2 Interface methods
+// Source: §19.4.2 Interface methods
 interface_method_declaration
     : attributes? 'new'? return_type interface_method_header
     | attributes? 'new'? ref_kind ref_return_type interface_method_header
@@ -2537,7 +2545,7 @@ interface_method_header
       type_parameter_constraints_clause* ';'
     ;
 
-// Source: §18.4.3 Interface properties
+// Source: §19.4.3 Interface properties
 interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
     | attributes? 'new'? ref_kind type identifier '{' ref_interface_accessor '}'
@@ -2554,12 +2562,12 @@ ref_interface_accessor
     : attributes? 'get' ';'
     ;
 
-// Source: §18.4.4 Interface events
+// Source: §19.4.4 Interface events
 interface_event_declaration
     : attributes? 'new'? 'event' type identifier ';'
     ;
 
-// Source: §18.4.5 Interface indexers
+// Source: §19.4.5 Interface indexers
 interface_indexer_declaration
     : attributes? 'new'? type 'this' '[' parameter_list ']'
       '{' interface_accessors '}'
@@ -2567,7 +2575,7 @@ interface_indexer_declaration
       '{' ref_interface_accessor '}'
     ;
 
-// Source: §19.2 Enum declarations
+// Source: §20.2 Enum declarations
 enum_declaration
     : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
@@ -2586,7 +2594,7 @@ enum_body
     | '{' enum_member_declarations ',' '}'
     ;
 
-// Source: §19.3 Enum modifiers
+// Source: §20.3 Enum modifiers
 enum_modifier
     : 'new'
     | 'public'
@@ -2595,17 +2603,17 @@ enum_modifier
     | 'private'
     ;
 
-// Source: §19.4 Enum members
+// Source: §20.4 Enum members
 enum_member_declarations
     : enum_member_declaration (',' enum_member_declaration)*
     ;
 
-// Source: §19.4 Enum members
+// Source: §20.4 Enum members
 enum_member_declaration
     : attributes? identifier ('=' constant_expression)?
     ;
 
-// Source: §20.2 Delegate declarations
+// Source: §21.2 Delegate declarations
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type delegate_header
     | attributes? delegate_modifier* 'delegate' ref_kind ref_return_type
@@ -2627,7 +2635,7 @@ delegate_modifier
     | unsafe_modifier   // unsafe code support
     ;
 
-// Source: §22.3 Attribute specification
+// Source: §23.3 Attribute specification
 global_attributes
     : global_attribute_section+
     ;
@@ -2704,7 +2712,7 @@ attribute_argument_expression
 
 ```ANTLR
 
-// Source: §23.2 Unsafe contexts
+// Source: §24.2 Unsafe contexts
 unsafe_modifier
     : 'unsafe'
     ;
@@ -2713,33 +2721,33 @@ unsafe_statement
     : 'unsafe' block
     ;
 
-// Source: §23.3 Pointer types
+// Source: §24.3 Pointer types
 pointer_type
     : value_type ('*')+
     | 'void' ('*')+
     ;
 
-// Source: §23.6.2 Pointer indirection
+// Source: §24.6.2 Pointer indirection
 pointer_indirection_expression
     : '*' unary_expression
     ;
 
-// Source: §23.6.3 Pointer member access
+// Source: §24.6.3 Pointer member access
 pointer_member_access
     : primary_expression '->' identifier type_argument_list?
     ;
 
-// Source: §23.6.4 Pointer element access
+// Source: §24.6.4 Pointer element access
 pointer_element_access
     : primary_expression '[' expression ']'
     ;
 
-// Source: §23.6.5 The address-of operator
+// Source: §24.6.5 The address-of operator
 addressof_expression
     : '&' unary_expression
     ;
 
-// Source: §23.7 The fixed statement
+// Source: §24.7 The fixed statement
 fixed_statement
     : 'fixed' '(' pointer_type fixed_pointer_declarators ')' embedded_statement
     ;
@@ -2757,7 +2765,7 @@ fixed_pointer_initializer
     | expression
     ;
 
-// Source: §23.8.2 Fixed-size buffer declarations
+// Source: §24.8.2 Fixed-size buffer declarations
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type
       fixed_size_buffer_declarators ';'

@@ -22,7 +22,7 @@ public record StatusCheckMessage(string file, int StartLine, int EndLine, string
 /// </remarks>
 /// <param name="pathToRoot">The path to the root of the repository</param>
 /// <param name="toolName">The name of the tool that is running the check</param>
-public class StatusCheckLogger(string pathToRoot, string toolName)
+public class StatusCheckLogger(TextWriter writer, string pathToRoot, string toolName)
 {
     private List<NewCheckRunAnnotation> annotations = [];
     public bool Success { get; private set; } = true;
@@ -30,7 +30,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     // Utility method to format the path to unix style, from the root of the repository.
     private string FormatPath(string path) => Path.GetRelativePath(pathToRoot, path).Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-    private void WriteMessageToConsole(string prefix, StatusCheckMessage d) => Console.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
+    private void WriteMessageToConsole(string prefix, StatusCheckMessage d) => writer.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
 
     /// <summary>
     /// Log a notice from the status check to the console only
@@ -178,9 +178,9 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         // Once running on a branch on the dotnet org, this should work correctly.
         catch (ForbiddenException e)
         {
-            Console.WriteLine("===== WARNING: Could not create a check run.=====");
-            Console.WriteLine("Exception details:");
-            Console.WriteLine(e);
+            writer.WriteLine("===== WARNING: Could not create a check run.=====");
+            writer.WriteLine("Exception details:");
+            writer.WriteLine(e);
         }
     }
 }

@@ -22,7 +22,7 @@ struct_declaration
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -46,7 +46,7 @@ struct_modifier
     ;
 ```
 
-*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
@@ -100,7 +100,7 @@ struct_interfaces
 
 The handling of interfaces on multiple parts of a partial struct declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) are discussed further in [§15.2.4.3](classes.md#15243-interface-implementations).
 
-Interface implementations are discussed further in [§18.6](interfaces.md#186-interface-implementations).
+Interface implementations are discussed further in [§19.6](interfaces.md#196-interface-implementations).
 
 ### 16.2.6 Struct body
 
@@ -132,7 +132,7 @@ struct_member_declaration
     ;
 ```
 
-*fixed_size_buffer_declaration* ([§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 > *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
 
@@ -238,7 +238,7 @@ Assignment to a variable of a struct type creates a *copy* of the value being as
 
 Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a by-reference parameter.
 
-When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.21.2](expressions.md#12212-simple-assignment).
+When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.22.2](expressions.md#12222-simple-assignment).
 
 ### 16.4.5 Default values
 
@@ -470,7 +470,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > ```
 >
 > No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
-> There is one exception to this, and that involves automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). The definite assignment rules ([§12.21.2](expressions.md#12212-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> There is one exception to this, and that involves automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). The definite assignment rules ([§12.22.2](expressions.md#12222-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Constructors3"} -->
 > ```csharp
@@ -515,6 +515,11 @@ It is a compile-time error to have a `readonly` modifier on a property itself as
 It is a compile-time error for a property to have a readonly modifier on all of its accessors.
 
 > *Note*: To correct the error, move the modifier from the accessors to the property itself. *end note*
+
+For a property accessor expression, `s.P`:
+
+- It is a compile-time error if `s.P` invokes the set accessor `M` of type `T` when the process in [§12.6.6.1](expressions.md#12661-general) would create a temporary copy of `s`.
+- If `s.P` invokes the get accessor of type `T`, the process in [§12.6.6.1](expressions.md#12661-general) is followed, including creating a temporary copy of `s` if required.
 
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
