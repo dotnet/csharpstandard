@@ -442,7 +442,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
-- A *property_declaration* that has a *block* or *expression-bodied-member* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- A *property_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 18.4.4 Interface events
 
@@ -464,7 +464,7 @@ This clause augments the description of indexers in classes [§15.9](classes.md#
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
 - *indexer_modifier* shall not include `override`.
-- An *indexer_declaration* that has a *block* or *expression-bodied-member* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
+- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
 - All the parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 - Any output or reference parameter types shall also be output-safe.
 
