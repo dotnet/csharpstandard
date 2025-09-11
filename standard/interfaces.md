@@ -344,7 +344,7 @@ Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#
 
 See §interface-static-constructors for information regarding the allocation and initialization of static fields.
 
-### 18.4.2 Interface methods
+### 19.4.2 Interface methods
 
 This clause augments the description of methods in classes [§15.6](classes.md#156-methods) for methods declared in interfaces.
 
@@ -429,7 +429,7 @@ A virtual method with implementation declared in an interface may be overridden 
 >
 > This is useful in derived interfaces where the implementation of a method is inappropriate and a more appropriate implementation should be provided by implementing classes. *end example*
 
-### 18.4.3 Interface properties
+### 19.4.3 Interface properties
 
 This clause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
 
@@ -444,7 +444,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
 - A *property_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
-### 18.4.4 Interface events
+### 19.4.4 Interface events
 
 This clause augments the description of events in classes [§15.8](classes.md#158-events) for events declared in interfaces.
 
@@ -572,7 +572,7 @@ It is an error if in a class declaration the most specific override of some inte
 >
 > *end example*
 
-### 18.4.6 Interface member access
+### 19.4.6 Interface member access
 
 Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
