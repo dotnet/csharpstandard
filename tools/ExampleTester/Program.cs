@@ -2,7 +2,7 @@
 using System.CommandLine;
 using Utilities;
 
-var logger = new StatusCheckLogger("..", "Example tester");
+var logger = new StatusCheckLogger(Console.Out, "..", "Example tester");
 var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
 var token = Environment.GetEnvironmentVariable("GH_TOKEN");
 

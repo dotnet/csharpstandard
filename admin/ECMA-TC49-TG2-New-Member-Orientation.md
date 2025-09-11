@@ -41,11 +41,11 @@ If errors are found in a published spec, we do ***not*** make available a correc
 
 ## C# Formal Grammar
 
-Some time ago, we moved from an eBNF form to [ANTLR](https://en.wikipedia.org/wiki/ANTLR).
+Some time ago, we moved from an eBNF form to [ANTLR](https://en.wikipedia.org/wiki/ANTLR) notation for the grammar.
 
-Nigel is our resident grammar expert.
+While the grammar is written in ANTLR notation the ANTLR parser generator itself cannot be used to build a parser directly based on it. This is due either to the use of grammar features the generator does not support, or the need to use non-grammar features of the ANTLR generator to support them. An example of the former is the C# grammar’s use in a few placers of mutual left recursion, which the ANTLR generator does not support. An example of the latter is C#’s interpolated strings which, like in many languages, are a “language within a language”. Standard *implementation* techniques exist to support such features, which as such are outside the scope of the C# Standard.
 
-The core ANTLR implementation doesn’t allow left recursion, although a C#-code-generating version does.
+We have an internal tool to extract the grammar from the spec, apply ANTLR generator specific implementation techniques, validate the grammar, and run grammar tests. (See [antlr-testing](https://github.com/ECMA-TC49-TG2/antlr-testing/blob/v2/ReadMe.md).)
 
 Nigel made a tool to extract the grammar from the spec and to rearrange the grammar to get it to pass the ANTLR validator.
 
