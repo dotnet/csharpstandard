@@ -1333,8 +1333,8 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
 
-- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type (§12.9.8.2).
-- «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)).
+- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type (§12.9.9.2).
+- «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.9.3](expressions.md#12993-classification-of-await-expressions)).
 - «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
 
@@ -1368,7 +1368,7 @@ In the case where the expression `enumerable` represents a method call expressio
 
 The body of the `finally` block is constructed according to the following steps:
 
-- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable (§12.9.8.2), the `finally` clause is expanded to the semantic equivalent of:
+- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable (§12.9.9.2), the `finally` clause is expanded to the semantic equivalent of:
 
     ```csharp
     finally

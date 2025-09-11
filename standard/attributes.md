@@ -1096,27 +1096,13 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 > ```csharp
 > CancellationTokenSource sourceOne = new CancellationTokenSource();
 > CancellationTokenSource sourceTwo = new CancellationTokenSource();
-> await foreach (string number in GetStringsAsync(sourceOne.Token).ToListAsync(sourceTwo.Token))
+> IAsyncEnumerator<string> enumerator = GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token);
+> while (await enumerator.MoveNextAsync())
 > {
+>     string number = enumerator.Current;
 >     if (number == "8") sourceOne.Cancel();
 >     if (number == "5") sourceTwo.Cancel();
->     Console.WriteLine(number);
-> }
->
-> public static ValueTask<List<TSource>> ToListAsync<TSource>(
->     this IAsyncEnumerable<TSource> source,
->     CancellationToken cancellationToken = default)
-> {
->     List<TSource> list = new List<TSource>();
->     await foreach (TSource element in source)
->     {
->         if (cancellationToken.IsCancellationRequested)
->         {
->             break;
->         }
->         list.Add(element);
->     }
->     return list;
+>         Console.WriteLine(number);
 > }
 >
 > *end example*
