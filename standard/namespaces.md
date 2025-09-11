@@ -23,7 +23,7 @@ The *extern_alias_directive*s of a compilation unit affect the *using_directive*
 
 The *using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
 
-The *global_attributes* ([§22.3](attributes.md#223-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
+The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
 The *namespace_member_declaration*s of each compilation unit of a program contribute members to a single declaration space called the global namespace.
 
@@ -754,7 +754,7 @@ A compilation unit or a namespace body can contain *namespace_member_declaration
 
 ## 14.7 Type declarations
 
-A *type_declaration* is a *class_declaration* ([§15.2](classes.md#152-class-declarations)), a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)), an *interface_declaration* ([§18.2](interfaces.md#182-interface-declarations)), an *enum_declaration* ([§19.2](enums.md#192-enum-declarations)), or a *delegate_declaration* ([§20.2](delegates.md#202-delegate-declarations)).
+A *type_declaration* is a *class_declaration* ([§15.2](classes.md#152-class-declarations)), a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)), an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)), an *enum_declaration* ([§20.2](enums.md#202-enum-declarations)), or a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)).
 
 ```ANTLR
 type_declaration

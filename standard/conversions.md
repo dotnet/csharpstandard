@@ -64,7 +64,7 @@ The following conversions are classified as implicit conversions:
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 
-Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), and assignments ([§12.21](expressions.md#1221-assignment-operators)).
+Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.22](expressions.md#1222-assignment-operators)).
 
 The pre-defined implicit conversions always succeed and never cause exceptions to be thrown.
 
@@ -113,7 +113,7 @@ An identity conversion converts from any type to the same type or a type that is
 
 All identity conversions are symmetric. If an identity conversion exists from `T₁` to `T₂`, then an identity conversion exists from `T₂` to `T₁`. Two types are *identity convertible* when an identity conversion exists between two types.
 
-In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
+In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 ### 10.2.3 Implicit numeric conversions
 
@@ -136,7 +136,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 10.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
+An implicit enumeration conversion permits a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
 
 ### 10.2.5 Implicit interpolated string conversions
 
@@ -167,7 +167,7 @@ The implicit reference conversions are:
 - From any *delegate_type* to `System.Delegate` and the interfaces it implements.
 - From the null literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any reference-type.
 - From any *reference_type* to a *reference_type* `T` if it has an implicit identity or reference conversion to a *reference_type* `T₀` and `T₀` has an identity conversion to `T`.
-- From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `T`.
+- From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `T`.
 - Implicit conversions involving type parameters that are known to be reference types. See [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) for more details on implicit conversions involving type parameters.
 
 The implicit reference conversions are those conversions between *reference_type*s that can be proven to always succeed, and therefore require no checks at run-time.
@@ -185,7 +185,7 @@ A boxing conversion permits a *value_type* to be implicitly converted to a *refe
 - From any *enum_type* to the type `System.Enum`.
 - From any *non_nullable_value_type* to any *interface_type* implemented by the *non_nullable_value_type*.
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` has an identity conversion to `I`.
-- From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `I`.
+- From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `I`.
 - From any *nullable_value_type* to any *reference_type* where there is a boxing conversion from the underlying type of the *nullable_value_type* to the *reference_type.*
 - From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters).
 
@@ -315,7 +315,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
 ### 10.2.12 Implicit conversions involving type parameters
@@ -339,7 +339,7 @@ For a *type_parameter* `T` that is *not* known to be a reference type, there is 
 The following further implicit conversions exist for a given type parameter `T`:
 
 - From `T` to a reference type `S` if it has an implicit conversion to a reference type `S₀` and `S₀` has an identity conversion to `S`. At run-time, the conversion is executed the same way as the conversion to `S₀`.
-- From `T` to an interface type `I` if it has an implicit conversion to an interface type `I₀`, and `I₀` is variance-convertible to `I` ([§18.2.3.3](interfaces.md#18233-variance-conversion)). At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. Otherwise, the conversion is executed as an implicit reference conversion or identity conversion.
+- From `T` to an interface type `I` if it has an implicit conversion to an interface type `I₀`, and `I₀` is variance-convertible to `I` ([§19.2.3.3](interfaces.md#19233-variance-conversion)). At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. Otherwise, the conversion is executed as an implicit reference conversion or identity conversion.
 
 In all cases, the rules ensure that a conversion is executed as a boxing conversion if and only if at run-time the conversion is from a value type to a reference type.
 
@@ -397,7 +397,7 @@ The following conversions are classified as explicit conversions:
 - Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
 - User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
 
-Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
+Explicit conversions can occur in cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 The set of explicit conversions includes all implicit conversions.
 
@@ -422,7 +422,7 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `double` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `decimal`.
 - From `decimal` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `double`.
 
-Because the explicit conversions include all implicit and explicit numeric conversions, it is always possible to convert from any *numeric_type* to any other *numeric_type* using a cast expression ([§12.9.7](expressions.md#1297-cast-expressions)).
+Because the explicit conversions include all implicit and explicit numeric conversions, it is always possible to convert from any *numeric_type* to any other *numeric_type* using a cast expression ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 The explicit numeric conversions possibly lose information or possibly cause exceptions to be thrown. An explicit numeric conversion is processed as follows:
 
@@ -483,7 +483,7 @@ The explicit reference conversions are:
 - From `System.Collections.Generic.IList<S>`, `System.Collections.Generic.IReadOnlyList<S>`, and their base interfaces to a single-dimensional array type `T[]`, provided that there is an identity conversion or explicit reference conversion from `S` to T.
 - From `System.Delegate` and the interfaces it implements to any *delegate_type*.
 - From a reference type `S` to a reference type `T` if it has an explicit reference conversion from `S` to a reference type `T₀` and `T₀` and there is an identity conversion from `T₀` to `T`.
-- From a reference type `S` to an interface or delegate type `T` if it there is an explicit reference conversion from `S` to an interface or delegate type `T₀` and either `T₀` is variance-convertible to `T` or `T` is variance-convertible to `T₀` [§18.2.3.3](interfaces.md#18233-variance-conversion).
+- From a reference type `S` to an interface or delegate type `T` if it there is an explicit reference conversion from `S` to an interface or delegate type `T₀` and either `T₀` is variance-convertible to `T` or `T` is variance-convertible to `T₀` [§19.2.3.3](interfaces.md#19233-variance-conversion).
 - From `D<S₁...Sᵥ>` to `D<T₁...Tᵥ>` where `D<X₁...Xᵥ>` is a generic delegate type, `D<S₁...Sᵥ>` is not compatible with or identical to `D<T₁...Tᵥ>`, and for each type parameter `Xᵢ` of `D` the following holds:
   - If `Xᵢ` is invariant, then `Sᵢ` is identical to `Tᵢ`.
   - If `Xᵢ` is covariant, then there is an identity conversion, implicit reference conversion or explicit reference conversion from `Sᵢ` to `Tᵢ`.
@@ -509,7 +509,7 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From the type `System.Enum` to any *enum_type*.
 - From any *interface_type* to any *non_nullable_value_type* that implements the *interface_type*.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
-- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
+- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§19.2.3.3](interfaces.md#19233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
 - From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
@@ -752,7 +752,7 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 ### 10.7.1 General
 
-An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
+An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.20](expressions.md#1220-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
 Specifically, an anonymous function `F` is compatible with a delegate type `D` provided:
 
@@ -900,14 +900,14 @@ Not every lambda expression can be converted to expression tree types. The conve
 
 ## 10.8 Method group conversions
 
-An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§20.4](delegates.md#204-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
+An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§21.4](delegates.md#214-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
 - A single method `M` is selected corresponding to a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) of the form `E(A)`, with the following modifications:
   - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.8.10.2](expressions.md#128102-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
+- A conversion is considered to exist if the algorithm of [§12.8.10.2](expressions.md#128102-method-invocations) produces a single best method `M` which is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.
@@ -1002,4 +1002,4 @@ the target object of the delegate is determined from the instance expression ass
 - Otherwise, the selected method is part of a static method call, and the target object of the delegate is `null`.
 - A delegate instance of delegate type `D` is obtained with a reference to the method that was determined at compile-time and a reference to the target object computed above, as follows:
   - The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.
-  - If an existing instance was not reused, a new one is created ([§20.5](delegates.md#205-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.
+  - If an existing instance was not reused, a new one is created ([§21.5](delegates.md#215-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.
