@@ -31,7 +31,7 @@ embedded_statement
     ;
 ```
 
-*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*unsafe_statement* ([§24.2](unsafe-code.md#242-unsafe-contexts)) and *fixed_statement* ([§24.7](unsafe-code.md#247-the-fixed-statement)) are only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
@@ -78,7 +78,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.23](expressions.md#1223-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.24](expressions.md#1224-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 >
 > In the example
 >
@@ -165,7 +165,7 @@ The end point of a block is reachable if the block is empty or if the end point 
 A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). Some additional restrictions apply to iterator blocks:
 
 - It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
-- It is a compile-time error for an iterator block to contain an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
+- It is a compile-time error for an iterator block to contain an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
 
 ### 13.3.2 Statement lists
 
@@ -315,7 +315,7 @@ Within a *local_variable_declaration* each variable is introduced by a ***declar
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
-> *Note*: For a *local_variable_declaration* not occuring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
+> *Note*: For a *local_variable_declaration* not occurring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls2", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
@@ -427,9 +427,9 @@ local_variable_initializer
     ;
 ```
 
-An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
+An *explicitly_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.22.2](expressions.md#12222-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
 #### 13.6.2.4 Explicitly typed ref local variable declarations
 
@@ -447,7 +447,7 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.22.3](expressions.md#12223-ref-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
@@ -471,7 +471,7 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
@@ -562,7 +562,7 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
 A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
@@ -570,7 +570,7 @@ When the type of `this` is a struct type, it is a compile-time error for the bod
 
 It is a compile-time error for the body of the local function to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body of the local function.
 
-> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.19.3](expressions.md#12193-anonymous-function-bodies). *end note*
+> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.20.3](expressions.md#12203-anonymous-function-bodies). *end note*
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
@@ -695,7 +695,7 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 An `if` statement is executed as follows:
 
-- The *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the first embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is present, control is transferred to the second embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is not present, control is transferred to the end point of the `if` statement.
@@ -927,7 +927,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Like the string equality operators ([§12.12.8](expressions.md#12128-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
+> *Note*: Like the string equality operators ([§12.13.8](expressions.md#12138-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
@@ -1001,7 +1001,7 @@ while_statement
 
 A `while` statement is executed as follows:
 
-- The *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), control is transferred to the beginning of the `while` statement.
 - If the Boolean expression yields `false`, control is transferred to the end point of the `while` statement.
 
@@ -1027,7 +1027,7 @@ do_statement
 A `do` statement is executed as follows:
 
 - Control is transferred to the embedded statement.
-- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
+- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
 
 Within the embedded statement of a `do` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
 
@@ -1068,7 +1068,7 @@ statement_expression_list
 
 The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement*.
 
-The *for_condition*, if present, shall be a *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)).
+The *for_condition*, if present, shall be a *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)).
 
 The *for_iterator*, if present, consists of a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas.
 
@@ -1207,11 +1207,11 @@ is then equivalent to:
 }
 ```
 
-The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.21.3](expressions.md#12213-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.22.3](expressions.md#12223-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 
-The placement of `v` inside the `while` loop is important for how it is captured ([§12.19.6.2](expressions.md#121962-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
+The placement of `v` inside the `while` loop is important for how it is captured ([§12.20.6.2](expressions.md#122062-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
 > *Example*:
 >
@@ -1625,7 +1625,7 @@ A function member is said to ***compute a value*** if it is a method with a retu
 
 For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and the effective return type of the containing function member.
 
-`return` statements can also be used in the body of anonymous function expressions ([§12.19](expressions.md#1219-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
+`return` statements can also be used in the body of anonymous function expressions ([§12.20](expressions.md#1220-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
 It is a compile-time error for a `return` statement to appear in a `finally` block ([§13.11](statements.md#1311-the-try-statement)).
 
@@ -1654,7 +1654,7 @@ A `throw` statement with no expression can be used only in a `catch` block, in w
 
 Because a `throw` statement unconditionally transfers control elsewhere, the end point of a `throw` statement is never reachable.
 
-When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown. This behavior is specified in ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
+When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown. This behavior is specified in ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
 
 - In the current function member, each `try` statement that encloses the throw point is examined. For each statement `S`, starting with the innermost `try` statement and ending with the outermost `try` statement, the following steps are evaluated:
 
