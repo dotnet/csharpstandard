@@ -244,7 +244,7 @@ This clause augments the description of members in classes (§15.3) with restric
 
 An abstract member `M1` may be overridden by either a derived interface or an implementing class or struct. That member `M1` can be accessed through a reference of the implementing type.
 
-A member `M2` with definition in an interface requires any overriding member to declare an explicit interface implementation (§18.6.2). That member `M2` only be accessed through an interface instance.
+A member `M2` with definition in an interface requires any overriding member to declare an explicit interface implementation (§19.6.2). That member `M2` only be accessed through an interface instance.
 
 Some declarations, such as *constant_declaration* (§15.4) have no restrictions in interfaces.
 
@@ -359,7 +359,7 @@ Interface properties are declared using *method_declaration*s (§15.6)). The *at
   - A private declaration that is not extern shall have a block body or expression body as a *method_body*.
   - A sealed declaration that is not extern shall have a block body or expression body as a *method_body*.
   - An async declaration shall have a block body or expression body as a *method_body*.
-- All parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe.
+- All parameter types of an interface method shall be input-safe ([§19.2.3.2](interfaces.md#19232-variance-safety)), and the return type shall be either `void` or output-safe.
 - Any output or reference parameter types shall also be output-safe.
 
   > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
@@ -464,8 +464,8 @@ This clause augments the description of indexers in classes [§15.9](classes.md#
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
 - *indexer_modifier* shall not include `override`.
-- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
-- All the parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
+- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract.
+- All the parameter types of an interface indexer shall be input-safe ([§19.2.3.2](interfaces.md#19232-variance-safety)).
 - Any output or reference parameter types shall also be output-safe.
 
   > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
@@ -500,7 +500,7 @@ To initialize a new closed interface type, first a new set of static fields for 
 
 This clause augments the description of nested types in classes [§15.3.9](classes.md#1539-nested-types) for nested types declared in interfaces.
 
-It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§18.2.3.1](interfaces.md#18231-general)).
+It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§19.2.3.1](interfaces.md#19231-general)).
 
 > *Example*: The declaration of `C` below is an error.
 >

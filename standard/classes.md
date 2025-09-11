@@ -4303,7 +4303,7 @@ An abstract event declaration specifies that the accessors of the event are virt
 
 An event declaration that includes both the `abstract` and `override` modifiers specifies that the event is abstract and overrides a base event. The accessors of such an event are also abstract.
 
-Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.4](interfaces.md#1844-interface-events)).
+Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.4](interfaces.md#1944-interface-events)).
 
 The accessors of an inherited virtual event can be overridden in a derived class by including an event declaration that specifies an `override` modifier. This is known as an ***overriding event declaration***. An overriding event declaration does not declare a new event. Instead, it simply specializes the implementations of the accessors of an existing virtual event.
 
