@@ -1088,7 +1088,8 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 >     if (number == "5") sourceTwo.Cancel();
 >     Console.WriteLine(number);
 > }
->
+> ```
+> 
 > *end example*
 
 ## 23.6 Attributes for interoperation
