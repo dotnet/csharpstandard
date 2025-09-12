@@ -1079,30 +1079,15 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 > ```csharp
 > static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
 > {
->     for (int i = 0; i < 10; i++)
->     {
->         if (token.IsCancellationRequested)
->         {
->             yield break; // Exit if cancellation is requested
->         }
->         await Task.Delay(100);
->         yield return i.ToString();
->     }
-> }
-> ```
->
-> The `EnumerationCancellation` attribute indicates that the associated parameter is used for cancellation. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. This combined token that indicates that cancellation was requested when either token indicates cancellation. The async iterator then cancels the operation based on the state of the combined token.
->
-> ```csharp
-> CancellationTokenSource sourceOne = new CancellationTokenSource();
-> CancellationTokenSource sourceTwo = new CancellationTokenSource();
-> IAsyncEnumerator<string> enumerator = GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token);
-> while (await enumerator.MoveNextAsync())
+> await using (IAsyncEnumerator<string> enumerator = GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token))
 > {
->     string number = enumerator.Current;
->     if (number == "8") sourceOne.Cancel();
->     if (number == "5") sourceTwo.Cancel();
+>     while (await enumerator.MoveNextAsync())
+>     {
+>         string number = enumerator.Current;
+>         if (number == "8") sourceOne.Cancel();
+>         if (number == "5") sourceTwo.Cancel();
 >         Console.WriteLine(number);
+>     }
 > }
 >
 > *end example*
