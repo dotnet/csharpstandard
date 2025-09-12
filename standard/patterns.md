@@ -2,7 +2,7 @@
 
 ## 11.1 General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.12.12](expressions.md#121212-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* (§switch-expression-new-clause) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  A pattern is tested against the *expression* of a switch statement, or against a *relational_expression* that is on the left-hand side of an `is` operator, each of which is referred to as a ***pattern input value***.
+A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.13.12](expressions.md#121312-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* (§switch-expression-new-clause) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  A pattern is tested against the *expression* of a switch statement, or against a *relational_expression* that is on the left-hand side of an `is` operator, each of which is referred to as a ***pattern input value***.
 
 ## 11.2 Pattern forms
 
@@ -75,7 +75,7 @@ single_variable_designation
 
 > *Note*: The ordering of the grammar rules in *simple_designation* is important. By putting *discard_designation” first, the source token `_` is recognized as a discard rather than as a named identifier. *end note*
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.12.12.1](expressions.md#1212121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.13.12.1](expressions.md#1213121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). This pattern form never matches a `null` value.
 
 > *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn’t a nullable type. *end note*
 

@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*pointer_type* ([§24.3](unsafe-code.md#243-pointer-types)) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -85,7 +85,7 @@ nullable_type_annotation
 
 ```
 
-*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
+*pointer_type* is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
@@ -102,10 +102,10 @@ Certain predefined class types have special meaning in the C# language, as descr
 `System.Object`    | The ultimate base class of all other types. See [§8.2.3](types.md#823-the-object-type).
 `System.String`    | The string type of the C# language. See [§8.2.5](types.md#825-the-string-type).
 `System.ValueType` | The base class of all value types. See [§8.3.2](types.md#832-the-systemvaluetype-type).
-`System.Enum`      | The base class of all `enum` types. See [§19.5](enums.md#195-the-systemenum-type).
+`System.Enum`      | The base class of all `enum` types. See [§20.5](enums.md#205-the-systemenum-type).
 `System.Array`     | The base class of all array types. See [§17.2.2](arrays.md#1722-the-systemarray-type).
-`System.Delegate`  | The base class of all `delegate` types. See [§20.1](delegates.md#201-general).
-`System.Exception` | The base class of all exception types. See [§21.3](exceptions.md#213-the-systemexception-class).
+`System.Delegate`  | The base class of all `delegate` types. See [§21.1](delegates.md#211-general).
+`System.Exception` | The base class of all exception types. See [§22.3](exceptions.md#223-the-systemexception-class).
 
 ### 8.2.3 The object type
 
@@ -131,7 +131,7 @@ The keyword `string` is simply an alias for the predefined class `System.String`
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interface types are described in [§18](interfaces.md#18-interfaces).
+Interface types are described in [§19](interfaces.md#19-interfaces).
 
 ### 8.2.7 Array types
 
@@ -145,7 +145,7 @@ A delegate is a data structure that refers to one or more methods. For instance 
 
 > *Note*: The closest equivalent of a delegate in C or C++ is a function pointer, but whereas a function pointer can only reference static functions, a delegate can reference both static and instance methods. In the latter case, the delegate stores not only a reference to the method’s entry point, but also a reference to the object instance on which to invoke the method. *end note*
 
-Delegate types are described in [§20](delegates.md#20-delegates).
+Delegate types are described in [§21](delegates.md#21-delegates).
 
 ## 8.3 Value types
 
@@ -307,7 +307,7 @@ Because a simple type aliases a struct type, every simple type has members.
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
 > - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
-> - When the operands of an expression are all simple type constants, it is possible for a compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
+> - When the operands of an expression are all simple type constants, it is possible for a compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
 > - Through `const` declarations, it is possible to declare constants of the simple types ([§15.4](classes.md#154-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
@@ -347,7 +347,7 @@ The `checked` and `unchecked` operators and statements are used to control overf
 
 C# supports two floating-point types: `float` and `double`. The `float` and `double` types are represented using the 32-bit single-precision and 64-bit double-precision IEC 60559 formats, which provide the following sets of values:
 
-- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§12.10.3](expressions.md#12103-division-operator)).
+- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§12.11.3](expressions.md#12113-division-operator)).
 - Positive infinity and negative infinity. Infinities are produced by such operations as dividing a non-zero number by zero.
   > *Example*:
   > `1.0 / 0.0` yields positive infinity, and `–1.0 / 0.0` yields negative infinity.
@@ -369,7 +369,7 @@ The floating-point operators, including the assignment operators, never produce 
 - If a floating-point operation is invalid, the result of the operation becomes NaN.
 - If one or both operands of a floating-point operation is NaN, the result of the operation becomes NaN.
 
-Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§12.9.7](expressions.md#1297-cast-expressions)) can be used.
+Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§12.9.8](expressions.md#1298-cast-expressions)) can be used.
 
 > *Example*: Some hardware architectures support an “extended” or “long double” floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. *end example*
 
@@ -399,7 +399,7 @@ No standard conversions exist between `bool` and other value types. In particula
 
 ### 8.3.10 Enumeration types
 
-An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§19.2](enums.md#192-enum-declarations)).
+An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§20.2](enums.md#202-enum-declarations)).
 
 ### 8.3.11 Tuple types
 
@@ -468,7 +468,7 @@ creates a non-null instance of `T?` for which the `Value` property is `x`. The p
 
 Implicit conversions are available from the `null` literal to `T?` ([§10.2.7](conversions.md#1027-null-literal-conversions)) and from `T` to `T?` ([§10.2.6](conversions.md#1026-implicit-nullable-conversions)).
 
-The nullable value type `T?` implements no interfaces ([§18](interfaces.md#18-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
+The nullable value type `T?` implements no interfaces ([§19](interfaces.md#19-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
 
 ### 8.3.13 Boxing and unboxing
 
@@ -618,10 +618,10 @@ Since a type parameter can be instantiated with many different type arguments, t
 
 > *Note*: These include:
 >
-> - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§18.2.4](interfaces.md#1824-base-interfaces)).
+> - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§19.2.4](interfaces.md#1924-base-interfaces)).
 > - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
 > - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) and [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
-> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.12.7](expressions.md#12127-reference-type-equality-operators)) unless the type parameter has the value type constraint.
+> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.13.7](expressions.md#12137-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
@@ -669,7 +669,7 @@ The API surface provided by `Expression<TDelegate>` is implementation-defined be
 > *Note*: While the details of the API provided for expression trees are implementation-defined, it is expected that an implementation will:
 >
 > - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
-> - Enable expression trees to be created programatically within user code
+> - Enable expression trees to be created programmatically within user code
 >
 > *end note*
 
@@ -717,7 +717,7 @@ An *unmanaged_type* is any type that is neither a *reference_type* nor a *type_p
 - Any *enum_type*.
 - Any user-defined *struct_type* that contains instance fields of *unmanaged_type*s only.
 - Any type parameter which is constrained to be unmanaged.
-- Any *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)).
+- Any *pointer_type* ([§24.3](unsafe-code.md#243-pointer-types)).
 
 ## 8.9 Reference Types and nullability
 
@@ -851,9 +851,13 @@ When the nullable context is ***enabled***:
 
 ### 8.9.5 Nullabilities and null states
 
+#### 8.9.5.1 General
+
 A compiler is not required to perform any static analysis nor is it required to generate any diagnostic warnings related to nullability.
 
 **The remainder of this subclause is conditionally normative.**
+
+#### 8.9.5.2 Flow analysis
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -921,10 +925,10 @@ A compiler can update the null state of a variable as part of its analysis.
 >     int length = p.Length; // Warning: p is maybe null
 >
 >     string s = p; // No warning. p is not null
-> 
+>
 >     if (s != null)
 >     {
->         int l2 = s.Length; // No warning. s is not null 
+>         int l2 = s.Length; // No warning. s is not null
 >     }
 >     int l3 = s.Length; // Warning. s is maybe null
 > }
@@ -994,13 +998,13 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >     {
 >         get
 >         {
->                string tmp = _field;
->                _field = null;
->                return tmp;
+>             string tmp = _field;
+>             _field = null;
+>             return tmp;
 >         }
 >         set
 >         {
->              _field = value;
+>             _field = value;
 >         }
 >     }
 >
@@ -1027,11 +1031,132 @@ A compiler may use any expression that dereferences a variable, property, or eve
 > public class C
 > {
 >     private C? child;
->    
+>
 >     public void M()
 >     {
 >         _ = child.child.child; // Warning. Dereference possible null value
 >         var greatGrandChild = child.child.child; // No warning. 
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### 8.9.5.3 Type conversions
+
+A compiler that generates diagnostic warnings conforms to these rules.
+
+> *Note:* Differences in top-level or nested nullability annotations in types do not affect whether conversion between the types is permitted, since there is no semantic difference between a non-nullable reference type and its corresponding nullable type ([§8.9.1](types.md#891-general)). *end note*
+
+A compiler may issue a warning when nullability annotations differ between two types, either top-level or nested, when the conversion is narrowing.
+
+> *Example*: Types differing in top-level annotations
+>
+> <!-- Example: {template:"code-in-class-lib", name:"TopLevelNullabilityConversionWarnings", ignoredWarnings:["CS8600"]} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(string p)
+>     {
+>         _ = (string?)p; // No warning, widening
+>     }
+>
+>     public void M2(string? p)
+>     {
+>         _ = (string)p; // Warning, narrowing
+>         _ = (string)p!; // No warning, suppressed
+>     }
+> }
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Types differing in nested nullability annotations
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NestedNullabilityConversionWarnings", ignoredWarnings:["CS8619"]} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1((string, string) p)
+>     {
+>         _ = ((string?, string?))p; // No warning, widening
+>     }
+>
+>     public void M2((string?, string?) p)
+>     {
+>         _ = ((string, string))p; // Warning, narrowing
+>         _ = ((string, string))p!; // No warning, suppressed
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compiler may follow rules for interface variance ([§19.2.3.3](interfaces.md#19233-variance-conversion)), delegate variance ([§21.4](delegates.md#214-delegate-compatibility)), and array covariance ([§17.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
+
+> <!-- Example: {template:"code-in-class-lib", name:"NullVariance", ignoredWarnings:["CS8619"]} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(IEnumerable<string> p)
+>     {
+>         IEnumerable<string?> v1 = p; // No warning
+>     }
+>
+>     public void M2(IEnumerable<string?> p)
+>     {
+>         IEnumerable<string> v1 = p; // Warning
+>         IEnumerable<string> v2 = p!; // No warning
+>     }
+>
+>     public void M3(Action<string?> p)
+>     {
+>         Action<string> v1 = p; // No warning
+>     }
+>
+>     public void M4(Action<string> p)
+>     {
+>         Action<string?> v1 = p; // Warning
+>         Action<string?> v2 = p!; // No warning
+>     }
+>
+>     public void M5(string[] p)
+>     {
+>         string?[] v1 = p; // No warning
+>     }
+>
+>     public void M6(string?[] p)
+>     {
+>         string[] v1 = p; // Warning
+>         string[] v2 = p!; // No warning
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compiler may issue a warning when nullability differs in either direction in types which do not permit a variant conversion.
+
+> <!-- Example: {template:"code-in-class-lib", name:"NullInvariance", ignoredWarnings:["CS8619"]} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(List<string> p)
+>     {
+>         List<string?> v1 = p; // Warning
+>         List<string?> v2 = p!; // No warning
+>     }
+>
+>     public void M2(List<string?> p)
+>     {
+>         List<string> v1 = p; // Warning
+>         List<string> v2 = p!; // No warning
 >     }
 > }
 > ```

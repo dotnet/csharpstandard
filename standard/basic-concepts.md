@@ -53,7 +53,7 @@ Other than the situations listed above, entry point methods behave like those th
 
 If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
-If the effective entry point method terminates due to an exception ([§21.4](exceptions.md#214-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+If the effective entry point method terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
 Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-defined.
 
@@ -61,7 +61,7 @@ Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as par
 
 ## 7.3 Declarations
 
-Declarations in a C# program define the constituent elements of the program. C# programs are organized using namespaces. These are introduced using namespace declarations ([§14](namespaces.md#14-namespaces)), which can contain type declarations and nested namespace declarations. Type declarations ([§14.7](namespaces.md#147-type-declarations)) are used to define classes ([§15](classes.md#15-classes)), structs ([§16](structs.md#16-structs)), interfaces ([§18](interfaces.md#18-interfaces)), enums ([§19](enums.md#19-enums)), and delegates ([§20](delegates.md#20-delegates)). The kinds of members permitted in a type declaration depend on the form of the type declaration. For instance, class declarations can contain declarations for constants ([§15.4](classes.md#154-constants)), fields ([§15.5](classes.md#155-fields)), methods ([§15.6](classes.md#156-methods)), properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), indexers ([§15.9](classes.md#159-indexers)), operators ([§15.10](classes.md#1510-operators)), instance constructors ([§15.11](classes.md#1511-instance-constructors)), static constructors ([§15.12](classes.md#1512-static-constructors)), finalizers ([§15.13](classes.md#1513-finalizers)), and nested types ([§15.3.9](classes.md#1539-nested-types)).
+Declarations in a C# program define the constituent elements of the program. C# programs are organized using namespaces. These are introduced using namespace declarations ([§14](namespaces.md#14-namespaces)), which can contain type declarations and nested namespace declarations. Type declarations ([§14.7](namespaces.md#147-type-declarations)) are used to define classes ([§15](classes.md#15-classes)), structs ([§16](structs.md#16-structs)), interfaces ([§19](interfaces.md#19-interfaces)), enums ([§20](enums.md#20-enums)), and delegates ([§21](delegates.md#21-delegates)). The kinds of members permitted in a type declaration depend on the form of the type declaration. For instance, class declarations can contain declarations for constants ([§15.4](classes.md#154-constants)), fields ([§15.5](classes.md#155-fields)), methods ([§15.6](classes.md#156-methods)), properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), indexers ([§15.9](classes.md#159-indexers)), operators ([§15.10](classes.md#1510-operators)), instance constructors ([§15.11](classes.md#1511-instance-constructors)), static constructors ([§15.12](classes.md#1512-static-constructors)), finalizers ([§15.13](classes.md#1513-finalizers)), and nested types ([§15.3.9](classes.md#1539-nested-types)).
 
 A declaration defines a name in the ***declaration space*** to which the declaration belongs. It is a compile-time error to have two or more declarations that introduce members with the same name in a declaration space, except in the following cases:
 
@@ -89,7 +89,7 @@ There are several different types of declaration spaces, as described in the fol
   - Each *block*, *switch_block*, *specific_catch_clause*, *iteration_statement* and *using_statement* creates a nested local variable declaration space.
   - Each *embedded_statement* that is not directly part of a *statement_list* creates a nested local variable declaration space.
   - Each *switch_section* creates a nested local variable declaration space. However, variables declared directly within the *statement_list* of the *switch_section* (but not within a nested local variable declaration space inside the *statement_list*) are added directly to the local variable declaration space of the enclosing *switch_block*, instead of that of the *switch_section*.
-  - The syntactic translation of a *query_expression* ([§12.20.3](expressions.md#12203-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
+  - The syntactic translation of a *query_expression* ([§12.21.3](expressions.md#12213-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
 > *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0. The local variable `z` is not in scope within the switch section for the default case, as it is introduced in the local variable declaration space for the switch section in which the declaration occurs.
@@ -120,7 +120,7 @@ The textual order in which names are declared is generally of no significance. I
 
 - Declaration order for field declarations determines the order in which their initializers (if any) are executed ([§15.5.6.2](classes.md#15562-static-field-initialization), [§15.5.6.3](classes.md#15563-instance-field-initialization)).
 - Local variables shall be defined before they are used ([§7.7](basic-concepts.md#77-scopes)).
-- Declaration order for enum member declarations ([§19.4](enums.md#194-enum-members)) is significant when *constant_expression* values are omitted.
+- Declaration order for enum member declarations ([§20.4](enums.md#204-enum-members)) is significant when *constant_expression* values are omitted.
 
 > *Example*: The declaration space of a namespace is “open ended”, and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
 >
@@ -243,7 +243,7 @@ The members of `object` ([§8.2.3](types.md#823-the-object-type)) and `string` (
 
 The members of an interface are the members declared in the interface and in all base interfaces of the interface.
 
-> *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§18.4](interfaces.md#184-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
+> *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§19.4](interfaces.md#194-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
 ### 7.4.7 Array members
 
@@ -251,7 +251,7 @@ The members of an array are the members inherited from class `System.Array`.
 
 ### 7.4.8 Delegate members
 
-A delegate inherits members from class `System.Delegate`. Additionally, it contains a method named `Invoke` with the same return type and parameter list specified in its declaration ([§20.2](delegates.md#202-delegate-declarations)). An invocation of this method shall behave identically to a delegate invocation ([§20.6](delegates.md#206-delegate-invocation)) on the same delegate instance.
+A delegate inherits members from class `System.Delegate`. Additionally, it contains a method named `Invoke` with the same return type and parameter list specified in its declaration ([§21.2](delegates.md#212-delegate-declarations)). An invocation of this method shall behave identically to a delegate invocation ([§21.6](delegates.md#216-delegate-invocation)) on the same delegate instance.
 
 An implementation may provide additional members, either through inheritance or directly in the delegate itself.
 
@@ -564,7 +564,7 @@ Signatures are the enabling mechanism for ***overloading*** of members in classe
 
 Although `in`, `out`, and `ref` parameter modifiers are considered part of a signature, members declared in a single type cannot differ in signature solely by `in`, `out`, and `ref`. A compile-time error occurs if two members are declared in the same type with signatures that would be the same if all parameters in both methods with `out` or `in` modifiers were changed to `ref` modifiers. For other purposes of signature matching (e.g., hiding or overriding), `in`, `out`, and `ref` are considered part of the signature and do not match each other.
 
-> *Note*: This restriction is to allow C# programs to be easily translated to run on the Common Language Infrastructure (CLI), which does not provide a way to define methods that differ solely in `in`, `out`, and `ref`. *end note*
+> *Note*: This restriction is to allow C# programs to be easily translated to run on a platform that does not provide a way to define methods that differ solely in `in`, `out`, and `ref`. *end note*
 
 The types `object` and `dynamic` are not distinguished when comparing signatures. Therefore members declared in a single type whose signatures differ only by replacing `object` with `dynamic` are not allowed.
 
@@ -607,19 +607,19 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clause*s, and *class_body* of that *class_declaration*.
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
-- The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§18.2](interfaces.md#182-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
-- The scope of a type parameter declared by a *type_parameter_list* on a *delegate_declaration* ([§20.2](delegates.md#202-delegate-declarations)) is the *return_type*, *parameter_list*, and *type_parameter_constraints_clause*s of that *delegate_declaration*.
+- The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
+- The scope of a type parameter declared by a *type_parameter_list* on a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)) is the *return_type*, *parameter_list*, and *type_parameter_constraints_clause*s of that *delegate_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on a *method_declaration* ([§15.6.1](classes.md#1561-general)) is the *method_declaration*.
 - The scope of a member declared by a *class_member_declaration* ([§15.3.1](classes.md#1531-general)) is the *class_body* in which the declaration occurs. In addition, the scope of a class member extends to the *class_body* of those derived classes that are included in the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the member.
 - The scope of a member declared by a *struct_member_declaration* ([§16.3](structs.md#163-struct-members)) is the *struct_body* in which the declaration occurs.
 
-- The scope of a member declared by an *enum_member_declaration* ([§19.4](enums.md#194-enum-members)) is the *enum_body* in which the declaration occurs.
+- The scope of a member declared by an *enum_member_declaration* ([§20.4](enums.md#204-enum-members)) is the *enum_body* in which the declaration occurs.
 - The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* or *ref_method_body* of that *method_declaration*.
 - The scope of a parameter declared in an *indexer_declaration* ([§15.9](classes.md#159-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§15.10](classes.md#1510-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§15.11](classes.md#1511-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- The scope of a parameter declared in a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- The scope of a parameter declared in an *anonymous_method_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- The scope of a parameter declared in a *lambda_expression* ([§12.20](expressions.md#1220-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- The scope of a parameter declared in an *anonymous_method_expression* ([§12.20](expressions.md#1220-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§13.5](statements.md#135-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)) is the *switch_block*.
