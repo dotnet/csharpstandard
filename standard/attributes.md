@@ -1079,15 +1079,14 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 > ```csharp
 > static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
 > {
-> await using (IAsyncEnumerator<string> enumerator = GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token))
+> await using (IAsyncEnumerator<string> enumerator = 
+>     GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token));
+> while (await enumerator.MoveNextAsync())
 > {
->     while (await enumerator.MoveNextAsync())
->     {
->         string number = enumerator.Current;
->         if (number == "8") sourceOne.Cancel();
->         if (number == "5") sourceTwo.Cancel();
->         Console.WriteLine(number);
->     }
+>     string number = enumerator.Current;
+>     if (number == "8") sourceOne.Cancel();
+>     if (number == "5") sourceTwo.Cancel();
+>     Console.WriteLine(number);
 > }
 >
 > *end example*
