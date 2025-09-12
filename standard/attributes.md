@@ -1077,16 +1077,28 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 >
 > <!-- Example: {template:"code-in-class-lib", name:"AsyncEnumeratorCancellation"} -->
 > ```csharp
-> static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
+> CancellationTokenSource sourceOne = new();
+> CancellationTokenSource sourceTwo = new();
+> await using (IAsyncEnumerator<string> enumerator =
+>     GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token)
 > {
-> await using (IAsyncEnumerator<string> enumerator = 
->     GetStringsAsync(sourceOne.Token).GetAsyncEnumerator(sourceTwo.Token));
-> while (await enumerator.MoveNextAsync())
+>     while (await enumerator.MoveNextAsync())
+>     {
+>         string number = enumerator.Current;
+>         if (number == "8") sourceOne.Cancel();
+>         if (number == "5") sourceTwo.Cancel();
+>         Console.WriteLine(number);
+>     }
+> }
+>
+> static async IAsyncEnumerable<string> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
 > {
->     string number = enumerator.Current;
->     if (number == "8") sourceOne.Cancel();
->     if (number == "5") sourceTwo.Cancel();
->     yield return number;
+>     for (int i = 0; i < 10; i++)
+>     {
+>         if (token.IsCancellationRequested) yield break;
+>         await Task.Delay(1000, token);
+>         yield return i.ToString();
+>     }
 > }
 > ```
 >
