@@ -658,6 +658,11 @@ namespace System
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6, T7 item7, TRest rest);
     }
+
+    public interface IAsyncDisposable
+    {
+        public System.Threading.Tasks.ValueTask DisposeAsync();
+    }
 }
 
 namespace System.Collections.Generic
@@ -670,6 +675,17 @@ namespace System.Collections.Generic
     public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
     {
         T this [int index] { get; }
+    }
+
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        ValueTask<bool> MoveNextAsync();
+        T Current { get; }
     }
 }
 
@@ -737,20 +753,6 @@ namespace System.Diagnostics.CodeAnalysis
     public sealed class NotNullWhenAttribute : Attribute
     {
         public NotNullWhenAttribute(bool returnValue) {}
-    }
-}
-
-namespace System.Collections.Generic
-{
-    public interface IAsyncEnumerable<out T>
-    {
-        IAsyncEnumerator<T> GetAsyncEnumerator();
-    }
-
-    public interface IAsyncEnumerator<out T> : IAsyncDisposable
-    {
-        ValueTask<bool> MoveNextAsync();
-        T Current { get; }
     }
 }
 
@@ -843,6 +845,24 @@ namespace System.Runtime.CompilerServices
     }
 }
 
+namespace System.Threading
+{
+    public class CancellationTokenSource : IDisposable
+    {
+        public CancellationTokenSource();
+        public System.Threading.CancellationToken Token { get; }
+        public void Cancel();
+        public static CancellationTokenSource CreateLinkedTokenSource
+                                             (CancellationToken token1,
+                                              CancellationToken token2);
+    }
+
+    public readonly struct CancellationToken : IEquatable<CancellationToken>
+    {
+        public bool IsCancellationRequested { get; }
+    }
+}
+
 namespace System.Threading.Tasks
 {
     public class Task
@@ -866,26 +886,6 @@ namespace System.Threading.Tasks
         public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
             GetAwaiter();
     }
-
-    public readonly struct CancellationToken : IEquatable<System.Threading.CancellationToken>
-    {
-        public static CancellationToken None { get; }
-        public bool IsCancellationRequested { get; }
-        public bool CanBeCanceled { get; }
-        public WaitHandle WaitHandle { get; }
-        public CancellationToken(bool canceled);
-        public CancellationTokenRegistration Register(Action callback);
-        public CancellationTokenRegistration Register(Action callback, bool useSynchronizationContext);
-        public CancellationTokenRegistration Register(Action<object?> callback, object? state);
-        public CancellationTokenRegistration Register(Action<object?, CancellationToken> callback, object? state);
-        public CancellationTokenRegistration Register(Action<object?> callback, object? state, bool useSynchronizationContext);
-        public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
-        public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
-        public bool Equals(CancellationToken other);
-        public static bool operator ==(CancellationToken left, CancellationToken right);
-        public static bool operator !=(CancellationToken left, CancellationToken right);
-        public void ThrowIfCancellationRequested();
-    }  
 }
 ```
 
