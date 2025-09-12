@@ -1086,10 +1086,10 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 >     string number = enumerator.Current;
 >     if (number == "8") sourceOne.Cancel();
 >     if (number == "5") sourceTwo.Cancel();
->     Console.WriteLine(number);
+>     yield return number;
 > }
 > ```
-> 
+>
 > *end example*
 
 ## 23.6 Attributes for interoperation
