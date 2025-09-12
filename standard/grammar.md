@@ -1838,14 +1838,24 @@ lock_statement
     : 'lock' '(' expression ')' embedded_statement
     ;
 
-// Source: §13.14 The using statement
+// Source: §13.14.1 General
 using_statement
-    : 'using' '(' resource_acquisition ')' embedded_statement
+    : 'await'? 'using' '(' resource_acquisition ')' embedded_statement
     ;
 
 resource_acquisition
-    : local_variable_declaration
+    : non_ref_local_variable_declaration
     | expression
+    ;
+
+non_ref_local_variable_declaration
+    : implicitly_typed_local_variable_declaration
+    | explicitly_typed_local_variable_declaration
+    ;
+
+// Source: §13.14.2 Using declaration
+using_declaration
+    : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 
 // Source: §13.15 The yield statement

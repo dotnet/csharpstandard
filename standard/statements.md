@@ -1114,7 +1114,7 @@ The iteration variable corresponds to a local variable with a scope that extends
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
-The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within '«' and '»' are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within ‘«’ and ‘»’ are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
 
 1. Determine whether the type `X` has an appropriate «GetEnumerator» method:
    1. Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described in step 2. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
@@ -1130,25 +1130,25 @@ The determination is similar for the synchronous and asynchronous versions. Diff
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in §13.9.5.2 and §13.9.5.3.
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in [§13.9.5.2](statements.md#13952-synchronous-foreach) and [§13.9.5.3](statements.md#13953-await-foreach).
 
 #### 13.9.5.2 Synchronous foreach
 
-A synchronous `foreach` does not include the `await` keyword before the `foreach` keyword. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
+A synchronous `foreach` does not include the `await` keyword before the `foreach` keyword. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
 
 - «GetEnumerator» is a `GetEnumerator` method.
 - «MoveNext» is a `MoveNext` method with a `bool` return type.
 - «IEnumerable»\<T> is the `System.Collections.Generic.IEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IEnumerator<T>` interface.
 
-In addition, the following modifications are made to the steps in §13.9.5.1:
+In addition, the following modifications are made to the steps in [§13.9.5.1](statements.md#13951-general):
 
-Before the process described in §13.9.5.1, the following steps are taken:
+Before the process described in [§13.9.5.1](statements.md#13951-general), the following steps are taken:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the element type of the array `X` (§17.2.3).
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the element type of the array `X` ([§17.2.3](arrays.md#1723-arrays-and-the-generic-collection-interfaces)).
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 
-If the process in §13.9.5.1 completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
+If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
 - If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
 - Otherwise, an error is produced, and no further steps are taken.
@@ -1331,14 +1331,14 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 #### 13.9.5.3 await foreach
 
-An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
+An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
 
-- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type (§12.9.9.2).
+- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
 - «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.9.3](expressions.md#12993-classification-of-await-expressions)).
 - «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
 
-It is an error for the ***iteration type*** of an `await foreach` statement to be a reference variable (§9.7).
+It is an error for the ***iteration type*** of an `await foreach` statement to be a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)).
 
 An `await foreach` statement of the form
 
@@ -1364,11 +1364,11 @@ finally
 }
 ```
 
-In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` (§enumerator-cancellation) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
+In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
 The body of the `finally` block is constructed according to the following steps:
 
-- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable (§12.9.9.2), the `finally` clause is expanded to the semantic equivalent of:
+- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), the `finally` clause is expanded to the semantic equivalent of:
 
     ```csharp
     finally
@@ -1417,7 +1417,7 @@ The body of the `finally` block is constructed according to the following steps:
 
 The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
 
-> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn't available. *end note*
+> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn’t available. *end note*
 
 ## 13.10 Jump statements
 
@@ -1907,7 +1907,7 @@ While a mutual-exclusion lock is held, code executing in the same execution thre
 
 ## 13.14 The using statement
 
-### §using-general General
+### 13.14.1 General
 
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 
@@ -2102,9 +2102,9 @@ is semantically equivalent to
 }
 ```
 
-> *Note*: Any jump statements (§13.10) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
+> *Note*: Any jump statements ([§13.10](statements.md#1310-jump-statements)) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
 
-### §using-declarations Using declaration
+### 13.14.2 Using declaration
 
 A syntactic variant of the using statement is a *using declaration*.
 
@@ -2114,7 +2114,7 @@ using_declaration
     ;
 ```
 
-A *using declaration* has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement (§using-general), as follows:
+A *using declaration* has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement ([§13.14.1](statements.md#13141-general)), as follows:
 
 ```csharp
 using «local_variable_type» «local_variable_declarators»

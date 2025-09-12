@@ -5504,7 +5504,7 @@ An iterator block may occur as a *method_body*, *operator_body* or *accessor_bod
 
 When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
 
-An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in §enumerator-cancellation.
+An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute).
 
 ### 15.15.2 Enumerator interfaces
 
@@ -5575,7 +5575,7 @@ The precise action performed by `MoveNext` or `MoveNextAsync` depends on the sta
 
 When `MoveNext` executes the iterator block, execution can be interrupted in four ways: By a `yield return` statement, by a `yield break` statement, by encountering the end of the iterator block, and by an exception being thrown and propagated out of the iterator block.
 
-> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that hasn't completed. *end note*
+> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that hasn’t completed. *end note*
 
 - When a `yield return` statement is encountered ([§9.4.4.20](variables.md#94420-yield-statements)):
   - The expression given in the statement is evaluated, implicitly converted to the yield type, and assigned to the `Current` property of the enumerator object.
@@ -5622,7 +5622,7 @@ The `Dispose` or `DisposeAsync` method is used to clean up the iteration by brin
 
 When a function member or local function returning an enumerable interface type or an async enumerable interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
 
-A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object (§15.15.5). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  (§15.15.5).
+A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object ([§15.15.5](classes.md#15155-enumerator-objects)). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  ([§15.15.5](classes.md#15155-enumerator-objects)).
 
 An enumerable object is initialized with a copy of the argument values (if any) and instance value passed to the function.
 
@@ -5636,4 +5636,4 @@ An enumerable object may implement more interfaces than those specified above.
 
 An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
 
-An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` (§enumerator-cancellation). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
+An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
