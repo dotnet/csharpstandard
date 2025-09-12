@@ -493,6 +493,8 @@
   - [§13.12](statements.md#1312-the-checked-and-unchecked-statements)  The checked and unchecked statements
   - [§13.13](statements.md#1313-the-lock-statement)  The lock statement
   - [§13.14](statements.md#1314-the-using-statement)  The using statement
+    - [§13.14.1](statements.md#13141-general)  General
+    - [§13.14.2](statements.md#13142-using-declaration)  Using declaration
   - [§13.15](statements.md#1315-the-yield-statement)  The yield statement
 - [§14](namespaces.md#14-namespaces)  Namespaces
   - [§14.1](namespaces.md#141-general)  General
@@ -771,6 +773,7 @@
       - [§23.5.7.8](attributes.md#23578-the-notnull-attribute)  The NotNull attribute
       - [§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
       - [§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute)  The NotNullWhen attribute
+    - [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
   - [§24.1](unsafe-code.md#241-general)  General
