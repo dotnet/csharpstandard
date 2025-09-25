@@ -6,6 +6,7 @@ An interface defines a contract. A class or struct that implements an interface 
 
 Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
 
+<!-- This note needs to be updated in C# 13, when ref struct types can implement interfaces. -->
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
 
 ## 19.2 Interface declarations
@@ -129,6 +130,8 @@ A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Bᵥ
 
 An interface can inherit from zero or more interface types, which are called the ***explicit base interfaces*** of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
 
+A derived interface may declare new members that hide inherited members (§7.7.2.3) declared in base interfaces or explicitly implement inherited members (§19.6.2) declared in base interfaces.
+
 ```ANTLR
 interface_base
     : ':' interface_type_list
@@ -236,25 +239,23 @@ This clause augments the description of members in classes (§15.3) with restric
 - Instance constructors, *constructor_declaration*s, are not allowed.
 - All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors (§15.12).
 - The `abstract` modifier is implied for interface function members without bodies; that modifier may be given explicitly.
-- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used.
+- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly.
 - A `private` or `sealed` function member of an interface shall have a body.
 - A `private` function member shall not have the modifier `sealed`.
-- A derived interface may override an abstract member declared in a base interface.
+- A derived interface may override an abstract or virtual member declared in a base interface.
 - An explicitly implemented function member shall not have the modifier `sealed`.
-
-An abstract member `M1` may be overridden by either a derived interface or an implementing class or struct. That member `M1` can be accessed through a reference of the implementing type.
-
-A member `M2` with definition in an interface requires any overriding member to declare an explicit interface implementation (§19.6.2). That member `M2` only be accessed through an interface instance.
 
 Some declarations, such as *constant_declaration* (§15.4) have no restrictions in interfaces.
 
-The inherited members of an interface are specifically not part of the declaration space of the interface. The rules for inheritance in classes (§15.3.4) do not apply to interfaces. The `new` modifier can hide an interface member declared in a base interface. The rules for the `new` modifier in classes (§15.3.5) apply to interface member declarations.
+The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does cause a compiler to issue a warning. To suppress the warning, the declaration of the derived interface member shall include a `new` modifier to indicate that the derived member is intended to hide the base member. This topic is discussed further in (§7.7.2.3).
+
+If a `new` modifier is included in a declaration that doesn’t hide an inherited member, a warning is issued to that effect. This warning is suppressed by removing the `new` modifier.
 
 > *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§19.4](interfaces.md#194-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
 The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
-> *Example*: Consider an interface `IA` with an implementation for a member `M`. As `M` is not abstract, outside that interface or any interface derived from it, that name is not visible. It must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA`.
+> *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` doesn't provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` of `IB`. These members aren't found through member lookup on a variable of type `C`.
 >
 > <!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
 > ```csharp
@@ -290,11 +291,7 @@ The set of members of an interface declared in multiple parts ([§15.2.7](classe
 > }
 > ```
 >
->Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Main`, we cannot write `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed. *end example*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Note*: See how the declaration of `M` in `IB` uses explicit interface implementation syntax. This is necessary to make that method override the one in `IA`; the modifier `override` may not be applied to a function member. *end note*
+>Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Main`, we cannot write `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed. The declaration of `M` in `IB` uses explicit interface implementation syntax. This is necessary to make that method override the one in `IA`; the modifier `override` may not be applied to a function member. *end example*
 
 ### §interface-fields Interface fields
 
@@ -351,7 +348,8 @@ This clause augments the description of methods in classes [§15.6](classes.md#1
 Interface properties are declared using *method_declaration*s (§15.6)). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
 
 - *method_modifier* shall not include `override`.
-- An interface method declaration that has a block body or expression body as a *method_body* has an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract.
+- A method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
+- An interface method declaration that has a block body or expression body as a *method_body* has is `virtual`; the `virtual` modifier is not required, but is allowed.
 - A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 - The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
   - A static declaration that is not extern shall have a block body or expression body as a *method_body*.
@@ -437,12 +435,13 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
 
 - *property_modifier* shall not include `override`.
 - An explicit interface member implementation shall not contain an *accessor_modifier* (§15.7.3).
-- A derived interface may implement an abstract interface property declared in a base interface.
+- A derived interface may explicitly implement an abstract interface property declared in a base interface.
 
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
-- A *property_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 19.4.4 Interface events
 
@@ -464,7 +463,8 @@ This clause augments the description of indexers in classes [§15.9](classes.md#
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
 - *indexer_modifier* shall not include `override`.
-- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is an implementation ([§19.1](interfaces.md#191-general)), so it is *not* abstract.
+- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An *indexer_declaration* whose accessors are semi-colons (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
 - All the parameter types of an interface indexer shall be input-safe ([§19.2.3.2](interfaces.md#19232-variance-safety)).
 - Any output or reference parameter types shall also be output-safe.
 
@@ -484,11 +484,11 @@ It is a compile-time error for an interface to declare a conversion, equality, o
 
 This clause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
 
-The static constructor for a closed interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
+The static constructor for a closed (§8.4.3) interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
 - Any of the static members of the interface are referenced.
-- Before the Main method is called for an interface containing the Main method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
-- The implementation for a member defined in the interface is accessed as the most specific implementation (§most-specific-implementation) for that member.
+- Before the `Main` method is called for an interface containing the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
+- That interface provides an implementation for a member, and that implementation is accessed as the most specific implementation (§most-specific-implementation) for that member.
 
 > *Note*: In the case where none of the preceding actions take place, the static constructor for an interface may not execute for a program where instances of types that implement the interface are created and used. *end note*
 
@@ -514,16 +514,16 @@ It is an error to declare a class type, struct type, or enum type within the sco
 >
 > *end example*
 
-### §most-specific-implementation Most specific override
+### §most-specific-implementation most specific implementation
 
-Every interface and class shall have a most specific override for every virtual member declared in all interfaces implemented by that type among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific override*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific override.
+Every class and struct shall have a most specific implementation for every virtual member declared in all interfaces implemented by that type among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific implementation.
 
-> *Note*: The most specific override rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
+> *Note*: The most specific implementation rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
 
-For a type `T` that is a struct or a class that implements interfaces `I2` and `I3`, where `I2` and `I3` both derive directly or indirectly from interface `I` that declares a member `M`, the most specific override of `M` is:
+For a type `T` that is a struct or a class that implements interfaces `I2` and `I3`, where `I2` and `I3` both derive directly or indirectly from interface `I` that declares a member `M`, the most specific implementation of `M` is:
 
-- If `T` declares an implementation of `I.M`, that implementation is the most specific override.
-- Otherwise, if `T` is a class and a direct or indirect base class declares an implementation of `I.M`, the most derived base class of `T` is the most specific override.
+- If `T` declares an implementation of `I.M`, that implementation is the most specific implementation.
+- Otherwise, if `T` is a class and a direct or indirect base class declares an implementation of `I.M`, the most derived base class of `T` is the most specific implementation.
 - Otherwise, if `I2` and `I3` are interfaces implemented by `T` and `I3` derives from `I2` either directly or indirectly, `I3.M` is a more specific implementation than `I2.M`.
 - Otherwise, neither `I2.M` nor `I3.M` are more specific and an error occurs.
 
@@ -546,7 +546,7 @@ For a type `T` that is a struct or a class that implements interfaces `I2` and `
 >     void IA.M() { Console.WriteLine("IC.M"); }
 > }
 > 
-> abstract class C: IB, IC { } // error: no most specific override for 'IA.M'
+> abstract class C: IB, IC { } // error: no most specific implementation for 'IA.M'
 > 
 > abstract class D: IA, IB, IC // OK
 > {
@@ -554,33 +554,13 @@ For a type `T` that is a struct or a class that implements interfaces `I2` and `
 > }
 > ```
 >
-> The most specific override rule ensures that a conflict (i.e., an ambiguity arising from diamond inheritance) is resolved explicitly by the programmer at the point where the conflict arises. *end example*
-
-It is an error if in a class declaration the most specific override of some interface method is an abstract override that was declared in a class or an interface.
-
-> *Example*:
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods5", expectedErrors:["CS0535"]} -->
-> ```csharp
-> interface IF
-> {
->     void M();
-> }
-> 
-> abstract class F : IF { } // error: 'F' does not implement 'IF.M'
-> ```
->
-> *end example*
+> The most specific implementation rule ensures that a conflict (i.e., an ambiguity arising from diamond inheritance) is resolved explicitly by the programmer at the point where the conflict arises. *end example*
 
 ### 19.4.6 Interface member access
 
 Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
-In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`:
-
-- The expression `base.M()` is valid only if `B` provides a definition for `M`. The expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M` is in a class type. To access the most specific implementation if it was defined in an interface, use the cast expression `(this as I).M()` to refer to the most specific implementation (§most-specific-implementation) of `M` in `I` or an interface derived from `I`.
-- If `B` contains a method `M` without the `virtual` or `override` modifier, that method hides `I.M()` rather than overriding it.
-- If `B` contains a method `M` with a different parameter list, that method `M` is a distinct overload of `M`.
+In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`, the expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M()` is in a class type.
 
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
@@ -808,7 +788,9 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 
 ### 19.6.2 Explicit interface member implementations
 
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. An interface that implements a member in a base interface must declare an explicit interface member implementation. 
+
+A derived interface member that satisfies interface mapping (§19.6.5) hides the base interface member (§7.7.2). The compiler shall issue a warning unless the `new` modifier is present.
 
 > *Example*:
 >
