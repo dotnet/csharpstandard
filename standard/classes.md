@@ -1098,7 +1098,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 
 #### 15.3.9.1 General
 
-A type declared within a class, interface, or struct is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
+A type declared within a class, struct, or interface is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
 
 > *Example*: In the following example:
 >
@@ -1126,7 +1126,7 @@ The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)
 
 #### 15.3.9.3 Declared accessibility
 
-Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class, interface, or struct:
+Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class, struct, or interface:
 
 - A nested type that is declared in a class or interface can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
