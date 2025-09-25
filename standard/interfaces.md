@@ -788,7 +788,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 
 ### 19.6.2 Explicit interface member implementations
 
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. An interface that implements a member in a base interface must declare an explicit interface member implementation. 
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping (§19.6.5) hides the base interface member (§7.7.2). The compiler shall issue a warning unless the `new` modifier is present.
 
