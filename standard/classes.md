@@ -1128,7 +1128,7 @@ The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)
 
 Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class, struct, or interface:
 
-- A nested type that is declared in a class or interface can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
+- A nested type that is declared in a class can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
 
 > *Example*: The example

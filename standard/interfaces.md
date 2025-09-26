@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by classes or structs that implement the interface, or derived interface that provide an overriding definition.
 
 <!-- This note needs to be updated in C# 13, when ref struct types can implement interfaces. -->
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
@@ -349,7 +349,7 @@ Interface properties are declared using *method_declaration*s (§15.6)). The *at
 
 - *method_modifier* shall not include `override`.
 - A method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
-- An interface method declaration that has a block body or expression body as a *method_body* has is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
 - A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 - The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
   - A static declaration that is not extern shall have a block body or expression body as a *method_body*.

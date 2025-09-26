@@ -268,7 +268,7 @@ When access to a particular member is allowed, the member is said to be ***acces
 The ***declared accessibility*** of a member can be one of the following:
 
 - Public, which is selected by including a `public` modifier in the member declaration. The intuitive meaning of `public` is “access not limited”.
-- Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is “access limited to the containing class or types derived from the containing class”.
+- Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is “access limited to the containing type or types derived from the containing type”.
 - Internal, which is selected by including an `internal` modifier in the member declaration. The intuitive meaning of `internal` is “access limited to this assembly”.
 - Protected internal, which is selected by including both a `protected` and an `internal` modifier in the member declaration. The intuitive meaning of `protected internal` is “accessible within this assembly as well as types derived from the containing class”.
 - Private protected, which is selected by including both a `private` and a `protected` modifier in the member declaration. The intuitive meaning of `private protected` is “accessible within this assembly by the containing class and types derived from the containing class.”
@@ -402,7 +402,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 ### 7.5.4 Protected access
 
-When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class.
+When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class. Instance interface members defined with `protected` or `private protected` access cannot be accessed from a `class` or `struct` that implements that interface; these can be accessed only from derived interfaces. However, `class` and `struct` types can override `protected` instance members declared in an interface it implements.
 
 Let `B` be a base class that declares a protected instance member `M`, and let `D` be a class that derives from `B`. Within the *class_body* of `D`, access to `M` can take one of the following forms:
 
@@ -783,7 +783,7 @@ Name hiding through inheritance occurs when classes or structs redeclare names t
 
 - A constant, field, property, event, or type introduced in a class, struct, or interface hides all base class members with the same name.
 - A method introduced in a class, struct, or interface hides all non-method base class members with the same name, and all base class methods with the same signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
-- An indexer introduced in a class, struct, or interface hides all base class indexers with the same signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) .
+- An indexer introduced in a class, struct, or interface hides all base type indexers with the same signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) .
 
 The rules governing operator declarations ([§15.10](classes.md#1510-operators)) make it impossible for a derived class to declare an operator with the same signature as an operator in a base class. Thus, operators never hide one another.
 
@@ -915,7 +915,7 @@ where:
 - If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header*, and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then `R₀` refers to that type parameter.
 - Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class, struct, or interface declaration (if any):
   - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then `R₀` refers to that type parameter.
-  - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
+  - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected. It is a compiler error if no type is more derived than all others, as in the case if nested types declared in multiple interfaces.
     > *Note*: Non-type members (constants, fields, methods, properties, indexers, operators, instance constructors, finalizers, and static constructors) and type members with a different number of type parameters are ignored when determining the meaning of the *namespace_or_type_name*. *end note*
   - Otherwise, for each namespace `N`, starting with the namespace in which the *namespace_or_type_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
     - If `x` is zero and `I` is the name of a namespace in `N`, then:
@@ -945,7 +945,7 @@ For each repetition `n`, where `1 ≤ n ≤ k`, its resolution, `Rₙ`; which in
 
 - If `x` is zero and `Rₚ` refers to a namespace and `Rₚ` contains a nested namespace with name `I`, then `Rₙ` refers to that nested namespace.
 - Otherwise, if `Rₚ` refers to a namespace and `Rₚ` contains an accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments.
-- Otherwise, if `Rₚ` refers to a (possibly constructed) class, struct, or interface type and `Rₚ` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
+- Otherwise, if `Rₚ` refers to a (possibly constructed) class, struct, or interface type and `Rₚ` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected. It is a compiler error if no type is more derived than all others, as in the case if nested types declared in multiple interfaces.
     > *Note*: If the meaning of `T.I`, for some type `T`, is being determined as part of resolving the base class specification of `T` then the direct base class of `T` is considered to be `object` ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
 - Otherwise, the *namespace_or_type_name* is invalid and a compile-time error occurs.
 
