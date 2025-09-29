@@ -255,7 +255,7 @@ If a `new` modifier is included in a declaration that doesn’t hide an inherite
 
 The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
-> *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` doesn't provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` of `IB`. These members aren't found through member lookup on a variable of type `C`.
+> *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` doesn't provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` or `IB`. These members aren't found through member lookup on a variable of type `C`.
 >
 > <!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
 > ```csharp
@@ -516,7 +516,7 @@ It is an error to declare a class type, struct type, or enum type within the sco
 
 ### §most-specific-implementation most specific implementation
 
-Every class and struct shall have a most specific implementation for every virtual member declared in all interfaces implemented by that type among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific implementation.
+Every class and struct shall have a most specific implementation for every virtual member declared in all interfaces implemented by that type among the implementations appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique implementation that is more specific than every other implementation.
 
 > *Note*: The most specific implementation rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
 
