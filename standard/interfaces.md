@@ -345,7 +345,7 @@ See §interface-static-constructors for information regarding the allocation and
 
 This clause augments the description of methods in classes [§15.6](classes.md#156-methods) for methods declared in interfaces.
 
-Interface properties are declared using *method_declaration*s (§15.6)). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
+Interface methods are declared using *method_declaration*s (§15.6)). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
 
 - *method_modifier* shall not include `override`.
 - A method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
@@ -463,8 +463,8 @@ This clause augments the description of indexers in classes [§15.9](classes.md#
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
 - *indexer_modifier* shall not include `override`.
-- An *indexer_declaration* that has an *expression body* or contains an accessor with a body is `virtual`; the `virtual` modifier is not required, but is allowed.
-- An *indexer_declaration* whose accessors are semi-colons (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
+- An *indexer_declaration* that has an *expression body* or contains an accessor with a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An *indexer_declaration* whose accessor bodies are semi-colons (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
 - All the parameter types of an interface indexer shall be input-safe ([§19.2.3.2](interfaces.md#19232-variance-safety)).
 - Any output or reference parameter types shall also be output-safe.
 
@@ -560,7 +560,7 @@ For a type `T` that is a struct or a class that implements interfaces `I2` and `
 
 Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
-In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`, the expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M()` is in a class type.
+In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`, the expression `base.M()` is valid only if `base.M()` staticly (§12.3) binds to an implementation of `M()` in a class type.
 
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
