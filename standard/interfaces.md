@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by classes or structs that implement the interface, or derived interface that provide an overriding definition.
+Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations must be supplied by classes or structs that implement the interface, or derived interface that provide an overriding definition.
 
 <!-- This note needs to be updated in C# 13, when ref struct types can implement interfaces. -->
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
@@ -718,6 +718,10 @@ When an interface is part of a namespace, a qualified interface member name can 
 
 Interfaces may be implemented by classes and structs. To indicate that a class or struct directly implements an interface, the interface is included in the base class list of the class or struct.
 
+A class or struct `C` that implements an interface `I` must provide or inherit an implementation for every member declared in `I`. Public members of `I` may be defined in public members of `C`. Non-public members declared in `I` that are accessible in `C` may be defined in `C` using explicit interface implmentation (§19.6.2). Non-accessible members, such as `private` members of `I` can't be defined in `C`.
+
+ A member in a derived type that satisfies interface mapping (§19.6.5) but does not implement the matching base interface member introduces a new member. This occurs when explicit interface implementation is required to define the interface member.
+
 > *Example*:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceImplementations1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
@@ -788,7 +792,8 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 
 ### 19.6.2 Explicit interface member implementations
 
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. An interface that implements a member in a base interface must declare an explicit interface member implementation.
+<!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping (§19.6.5) hides the base interface member (§7.7.2). The compiler shall issue a warning unless the `new` modifier is present.
 

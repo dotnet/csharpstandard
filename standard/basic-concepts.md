@@ -960,7 +960,7 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"MultipleNested", expectedErrors:["CS0104"]} -->
 > ```csharp
-> class A
+> interface A
 > {
 >     class NestedClass { public static void M() {} }
 > }
