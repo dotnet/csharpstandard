@@ -62,7 +62,7 @@ internal class ReferenceUpdateProcessor
             if ((referenceText.Length > 1) &&
                 (!linkMap.ContainsKey(referenceText)))
             {
-                var diagnostic = new Diagnostic(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
+                var diagnostic = new StatusCheckMessage(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
                 logger.LogFailure(diagnostic);
             } else
             {
@@ -124,7 +124,7 @@ internal class ReferenceUpdateProcessor
 
         // Start and the end of the range, look for "](", then ']'. 
         int endIndex = range.End.Value;
-        if (line.Substring(endIndex, 2) != "](") throw new InvalidOperationException("Unexpected link text");
+        if (line.Substring(endIndex, 2) != "](") throw new InvalidOperationException($"Unexpected link text >{line.Substring(endIndex, 2)}< in line >{line}<");
 
         endIndex += 2;
         while (line[endIndex] != ')') endIndex++;

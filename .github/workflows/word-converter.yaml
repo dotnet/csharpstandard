@@ -4,6 +4,10 @@ name: Word Converter
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "standard/**"
+      - "tools/MarkdownConverter/**"
+      - "tools/run-converter.sh"
   workflow_dispatch:
     inputs:
       reason:
@@ -14,15 +18,20 @@ on:
 jobs:
   word-converter:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     env:
       DOTNET_NOLOGO: true
-
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5.0.0
 
     - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 8.0.x
 

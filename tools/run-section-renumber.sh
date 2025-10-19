@@ -4,7 +4,7 @@ set -e
 
 declare -r PROJECT=StandardAnchorTags
 
-dotnet run --project $PROJECT -- --owner dotnet --repo csharpstandard --dryrun true --head-sha $1
+dotnet run --project $PROJECT -- --owner dotnet --repo csharpstandard
 
 if [ -n "$GITHUB_OUTPUT" ]
 then

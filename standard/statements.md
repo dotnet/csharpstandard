@@ -31,7 +31,7 @@ embedded_statement
     ;
 ```
 
-*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*unsafe_statement* ([§24.2](unsafe-code.md#242-unsafe-contexts)) and *fixed_statement* ([§24.7](unsafe-code.md#247-the-fixed-statement)) are only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
@@ -78,7 +78,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.23](expressions.md#1223-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.24](expressions.md#1224-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 >
 > In the example
 >
@@ -162,10 +162,10 @@ The statement list of a block is reachable if the block itself is reachable.
 
 The end point of a block is reachable if the block is empty or if the end point of the statement list is reachable.
 
-A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.14](classes.md#1514-iterators)). Some additional restrictions apply to iterator blocks:
+A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). Some additional restrictions apply to iterator blocks:
 
 - It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
-- It is a compile-time error for an iterator block to contain an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
+- It is a compile-time error for an iterator block to contain an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
 
 ### 13.3.2 Statement lists
 
@@ -302,11 +302,9 @@ A *local_variable_declaration* declares one or more local variables.
 local_variable_declaration
     : implicitly_typed_local_variable_declaration
     | explicitly_typed_local_variable_declaration
-    | ref_local_variable_declaration
+    | explicitly_typed_ref_local_variable_declaration
     ;
 ```
-
-Local variable declarations fall into one of the three categories: implicitly typed, explicitly typed, and ref local.
 
 Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) `var` resulting in a syntactic ambiguity between the three categories which is resolved as follows:
 
@@ -317,7 +315,7 @@ Within a *local_variable_declaration* each variable is introduced by a ***declar
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
-> *Note*: For a *local_variable_declaration* not occuring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
+> *Note*: For a *local_variable_declaration* not occurring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls2", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
@@ -366,7 +364,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
+An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
 
 > *Example*:
 >
@@ -429,14 +427,14 @@ local_variable_initializer
     ;
 ```
 
-An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
+An *explicitly_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.22.2](expressions.md#12222-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-#### 13.6.2.4 Ref local variable declarations
+#### 13.6.2.4 Explicitly typed ref local variable declarations
 
 ```ANTLR
-ref_local_variable_declaration
+explicitly_typed_ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
 
@@ -449,11 +447,11 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.22.3](expressions.md#12223-ref-assignment)).
 
-If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*(s) being declared are references to variables that shall be writable.
+If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
-It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.14](classes.md#1514-iterators)).
+It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
 ### 13.6.3 Local constant declarations
 
@@ -473,7 +471,7 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
@@ -496,8 +494,8 @@ local_function_declaration
     ;
 
 local_function_header
-    : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
@@ -564,15 +562,15 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
-A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
+A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 
 It is a compile-time error for the body of the local function to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body of the local function.
 
-> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.19.3](expressions.md#12193-anonymous-function-bodies). *end note*
+> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.20.3](expressions.md#12203-anonymous-function-bodies). *end note*
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
@@ -697,7 +695,7 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 An `if` statement is executed as follows:
 
-- The *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the first embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is present, control is transferred to the second embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is not present, control is transferred to the end point of the `if` statement.
@@ -773,7 +771,7 @@ A `switch` statement is executed as follows:
   - Otherwise, if a `default` label is present, control is transferred to the statement list following the `default` label.
   - Otherwise, control is transferred to the end point of the `switch` statement.
 
-> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, the compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
+> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, a compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
 
 If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
@@ -929,7 +927,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Like the string equality operators ([§12.12.8](expressions.md#12128-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
+> *Note*: Like the string equality operators ([§12.13.8](expressions.md#12138-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
@@ -1003,7 +1001,7 @@ while_statement
 
 A `while` statement is executed as follows:
 
-- The *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), control is transferred to the beginning of the `while` statement.
 - If the Boolean expression yields `false`, control is transferred to the end point of the `while` statement.
 
@@ -1029,7 +1027,7 @@ do_statement
 A `do` statement is executed as follows:
 
 - Control is transferred to the embedded statement.
-- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
+- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
 
 Within the embedded statement of a `do` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
 
@@ -1070,7 +1068,7 @@ statement_expression_list
 
 The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement*.
 
-The *for_condition*, if present, shall be a *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)).
+The *for_condition*, if present, shall be a *boolean_expression* ([§12.25](expressions.md#1225-boolean-expressions)).
 
 The *for_iterator*, if present, consists of a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas.
 
@@ -1095,42 +1093,67 @@ The end point of a `for` statement is reachable if at least one of the following
 
 ### 13.9.5 The foreach statement
 
+#### 13.9.5.1 General
+
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
-      expression ')' embedded_statement
+    : 'await'? 'foreach' '(' ref_kind? local_variable_type identifier
+      'in' expression ')' embedded_statement
     ;
 ```
 
 The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
+It is a compile time error for both `await` and `ref_kind` to be present in a `foreach statement`.
+
 If the *foreach_statement* contains both or neither `ref` and `readonly`, the iteration variable denotes a variable that is treated as read-only. Otherwise, if *foreach_statement* contains `ref` without `readonly`, the iteration variable denotes a variable that shall be writable.
 
-The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` and `IEnumerator<T>` refer to the corresponding types in the namespaces `System.Collections` and `System.Collections.Generic`.
+The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within ‘«’ and ‘»’ are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
+1. Determine whether the type `X` of *expression* has an appropriate «GetEnumerator» method:
+   1. Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described in step 2. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+   1. Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
+   1. If the return type `E` of the «GetEnumerator» method is not a class, struct or interface type, produce an error and take no further steps.
+   1. Perform member lookup on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, produce an error and take no further steps.
+   1. Perform member lookup on `E` with the identifier «MoveNext» and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, produce an error and take no further steps.
+   1. Perform overload resolution on the method group with an empty argument list. If overload resolution results in: no applicable methods; an ambiguity; or a single best method but that method is either static, or not public, or its return type is not an allowed return type; then produce an error and take no further steps.
+   1. The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
+1. Otherwise, check for an enumerable interface:
+   1. If among all the types `Tᵢ` for which there is an implicit conversion from `X` to «IEnumerable»\<Tᵢ>, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from «IEnumerable»\<T> to «IEnumerable»\<Tᵢ>, then the collection type is the interface «IEnumerable»\<T>, the enumerator type is the interface «IEnumerator»\<T>, and the iteration type is `T`.
+   1. Otherwise, if there is more than one such type `T`, then produce an error and take no further steps.
+
+> *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
+
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in [§13.9.5.2](statements.md#13952-synchronous-foreach) and [§13.9.5.3](statements.md#13953-await-foreach).
+
+#### 13.9.5.2 Synchronous foreach
+
+A synchronous `foreach` does not include the `await` keyword before the `foreach` keyword. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
+
+- «GetEnumerator» is a `GetEnumerator` method.
+- «MoveNext» is a `MoveNext` method with a `bool` return type.
+- «IEnumerable»\<T> is the `System.Collections.Generic.IEnumerable<T>` interface.
+- «IEnumerator»\<T> is the `System.Collections.Generic.IEnumerator<T>` interface.
+
+In addition, the following modifications are made to the steps in [§13.9.5.1](statements.md#13951-general):
+
+Before the process described in [§13.9.5.1](statements.md#13951-general), the following steps are taken:
+
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the element type of the array `X` ([§17.2.3](arrays.md#1723-arrays-and-the-generic-collection-interfaces)).
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
-- Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
-  - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
-  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the `GetEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `MoveNext` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced and no further steps are taken.
-  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property. The `Current` property may include the `ref` modifier, in which case, the expression returned is a *variable_reference* ([§9.5](variables.md#95-variable-references)) that is optionally read-only.
-- Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
-  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-  - Otherwise, an error is produced and no further steps are taken.
 
-The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`, `ref T`, or `ref readonly T`. A `foreach` statement of the form
+If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
+
+- If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
+- Otherwise, an error is produced, and no further steps are taken.
+
+A `foreach` statement of the form
 
 ```csharp
 foreach (V v in x) «embedded_statement»
@@ -1184,15 +1207,11 @@ is then equivalent to:
 }
 ```
 
-The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.21.3](expressions.md#12213-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.22.3](expressions.md#12223-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 
-> *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
-
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
-
-The placement of `v` inside the `while` loop is important for how it is captured ([§12.19.6.2](expressions.md#121962-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
+The placement of `v` inside the `while` loop is important for how it is captured ([§12.20.6.2](expressions.md#122062-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
 > *Example*:
 >
@@ -1309,6 +1328,96 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 >
 > *end example*
+
+#### 13.9.5.3 await foreach
+
+An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
+
+- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
+- «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.9.3](expressions.md#12993-classification-of-await-expressions)).
+- «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
+- «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
+
+It is an error for the ***iteration type*** of an `await foreach` statement to be a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)).
+
+An `await foreach` statement of the form
+
+```csharp
+await foreach (T item in enumerable) «embedded_statement»
+```
+
+is semantically equivalent to:
+
+```csharp
+var enumerator = enumerable.GetAsyncEnumerator();
+try
+{
+    while (await enumerator.MoveNextAsync())
+    {
+       T item = enumerator.Current;
+       «embedded_statement»
+    }
+}
+finally
+{
+    // dispose of enumerator as described later in this clause.
+}
+```
+
+In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
+
+The body of the `finally` block is constructed according to the following steps:
+
+- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        await e.DisposeAsync();
+    }
+    ```
+
+- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface and `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        await ((System.IAsyncDisposable)e).DisposeAsync();
+    }
+    ```
+
+    except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
+- Otherwise, if `E` is a `ref struct` type and has an accessible `Dispose()` method, the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        e.Dispose();
+    }
+    ```
+
+- Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
+
+  ```csharp
+  finally {}
+  ```
+
+- Otherwise, the `finally` clause is expanded to:
+  
+  ```csharp
+  finally
+  {
+      System.IAsyncDisposable d = e as System.IAsyncDisposable;
+      if (d != null)
+      {
+          await d.DisposeAsync();
+      }
+  }
+  ```
+
+The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
+
+> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn’t available. *end note*
 
 ## 13.10 Jump statements
 
@@ -1516,7 +1625,7 @@ A function member is said to ***compute a value*** if it is a method with a retu
 
 For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and the effective return type of the containing function member.
 
-`return` statements can also be used in the body of anonymous function expressions ([§12.19](expressions.md#1219-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
+`return` statements can also be used in the body of anonymous function expressions ([§12.20](expressions.md#1220-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
 It is a compile-time error for a `return` statement to appear in a `finally` block ([§13.11](statements.md#1311-the-try-statement)).
 
@@ -1525,7 +1634,7 @@ A `return` statement is executed as follows:
 - For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, the *expression* is evaluated, and the result shall be classified as a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
-- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
+- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)).
 
 Because a `return` statement unconditionally transfers control elsewhere, the end point of a `return` statement is never reachable.
 
@@ -1545,7 +1654,7 @@ A `throw` statement with no expression can be used only in a `catch` block, in w
 
 Because a `throw` statement unconditionally transfers control elsewhere, the end point of a `throw` statement is never reachable.
 
-When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown. This behavior is specified in ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
+When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown. This behavior is specified in ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
 
 - In the current function member, each `try` statement that encloses the throw point is examined. For each statement `S`, starting with the innermost `try` statement and ending with the outermost `try` statement, the following steps are evaluated:
 
@@ -1554,8 +1663,8 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
-  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
 ## 13.11 The try statement
@@ -1671,7 +1780,7 @@ It is a compile-time error for a `return` statement to occur in a `finally` bloc
 
 When execution reaches a `try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
 
-If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in [§13.10.6](statements.md#13106-the-throw-statement). A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
+If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in [§13.10.6](statements.md#13106-the-throw-statement). A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated. If the evaluation of the *boolean_expression* for an *exception_filter* throws an exception, that exception is caught, and the exception filter evaluates to `false`.
 
 If an exception has been propagated and a matching `catch` clause is found, control is transferred to the first matching `catch` block. If control reaches the end point of the `catch` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement. If an exception has been propagated from the `catch` block, control transfers to the `finally` block if one exists. The exception is propagated to the next enclosing `try` statement.
 
@@ -1756,7 +1865,7 @@ unchecked_statement
 
 The `checked` statement causes all expressions in the *block* to be evaluated in a checked context, and the `unchecked` statement causes all expressions in the *block* to be evaluated in an unchecked context.
 
-The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
+The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
 
 ## 13.13 The lock statement
 
@@ -1798,26 +1907,33 @@ While a mutual-exclusion lock is held, code executing in the same execution thre
 
 ## 13.14 The using statement
 
+### 13.14.1 General
+
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 
 ```ANTLR
 using_statement
-    : 'using' '(' resource_acquisition ')' embedded_statement
+    : 'await'? 'using' '(' resource_acquisition ')' embedded_statement
     ;
 
 resource_acquisition
-    : local_variable_declaration
+    : non_ref_local_variable_declaration
     | expression
+    ;
+
+non_ref_local_variable_declaration
+    : implicitly_typed_local_variable_declaration
+    | explicitly_typed_local_variable_declaration
     ;
 ```
 
-A ***resource*** is a class or struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`. Code that is using a resource can call `Dispose` to indicate that the resource is no longer needed.
+A ***resource type*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
-Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
+Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If the acquisition expression evaluates to `null`, then no call to `Dispose` (or `DisposeAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 
@@ -1825,7 +1941,7 @@ A `using` statement of the form
 using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to one of three possible expansions. When `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the expansion is semantically equivalent to
+corresponds to one of three possible formulations. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to
 
 ```csharp
 {
@@ -1843,7 +1959,7 @@ corresponds to one of three possible expansions. When `ResourceType` is a non-nu
 
 except that the cast of `resource` to `System.IDisposable` shall not cause boxing to occur.
 
-Otherwise, when `ResourceType` is `dynamic`, the expansion is
+Otherwise, when `ResourceType` is `dynamic`, the formulation is
 
 ```csharp
 {
@@ -1863,7 +1979,7 @@ Otherwise, when `ResourceType` is `dynamic`, the expansion is
 }
 ```
 
-Otherwise, the expansion is
+Otherwise, the formulation is
 
 ```csharp
 {
@@ -1883,9 +1999,23 @@ Otherwise, the expansion is
 }
 ```
 
-In any expansion, the `resource` variable is read-only in the embedded statement, and the `d` variable is inaccessible in, and invisible to, the embedded statement.
+For ref struct resources, the only semantically equivalent formulation is
 
-An implementation is permitted to implement a given *using_statement* differently, e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
+```csharp
+{
+    «ResourceType» resource = «expression»;
+    try
+    {
+        «statement»;
+    }
+    finally
+    {
+        resource.Dispose();
+    }
+}
+```
+
+In any formulation, the `resource` variable is read-only in the embedded statement, and the `d` variable is inaccessible in, and invisible to, the embedded statement.
 
 A `using` statement of the form:
 
@@ -1893,7 +2023,7 @@ A `using` statement of the form:
 using («expression») «statement»
 ```
 
-has the same three possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
+has the same possible formulations.
 
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
@@ -1940,9 +2070,102 @@ using (ResourceType rN = eN)
 >
 > *end example*
 
+When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other formulations for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
+
+```csharp
+await using (ResourceType resource = «expression» ) «statement»
+```
+
+is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
+
+```csharp
+await using (ResourceType resource = «expression» ) «statement»
+```
+
+is semantically equivalent to
+
+```csharp
+{
+    ResourceType resource = «expression»;
+    try
+    {
+        «statement»;
+    }
+    finally
+    {
+        IAsyncDisposable d = (IAsyncDisposable)resource;
+        if (d != null)
+        {
+            await d.DisposeAsync();
+        }
+    }
+}
+```
+
+> *Note*: Any jump statements ([§13.10](statements.md#1310-jump-statements)) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
+
+### 13.14.2 Using declaration
+
+A syntactic variant of the using statement is a *using declaration*.
+
+```ANTLR
+using_declaration
+    : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
+    ;
+```
+
+A *using declaration* has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement ([§13.14.1](statements.md#13141-general)), as follows:
+
+```csharp
+using «local_variable_type» «local_variable_declarators»
+// statements
+```
+
+is semantically equivalent to
+
+```csharp
+using («local_variable_type» «local_variable_declarators»)
+{
+    // statements
+}
+```
+
+and
+
+```csharp
+await using «local_variable_type» «local_variable_declarators»
+// statements
+```
+
+is semantically equivalent to
+
+```csharp
+await using («local_variable_type» «local_variable_declarators»)
+{
+    // statements
+}
+```
+
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
+
+<!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
+```csharp
+static void M()
+{
+    using FileStream f1 = new FileStream(...);
+    using FileStream f2 = new FileStream(...), f3 = new FileStream(...);
+    ...
+    // Dispose f3
+    // Dispose f2 
+    // Dispose f1
+}
+```
+
+A using declaration shall not appear directly inside a *switch_label*, but, instead, may be within a block inside a *switch_label*.
+
 ## 13.15 The yield statement
 
-The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.14.5](classes.md#15145-enumerator-objects)) or enumerable object ([§15.14.6](classes.md#15146-enumerable-objects)) of an iterator or to signal the end of the iteration.
+The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.15.5](classes.md#15155-enumerator-objects)) or enumerable object ([§15.15.6](classes.md#15156-enumerable-objects)) of an iterator or to signal the end of the iteration.
 
 ```ANTLR
 yield_statement
@@ -1962,7 +2185,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 
 > *Example*: The following example shows some valid and invalid uses of `yield` statements.
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > delegate IEnumerable<int> D();
 >
@@ -2002,7 +2225,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 >
 > *end example*
 
-An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.14.4](classes.md#15144-yield-type)) of the iterator.
+An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.15.4](classes.md#15154-yield-type)) of the iterator.
 
 A `yield return` statement is executed as follows:
 

@@ -6,6 +6,11 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - "standard/*.md"
+      - "tools/example-templates/**"
+      - "tools/ExampleExtractor/**"
+      - "tools/ExampleTester/**"
+      - "tools/Utilities/**"
+      - "tools/test-examples.sh"
   workflow_dispatch:
     inputs:
       reason:
@@ -16,19 +21,24 @@ on:
 jobs:
   test-extraction-and-runner:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5.0.0
 
     # We build examples against .NET 6.0, but use
     # 8.0 for the tools themselves. (The closer we
     # are to the target language version we're standardising,
     # the better.)
     - name: Setup .NET 6.0 and 8.0
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           6.0.x
