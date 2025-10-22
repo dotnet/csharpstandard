@@ -4,6 +4,8 @@
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
+Structs (§16) and interfaces (§18) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
+
 ## 15.2 Class declarations
 
 ### 15.2.1 General
@@ -270,7 +272,7 @@ The base classes of a class are the direct base class and its base classes. In o
 
 Except for class `object`, every class has exactly one direct base class. The `object` class has no direct base class and is the ultimate base class of all other classes.
 
-It is a compile-time error for a class to depend on itself. For the purpose of this rule, a class ***directly depends on*** its direct base class (if any) and *directly depends on* the nearest enclosing class within which it is nested (if any). Given this definition, the complete set of classes upon which a class depends is the transitive closure of the *directly depends on* relationship.
+It is a compile-time error for a class to depend on itself. For the purpose of this rule, a class ***directly depends on*** its direct base class (if any) and *directly depends on* the type within which it is immediately nested (if any).
 
 > *Example*: The example
 >
@@ -1097,7 +1099,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 
 #### 15.3.9.1 General
 
-A type declared within a class or struct is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
+A type declared within a class, struct, or interface is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
 
 > *Example*: In the following example:
 >
@@ -1125,7 +1127,7 @@ The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)
 
 #### 15.3.9.3 Declared accessibility
 
-Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class or struct:
+Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class, struct, or interface:
 
 - A nested type that is declared in a class can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
@@ -2050,6 +2052,8 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.4](structs.md#164-class-and-struct-differences)) and interfaces ([§19.4.2](interfaces.md#1942-interface-methods)).
+
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
 ```ANTLR
@@ -2143,6 +2147,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - The declaration includes at most one of the following modifiers: `static`, `virtual`, and `override`.
 - The declaration includes at most one of the following modifiers: `new` and `override`.
 - If the declaration includes the `abstract` modifier, then the declaration does not include any of the following modifiers: `static`, `virtual`, `sealed`, or `extern`.
+- The declaration may include the `abstract` and `override` modifiers so that an abstract member may override a virtual member.
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
@@ -2914,9 +2919,9 @@ When an instance method declaration includes a `sealed` modifier, that method is
 
 When an instance method declaration includes an `abstract` modifier, that method is said to be an ***abstract method***. Although an abstract method is implicitly also a virtual method, it cannot have the modifier `virtual`.
 
-An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the method body of an abstract method simply consists of a semicolon.
+An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. The *method_body* of an abstract method simply consists of a semicolon.
 
-Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
+Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.2](interfaces.md#1942-interface-methods)).
 
 > *Example*: In the following code
 >
@@ -2938,7 +2943,7 @@ Abstract method declarations are only permitted in abstract classes ([§15.2.2.2
 > }
 > ```
 >
-> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation.
+> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful fallback implementation for the abstract concept of shape. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation.
 >
 > *end example*
 
@@ -3420,7 +3425,6 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
-- An *accessor_modifier* shall not be used in an interface or in an explicit interface member implementation.
 - The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.4.11](structs.md#16411-properties), [§16.4.13](structs.md#16413-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
@@ -3933,7 +3937,7 @@ An abstract property declaration specifies that the accessors of the property ar
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
-Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.3](interfaces.md#1943-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
 The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
@@ -4300,7 +4304,7 @@ An abstract event declaration specifies that the accessors of the event are virt
 
 An event declaration that includes both the `abstract` and `override` modifiers specifies that the event is abstract and overrides a base event. The accessors of such an event are also abstract.
 
-Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
+Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.4](interfaces.md#1944-interface-events)).
 
 The accessors of an inherited virtual event can be overridden in a derived class by including an event declaration that specifies an `override` modifier. This is known as an ***overriding event declaration***. An overriding event declaration does not declare a new event. Instead, it simply specializes the implementations of the accessors of an existing virtual event.
 
