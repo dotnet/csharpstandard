@@ -4,7 +4,8 @@
 
 A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.13.12](expressions.md#121312-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* (§switch-expression-new-clause) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  
 
-A pattern is tested against a value in a number of contexts:  
+A pattern is tested against a value in a number of contexts:
+
 - In a switch statement, the *pattern* of a case label is tested against the *expression* of the switch statement.  
 - In an *is-pattern* operator, the *pattern* on the right-hand-side is tested against the expression on the left.  
 - In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression's left-hand-side.  
