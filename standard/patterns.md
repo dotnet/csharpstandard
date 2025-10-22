@@ -11,7 +11,7 @@ A pattern is tested against a value in a number of contexts:
 - In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression's left-hand-side.  
 - In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.  
 
-The value against which a pattern is tested is called the ***pattern input value*** for the pattern.  
+The value against which a pattern is tested is called the ***pattern input value***.
 
 ## 11.2 Pattern forms
 
