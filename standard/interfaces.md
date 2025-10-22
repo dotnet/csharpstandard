@@ -718,7 +718,7 @@ When an interface is part of a namespace, a qualified interface member name can 
 
 Interfaces may be implemented by classes and structs. To indicate that a class or struct directly implements an interface, the interface is included in the base class list of the class or struct.
 
-A class or struct `C` that implements an interface `I` must provide or inherit an implementation for every member declared in `I`. Public members of `I` may be defined in public members of `C`. Non-public members declared in `I` that are accessible in `C` may be defined in `C` using explicit interface implmentation (§19.6.2). Non-accessible members, such as `private` members of `I` can't be defined in `C`.
+A class or struct `C` that implements an interface `I` must provide or inherit an implementation for every member declared in `I` that `C` can access. Public members of `I` may be defined in public members of `C`. Non-public members declared in `I` that are accessible in `C` may be defined in `C` using explicit interface implementation (§19.6.2).
 
  A member in a derived type that satisfies interface mapping (§19.6.5) but does not implement the matching base interface member introduces a new member. This occurs when explicit interface implementation is required to define the interface member.
 
