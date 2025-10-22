@@ -182,8 +182,7 @@ tuple_designation
     : '(' designations? ')'
     ;
 designations
-    : designation
-    | designations ',' designation
+    : designation (',' designation)*
     ;
 ```
 
