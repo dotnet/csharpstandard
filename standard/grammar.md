@@ -2537,52 +2537,15 @@ interface_body
 
 // Source: §19.4.1 General
 interface_member_declaration
-    : interface_method_declaration
-    | interface_property_declaration
-    | interface_event_declaration
-    | interface_indexer_declaration
-    ;
-
-// Source: §19.4.2 Interface methods
-interface_method_declaration
-    : attributes? 'new'? return_type interface_method_header
-    | attributes? 'new'? ref_kind ref_return_type interface_method_header
-    ;
-
-interface_method_header
-    : identifier '(' parameter_list? ')' ';'
-    | identifier type_parameter_list '(' parameter_list? ')'
-      type_parameter_constraints_clause* ';'
-    ;
-
-// Source: §19.4.3 Interface properties
-interface_property_declaration
-    : attributes? 'new'? type identifier '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type identifier '{' ref_interface_accessor '}'
-    ;
-
-interface_accessors
-    : attributes? 'get' ';'
-    | attributes? 'set' ';'
-    | attributes? 'get' ';' attributes? 'set' ';'
-    | attributes? 'set' ';' attributes? 'get' ';'
-    ;
-
-ref_interface_accessor
-    : attributes? 'get' ';'
-    ;
-
-// Source: §19.4.4 Interface events
-interface_event_declaration
-    : attributes? 'new'? 'event' type identifier ';'
-    ;
-
-// Source: §19.4.5 Interface indexers
-interface_indexer_declaration
-    : attributes? 'new'? type 'this' '[' parameter_list ']'
-      '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type 'this' '[' parameter_list ']'
-      '{' ref_interface_accessor '}'
+    : constant_declaration
+    | field_declaration
+    | method_declaration
+    | property_declaration
+    | event_declaration
+    | indexer_declaration
+    | static_constructor_declaration
+    | operator_declaration
+    | type_declaration
     ;
 
 // Source: §20.2 Enum declarations

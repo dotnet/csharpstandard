@@ -381,7 +381,7 @@ A member lookup of a name `N` with `K` type arguments in a type `T` is proces
   - Otherwise, if the set contains only methods, then this group of methods is the result of the lookup.
   - Otherwise, the lookup is ambiguous, and a binding-time error occurs.
 
-For member lookups in types other than type parameters and interfaces, and member lookups in interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effect of the lookup rules is simply that derived members hide base members with the same name or signature. Such single-inheritance lookups are never ambiguous. The ambiguities that can possibly arise from member lookups in multiple-inheritance interfaces are described in [§19.4.6](interfaces.md#1946-interface-member-access).
+For member lookups in types other than type parameters and interfaces, and member lookups in interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effect of the lookup rules is simply that derived members hide base members with the same name or signature. Such single-inheritance lookups are never ambiguous. The ambiguities that can possibly arise from member lookups in multiple-inheritance interfaces are described in [§19.4.11](interfaces.md#19411-interface-member-access).
 
 > *Note*: This phase only accounts for one kind of ambiguity. If the member lookup results in a method group, further uses of method group may fail due to ambiguity, for example as described in [§12.6.4.1](expressions.md#12641-general) and [§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances). *end note*
 

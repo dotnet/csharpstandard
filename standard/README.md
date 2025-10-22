@@ -701,11 +701,16 @@
   - [§19.3](interfaces.md#193-interface-body)  Interface body
   - [§19.4](interfaces.md#194-interface-members)  Interface members
     - [§19.4.1](interfaces.md#1941-general)  General
-    - [§19.4.2](interfaces.md#1942-interface-methods)  Interface methods
-    - [§19.4.3](interfaces.md#1943-interface-properties)  Interface properties
-    - [§19.4.4](interfaces.md#1944-interface-events)  Interface events
-    - [§19.4.5](interfaces.md#1945-interface-indexers)  Interface indexers
-    - [§19.4.6](interfaces.md#1946-interface-member-access)  Interface member access
+    - [§19.4.2](interfaces.md#1942-interface-fields)  Interface fields
+    - [§19.4.3](interfaces.md#1943-interface-methods)  Interface methods
+    - [§19.4.4](interfaces.md#1944-interface-properties)  Interface properties
+    - [§19.4.5](interfaces.md#1945-interface-events)  Interface events
+    - [§19.4.6](interfaces.md#1946-interface-indexers)  Interface indexers
+    - [§19.4.7](interfaces.md#1947-interface-operators)  Interface operators
+    - [§19.4.8](interfaces.md#1948-interface-static-constructors)  Interface static constructors
+    - [§19.4.9](interfaces.md#1949-interface-nested-types)  Interface nested types
+    - [§19.4.10](interfaces.md#19410-most-specific-implementation)  most specific implementation
+    - [§19.4.11](interfaces.md#19411-interface-member-access)  Interface member access
   - [§19.5](interfaces.md#195-qualified-interface-member-names)  Qualified interface member names
   - [§19.6](interfaces.md#196-interface-implementations)  Interface implementations
     - [§19.6.1](interfaces.md#1961-general)  General
