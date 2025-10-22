@@ -4795,18 +4795,18 @@ The operation `E is T` is evaluated as follows:
 1. If `T` is a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)), a compile-time error occurs.
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
-  1. Let `R` be the runtime type of `E`.
-  1. Let `D` be derived from `R` as follows:
-    1. If `R` is a nullable value type, `D` is the underlying type of `R`.
-    1. Otherwise, `D` is `R`.
-  1. The result depends on `D` and `T` as follows:
-    1. If `T` is a reference type, the result is `true` if:
-      - an identity conversion exists between `D` and `T`, or
-      - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
-      - `D` is a value type and a boxing conversion from `D` to `T` exists.
-    1. If `T` is a nullable value type, the result is `true` if `D` is the underlying type of `T`.
-    1. If `T` is a non-nullable value type, the result is `true` if `D` and `T` are the same type.
-    1. Otherwise, the result is `false`.
+   1. Let `R` be the runtime type of `E`.
+   1. Let `D` be derived from `R` as follows:
+      1. If `R` is a nullable value type, `D` is the underlying type of `R`.
+      1. Otherwise, `D` is `R`.
+   1. The result depends on `D` and `T` as follows:
+      1. If `T` is a reference type, the result is `true` if:
+         - an identity conversion exists between `D` and `T`, or
+         - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
+         - `D` is a value type and a boxing conversion from `D` to `T` exists.
+      1. If `T` is a nullable value type, the result is `true` if `D` is the underlying type of `T`.
+      1. If `T` is a non-nullable value type, the result is `true` if `D` and `T` are the same type.
+      1. Otherwise, the result is `false`.
 
 User defined conversions are not considered by the `is` operator.
 
