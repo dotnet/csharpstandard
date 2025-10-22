@@ -110,7 +110,9 @@ Certain combinations of static type of the pattern input value and the given typ
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The declaration pattern can be used to test values of nullable types: a value of type `Nullable<T>` (or a boxed `T`) matches a type pattern `T2 id` if the value is non-null and `T2` is `T`, or some base type or interface of `T`. For example, in the code fragment
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"DeclarationPattern1"} -->
