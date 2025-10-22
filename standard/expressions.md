@@ -4783,8 +4783,6 @@ The tuple equality operator `x != y` is evaluated as follows:
 
 There are two forms of the `is` operator. One is the *is-type operator*, which has a type on the right-hand-side. The other is the *is-pattern operator*, which has a pattern on the right-hand-side.
 
-An expression of the form `E is _`, where the right-hand-side is the identifier `_` and designates a type, is an *is-type operator*. To reduce confusion with the discard pattern, an implementation shall issue a warning where this occurs.
-
 #### 12.13.12.1 The is-type operator
 
 The *is-type operator* is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
