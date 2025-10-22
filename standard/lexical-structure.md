@@ -423,6 +423,11 @@ The rules for identifiers given in this subclause correspond exactly to those re
 identifier
     : Simple_Identifier
     | contextual_keyword
+    | discard_token
+    ;
+
+discard_token
+    : '_'
     ;
 
 Simple_Identifier
