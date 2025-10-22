@@ -3952,11 +3952,10 @@ The `*`, `/`, `%`, `+`, and `-` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : range_expression
-    | switch_expression
-    | multiplicative_expression '*' range_expression
-    | multiplicative_expression '/' range_expression
-    | multiplicative_expression '%' range_expression
+    : switch_expression
+    | multiplicative_expression '*' switch_expression
+    | multiplicative_expression '/' switch_expression
+    | multiplicative_expression '%' switch_expression
     ;
 
 additive_expression
