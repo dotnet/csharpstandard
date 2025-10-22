@@ -147,8 +147,8 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
-> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
+> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-range-operator) | Range | `..` |
 > |  §switch-expression-new-clause                                   | Switch                           | `switch { … }` |
 > |  [§12.11](expressions.md#1211-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
