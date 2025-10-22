@@ -712,7 +712,7 @@ The `switch` statement selects for execution a statement list having an associat
 
 ```ANTLR
 switch_statement
-    | 'switch' selector_expression switch_block
+    : 'switch' selector_expression switch_block
     ;
 
 selector_expression
