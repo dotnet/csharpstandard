@@ -149,9 +149,9 @@ The precedence of an operator is established by the definition of its associated
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
-> |  §switch-expression-new-clause                                   | Switch                           | `switch { … }` |
 > |  [§12.10](expressions.md#1210-range-operator) | Range | `..` |
-> |  [§12.11](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
+> |  §switch-expression-new-clause                                   | Switch                           | `switch { … }` |
+> |  [§12.11](expressions.md#1211-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.11](expressions.md#1211-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.12](expressions.md#1212-shift-operators)             | Shift                            | `<<` `>>` |
 > |  [§12.13](expressions.md#1213-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as` |
@@ -163,7 +163,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.15](expressions.md#1215-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.16](expressions.md#1216-the-null-coalescing-operator) and [§12.17](expressions.md#1217-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.19](expressions.md#1219-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.22](expressions.md#1222-assignment-operators) and [§12.20](expressions.md#1220-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
+> |  [§12.22](expressions.md#1222-assignment-operators) and [§12.20](expressions.md#1220-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   `??=` |
 >
 > *end note*
 
@@ -3883,21 +3883,21 @@ A *switch_expression* provides `switch`-like semantics in an expression context.
 ```ANTLR
 switch_expression
     : range_expression
-    | switch_expression 'switch' '{' (switch_expression_arms ','?)? '}'
+    | switch_expression 'switch' '{' switch_expression_arms? '}'
     ;
+
 switch_expression_arms
-    : switch_expression_arm
-    | switch_expression_arms ',' switch_expression_arm
+    : switch_expression_arm (',' switch_expression_arm)* ','?
     ;
+
 switch_expression_arm
     : pattern case_guard? '=>' switch_expression_arm_expression
     ;
+
 switch_expression_arm_expression
     : expression
     ;
 ```
-
-A *switch_expression* is not an *expression_statement*.
 
 There is a *switch expression conversion* (§switch-expression-conversion) from a switch expression to a type `T`
 if there is an implicit conversion from every *switch_expression_arm_expression* of each of the switch expression's *switch_expression_arm*s to `T`.
