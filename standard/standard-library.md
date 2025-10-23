@@ -127,11 +127,11 @@ namespace System
         public Exception();
         public Exception(string? message);
         public Exception(string? message, Exception? innerException);
-        public sealed Exception? InnerException { get; }
+        public Exception? InnerException { get; }
         public virtual string Message { get; }
     }
 
-    public class GC { }
+    public static class GC { }
 
     public interface IDisposable
     {
@@ -181,7 +181,7 @@ namespace System
             Exception? innerException);    
     }
 
-    public struct Nullable<T>
+    public struct Nullable<T> where T : struct
     {
         public bool HasValue { get; }
         public T Value { get; }
@@ -198,7 +198,7 @@ namespace System
     {
         public Object();
         ~Object();
-        public virtual bool Equals(object obj);
+        public virtual bool Equals(object? obj);
         public virtual int GetHashCode();
         public Type GetType();
         public virtual string? ToString();
@@ -215,7 +215,7 @@ namespace System
         public ObsoleteAttribute(string? message);
         public ObsoleteAttribute(string? message, bool error);
         public bool IsError { get; }
-        public string Message? { get; }
+        public string? Message { get; }
     }
 
     public class OutOfMemoryException : Exception
@@ -242,11 +242,13 @@ namespace System
         public StackOverflowException(string? message, Exception? innerException);
     }
 
-    public sealed class String : IEnumerable<Char>, IEnumerable
+    public sealed class String : IEnumerable<char>, IEnumerable
     {
         public int Length { get; }
         public char this [int index] { get; }
         public static string Format(string format, params object?[] args);
+        System.Collections.IEnumerator IEnumerable.GetEnumerator();
+        System.Collections.Generic.IEnumerator<char> IEnumerable<char>.GetEnumerator();
     }
 
     public class SystemException : Exception
