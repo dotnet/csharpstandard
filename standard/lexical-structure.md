@@ -505,7 +505,7 @@ fragment Formatting_Character
 > - For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
 > - The fragment *Available_Identifier* requires the exclusion of keywords and contextual keywords. If the grammar in this specification is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >   - Keywords and contextual keywords occur in the grammar as literal strings.
->   - ANTLR creates implicit lexical token rules are created from these literal strings.
+>   - ANTLR creates implicit lexical token rules for these literal strings.
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >   - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 > - Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§6.3.1](lexical-structure.md#631-general)).
