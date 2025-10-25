@@ -1,7 +1,5 @@
 # 18 Extended indexing and slicing
 
-> **Review Note:** This new clause, currently ([§18](ranges.md#18-extended-indexing-and-slicing)), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. Its final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§19](interfaces.md#19-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.
-
 ## 18.1 General
 
 This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
