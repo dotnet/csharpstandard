@@ -515,7 +515,8 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;
->         // possible warning: nonnullable base class requirement prohibits nullable class type argument
+>         // possible warning: nonnullable base class requirement prohibits nullable
+>         // class type argument
 >         B1<C?> x6;
 >         // nullable base class requirement allows nonnullable class type argument
 >         B2<C> x7;
