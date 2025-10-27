@@ -4,7 +4,7 @@
 
 Much of the C# language enables the programmer to specify declarative information about the entities defined in the program. For example, the accessibility of a method in a class is specified by decorating it with the *method_modifier*s `public`, `protected`, `internal`, and `private`.
 
-C# enables programmers to invent new kinds of declarative information, called ***attributes***. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment.
+C# enables programmers to invent new kinds of declarative information, called ***attribute***s. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment.
 
 > *Note*: For instance, a framework might define a `HelpAttribute` attribute that can be placed on certain program elements (such as classes and methods) to provide a mapping from those program elements to their documentation. *end note*
 
@@ -145,7 +145,7 @@ Attribute classes can have ***positional parameter***s and ***named parameter***
 
 ### 23.2.4 Attribute parameter types
 
-The types of positional and named parameters for an attribute class are limited to the ***attribute parameter types***, which are:
+The types of positional and named parameters for an attribute class are limited to the ***attribute parameter type***s, which are:
 
 - One of the following types: `bool`, `byte`, `char`, `double`, `float`, `int`, `long`, `sbyte`, `short`, `string`, `uint`, `ulong`, `ushort`.
 - The type `object`.
@@ -156,9 +156,9 @@ The types of positional and named parameters for an attribute class are limited 
 
 ## 23.3 Attribute specification
 
-***Attribute specification*** is the application of a previously defined attribute to a program entity. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
+Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
 
-Attributes are specified in ***attribute sections***. An attribute section consists of a pair of square brackets, which surround a comma-separated list of one or more attributes. The order in which attributes are specified in such a list, and the order in which sections attached to the same program entity are arranged, is not significant. For instance, the attribute specifications `[A][B]`, `[B][A]`, `[A, B]`, and `[B, A]` are equivalent.
+Attributes are specified in ***attribute section***s. An attribute section consists of a pair of square brackets, which surround a comma-separated list of one or more attributes. The order in which attributes are specified in such a list, and the order in which sections attached to the same program entity are arranged, is not significant. For instance, the attribute specifications `[A][B]`, `[B][A]`, `[A, B]`, and `[B, A]` are equivalent.
 
 ```ANTLR
 global_attributes
@@ -513,7 +513,7 @@ A class that is decorated with the `AttributeUsage` attribute shall derive from 
 
 #### 23.5.3.1 General
 
-The attribute `Conditional` enables the definition of ***conditional methods*** and ***conditional attribute classes***.
+The attribute `Conditional` enables the definition of ***conditional method***s and ***conditional attribute class***es.
 
 #### 23.5.3.2 Conditional methods
 
