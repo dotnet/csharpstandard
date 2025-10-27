@@ -243,8 +243,8 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 >
 > ```csharp
 > var (ix0, len0) = firstQuad.GetOffsetAndLength(6); // ix0 = 0, len0 = 4
-> var (ix1, len1) = nextQuad.GetOffsetAndLength(6);  // throws ArgumentOutOfRangeException
->                                                    // as range crosses sequence end
+> var (ix1, len1) = nextQuad.GetOffsetAndLength(6);  // throws
+>    // ArgumentOutOfRangeException as range crosses sequence end
 > var (ix2, len2) = wholeSeq.GetOffsetAndLength(6);  // ix2 = 0, len2 = 6
 > var (ix3, len3) = dropFirst.GetOffsetAndLength(6); // ix3 = 1, len3 = 5
 > var (ix4, len4) = dropLast.GetOffsetAndLength(6);  // ix4 = 0, len4 = 5
