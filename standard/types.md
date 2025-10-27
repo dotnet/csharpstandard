@@ -947,13 +947,17 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > {
 >     int length = s.Length; // No warning. s is not null
 >
->     _ = s == null; // Null check by testing equality. The null state of s is maybe null
->     length = s.Length; // Warning, and changes the null state of s to not null
+>     _ = s == null; // Null check by testing equality. The null state of s
+>                    // is maybe null
+>     length = s.Length; // Warning, and changes the null state of s
+>                        // to not null
 >
->     _ = s?.Length; // The ?. is a null check and changes the null state of s to maybe null
+>     _ = s?.Length; // The ?. is a null check and changes the null state of s
+>                    // to maybe null
 >     if (s.Length > 4) // Warning. Changes null state of s to not null
 >     {
->         _ = s?[4]; // ?[] is a null check and changes the null state of s to maybe null
+>         _ = s?[4]; // ?[] is a null check and changes the null state of s
+>                    // to maybe null
 >         _ = s.Length; // Warning. s is maybe null
 >     }
 > }
@@ -1013,7 +1017,8 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume property is stateful
+>             int len = t.DisappearingProperty.Length; // No warning. A compiler can
+>                                                      // assume property is stateful
 >         }
 >     }
 > }
