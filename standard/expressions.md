@@ -187,7 +187,7 @@ The ***overloadable unary operators*** are:
 
 > `+  -  !` (logical negation only) `~  ++  --  true  false`
 
-Only the operators listed above can be overloaded. In particular, it is not possible to overload the null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) or the unary hat operator (prefix `^`, ([§12.9.6](expressions.md#1296-hat-operator))).
+Only the operators listed above can be overloaded. In particular, it is not possible to overload the null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) or the unary index from-end operator (prefix `^`, ([§12.9.6](expressions.md#1296-hat-operator))).
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.25](expressions.md#1225-boolean-expressions)) and expressions involving the conditional ([§12.19](expressions.md#1219-conditional-operator)) and conditional logical operators ([§12.15](expressions.md#1215-conditional-logical-operators)). *end note*
 
@@ -3597,7 +3597,7 @@ unary_expression
 If the operand of a *unary_expression* has the compile-time type `dynamic`, it is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case:
 
 - the compile-time type of the *unary_expression* is:
-  - `Index` for the `^` hat operator ([§12.9.6](expressions.md#1296-hat-operator))
+  - `Index` for the `^` index from-end operator ([§12.9.6](expressions.md#1296-hat-operator))
   - `dynamic` for all other unary operators; and
 - the resolution described below will take place at run-time using the run-time type of the operand.
 
@@ -3690,9 +3690,9 @@ The result of evaluating `~x`, where `X` is an expression of an enumeration ty
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
 
-### 12.9.6 Hat operator
+### 12.9.6 Index from-end operator
 
-The unary `^` operator is called the *hat* operator. The hat operator is not overloadable ([§12.4.3](expressions.md#1243-operator-overloading)) and there is a single predefined hat operator:
+The unary `^` operator is called the ***index from-end operator*** (which is colloquially referred to as the *hat operator*). This operator is not overloadable ([§12.4.3](expressions.md#1243-operator-overloading)) and there is a single predefined operator:
 
 ```csharp
 Index operator ^(int x);
@@ -3706,7 +3706,7 @@ new Index(x, true)
 
 As with the other *unary_expression*s the operand may have a compile-time type of `dynamic` ([§12.9.1](expressions.md#1291-general)) and be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). The compile-time type of the result is always `Index`.
 
-A lifted ([§12.4.8](expressions.md#1248-lifted-operators)) form of the hat operator is also predefined.
+A lifted ([§12.4.8](expressions.md#1248-lifted-operators)) form of the index from-end operator is also predefined.
 
 ### 12.9.7 Prefix increment and decrement operators
 
