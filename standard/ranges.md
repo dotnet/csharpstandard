@@ -86,7 +86,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 
 ## 18.2 The Index type
 
-The `System.Index` type represents an *abstract* index which is either a from-start index or a from-end index.
+The `System.Index` type represents an *abstract* index which represents either a *from-start index* or a *from-end index*.
 
 ```csharp
     public readonly struct Index : IEquatable<Index>
