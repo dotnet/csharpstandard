@@ -3117,8 +3117,10 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
-    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    : identifier generic_dimension_specifier?
+      ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member
+      ('.' identifier generic_dimension_specifier?)*
     ;
 
 unbound_qualified_alias_member
@@ -6654,7 +6656,8 @@ assignment
     ;
 
 assignment_operator
-    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
+    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' |
+      '<<=' | '??='
     | right_shift_assignment
     ;
 ```
