@@ -370,7 +370,7 @@
     - [§12.9.3](expressions.md#1293-unary-minus-operator)  Unary minus operator
     - [§12.9.4](expressions.md#1294-logical-negation-operator)  Logical negation operator
     - [§12.9.5](expressions.md#1295-bitwise-complement-operator)  Bitwise complement operator
-    - [§12.9.6](expressions.md#1296-hat-operator)  Hat operator
+    - [§12.9.6](expressions.md#1296-index-from-end-operator)  Index from-end operator
     - [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
     - [§12.9.8](expressions.md#1298-cast-expressions)  Cast expressions
     - [§12.9.9](expressions.md#1299-await-expressions)  Await expressions

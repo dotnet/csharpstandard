@@ -5,7 +5,7 @@
 This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
 
 - The types introduced in this clause, `System.Index` ([§18.2](ranges.md#182-the-index-type)) and `System.Range` ([§18.3](ranges.md#183-the-range-type));
-- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-hat-operator)) and binary `..` ([§12.10](expressions.md#1210-range-operator)) operators; and
+- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) and binary `..` ([§12.10](expressions.md#1210-range-operator)) operators; and
 - The *element_access* expression.
 
 Under the model a type is classified as:
@@ -116,7 +116,7 @@ The `System.Index` type represents an *abstract* index which is either a from-st
 >
 > *end example*
 
-There is an implicit conversion from `int` to `Index` which produces from-start indices, and a language-defined unary operator `^` ([§12.9.6](expressions.md#1296-hat-operator)) from `int` to `Index` which produces from-end indices.
+There is an implicit conversion from `int` to `Index` which produces from-start indices, and a language-defined unary operator `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) from `int` to `Index` which produces from-end indices.
 
 > *Example*
 >
@@ -168,7 +168,7 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 
 > *Example*
 >
-> The following examples use the implicit conversion from `int` to `Index` ([§18.2](ranges.md#182-the-index-type)) and the `^` ([§12.9.6](expressions.md#1296-hat-operator)) operator to create the `Index` values for each `Range`:
+> The following examples use the implicit conversion from `int` to `Index` ([§18.2](ranges.md#182-the-index-type)) and the `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) operator to create the `Index` values for each `Range`:
 >
 > ```csharp
 > var firstQuad = new Range(0, 4);  // the indices from `0` to `3`
