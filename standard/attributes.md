@@ -958,7 +958,8 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >     {
 >         if (!isNull)
 >         {
->             throw new ArgumentException(argumentName, $"argument {argumentName} can't be null");
+>             throw new ArgumentException(argumentName,
+>               $"argument {argumentName} can't be null");
 >         }
 >     }
 >
@@ -1012,7 +1013,8 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullAttribute"} -->
 > ```csharp
 > #nullable enable
-> public static void ThrowWhenNull([NotNull] object? value, string valueExpression = "") =>
+> public static void ThrowWhenNull([NotNull] object? value,
+>   string valueExpression = "") =>
 >     _ = value ?? throw new ArgumentNullException(valueExpression);
 >
 > public static void LogMessage(string? message)
@@ -1094,7 +1096,8 @@ The iterator won’t have access to the `CancellationToken` argument for `GetAsy
 >     }
 > }
 >
-> static async IAsyncEnumerable<string> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
+> static async IAsyncEnumerable<string> GetStringsAsync(
+>   [EnumeratorCancellation] CancellationToken token)
 > {
 >     for (int i = 0; i < 10; i++)
 >     {
