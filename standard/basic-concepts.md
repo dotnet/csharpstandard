@@ -972,7 +972,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 >
 > interface C : A, B
 > {
->     public void Test() { NestedClass.M(); } // ambiguity between A.NestedClass and B.NestedClass
+>     public void Test() { NestedClass.M(); } // ambiguity between
+>                                             // A.NestedClass and B.NestedClass
 > }
 > ```
 >
