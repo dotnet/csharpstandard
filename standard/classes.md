@@ -3292,7 +3292,7 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 ### 15.7.1 General
 
-A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
+A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessor***s that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
 
 Properties are declared using *property_declaration*s:
 
