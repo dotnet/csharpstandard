@@ -128,7 +128,7 @@ A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Bᵥ
 
 ### 19.2.4 Base interfaces
 
-An interface can inherit from zero or more interface types, which are called the ***explicit base interfaces*** of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
+An interface can inherit from zero or more interface types, which are called the ***explicit base interface***s of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
 
 A derived interface may declare new members that hide inherited members ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)) declared in base interfaces or explicitly implement inherited members ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)) declared in base interfaces.
 
@@ -148,7 +148,7 @@ The explicit base interfaces of an interface shall be at least as accessible as 
 
 It is a compile-time error for an interface to directly or indirectly inherit from itself.
 
-The ***base interfaces*** of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
+The ***base interface***s of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
 
 > *Example*: In the following code
 >
@@ -793,7 +793,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 ### 19.6.2 Explicit interface member implementations
 
 <!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.7.2](basic-concepts.md#772-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
 
