@@ -49,7 +49,7 @@ Other than the situations listed above, entry point methods behave like those th
 
 ## 7.2 Application termination
 
-The return of control to the execution environment is known as ***application termination***. 
+The return of control to the execution environment is known as ***application termination***.
 
 If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
