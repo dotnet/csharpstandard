@@ -2,7 +2,7 @@
 
 ## 6.1 Programs
 
-A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§14.2](namespaces.md#142-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
+A C# ***program*** consists of one or more source files, each known formally as a ***compilation unit*** ([§14.2](namespaces.md#142-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
 
 Conceptually speaking, a program is compiled using three steps:
 
@@ -343,7 +343,7 @@ Whitespace
 
 ### 6.4.1 General
 
-There are several kinds of ***tokens***: identifiers, keywords, literals, operators, and punctuators. White space and comments are not tokens, though they act as separators for tokens.
+There are several kinds of ***token***s: identifiers, keywords, literals, operators, and punctuators. White space and comments are not tokens, though they act as separators for tokens.
 
 ```ANTLR
 token
@@ -887,7 +887,7 @@ The type of a *Character_Literal* is `char`.
 
 #### 6.4.5.6 String literals
 
-C# supports two forms of string literals: ***regular string literals*** and ***verbatim string literals***. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences.
+C# supports two forms of string literals: ***regular string literal***s and ***verbatim string literal***s. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences.
 
 A verbatim string literal consists of an `@` character followed by a double-quote character, zero or more characters, and a closing double-quote character.
 
@@ -1306,7 +1306,7 @@ fragment PP_Endif
     ;
 ```
 
-Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
+Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional section***s of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
 At most one of the contained conditional sections is selected for normal lexical processing:
 
