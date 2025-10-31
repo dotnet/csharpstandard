@@ -1554,7 +1554,7 @@ constant_modifier
 
 A *constant_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
@@ -1568,7 +1568,7 @@ A constant can itself participate in a *constant_expression*. Thus, a constant m
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As described in [§12.24](expressions.md#1224-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
+> *Note*: As described in [§12.25](expressions.md#1225-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
 When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§15.5.3](classes.md#1553-readonly-fields)) may be used instead.
 
@@ -1666,7 +1666,7 @@ The *type* of a *field_declaration* specifies the type of the members introduced
 
 The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.15](expressions.md#12815-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.22](expressions.md#1222-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)).
+The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.15](expressions.md#12815-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.23](expressions.md#1223-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)).
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
@@ -3475,7 +3475,7 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 
 The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
 
-A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.22](expressions.md#1222-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.22.2](expressions.md#12222-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.23](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
 Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
@@ -3848,8 +3848,8 @@ The presence of an *accessor_modifier* never affects member lookup ([§12.5](exp
 Once a particular non-ref-valued property or non-ref-valued indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§12.22.2](expressions.md#12222-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§12.22.4](expressions.md#12224-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§12.23.2](expressions.md#12232-simple-assignment)), the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.23.4](expressions.md#12234-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -4099,7 +4099,7 @@ An event can be used as the left operand of the `+=` and `-=` operators. These 
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.22.5](expressions.md#12225-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.23.5](expressions.md#12235-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
@@ -4640,7 +4640,7 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 
 The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
-The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.25](expressions.md#1225-boolean-expressions).
+The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.26](expressions.md#1226-boolean-expressions).
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
@@ -4684,7 +4684,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§12.12](expressions.md#1212-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<` or `>>` operator ([§12.13](expressions.md#1213-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
 
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
@@ -5399,7 +5399,7 @@ For a discussion of the behavior when an exception is thrown from a finalizer, s
 
 ### 15.14.1 General
 
-A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.20](expressions.md#1220-anonymous-function-expressions)), or local function ([§13.6.4](statements.md#1364-local-function-declarations)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
+A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.21](expressions.md#1221-anonymous-function-expressions)), or local function ([§13.6.4](statements.md#1364-local-function-declarations)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
 It is a compile-time error for the parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 

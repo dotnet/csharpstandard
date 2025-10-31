@@ -110,6 +110,11 @@ fragment Unicode_Escape_Sequence
 identifier
     : Simple_Identifier
     | contextual_keyword
+    | discard_token
+    ;
+
+discard_token
+    : '_'
     ;
 
 Simple_Identifier
@@ -731,6 +736,9 @@ pattern
     : declaration_pattern
     | constant_pattern
     | var_pattern
+    | positional_pattern
+    | property_pattern
+    | discard_pattern
     ;
 
 // Source: §11.2.2 Declaration pattern
@@ -738,7 +746,11 @@ declaration_pattern
     : type simple_designation
     ;
 simple_designation
-    : single_variable_designation
+    : discard_designation
+    | single_variable_designation
+    ;
+discard_designation
+    : '_'
     ;
 single_variable_designation
     : identifier
@@ -755,6 +767,39 @@ var_pattern
     ;
 designation
     : simple_designation
+    | tuple_designation
+    ;
+tuple_designation
+    : '(' designations? ')'
+    ;
+designations
+    : designation (',' designation)*
+    ;
+
+// Source: §11.2.5 Positional pattern
+positional_pattern
+    : type? '(' subpatterns? ')' property_subpattern? simple_designation?
+    ;
+subpatterns
+    : subpattern (',' subpattern)*
+    ;
+subpattern
+    : pattern
+    | identifier ':' pattern
+    ;
+
+// Source: §11.2.6 Property pattern
+property_pattern
+    : type? property_subpattern simple_designation?
+    ;
+property_subpattern
+    : '{' '}'
+    | '{' subpatterns ','? '}'
+    ;
+
+// Source: §11.2.7 Discard pattern
+discard_pattern
+    : '_'
     ;
 
 // Source: §12.6.2.1 General
@@ -1250,12 +1295,30 @@ range_expression
     | unary_expression? '..' unary_expression?
     ;
 
-// Source: §12.11.1 General
-multiplicative_expression
+// Source: §12.11 Switch expression
+switch_expression
     : range_expression
-    | multiplicative_expression '*' range_expression
-    | multiplicative_expression '/' range_expression
-    | multiplicative_expression '%' range_expression
+    | switch_expression 'switch' '{' switch_expression_arms? '}'
+    ;
+
+switch_expression_arms
+    : switch_expression_arm (',' switch_expression_arm)* ','?
+    ;
+
+switch_expression_arm
+    : pattern case_guard? '=>' switch_expression_arm_expression
+    ;
+
+switch_expression_arm_expression
+    : expression
+    ;
+
+// Source: §12.12.1 General
+multiplicative_expression
+    : switch_expression
+    | multiplicative_expression '*' switch_expression
+    | multiplicative_expression '/' switch_expression
+    | multiplicative_expression '%' switch_expression
     ;
 
 additive_expression
@@ -1264,14 +1327,14 @@ additive_expression
     | additive_expression '-' multiplicative_expression
     ;
 
-// Source: §12.12 Shift operators
+// Source: §12.13 Shift operators
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
     ;
 
-// Source: §12.13.1 General
+// Source: §12.14.1 General
 relational_expression
     : shift_expression
     | relational_expression '<' shift_expression
@@ -1289,7 +1352,7 @@ equality_expression
     | equality_expression '!=' relational_expression
     ;
 
-// Source: §12.14.1 General
+// Source: §12.15.1 General
 and_expression
     : equality_expression
     | and_expression '&' equality_expression
@@ -1305,7 +1368,7 @@ inclusive_or_expression
     | inclusive_or_expression '|' exclusive_or_expression
     ;
 
-// Source: §12.15.1 General
+// Source: §12.16.1 General
 conditional_and_expression
     : inclusive_or_expression
     | conditional_and_expression '&&' inclusive_or_expression
@@ -1316,19 +1379,19 @@ conditional_or_expression
     | conditional_or_expression '||' conditional_and_expression
     ;
 
-// Source: §12.16 The null coalescing operator
+// Source: §12.17 The null coalescing operator
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
     | throw_expression
     ;
 
-// Source: §12.17 The throw expression operator
+// Source: §12.18 The throw expression operator
 throw_expression
     : 'throw' null_coalescing_expression
     ;
 
-// Source: §12.18 Declaration expressions
+// Source: §12.19 Declaration expressions
 declaration_expression
     : local_variable_type identifier
     ;
@@ -1338,7 +1401,7 @@ local_variable_type
     | 'var'
     ;
 
-// Source: §12.19 Conditional operator
+// Source: §12.20 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
@@ -1346,7 +1409,7 @@ conditional_expression
       'ref' variable_reference
     ;
 
-// Source: §12.20.1 General
+// Source: §12.21.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -1400,7 +1463,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: §12.21.1 General
+// Source: §12.22.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1474,7 +1537,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: §12.22.1 General
+// Source: §12.23.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1484,7 +1547,7 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: §12.23 Expression
+// Source: §12.24 Expression
 expression
     : non_assignment_expression
     | assignment
@@ -1497,12 +1560,12 @@ non_assignment_expression
     | query_expression
     ;
 
-// Source: §12.24 Constant expressions
+// Source: §12.25 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: §12.25 Boolean expressions
+// Source: §12.26 Boolean expressions
 boolean_expression
     : expression
     ;
@@ -1687,7 +1750,12 @@ if_statement
 
 // Source: §13.8.3 The switch statement
 switch_statement
-    : 'switch' '(' expression ')' switch_block
+    : 'switch' selector_expression switch_block
+    ;
+
+selector_expression
+    : '(' expression ')'
+    | tuple_expression
     ;
 
 switch_block
@@ -1704,7 +1772,7 @@ switch_label
     ;
 
 case_guard
-    : 'when' expression
+    : 'when' null_coalescing_expression
     ;
 
 // Source: §13.9.1 General
