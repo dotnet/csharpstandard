@@ -66,7 +66,7 @@ The unannotated array type of an array of nullable arrays cannot be found by sim
 >
 > The following table demonstrates the effect on the unannotated array type caused by breaking up array types by inserting nullable annotations:
 >
-> | Annotated                        | Unannotated                                |
+> | Annotated                        | Unannotated                               |
 > |----------------------------------|-------------------------------------------|
 > | `T?[][,][,,]`                    | `T[][,][,,]` (not intervening, no change) |
 > | `T[][,][,,]?`                    | `T[][,][,,]` (not intervening, no change) |
