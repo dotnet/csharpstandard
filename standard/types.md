@@ -307,7 +307,7 @@ Because a simple type aliases a struct type, every simple type has members.
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
 > - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
-> - When the operands of an expression are all simple type constants, it is possible for a compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.24](expressions.md#1224-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
+> - When the operands of an expression are all simple type constants, it is possible for a compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
 > - Through `const` declarations, it is possible to declare constants of the simple types ([§15.4](classes.md#154-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
@@ -347,7 +347,7 @@ The `checked` and `unchecked` operators and statements are used to control overf
 
 C# supports two floating-point types: `float` and `double`. The `float` and `double` types are represented using the 32-bit single-precision and 64-bit double-precision IEC 60559 formats, which provide the following sets of values:
 
-- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§12.11.3](expressions.md#12113-division-operator)).
+- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§12.12.3](expressions.md#12123-division-operator)).
 - Positive infinity and negative infinity. Infinities are produced by such operations as dividing a non-zero number by zero.
   > *Example*:
   > `1.0 / 0.0` yields positive infinity, and `–1.0 / 0.0` yields negative infinity.
@@ -621,7 +621,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§19.2.4](interfaces.md#1924-base-interfaces)).
 > - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
 > - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) and [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
-> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.13.7](expressions.md#12137-reference-type-equality-operators)) unless the type parameter has the value type constraint.
+> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.14.7](expressions.md#12147-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.

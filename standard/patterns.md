@@ -2,13 +2,13 @@
 
 ## 11.1 General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.13.12](expressions.md#121312-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* (§switch-expression-new-clause) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  
+A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.14.12](expressions.md#121412-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  
 
 A pattern is tested against a value in a number of contexts:
 
 - In a switch statement, the *pattern* of a case label is tested against the *expression* of the switch statement.  
 - In an *is-pattern* operator, the *pattern* on the right-hand-side is tested against the expression on the left.  
-- In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression's left-hand-side.  
+- In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression’s left-hand-side.  
 - In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.  
 
 The value against which a pattern is tested is called the ***pattern input value***.
@@ -84,7 +84,7 @@ single_variable_designation
 
 A *simple_designation* with the token `_` shall be considered a *discard_designation* rather than a *single_variable_designation*.
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.13.12.1](expressions.md#1213121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
 
 > *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn’t a nullable type. *end note*
 
@@ -192,9 +192,9 @@ Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if *designa
 
 It is an error if the name `var` would bind to a type where a *var_pattern* is used.
 
-If *designation* is a *tuple_designation*, the pattern is equivalent to a *positional_pattern* (§positional-pattern-new-clause) of the form `(var` *designation*, ... `)` where the *designation*s are those found within the *tuple_designation*.  For example, the pattern `var (x, (y, z))` is equivalent to `(var x, (var y, var z))`.
+If *designation* is a *tuple_designation*, the pattern is equivalent to a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)) of the form `(var` *designation*, … `)` where the *designation*s are those found within the *tuple_designation*.  For example, the pattern `var (x, (y, z))` is equivalent to `(var x, (var y, var z))`.
 
-### §positional-pattern-new-clause Positional pattern
+### 11.2.5 Positional pattern
 
 A *positional_pattern* checks that the input value is not `null`, invokes an appropriate `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), and performs further pattern matching on the resulting values.  It also supports a tuple-like pattern syntax (without the type being provided) when the type of the input value is the same as the type containing `Deconstruct`, or if the type of the input value is a tuple type, or if the type of the input value is `object` or `System.ITuple` and the runtime type of the expression implements `System.ITuple`.
 
@@ -215,7 +215,7 @@ Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a m
 It is an error if a *positional_pattern* omits the type, has a single *subpattern* without an *identifier*, has no *property_subpattern* and has no *simple_designation*. This disambiguates between a *constant_pattern* that is parenthesized and a *positional_pattern*.
 In order to extract the values to match against the patterns in the list,
 
-- If *type* is omitted and the input expression's type is a tuple type, then the number of subpatterns shall to be the same as the cardinality of the tuple. Each tuple element is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a tuple element at the corresponding position in the tuple type.
+- If *type* is omitted and the input expression’s type is a tuple type, then the number of subpatterns shall to be the same as the cardinality of the tuple. Each tuple element is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a tuple element at the corresponding position in the tuple type.
 - Otherwise, if a suitable `Deconstruct` exists as a member of *type*, it is a compile-time error if the type of the input value is not pattern-compatible with *type*. At runtime the input value is tested against *type*. If this fails, then the positional pattern match fails. If it succeeds, the input value is converted to this type and `Deconstruct` is invoked with fresh compiler-generated variables to receive the output parameters. Each value that was received is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a parameter at the corresponding position of `Deconstruct`.
 - Otherwise, if *type* is omitted, and the input value is of type `object` or some type that can be converted to `System.ITuple` by an implicit reference conversion, and no *identifier* appears among the subpatterns, then the match uses `System.ITuple`.  
 - Otherwise, the pattern is a compile-time error.
@@ -278,7 +278,7 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 >
 > *end example*
 
-### §property-pattern-new-clause Property pattern
+### 11.2.6 Property pattern
 
 A *property_pattern* checks that the input value is not `null`, and recursively matches values extracted by the use of accessible properties or fields.
 
@@ -358,7 +358,7 @@ The *property_pattern* may be used to pattern-match with anonymous types.
 >
 > *end example*
 
-### §discard-pattern-new-clause Discard pattern
+### 11.2.7 Discard pattern
 
 Every expression matches the discard pattern, which results in the value of the expression being discarded.
 
@@ -403,7 +403,7 @@ It is a compile-time error to use a discard pattern in a *relational_expression*
 > 0.0
 > ```
 >
-> Here, a discard pattern is used to handle `null` and any integer value that doesn't have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
+> Here, a discard pattern is used to handle `null` and any integer value that doesn’t have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
 > *end example*
 
 ## 11.3 Pattern subsumption
