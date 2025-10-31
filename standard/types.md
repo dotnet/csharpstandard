@@ -547,7 +547,7 @@ Each type argument shall satisfy any constraints on the corresponding type param
 
 ### 8.4.3 Open and closed types
 
-Any type can be classified as either an ***open type*** or a ***closed type***. An open type is a type that involves type parameters. More specifically:
+All types can be classified as either ***open types*** or ***closed types***. An open type is a type that involves type parameters. More specifically:
 
 - A type parameter defines an open type.
 - An array type is an open type if and only if its element type is an open type.
