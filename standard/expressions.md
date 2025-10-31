@@ -6749,7 +6749,7 @@ The assignment operators other than the `=` and `= ref` operator are called the
 - For the `??=` operator, only if the value of the left-operand is `null`, is the right-operand evaluated and the result assigned to the variable, property, or indexer element given by the left operand.
 - Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.23.4](expressions.md#12234-compound-assignment).
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.22.5](expressions.md#12225-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.5](expressions.md#12235-event-assignment).
 
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
 
