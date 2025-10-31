@@ -148,8 +148,9 @@ The precedence of an operator is established by the definition of its associated
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
-> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `^` `++x` `--x` `(T)x` `await x` |
+> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-range-operator) | Range | `..` |
+> |  §switch-expression-new-clause                                   | Switch                           | `switch { … }` |
 > |  [§12.11](expressions.md#1211-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.11](expressions.md#1211-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.12](expressions.md#1212-shift-operators)             | Shift                            | `<<` `>>` |
@@ -162,7 +163,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.15](expressions.md#1215-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.16](expressions.md#1216-the-null-coalescing-operator) and [§12.17](expressions.md#1217-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.19](expressions.md#1219-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.22](expressions.md#1222-assignment-operators) and [§12.20](expressions.md#1220-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>` `??=` |
+> |  [§12.22](expressions.md#1222-assignment-operators) and [§12.20](expressions.md#1220-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`  `??=` |
 >
 > *end note*
 
@@ -3875,6 +3876,74 @@ A lifted ([§12.4.8](expressions.md#1248-lifted-operators)) form of the range op
 
 The range operator is non-associative ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)).
 
+## §switch-expression-new-clause Switch expression
+
+A *switch_expression* provides `switch`-like semantics in an expression context.
+
+```ANTLR
+switch_expression
+    : range_expression
+    | switch_expression 'switch' '{' switch_expression_arms? '}'
+    ;
+
+switch_expression_arms
+    : switch_expression_arm (',' switch_expression_arm)* ','?
+    ;
+
+switch_expression_arm
+    : pattern case_guard? '=>' switch_expression_arm_expression
+    ;
+
+switch_expression_arm_expression
+    : expression
+    ;
+```
+
+There is a *switch expression conversion* (§switch-expression-conversion) from a switch expression to a type `T`
+if there is an implicit conversion from every *switch_expression_arm_expression* of each of the switch expression's *switch_expression_arm*s to `T`.
+
+If a switch expression is not subject to a *switch expression conversion*, then
+
+- The type of the *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and each *switch_expression_arm_expression* can be implicitly converted to that type.
+- It is an error if no such type exists.
+
+It is an error if some *switch_expression_arm*'s pattern cannot affect the result because some previous pattern and guard will always match.
+
+A switch expression is said to be *exhaustive* if every value of its input is handled by at least one arm of the switch expression.  The compiler shall produce a warning if a switch expression is not exhaustive.
+At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*'s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
+
+> *Example*: The following converts values of an enum representing visual directions on an online map to the corresponding cardinal directions:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"SwitchExpression1", ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> static Orientation ToOrientation(Direction direction) => direction switch
+> {
+>     Direction.Up    => Orientation.North,
+>     Direction.Right => Orientation.East,
+>     Direction.Down  => Orientation.South,
+>     Direction.Left  => Orientation.West,
+>     _ => throw new ArgumentOutOfRangeException(direction.ToString()),
+> };
+>
+> public enum Direction
+> {
+>     Up,
+>     Down,
+>     Right,
+>     Left
+> }
+>
+> public enum Orientation
+> {
+>     North,
+>     South,
+>     East,
+>     West
+> }
+> ```
+>
+> *end example*
+
 ## 12.11 Arithmetic operators
 
 ### 12.11.1 General
@@ -3883,10 +3952,10 @@ The `*`, `/`, `%`, `+`, and `-` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : range_expression
-    | multiplicative_expression '*' range_expression
-    | multiplicative_expression '/' range_expression
-    | multiplicative_expression '%' range_expression
+    : switch_expression
+    | multiplicative_expression '*' switch_expression
+    | multiplicative_expression '/' switch_expression
+    | multiplicative_expression '%' switch_expression
     ;
 
 additive_expression
@@ -4346,7 +4415,12 @@ equality_expression
     ;
 ```
 
-> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
+> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*  
+
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` on the right-hand-side of `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression.
 
 The `is` operator is described in [§12.13.12](expressions.md#121312-the-is-operator) and the `as` operator is described in [§12.13.13](expressions.md#121313-the-as-operator).
 
@@ -4713,24 +4787,24 @@ There are two forms of the `is` operator. One is the *is-type operator*, which h
 
 The *is-type operator* is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
 
-The operation is evaluated as follows:
+The operation `E is T` is evaluated as follows:
 
 1. If `E` is an anonymous function or method group, a compile-time error occurs.
+1. If `T` is a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)), a compile-time error occurs.
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
-1. Let `R` be the runtime type of `E`.
-1. Let `D` be derived from `R` as follows:
-1. If `R` is a nullable value type, `D` is the underlying type of `R`.
-1. Otherwise, `D` is `R`.
-1. The result depends on `D` and `T` as follows:
-1. If `T` is a reference type, the result is `true` if:
-    - an identity conversion exists between `D` and `T`,
-    - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
-    - Either: `D` is a value type and a boxing conversion from `D` to `T` exists.  
-      Or: `D` is a value type and `T` is an interface type implemented by `D`.
-1. If `T` is a nullable value type, the result is `true` if `D` is the underlying type of `T`.
-1. If `T` is a non-nullable value type, the result is `true` if `D` and `T` are the same type.
-1. Otherwise, the result is `false`.
+   1. Let `R` be the runtime type of `E`.
+   1. Let `D` be derived from `R` as follows:
+      1. If `R` is a nullable value type, `D` is the underlying type of `R`.
+      1. Otherwise, `D` is `R`.
+   1. The result depends on `D` and `T` as follows:
+      1. If `T` is a reference type, the result is `true` if:
+         - an identity conversion exists between `D` and `T`, or
+         - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
+         - `D` is a value type and a boxing conversion from `D` to `T` exists.
+      1. If `T` is a nullable value type, the result is `true` if `D` is the underlying type of `T`.
+      1. If `T` is a non-nullable value type, the result is `true` if `D` and `T` are the same type.
+      1. Otherwise, the result is `false`.
 
 User defined conversions are not considered by the `is` operator.
 
@@ -4757,6 +4831,8 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
+
+Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true`.
 
 ### 12.13.13 The as operator
 
