@@ -39,7 +39,7 @@ The ***effective entry point*** of an application is the entry point declared wi
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-defined policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameters***, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
@@ -49,7 +49,7 @@ Other than the situations listed above, entry point methods behave like those th
 
 ## 7.2 Application termination
 
-***Application termination*** returns control to the execution environment.
+The return of control to the execution environment is known as ***application termination***.
 
 If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
@@ -205,7 +205,7 @@ The textual order in which names are declared is generally of no significance. I
 
 ### 7.4.1 General
 
-Namespaces and types have ***members***.
+Namespaces and types have ***member***s.
 
 > *Note*: The members of an entity are generally available through the use of a qualified name that starts with a reference to the entity, followed by a “`.`” token, followed by the name of the member. *end note*
 
@@ -546,7 +546,7 @@ The following accessibility constraints exist:
 
 ## 7.6 Signatures and overloading
 
-Methods, instance constructors, indexers, and operators are characterized by their ***signatures***:
+Methods, instance constructors, indexers, and operators are characterized by their ***signature***s:
 
 - The signature of a method consists of the name of the method, the number of type parameters, and the type and parameter-passing mode of each of its parameters, considered in the order left to right. For these purposes, any type parameter of the method that occurs in the type of a parameter is identified not by its name, but by its ordinal position in the type parameter list of the method. The signature of a method specifically does not include the return type, parameter names, type parameter names, type parameter constraints, the `params` or `this` parameter modifiers, nor whether parameters are required or optional.
 - The signature of an instance constructor consists of the type and parameter-passing mode of each of its parameters, considered in the order left to right. The signature of an instance constructor specifically does not include the `params` modifier that may be specified for the right-most parameter, nor whether parameters are required or optional.
@@ -972,7 +972,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 >
 > interface C : A, B
 > {
->     public void Test() { NestedClass.M(); } // ambiguity between A.NestedClass and B.NestedClass
+>     public void Test() { NestedClass.M(); } // ambiguity between
+>                                             // A.NestedClass and B.NestedClass
 > }
 > ```
 >

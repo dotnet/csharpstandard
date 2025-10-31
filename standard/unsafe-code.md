@@ -253,7 +253,7 @@ In an unsafe context, several constructs are available for operating on pointers
 
 ## 24.4 Fixed and moveable variables
 
-The address-of operator ([§24.6.5](unsafe-code.md#2465-the-address-of-operator)) and the `fixed` statement ([§24.7](unsafe-code.md#247-the-fixed-statement)) divide variables into two categories: ***Fixed variables*** and ***moveable variables***.
+The address-of operator ([§24.6.5](unsafe-code.md#2465-the-address-of-operator)) and the `fixed` statement ([§24.7](unsafe-code.md#247-the-fixed-statement)) divide variables into two categories: ***Fixed variable***s and ***moveable variable***s.
 
 Fixed variables reside in storage locations that are unaffected by operation of the garbage collector. (Examples of fixed variables include local variables, value parameters, and variables created by dereferencing pointers.) On the other hand, moveable variables reside in storage locations that are subject to relocation or disposal by the garbage collector. (Examples of moveable variables include fields in objects and elements of arrays.)
 

@@ -184,7 +184,7 @@ Precedence and associativity can be controlled using parentheses.
 
 All unary and binary operators have predefined implementations. In addition, user-defined implementations can be introduced by including operator declarations ([§15.10](classes.md#1510-operators)) in classes and structs. User-defined operator implementations always take precedence over predefined operator implementations: Only when no applicable user-defined operator implementations exist will the predefined operator implementations be considered, as described in [§12.4.4](expressions.md#1244-unary-operator-overload-resolution) and [§12.4.5](expressions.md#1245-binary-operator-overload-resolution).
 
-The ***overloadable unary operators*** are:
+The ***overloadable unary operator***s are:
 
 > `+  -  !` (logical negation only) `~  ++  --  true  false`
 
@@ -192,7 +192,7 @@ Only the operators listed above can be overloaded. In particular, it is not poss
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.26](expressions.md#1226-boolean-expressions)) and expressions involving the conditional ([§12.20](expressions.md#1220-conditional-operator)) and conditional logical operators ([§12.16](expressions.md#1216-conditional-logical-operators)). *end note*
 
-The ***overloadable binary operators*** are:
+The ***overloadable binary operator***s are:
 
 > `+  -  *  /  %  &  |  ^  <<  >>  ==  !=  >  <  <=  >=`
 
@@ -346,7 +346,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 ### 12.4.8 Lifted operators
 
-***Lifted operators*** permit predefined and user-defined operators that operate on non-nullable value types to also be used with nullable forms of those types. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
+A ***lifted operator*** permits predefined and user-defined operators that operate on a non-nullable value type to also be used with the nullable form of that type. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
 - For the unary operators `+`, `++`, `-`, `--`, `!` (logical negation), `^`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
 - For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `..`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.15.5](expressions.md#12155-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
@@ -3118,8 +3118,10 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
-    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    : identifier generic_dimension_specifier?
+      ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member
+      ('.' identifier generic_dimension_specifier?)*
     ;
 
 unbound_qualified_alias_member
@@ -6562,7 +6564,7 @@ except when `«v»` is the identifier `«x»`, the translation is
 
 #### 12.22.3.8 Transparent identifiers
 
-Certain translations inject range variables with ***transparent identifiers*** denoted by `*`. Transparent identifiers exist only as an intermediate step in the query-expression translation process.
+Certain translations inject range variables with ***transparent identifier***s denoted by `*`. Transparent identifiers exist only as an intermediate step in the query-expression translation process.
 
 When a query translation injects a transparent identifier, further translation steps propagate the transparent identifier into anonymous functions and anonymous object initializers. In those contexts, transparent identifiers have the following behavior:
 
@@ -6730,7 +6732,8 @@ assignment
     ;
 
 assignment_operator
-    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
+    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' |
+      '<<=' | '??='
     | right_shift_assignment
     ;
 ```
@@ -6741,12 +6744,12 @@ The `=` operator is called the ***simple assignment operator***. It assigns the
 
 The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which shall be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.23.3](expressions.md#12233-ref-assignment).
 
-The assignment operators other than the `=` and `= ref` operator are called the ***compound assignment operators***. These operators are processed as follows:
+The assignment operators other than the `=` and `= ref` operator are called the ***compound assignment operator***s. These operators are processed as follows:
 
 - For the `??=` operator, only if the value of the left-operand is `null`, is the right-operand evaluated and the result assigned to the variable, property, or indexer element given by the left operand.
 - Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.23.4](expressions.md#12234-compound-assignment).
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.5](expressions.md#12235-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.5](expressions.md#12235-event-assignment).
 
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
 

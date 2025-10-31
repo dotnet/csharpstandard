@@ -488,7 +488,7 @@ The nullable type annotation, `?`, can only be used on a type parameter that has
 >
 > *end example*
 
-The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
+The not null constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
 Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it shall be treated as a `class_type`. Otherwise it shall be treated as the not null constraint.
 
@@ -515,7 +515,8 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;
->         // possible warning: nonnullable base class requirement prohibits nullable class type argument
+>         // possible warning: nonnullable base class requirement prohibits nullable
+>         // class type argument
 >         B1<C?> x6;
 >         // nullable base class requirement allows nonnullable class type argument
 >         B2<C> x7;
@@ -1040,11 +1041,11 @@ A *class_member_declaration* can have any one of the permitted kinds of declared
 
 ### 15.3.7 Constituent types
 
-Types that are used in the declaration of a member are called the ***constituent types*** of that member. Possible constituent types are the type of a constant, field, property, event, or indexer, the return type of a method or operator, and the parameter types of a method, indexer, operator, or instance constructor. The constituent types of a member shall be at least as accessible as that member itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+Types that are used in the declaration of a member are called the ***constituent type***s of that member. Possible constituent types are the type of a constant, field, property, event, or indexer, the return type of a method or operator, and the parameter types of a method, indexer, operator, or instance constructor. The constituent types of a member shall be at least as accessible as that member itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 ### 15.3.8 Static and instance members
 
-Members of a class are either ***static members*** or ***instance members***.
+Members of a class are either ***static member***s or ***instance member***s.
 
 > *Note*: Generally speaking, it is useful to think of static members as belonging to classes and instance members as belonging to objects (instances of classes). *end note*
 
@@ -1695,7 +1696,7 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 
 ### 15.5.2 Static and instance fields
 
-When a field declaration includes a `static` modifier, the fields introduced by the declaration are ***static fields***. When no `static` modifier is present, the fields introduced by the declaration are ***instance fields***. Static fields and instance fields are two of the several kinds of variables ([§9](variables.md#9-variables)) supported by C#, and at times they are referred to as ***static variables*** and ***instance variables***, respectively.
+When a field declaration includes a `static` modifier, the fields introduced by the declaration are ***static field***s. When no `static` modifier is present, the fields introduced by the declaration are ***instance field***s. Static fields and instance fields are two of the several kinds of variables ([§9](variables.md#9-variables)) supported by C#, and at times they are referred to as ***static variable***s and ***instance variable***s, respectively.
 
 As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each instance of a class contains a complete set of the instance fields of the class, while there is only one set of static fields for each non-generic class or closed constructed type, regardless of the number of instances of the class or closed constructed type.
 
@@ -1703,7 +1704,7 @@ As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each in
 
 #### 15.5.3.1 General
 
-When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
+When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly field***s. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
 - In the *variable_declarator* that introduces the field (by including a *variable_initializer* in the declaration).
 - For an instance field, in the instance constructors of the class that contains the field declaration, excluding local functions and anonymous functions, and only on the instance being constructed. For a static field, in the static constructor or a static field or property initializer in the class that contains the field declaration, excluding local functions and anonymous functions. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
@@ -1780,7 +1781,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 ### 15.5.4 Volatile fields
 
-When a *field_declaration* includes a `volatile` modifier, the fields introduced by that declaration are ***volatile fields***. For non-volatile fields, optimization techniques that reorder instructions can lead to unexpected and unpredictable results in multi-threaded programs that access fields without synchronization such as that provided by the *lock_statement* ([§13.13](statements.md#1313-the-lock-statement)). These optimizations can be performed by the compiler, by the run-time system, or by hardware. For volatile fields, such reordering optimizations are restricted:
+When a *field_declaration* includes a `volatile` modifier, the fields introduced by that declaration are ***volatile field***s. For non-volatile fields, optimization techniques that reorder instructions can lead to unexpected and unpredictable results in multi-threaded programs that access fields without synchronization such as that provided by the *lock_statement* ([§13.13](statements.md#1313-the-lock-statement)). These optimizations can be performed by the compiler, by the run-time system, or by hardware. For volatile fields, such reordering optimizations are restricted:
 
 - A read of a volatile field is called a ***volatile read***. A volatile read has “acquire semantics”; that is, it is guaranteed to occur prior to any references to memory that occur after it in the instruction sequence.
 - A write of a volatile field is called a ***volatile write***. A volatile write has “release semantics”; that is, it is guaranteed to happen after any memory references prior to the write instruction in the instruction sequence.
@@ -3291,7 +3292,7 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 ### 15.7.1 General
 
-A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
+A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessor***s that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
 
 Properties are declared using *property_declaration*s:
 
@@ -4035,7 +4036,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 ### 15.8.1 General
 
-An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handlers***.
+An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handler***s.
 
 Events are declared using *event_declaration*s:
 
@@ -5513,7 +5514,7 @@ An asynchronous iterator shall support cancellation of the asynchronous operatio
 
 ### 15.15.2 Enumerator interfaces
 
-The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and the generic interface `System.Collections.Generic.IEnumerator<T>`.
+The ***enumerator interface***s are the non-generic interface `System.Collections.IEnumerator` and the generic interface `System.Collections.Generic.IEnumerator<T>`.
 
 The ***asynchronous enumerator interface*** is the generic interface `System.Collections.Generic.IAsyncEnumerator<T>`.
 
@@ -5521,7 +5522,7 @@ For the sake of brevity, in this subclause and its siblings these interfaces are
 
 ### 15.15.3 Enumerable interfaces
 
-The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and the generic interfaces `System.Collections.Generic.IEnumerable<T>`.
+The ***enumerable interface***s are the non-generic interface `System.Collections.IEnumerable` and the generic interfaces `System.Collections.Generic.IEnumerable<T>`.
 
 The ***asynchronous enumerable interface*** is the generic interface `System.Collections.Generic.IAsyncEnumerable<T>`.
 
