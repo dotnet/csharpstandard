@@ -737,25 +737,7 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time, with one exception:
-
-A compiler must respect the effect that *nullable_type_annotation* has on the ordering of array rank specifiers. Whereas `A[][,]` is a single *array_type* with two *rank_specifier*s, the presence of a nullable annotation between the rank specifiers in `A[]?[,]` causes it to no longer be a single *array_type*, but rather two: an outer *array_type* with a single *rank_specifier* of `[,]`, and an element type of `A[]?` which is a *nullable_reference_type* containing an inner *array_type* with a single *rank_specifier* of `[]`. Because of this, `A[]?[,]` and `A[,][]` are represented by the same underlying type, while `A[]?[,]` and `A[][,]` are not.
-
-> *Example*: The array ranks are interrupted by the '?' in the parameter type, changing the meaning of the underlying array type:
->
-> <!-- Example: {template:"code-in-class-lib", name:"ArraysOfNullAbleArrays"} -->
-> ```csharp
-> #nullable enable
-> class C
-> {
->     void M(string[][,]?[,,][,,,] arrays)
->     {
->         string? value = arrays[3, 3, 3][4, 4, 4, 4]?[1][2, 2];
->     }
-> }
-> ```
->
-> *end example*
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time, with one exception: arrays of nullable arrays are not parsed as a single *array_type*, but rather as multiple nested *array_type*s. The corresponding *non-nullable reference type* of an array of nullable arrays is not the single array type that would be parsed if the nullable annotations were removed; see §arrays-of-nullable-arrays.
 
 ### 8.9.2 Non-nullable reference types
 
@@ -1121,6 +1103,8 @@ A compiler may issue a warning when nullability annotations differ between two t
 
 A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance ([§17.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
 
+(See §arrays-of-nullable-arrays for the specification of the corresponding non-nullable array type used in `M7` and `M8`.)
+
 > <!-- Example: {template:"code-in-class-lib", name:"NullVariance", ignoredWarnings:["CS8619"]} -->
 > ```csharp
 > #nullable enable
@@ -1157,6 +1141,17 @@ A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#1
 >     {
 >         string[] v1 = p; // Warning
 >         string[] v2 = p!; // No warning
+>     }
+>
+>     public void M7(string[][,] p)
+>     {
+>         string[,]?[] v1 = p; // No warning
+>     }
+>
+>     public void M6(string[]?[,] p)
+>     {
+>         string[,][] v1 = p; // Warning
+>         string[,][] v2 = p!; // No warning
 >     }
 > }
 > ```

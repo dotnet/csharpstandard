@@ -50,6 +50,33 @@ At run-time, a value of an array type can be `null` or a reference to an instanc
 
 > *Note*: Following the rules of [§17.6](arrays.md#176-array-covariance), the value may also be a reference to a covariant array type. *end note*
 
+### §arrays-of-nullable-arrays Arrays of nullable arrays
+
+The nullable annotation `?` may be placed on an array type, as in `T[R]?`. Such an array type may be used as the element type of another array type, as in `T[R]?[R₂]`.
+
+The intervening nullable annotation (`?`) separates the grammar into multiple *array_types*. `T[R₁][R₂]?[R₃][R₄]` is not a single *array_type* with four ranks. Rather, it is two *array_type*s, each of which has two ranks. The outer *array_type* has ranks `[R₃][R₄]`, read left to right, and its element type is `T[R₁][R₂]?`. The element type is another *array_type* with a nullable annotation, and this inner array type has ranks `[R₁][R₂]`, read left to right.
+
+> *Note*: This is the sole exception to the general rule that the meaning of a program remains the same when nullable reference types annotations are removed. *end note*
+
+Every reference type which contains nullable annotations has a corresponding unannotated type with no semantic difference (§8.9.1). The corresponding unannotated type for an array of nullable arrays is a single array type which recursively collects all the ranks of all the nested *array_type*s.
+
+The unannotated array type of an array of nullable arrays cannot be found by simply removing the nullable annotations `?` from the grammar and reparsing. This is because array ranks are read left to right while nested *array_type* productions are read outside-in, with outer array type ranks to the right, inner array type ranks to the left. Thus, the type `T[R₁][R₂]?[R₃][R₄]` has an underlying array type of `T[R₃][R₄][R₁][R₂]`. To obtain the underlying array type of an array of nullable arrays, first take the ranks on the outermost array type in order from left to right, then move to the array type inside the nullable element type and take its ranks in order from left to right. Repeat until the element type is no longer a nullable array type. Then take this remaining element type and place on it all the collected ranks in order from first to last to obtain the unannotated array type.
+
+> *Example*:
+>
+> The following table demonstrates the effect on the underlying array type caused by breaking up array types by inserting nullable annotations:
+>
+> | Annotated                        | Underlying                                |
+> |----------------------------------|-------------------------------------------|
+> | `T?[][,][,,]`                    | `T[][,][,,]` (not intervening, no change) |
+> | `T[][,][,,]?`                    | `T[][,][,,]` (not intervening, no change) |
+> | `T[]?[,]?[,,]`                   | `T[,,][,][]`                              |
+> | `T[]?[,][,,]`                    | `T[,][,,][]`                              |
+> | `T[][,]?[,,]`                    | `T[,,][][,]`                              |
+> | `T[][,]?[,,][,,,]?[,,,,][,,,,,]` | `T[,,,,][,,,,,][,,][,,,][][,]`            |
+>
+> *end example*
+
 ### 17.2.2 The System.Array type
 
 The type `System.Array` is the abstract base type of all array types. An implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from any array type to `System.Array` and to any interface type implemented by `System.Array`. An explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exists from `System.Array` and any interface type implemented by `System.Array` to any array type. `System.Array` is not itself an *array_type*. Rather, it is a *class_type* from which all *array_type*s are derived.
