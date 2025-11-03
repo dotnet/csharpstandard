@@ -2,7 +2,9 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification.
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of the types and their members identified in ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)), refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification. For a list of types and their members required beyond those identified in [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271), see [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271).
+
+> *Note*: The adoption of a subset of the CLI’s library API does not create a dependency on the CLI itself; a conforming implementation need not be built upon, or target, the CLI.
 
 **This text is informative.**
 
@@ -34,6 +36,12 @@ namespace System
         public ArgumentException();
         public ArgumentException(string? message);
         public ArgumentException(string? message, Exception? innerException);
+    }
+
+    public class ArgumentOutOfRangeException : ArgumentException
+    {
+        public ArgumentOutOfRangeException(string? paramName);
+        public ArgumentOutOfRangeException(string? paramName, string? message);
     }
 
     public class ArithmeticException : Exception
@@ -128,6 +136,11 @@ namespace System
     public interface IDisposable
     {
         void Dispose();
+    }
+
+    public interface IEquatable<T>
+    {
+        bool Equals(T? other);
     }
 
     public interface IFormattable { }
@@ -382,6 +395,11 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 ```csharp
 namespace System
 {
+    public interface IAsyncDisposable
+    {
+        ValueTask DisposeAsync();
+    }
+
     public class FormattableString : IFormattable { }
 
     public class OperationCanceledException : Exception
@@ -389,6 +407,164 @@ namespace System
         public OperationCanceledException();
         public OperationCanceledException(string? message);
         public OperationCanceledException(string? message, Exception? innerException);
+    }
+
+    /// <summary>
+    ///    A read-only value type which represents an abstract
+    ///    index to be used with collections.
+    ///    - The Index can be relative to the start or end of a
+    ///      collection.
+    ///    - An Index can be converted to a zero-based concrete
+    ///      from-start index to be used with a collection
+    ///      of some specified length.
+    ///    - Equality between Index values is provided, however
+    ///      unlike concrete indices they are not ordered.
+    ///    - Array and String element access support indexing
+    ///      with Index values.
+    /// </summary>
+    public readonly struct Index : IEquatable<Index>
+    {
+        /// <summary>
+        ///    Construct an Index from an integer value and a
+        ///    boolean indicating whether the value is relative
+        ///    to the end (true) or start (false).
+        /// </summary>
+        /// <param name="value">
+        ///    The value, must be ≥ 0.
+        /// </param>
+        /// <param name="fromEnd">
+        ///    Optional boolean indicating whether the Index is
+        ///    relative to the end (true) or start (false).
+        ///    The default value is false.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///    Thrown if value < 0.
+        /// </exception>
+        /// <remarks>
+        ///    If the Index is relative to the start then:
+        ///       - the value 0 refers to the first element.
+        ///    If the Index is relative to the end then:
+        ///       - the value 1 refers to the last element; and
+        ///       - the value 0 refers to beyond last element.
+        /// </remarks>
+        public Index(int value, bool fromEnd = false);
+
+        /// <summary>
+        ///    Implicit conversion from integer to a
+        ///    from-start Index.
+        /// </summary>
+        /// <remarks>
+        ///    The predefined operator:
+        ///       <c>Index operator ^(int value);</c>
+        ///    is provided to convert from integer to a
+        ///    from-end Index.
+        /// </remarks>
+        public static implicit operator Index(int value);
+
+        /// <summary>
+        ///    Return the value.
+        /// </summary>
+        public int Value { get; }
+
+        /// <summary>
+        ///    Return whether the Index is relative to
+        ///    the end (true) or start (false).
+        /// </summary>
+        public bool IsFromEnd { get; }
+
+        /// <summary>
+        ///    Return a concrete from-start index for a
+        ///    given collection length.
+        /// </summary>
+        /// <param name="length">
+        ///    The length of the collection that the index
+        ///    will be used with.
+        /// </param>
+        /// <remarks>
+        ///    This method performs no sanity checking and
+        ///    will never throw an IndexOutOfRangeException.
+        ///    It is expected that the returned index will be
+        ///    used with a collection which will do validation.
+        /// </remarks>
+        public int GetOffset(int length);
+
+        /// <summary>
+        ///    Indicates whether the current Index value is
+        ///    equal to another Index value.
+        /// </summary>
+        /// <param name="other">
+        ///    The value to compare with this Index.
+        /// </param>
+        public bool Equals(Index other);
+    }
+
+    /// <summary>
+    ///    A read-only value type which represents a range of
+    ///    abstract indices to be used with collections.
+    ///    - The Range has two Index properties, Start and End.
+    ///    - A Range can be converted to a concrete index from
+    ///      the start and a length value to be used with a
+    ///      collection of some specified length.
+    ///    - Equality between Range values is provided,
+    ///      however they are not ordered.
+    ///    - Array and String element access supports indexing
+    ///      with Range values, returning a sub-array/substring
+    ///      of the indexed value respectively.
+    /// </summary>
+    public readonly struct Range : IEquatable<Index>
+    {
+        /// <summary>
+        ///    Construct a Range from two Index values.
+        /// </summary>
+        /// <param name="start">
+        ///    The inclusive Index value for the start
+        ///    of the range.
+        /// </param>
+        /// <param name="end">
+        ///    The exclusive Index value for the end
+        ///    of the range.</param>
+        /// <remarks>
+        ///    As Index values represent unordered abstract
+        ///    indices no sanity checking can be performed
+        ///    on the resultant Range value,
+        ///    <see cref="GetOffsetAndLength">".
+        ///
+        ///    The predefined operator:
+        ///       <c>Range operator ..(Index start, Index end);</c>
+        ///    also exists to create a Range value.
+        /// </remarks>
+        public Range(Index start, Index end);
+
+        /// <summary>Return the starting Index.</summary>
+        public Index Start { get; }
+
+        /// <summary>Return the ending Index.</summary>
+        public Index End { get; }
+
+        /// <summary>
+        ///    Return a concrete from-start index and the
+        ///    range length for a given collection length.
+        /// </summary>
+        /// <param name="length">
+        ///    The length of the collection that the result
+        ///    will be used with.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///    Thrown if the range is not valid wrt length.
+        /// </exception>
+        /// <returns>
+        ///    A tuple consisting of an index value and range length
+        /// </returns>
+        public (int Offset, int Length) GetOffsetAndLength(int length);
+
+        /// <summary>
+        ///    Indicates whether the current Range value is equal
+        ///    to another Range value.
+        /// </summary>
+        /// <param name="other">
+        ///    The value to compare with this Range.
+        /// </param>
+        public bool Equals(Range other);
     }
 
     public readonly ref struct ReadOnlySpan<T>
@@ -482,6 +658,11 @@ namespace System
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6, T7 item7, TRest rest);
     }
+
+    public interface IAsyncDisposable
+    {
+        public System.Threading.Tasks.ValueTask DisposeAsync();
+    }
 }
 
 namespace System.Collections.Generic
@@ -494,6 +675,17 @@ namespace System.Collections.Generic
     public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
     {
         T this [int index] { get; }
+    }
+
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        ValueTask<bool> MoveNextAsync();
+        T Current { get; }
     }
 }
 
@@ -602,6 +794,12 @@ namespace System.Runtime.CompilerServices
         public CallerMemberNameAttribute() { }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class EnumeratorCancellationAttribute : Attribute
+    {
+        public EnumeratorCancellationAttribute() {}
+    }
+    
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
@@ -644,6 +842,24 @@ namespace System.Runtime.CompilerServices
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
+    }
+}
+
+namespace System.Threading
+{
+    public class CancellationTokenSource : IDisposable
+    {
+        public CancellationTokenSource();
+        public System.Threading.CancellationToken Token { get; }
+        public void Cancel();
+        public static CancellationTokenSource CreateLinkedTokenSource
+                                             (CancellationToken token1,
+                                              CancellationToken token2);
+    }
+
+    public readonly struct CancellationToken : IEquatable<CancellationToken>
+    {
+        public bool IsCancellationRequested { get; }
     }
 }
 
@@ -1058,6 +1274,7 @@ The following library types are referenced in this specification. The full names
 
 - `global::System.Action`
 - `global::System.ArgumentException`
+- `global::System.ArgumentOutOfRangeException`
 - `global::System.ArithmeticException`
 - `global::System.Array`
 - `global::System.ArrayTypeMisMatchException`
@@ -1075,8 +1292,11 @@ The following library types are referenced in this specification. The full names
 - `global::System.Exception`
 - `global::System.FormattableString`
 - `global::System.GC`
+- `global::System.IAsyncDisposable`
 - `global::System.IDisposable`
+- `global::System.IEquatable<T>`
 - `global::System.IFormattable`
+- `global::System.Index`
 - `global::System.IndexOutOfRangeException`
 - `global::System.Int16`
 - `global::System.Int32`
@@ -1092,6 +1312,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.OperationCanceledException`
 - `global::System.OutOfMemoryException`
 - `global::System.OverflowException`
+- `global::System.Range`
 - `global::System.ReadOnlySpan`
 - `global::System.SByte`
 - `global::System.Single`
@@ -1118,6 +1339,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Collections.IEnumerable`
 - `global::System.Collections.IEnumerator`
 - `global::System.Collections.IList`
+- `global::System.Collections.Generic.IAsyncEnumerable<out T>`
+- `global::System.Collections.Generic.IAsyncEnumerator<out T>`
 - `global::System.Collections.Generic.ICollection<T>`
 - `global::System.Collections.Generic.IEnumerable<T>`
 - `global::System.Collections.Generic.IEnumerator<T>`

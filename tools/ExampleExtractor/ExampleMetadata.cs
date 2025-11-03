@@ -84,4 +84,6 @@ public class ExampleMetadata
 
     [JsonIgnore]
     public string Source => $"{MarkdownFile}:{StartLine}-{EndLine}";
+
+    public override string ToString() => Name;
 }

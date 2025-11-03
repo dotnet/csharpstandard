@@ -48,5 +48,5 @@ chmod +x TextModify
 popd >& /dev/null
 
 # We should now be able to run the testing package scripts...
-./SetupAndTest "${StandardSource}"
+./SetupAndTest "${StandardSource}" -v
 

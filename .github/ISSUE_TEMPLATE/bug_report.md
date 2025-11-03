@@ -12,7 +12,7 @@ A clear and concise description of what the bug is. Does the standard disallow c
 
 Include a reference to the clause in the standard containing the violation.
 
-Include the version of C# where you encounter this error. The committee is working on the updated standard for C# 7.3. We have lists for features that will be added in later versions. Bugs that describe changes to behavior that existed in 7.3 are useful. Adding issues for features that aren't covered are less helpful.
+Include the version of C# where you encounter this error. The committee is working on the updated standard for C# 8. We have lists for features that will be added in later versions. Bugs that describe changes to behavior that existed in 8 are useful. Adding issues for features that aren't covered are less helpful.
 
 **Example**
 Provide an example that shows the problem in the standard. A small code snippet that should be allowed or disallowed, or code that behaves differently than the standard.
