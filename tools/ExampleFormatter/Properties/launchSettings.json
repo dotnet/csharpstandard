@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ExampleFormatter": {
+      "commandName": "Project",
+      "commandLineArgs": "../standard",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

@@ -112,7 +112,9 @@ Elements of arrays created by *array_creation_expression*s are always initialize
 
 ## 17.4 Array element access
 
-Array elements are accessed using *element_access* expressions ([§12.8.12.2](expressions.md#128122-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
+Array elements are accessed using the *array access* variant of *element_access* expressions ([§12.8.12.2](expressions.md#128122-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array access is a variable reference ([§9.5](variables.md#95-variable-references)) to the array element selected by the indices.
+
+Array elements of single-dimensional arrays can also be accessed using an array access expression where the sole index, `I₁`, is an expression of type `Index`, `Range`, or can be implicitly converted to one or both of these types. If `I₁` is of type `Index`, or has been implicitly converted to that type, then the result of the array access is a variable reference to the array element selected by the index value. If `I₁` is of type `Range`, or has been implicitly converted to that type, then the result of the element access is a new array formed from a shallow copy of the array elements with indices in the `Range`, maintaining the element order.
 
 The elements of an array can be enumerated using a `foreach` statement ([§13.9.5](statements.md#1395-the-foreach-statement)).
 
@@ -124,7 +126,7 @@ Every array type inherits the members declared by the `System.Array` type.
 
 For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) or explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
 
-Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§12.21.2](expressions.md#12212-simple-assignment)).
+Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§12.23.2](expressions.md#12232-simple-assignment)).
 
 > *Example*:
 >

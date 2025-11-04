@@ -1,6 +1,6 @@
-# 19 Enums
+# 20 Enums
 
-## 19.1 General
+## 20.1 General
 
 An ***enum type*** is a distinct value type ([§8.3](types.md#83-value-types)) that declares a set of named constants.
 
@@ -20,7 +20,7 @@ An ***enum type*** is a distinct value type ([§8.3](types.md#83-value-types)) t
 >
 > *end example*
 
-## 19.2 Enum declarations
+## 20.2 Enum declarations
 
 An enum declaration declares a new enum type. An enum declaration begins with the keyword `enum`, and defines the name, accessibility, underlying type, and members of the enum.
 
@@ -76,7 +76,7 @@ An enum declaration that does not explicitly declare an underlying type has an u
 
 An enum declaration cannot include a type parameter list, but any enum nested inside a generic class declaration or a generic struct declaration is a generic enum declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-## 19.3 Enum modifiers
+## 20.3 Enum modifiers
 
 An *enum_declaration* may optionally include a sequence of enum modifiers:
 
@@ -94,7 +94,7 @@ It is a compile-time error for the same modifier to appear multiple times in an 
 
 The modifiers of an enum declaration have the same meaning as those of a class declaration ([§15.2.2](classes.md#1522-class-modifiers)). However, the `abstract`, and `sealed`, and `static` modifiers are not permitted in an enum declaration. Enums cannot be abstract and do not permit derivation.
 
-## 19.4 Enum members
+## 20.4 Enum members
 
 The body of an enum type declaration defines zero or more enum members, which are the named constants of the enum type. No two enum members can have the same name.
 
@@ -224,26 +224,26 @@ The associated value of an enum member shall not, directly or indirectly, use th
 
 Enum members are named and scoped in a manner exactly analogous to fields within classes. The scope of an enum member is the body of its containing enum type. Within that scope, enum members can be referred to by their simple name. From all other code, the name of an enum member shall be qualified with the name of its enum type. Enum members do not have any declared accessibility—an enum member is accessible if its containing enum type is accessible.
 
-## 19.5 The System.Enum type
+## 20.5 The System.Enum type
 
 The type `System.Enum` is the abstract base class of all enum types (this is distinct and different from the underlying type of the enum type), and the members inherited from `System.Enum` are available in any enum type. A boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) exists from any enum type to `System.Enum`, and an unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `System.Enum` to any enum type.
 
 Note that `System.Enum` is not itself an *enum_type*. Rather, it is a *class_type* from which all *enum_type*s are derived. The type `System.Enum` inherits from the type `System.ValueType` ([§8.3.2](types.md#832-the-systemvaluetype-type)), which, in turn, inherits from type `object`. At run-time, a value of type `System.Enum` can be `null` or a reference to a boxed value of any enum type.
 
-## 19.6 Enum values and operations
+## 20.6 Enum values and operations
 
 Each enum type defines a distinct type; an explicit enumeration conversion ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions)) is required to convert between an enum type and an integral type, or between two enum types. The set of values of the enum type is the same as the set of values of the underlying type and is not restricted to the values of the named constants. Any value of the underlying type of an enum can be cast to the enum type, and is a distinct valid value of that enum type.
 
-Enum members have the type of their containing enum type (except within other enum member initializers: see [§19.4](enums.md#194-enum-members)). The value of an enum member declared in enum type `E` with associated value `v` is `(E)v`.
+Enum members have the type of their containing enum type (except within other enum member initializers: see [§20.4](enums.md#204-enum-members)). The value of an enum member declared in enum type `E` with associated value `v` is `(E)v`.
 
 The following operators can be used on values of enum types:
 
-- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.12.6](expressions.md#12126-enumeration-comparison-operators))
-- binary `+` ([§12.10.5](expressions.md#12105-addition-operator))
-- binary `-` ([§12.10.6](expressions.md#12106-subtraction-operator))
-- `^`, `&`, `|` ([§12.13.3](expressions.md#12133-enumeration-logical-operators))
+- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.14.6](expressions.md#12146-enumeration-comparison-operators))
+- binary `+` ([§12.12.5](expressions.md#12125-addition-operator))
+- binary `-` ([§12.12.6](expressions.md#12126-subtraction-operator))
+- `^`, `&`, `|` ([§12.15.3](expressions.md#12153-enumeration-logical-operators))
 - `~` ([§12.9.5](expressions.md#1295-bitwise-complement-operator))
-- `++`, `--` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators))
-- `sizeof` ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator))
+- `++`, `--` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators))
+- `sizeof` ([§24.6.9](unsafe-code.md#2469-the-sizeof-operator))
 
 Every enum type automatically derives from the class `System.Enum` (which, in turn, derives from `System.ValueType` and `object`). Thus, inherited methods and properties of this class can be used on values of an enum type.
