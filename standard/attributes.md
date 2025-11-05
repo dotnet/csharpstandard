@@ -982,7 +982,8 @@ Specifies that a non-nullable return value may be null.
 
 > *Example*: Consider the following generic method:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], expectedErrors:["CS8627"]} -->
+> <!-- TODO:  This sample no longer generates the error in C# 9. This could be part of the new nullable constraints. Was: , expectedErrors:["CS8627"]-->
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
 > #nullable enable
 > public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
