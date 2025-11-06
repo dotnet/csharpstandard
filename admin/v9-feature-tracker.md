@@ -11,7 +11,7 @@ Rex started with a set of [MS proposals](https://github.com/dotnet/csharplang/tr
 Feature | PR | Branch | Status | Effort | Annotation | Notes
 ------- | -- | ------ | ------ | ------ | ---------- | ------
 Init accessors ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/init.md))         | [#1452](https://github.com/dotnet/csharpstandard/pull/1492) | `v9-init-accessors` | SPEC'D | medium | Done. See review notes in [#978](https://github.com/dotnet/csharpstandard/pull/978) | 
-Top-level statements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/top-level-statements.md))	| [980](https://github.com/dotnet/csharpstandard/pull/980) | N/A | SPEC'D |  small | Done | 
+Top-level statements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/top-level-statements.md))	| [#1454](https://github.com/dotnet/csharpstandard/pull/1454) | `v9-top-level-statements` | SPEC'D |  small | Done | 
 Native sized integers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/native-integers.md))	| [1060](https://github.com/dotnet/csharpstandard/pull/1060) | N/A  | SPEC'D | medium | Done |
 Records ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/records.md))	| [983](https://github.com/dotnet/csharpstandard/pull/983)  | N/A | SPEC'D | large | Done | See open issues in the PR intro
 Function pointers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/function-pointers.md))	| [984](https://github.com/dotnet/csharpstandard/pull/984)  | N/A | SPEC'D | large | Done | See open issues in the PR intro
