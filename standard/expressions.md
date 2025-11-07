@@ -2284,7 +2284,7 @@ For an array access the *argument_list* shall not contain named arguments or by-
 
 The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be:
 
-- of type `int`, `uint`, `nint`, nuint`, `long`, or `ulong`; or
+- of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`; or
 - for single rank array access only, of type `Index` or `Range`; or
 - be implicitly convertible to one or more of the above types.
 
