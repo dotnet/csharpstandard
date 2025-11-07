@@ -3380,7 +3380,7 @@ The differences between static and instance members are discussed further in [§
 
 #### §accessors-general General
 
-*Note*: This subclause and its sibling subclauses apply to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+*Note*: This subclause and its sibling subclauses apply to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The text is written in terms of properties; when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
@@ -3553,7 +3553,6 @@ For more information about set and get accessors, see §set-and-get-accessors.
 > *Example*: Consider the following, immutable type, which has auto-implemented properties:
 >
 > <!-- Example: {template:"standalone-lib", name:"AccessorsInit1"} -->
-> <!-- FIX: create and add file PointStructWithInit.cs. -->
 > ```csharp
 > struct Point
 > {

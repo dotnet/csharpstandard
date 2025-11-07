@@ -105,7 +105,7 @@ class X : Attribute { ... }
 
 ### 23.2.3 Positional and named parameters
 
-Attribute classes can have ***positional parameter***s and ***named parameter***s. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and non-static public read-write or read-init property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
+Attribute classes can have ***positional parameter***s and ***named parameter***s. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and non-static public read-write or read-init property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set or init accessor.
 
 > *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write or read-init. Two uses of this attribute are also shown:
 >
@@ -465,7 +465,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 - If `C` does not have public accessibility, then a compile-time error occurs.
 - For each *named_argument* `Arg` in `N`:
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
-  - `Name` shall identify a non-static read-write public field or a non-static public read-write or read-init property on `T`. If `T` has no such field or property, then a compile-time error occurs.
+  - `Name` shall identify a non-static read-write public field or a public non-static read-write or read-init property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§23.4.3](attributes.md#2343-run-time-retrieval-of-an-attribute-instance)).
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list* `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
