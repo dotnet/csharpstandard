@@ -779,13 +779,13 @@ class_body
     ;
 ```
 
+A non-record class shall not have a *class_body* of `;`.
+
 For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those synthesized by the compiler (§synth-members).
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning immediately before the keywords `class`, `struct`, and `interface`. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
-
-A non-record class shall not have a *class_body* of `;`.
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -6014,8 +6014,7 @@ The synthesized `Equals(R?)` returns `true` if and only if each of the following
 
 - `other` is not `null`, and
 - For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
-- If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise
-the value of `EqualityContract == other.EqualityContract`.
+- If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise the value of `EqualityContract == other.EqualityContract`.
 
 The record class type includes synthesized `==` and `!=` operators equivalent to operators declared as follows:
 
@@ -6056,8 +6055,7 @@ A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicit
 The synthesized override of `GetHashCode()` returns an `int` result of combining the following values:
 
 - For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
-- If there is a base record class type, the value of `base.GetHashCode()`; otherwise
-the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
+- If there is a base record class type, the value of `base.GetHashCode()`; otherwise the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
 
 > *Example*: Consider the following record class types:
 >
