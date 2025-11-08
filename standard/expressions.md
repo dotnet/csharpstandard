@@ -3833,7 +3833,6 @@ with_expression
     : switch_expression
     | switch_expression 'with' '{' member_initializer_list? '}'
     ;
-
 ```
 
 A *with_expression* is not permitted as a statement.
