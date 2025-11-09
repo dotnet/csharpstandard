@@ -35,6 +35,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. Whether or not finalizers are run as part of application termination. ([§7.2](basic-concepts.md#72-application-termination))
 1. Whether APIs allow a finalizer to be run more than once. ([§7.9](basic-concepts.md#79-automatic-memory-management))
 1. Whether or not finalizers are run as part of application termination. ([§7.9](basic-concepts.md#79-automatic-memory-management))
+1. The size and value range of the types `nint` and `nuint`. ([§8.3.6](types.md#836-integral-types))
 1. The API surface provided by `Expression<TDelegate>` beyond the requirement for a `Compile` method. ([§8.6](types.md#86-expression-tree-types))
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The reason a conversion to a compatible delegate type may fail at compile-time. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
