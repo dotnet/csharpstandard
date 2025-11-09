@@ -61,21 +61,6 @@
           </r>
         </p>
       </tc>
-      <tc>
-        <pPr>
-          <pStyle val="TableCellNormal" />
-          <jc val="center" />
-        </pPr>
-        <p>
-          <pPr>
-            <pStyle val="Code" />
-            <ind left="0" />
-          </pPr>
-          <r>
-            <t>Code cell</t>
-          </r>
-        </p>
-      </tc>
     </tr>
   </tbl>
   <p>

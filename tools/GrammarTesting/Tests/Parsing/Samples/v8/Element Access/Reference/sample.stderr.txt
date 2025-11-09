@@ -1,0 +1,5 @@
+line 7:34 LHS of an element_access cannot be an array_creation_expression unless it has an initializer
+line 19:38 LHS of an element_access cannot be a stackalloc_expression unless it has an initializer
+line 26:34 LHS of a null_conditional_element_access cannot be an array_creation_expression unless it has an initializer
+line 33:38 LHS of a null_conditional_element_access cannot be a stackalloc_expression unless it has an initializer
+line 46:42 LHS of an element_access cannot be a stackalloc_expression unless it has an initializer

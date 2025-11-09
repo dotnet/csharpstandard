@@ -1,17 +1,13 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Binding;
-using System.CommandLine.Invocation;
 
 namespace ExampleTester;
 
 public record TesterConfiguration(
     string ExtractedOutputDirectory,
-    bool Quiet,
-    string? SourceFile,
-    string? ExampleName)
-{
-    
-}
+    bool Quiet = false,
+    string? SourceFile = null,
+    string? ExampleName = null);
 
 public class TesterConfigurationBinder : BinderBase<TesterConfiguration>
 {
