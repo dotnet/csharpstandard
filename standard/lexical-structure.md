@@ -52,7 +52,18 @@ Every compilation unit in a C# program shall conform to the *compilation_unit* 
 
 ### 6.2.5 Grammar ambiguities
 
-The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) and *member_access* ([§12.8.7](expressions.md#1287-member-access)) can give rise to ambiguities in the grammar for expressions.
+The productions for:
+
+- *simple_name* ([§12.8.4](expressions.md#1284-simple-names)),
+- *member_access* ([§12.8.7](expressions.md#1287-member-access)),
+- *null_conditional_member_access* ([§12.8.8](expressions.md#1288-null-conditional-member-access)),
+- *dependent_access* ([§12.8.8](expressions.md#1288-null-conditional-member-access)),
+- *base_access* ([§12.8.15](expressions.md#12815-base-access)) and
+- *pointer_member_access* ([§24.6.3](unsafe-code.md#2463-pointer-member-access));
+
+(the “disambiguated productions”) can give rise to ambiguities in the grammar for expressions.
+
+These productions occur in contexts where a value can occur in an expression, and have one or more alternatives that end with the grammar “`identifier type_argument_list?`”. It is the optional *type_argument_list* which results in the possible ambiguity.
 
 > *Example*: The statement:
 >
@@ -65,16 +76,15 @@ The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
+If a sequence of tokens can be parsed, in context, as one of the disambiguated productions including an optional *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), then the token immediately following the closing `>` token shall be examined and if it is:
 
-- One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
-- One of the relational operators `<  <=  >=  is as`; or
-- A contextual query keyword appearing inside a query expression; or
-- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
+- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- one of the relational operators `<  <=  >=  is as`; or
+- a contextual query keyword appearing inside a query expression.
 
-If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
+then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
-> *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
+> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -124,7 +134,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-When recognising a *relational_expression* ([§12.12.1](expressions.md#12121-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 ## 6.3 Lexical analysis
 
@@ -189,7 +199,7 @@ Line terminators divide the characters of a C# compilation unit into lines.
 ```ANTLR
 New_Line
     : New_Line_Character
-    | '\u000D\u000A'    // carriage return, line feed 
+    | '\u000D\u000A'    // carriage return, line feed
     ;
 ```
 
@@ -262,7 +272,7 @@ fragment Input_Character
     // anything but New_Line_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')
     ;
-    
+
 fragment New_Line_Character
     : '\u000D'  // carriage return
     | '\u000A'  // line feed
@@ -270,11 +280,11 @@ fragment New_Line_Character
     | '\u2028'  // line separator
     | '\u2029'  // paragraph separator
     ;
-    
+
 fragment Delimited_Comment
     : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
-    
+
 fragment Delimited_Comment_Section
     : SLASH
     | ASTERISK* Not_Slash_Or_Asterisk
@@ -413,6 +423,11 @@ The rules for identifiers given in this subclause correspond exactly to those re
 identifier
     : Simple_Identifier
     | contextual_keyword
+    | discard_token
+    ;
+
+discard_token
+    : '_'
     ;
 
 Simple_Identifier
@@ -428,7 +443,7 @@ fragment Available_Identifier
 fragment Escaped_Identifier
     // Includes keywords and contextual keywords prefixed by '@'.
     // See note below.
-    : '@' Basic_Identifier 
+    : '@' Basic_Identifier
     ;
 
 fragment Basic_Identifier
@@ -495,7 +510,7 @@ fragment Formatting_Character
 > - For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
 > - The fragment *Available_Identifier* requires the exclusion of keywords and contextual keywords. If the grammar in this specification is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >   - Keywords and contextual keywords occur in the grammar as literal strings.
->   - ANTLR creates implicit lexical token rules are created from these literal strings.
+>   - ANTLR creates implicit lexical token rules for these literal strings.
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >   - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 > - Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§6.3.1](lexical-structure.md#631-general)).
@@ -556,7 +571,7 @@ Two identifiers are considered the same if they are identical after the followin
 The semantics of an identifier named `_` depends on the context in which it appears:
 
 - It can denote a named program element, such as a variable, class, or method, or
-- It can denote a discard ([§9.2.9.1](variables.md#9291-discards)).
+- It can denote a discard ([§9.2.9.2](variables.md#9292-discards)).
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -591,12 +606,12 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
-    | 'var'    | 'when'       | 'where'     | 'yield'
+    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
+    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
+    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
     ;
 ```
 
@@ -606,7 +621,7 @@ In most cases, the syntactic location of contextual keywords is such that they c
 
 In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
-Another example such disambiguation is the contextual keyword `await` ([§12.9.8.1](expressions.md#12981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
+Another example such disambiguation is the contextual keyword `await` ([§12.9.9.1](expressions.md#12991-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
@@ -664,16 +679,16 @@ fragment Decimal_Integer_Literal
 fragment Decorated_Decimal_Digit
     : '_'* Decimal_Digit
     ;
-       
+
 fragment Decimal_Digit
     : '0'..'9'
     ;
-    
+
 fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' |
       'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
-    
+
 fragment Hexadecimal_Integer_Literal
     : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
@@ -681,11 +696,11 @@ fragment Hexadecimal_Integer_Literal
 fragment Decorated_Hex_Digit
     : '_'* Hex_Digit
     ;
-       
+
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
-   
+
 fragment Binary_Integer_Literal
     : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
     ;
@@ -693,7 +708,7 @@ fragment Binary_Integer_Literal
 fragment Decorated_Binary_Digit
     : '_'* Binary_Digit
     ;
-       
+
 fragment Binary_Digit
     : '0' | '1'
     ;
@@ -723,14 +738,14 @@ To permit the smallest possible `int` and `long` values to be written as integer
 > 1_2__3___4____5      // decimal, int
 > _123                 // not a numeric literal; identifier due to leading _
 > 123_                 // invalid; no trailing _allowed
-> 
+>
 > 0xFf                 // hex, int
 > 0X1b_a0_44_fEL       // hex, long
 > 0x1ade_3FE1_29AaUL   // hex, ulong
 > 0x_abc               // hex, int
 > _0x123               // not a numeric literal; identifier due to leading _
 > 0xabc_               // invalid; no trailing _ allowed
-> 
+>
 > 0b101                // binary, int
 > 0B1001_1010u         // binary, uint
 > 0b1111_1111_0000UL   // binary, ulong
@@ -774,7 +789,7 @@ If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double
 - A real literal suffixed by `D` or `d` is of type `double`.
   > *Example*: The literals `1d`, `1.5d`, `1e10d`, and `123.456D` are all of type `double`. *end example*
 - A real literal suffixed by `M` or `m` is of type `decimal`.
-  > *Example*: The literals `1m`, `1.5m`, `1e10m`, and `123.456M` are all of type `decimal`. *end example*  
+  > *Example*: The literals `1m`, `1.5m`, `1e10m`, and `123.456M` are all of type `decimal`. *end example*
   This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker’s rounding ([§8.3.8](types.md#838-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded.
   > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
 
@@ -812,24 +827,24 @@ A character literal represents a single character, and consists of a character i
 Character_Literal
     : '\'' Character '\''
     ;
-    
+
 fragment Character
     : Single_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
-    
+
 fragment Single_Character
     // anything but ', \, and New_Line_Character
     : ~['\\\u000D\u000A\u0085\u2028\u2029]
     ;
-    
+
 fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
       '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
-    
+
 fragment Hexadecimal_Escape_Sequence
     : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
@@ -890,11 +905,11 @@ String_Literal
     : Regular_String_Literal
     | Verbatim_String_Literal
     ;
-    
+
 fragment Regular_String_Literal
     : '"' Regular_String_Literal_Character* '"'
     ;
-    
+
 fragment Regular_String_Literal_Character
     : Single_Regular_String_Literal_Character
     | Simple_Escape_Sequence
@@ -910,16 +925,16 @@ fragment Single_Regular_String_Literal_Character
 fragment Verbatim_String_Literal
     : '@"' Verbatim_String_Literal_Character* '"'
     ;
-    
+
 fragment Verbatim_String_Literal_Character
     : Single_Verbatim_String_Literal_Character
     | Quote_Escape_Sequence
     ;
-    
+
 fragment Single_Verbatim_String_Literal_Character
     : ~["]     // anything but quotation mark (U+0022)
     ;
-    
+
 fragment Quote_Escape_Sequence
     : '""'
     ;
@@ -957,7 +972,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.12.8](expressions.md#12128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.14.8](expressions.md#12148-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1000,11 +1015,11 @@ Punctuators are for grouping and separating.
 
 ```ANTLR
 operator_or_punctuator
-    : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!' | '~'
-    | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
-    | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
-    | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
+    : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'   | ','  | ':'  | ';'
+    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'   | '^'  | '!'  | '~'
+    | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++'  | '--' | '&&' | '||'
+    | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-='  | '*=' | '/=' | '%='
+    | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>' | '??=' | '..'
     ;
 
 right_shift
@@ -1102,7 +1117,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 > #endif
 > #if B
 >     void H() {}
-> #else    
+> #else
 >     void I() {}
 > #endif
 > }
@@ -1149,17 +1164,17 @@ The namespace for conditional compilation symbols is distinct and separate from 
 
 ### 6.5.3 Pre-processing expressions
 
-Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!`, `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
+Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!` (prefix logical negation only), `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
 
 ```ANTLR
 fragment PP_Expression
     : PP_Whitespace? PP_Or_Expression PP_Whitespace?
     ;
-    
+
 fragment PP_Or_Expression
     : PP_And_Expression (PP_Whitespace? '||' PP_Whitespace? PP_And_Expression)*
     ;
-    
+
 fragment PP_And_Expression
     : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace?
       PP_Equality_Expression)*
@@ -1169,12 +1184,12 @@ fragment PP_Equality_Expression
     : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace?
       PP_Unary_Expression)*
     ;
-    
+
 fragment PP_Unary_Expression
     : PP_Primary_Expression
     | '!' PP_Whitespace? PP_Unary_Expression
     ;
-    
+
 fragment PP_Primary_Expression
     : TRUE
     | FALSE
@@ -1185,7 +1200,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.23](expressions.md#1223-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.25](expressions.md#1225-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1282,15 +1297,15 @@ fragment PP_Conditional
 fragment PP_If_Section
     : 'if' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Elif_Section
     : 'elif' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Else_Section
     : 'else'
     ;
-    
+
 fragment PP_Endif
     : 'endif'
     ;
@@ -1473,7 +1488,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§23.5.6](attributes.md#2356-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1488,24 +1503,24 @@ fragment PP_Line_Indicator
     | DEFAULT
     | 'hidden'
     ;
-    
+
 fragment PP_Compilation_Unit_Name
-    : '"' PP_Compilation_Unit_Name_Character+ '"'
+    : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
-    
+
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, a compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, a compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
-A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
+A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
@@ -1515,7 +1530,8 @@ The nullable directive controls the nullable context, as described below.
 
 ```ANTLR
 fragment PP_Nullable
-    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    : 'nullable' PP_Whitespace PP_Nullable_Action
+      (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
@@ -1580,6 +1596,6 @@ fragment PP_Pragma_Text
     ;
 ```
 
-The *Input_Character*s in the *PP_Pragma_Text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *Input_Character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *Input_Character*s in the *PP_Pragma_Text* are interpreted by a compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If a compiler cannot interpret the *Input_Character*s, a compiler can produce a warning; however, it shall not produce a compile-time error.
 
 > *Note*: *PP_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*

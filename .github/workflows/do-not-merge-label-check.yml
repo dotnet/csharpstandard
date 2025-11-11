@@ -22,13 +22,13 @@ jobs:
         - 'do not merge'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit
 
       - name: 'Check "${{ matrix.label }}" label'
         run: |
-          echo "::notice::Merging permission is diabled for PRs when the '${{ matrix.label }}' label is applied."
+          echo "::notice::Merging permission is disabled for PRs when the '${{ matrix.label }}' label is applied."
 
           if [ "${{ contains(github.event.pull_request.labels.*.name, matrix.label) }}" = "true" ]; then
             echo "::error::Pull request is labeled as '${{ matrix.label }}'. Please remove the label before merging."
