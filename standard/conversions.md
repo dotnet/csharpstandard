@@ -396,6 +396,15 @@ There is an implicit ***object-creation conversion*** from a *target_typed_new* 
 
 Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
+### §imp-cond-expr-conv Implicit conditional expression conversions
+
+For a *conditional_expression* `c ? e1 : e2`, when
+
+1. there is no common type for `e1` and `e2`, or
+1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
+
+an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
