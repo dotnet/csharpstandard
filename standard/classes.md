@@ -15,7 +15,7 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 ```ANTLR
 class_declaration
     : attributes? class_modifier* 'partial'? class_tag identifier
-        type_parameter_list? parameter_list? class_base?
+        type_parameter_list? delimited_parameter_list? class_base?
         type_parameter_constraints_clause* class_body
     ;
 
@@ -25,7 +25,7 @@ class_tag
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *parameter_list* ([§15.6.2.1]( classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1]( classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -35,13 +35,13 @@ If *class_tag* contains `record`, that class is a ***record class***; otherwise,
 
 For a record class, *class_modifier* shall not be `static`.
 
-*parameter_list* shall not be present in a non-record class.
+*delimited_parameter_list* shall not be present in a non-record class.
 
-A *class_declaration* having a *parameter_list* declares a ***positional record class***.
+A *class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
 
-At most only one partial type declaration of a partial record class may provide a *parameter_list*.
+At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
 
-Parameters in *parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
+Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### 15.2.2 Class modifiers
 
@@ -205,7 +205,7 @@ interface_type_list
 
 A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
 
-It is an error for *class_base* to have a *base_argument_list* if the corresponding *class_declaration* does not contain a *parameter_list*.
+It is an error for *class_base* to have a *base_argument_list* if the corresponding *class_declaration* does not contain a *delimited_parameter_list*.
 
 #### 15.2.4.2 Base classes
 
@@ -2238,11 +2238,11 @@ All parameters and type parameters shall have different names.
 The parameters of a method, if any, are declared by the method’s *parameter_list*.
 
 ```ANTLR
-parameter_list
-    : '(' formal_parameter_list? ')'
+delimited_parameter_list
+    : '(' parameter_list? ')'
     ;
 
-formal_parameter_list
+parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
     | parameter_array
