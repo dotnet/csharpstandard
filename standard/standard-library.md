@@ -1370,6 +1370,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute`
 - `global::System.Diagnostics.CodeAnalysis.MaybeNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
