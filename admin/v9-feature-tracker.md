@@ -10,7 +10,8 @@ Rex started with a set of [MS proposals](https://github.com/dotnet/csharplang/tr
 
 Feature | PR | Branch | Status | Effort | Annotation | Notes
 ------- | -- | ------ | ------ | ------ | ---------- | ------
-Init accessors ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/init.md))         | [#1452](https://github.com/dotnet/csharpstandard/pull/1492) | `v9-init-accessors` | SPEC'D | medium | Done. See review notes in [#978](https://github.com/dotnet/csharpstandard/pull/978) | 
+Init accessors ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/init.md))         | [#1452](https://github.com/dotnet/csharpstandard/pull/1452) | `v9-init-accessors` | SPEC'D | medium | Done. See review notes in [#978](https://github.com/dotnet/csharpstandard/pull/978) | 
+
 Top-level statements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/top-level-statements.md))	| [#1454](https://github.com/dotnet/csharpstandard/pull/1454) | `v9-top-level-statements` | SPEC'D |  small | Done | 
 Native sized integers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/native-integers.md))	| [#1457](https://github.com/dotnet/csharpstandard/pull/1457) | `v9-native-sized-integers`  | SPEC'D | medium | Done. See review notes in [#1060](https://github.com/dotnet/csharpstandard/pull/1060) |
 Records ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/records.md))	| [#1458](https://github.com/dotnet/csharpstandard/pull/1458)  | `v9-records` | SPEC'D | large | Done | See open issues in the PR intro
@@ -23,7 +24,8 @@ Covariant return types ([MS Proposal](https://github.com/dotnet/csharplang/blob/
 Extension GetEnumerator support for foreach loops ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/extension-getenumerator.md))	| [#1463](https://github.com/dotnet/csharpstandard/pull/1463) | `v9-extension-foreach` | SPEC'D | small | N/A | 
 Lambda discard parameters ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/lambda-discard-parameters.md))	| [#1464](https://github.com/dotnet/csharpstandard/pull/1464)  | `v9-lambda-discards` | SPEC'D | small | N/A | 
 Attributes and extern on local functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/local-function-attributes.md))	| [#1466](https://github.com/dotnet/csharpstandard/pull/9914664) | `v9-attribute-locations` | SPEC'D | small | Done | 
-Module initializers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/module-initializers.md))	| [#1462](https://github.com/dotnet/csharpstandard/pull/1462)| | `v9-module-initializers` | SPEC'D | small | Done |
+Module initializers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/module-initializers.md))	| [#1467](https://github.com/dotnet/csharpstandard/pull/1467)| | `v9-module-initializers` | SPEC'D | small | Done |
+
 New features for partial methods ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/extending-partial-methods.md))	| [#1468](https://github.com/dotnet/csharpstandard/pull/1468)  | `v9-more-partial-methods` | SPEC'D | small | Done | 
 Target-typed new expressions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/target-typed-new.md))	| [#1469](https://github.com/dotnet/csharpstandard/pull/1469) | `v9-target-typed-new`  | SPEC'D | small | N/A |
 Unconstrained type parameter annotations ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/unconstrained-type-parameter-annotations.md))	| [#1470](https://github.com/dotnet/csharpstandard/pull/1470) | `v9-unconstrained-type-parameters`  | SPEC'D | small | N/A | 
