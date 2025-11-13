@@ -1432,6 +1432,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.Unsafe`
+- `global::System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute`
 - `global::System.Threading.Monitor`
 - `global::System.Threading.Tasks.Task`
 - `global::System.Threading.Tasks.Task<TResult>`
