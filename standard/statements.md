@@ -494,8 +494,8 @@ local_function_declaration
     ;
 
 local_function_header
-    : identifier parameter_list?
-    | identifier type_parameter_list parameter_list?
+    : identifier '(' parameter_list? ')'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
