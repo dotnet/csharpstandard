@@ -842,6 +842,8 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
+For an invocation that occurs within a local function, the name of the method that calls that local function is used. Consider the following: if method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member! 
+
 ### 23.5.7 Code analysis attributes
 
 #### 23.5.7.1 General
