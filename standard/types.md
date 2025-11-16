@@ -319,8 +319,6 @@ Every simple type has members. Each simple type that is an alias for a predefine
 
 Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
 
-Consider the following:
-
 While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
 
 <!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
