@@ -321,13 +321,7 @@ Although `nint` and `nuint` shall be represented by the types `System.IntPtr` an
 
 Consider the following:
 
-<!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes2", expectedErrors:["CS0266"], ignoredWarnings:["CS0219"]} -->
-```csharp
-nint a1 = 1;           // OK
-System.IntPtr a2 = 1;  // Error: no implicit conversion
-```
-
-While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. Similarly,
+While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
 
 <!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
 ```csharp
