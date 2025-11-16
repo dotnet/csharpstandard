@@ -236,7 +236,7 @@ The direct base class of a class type shall be at least as accessible as the cla
 
 The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§23.2.1](attributes.md#2321-general)).
 
-In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself.
+In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself. Given this definition, the complete set of types upon which a class depends is the transitive closure of the *directly depends on* relationship.
 
 > *Example*: The following
 >
@@ -3426,6 +3426,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
+- An *accessor_modifier* shall not be used in an explicit interface member implementation.
 - The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.4.11](structs.md#16411-properties), [§16.4.13](structs.md#16413-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
