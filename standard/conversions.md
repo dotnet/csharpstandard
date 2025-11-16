@@ -117,7 +117,7 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6]( types.md#836-integral-types)) and their underlying types.
+For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
 
 ### 10.2.3 Implicit numeric conversions
 
