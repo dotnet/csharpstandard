@@ -58,7 +58,14 @@ The nullable annotation `?` may be placed on an array type, as in `T[R]?`. Such 
 
 Every reference type which contains nullable annotations has a corresponding unannotated type with no semantic difference (§8.9.1). The corresponding unannotated type for an array of nullable arrays is a single array type which recursively collects all the ranks of all the nested *array_type*s.
 
-The unannotated array type of an array of nullable arrays cannot be found by simply removing the nullable annotations `?` from the grammar and reparsing. This is because array ranks are read left to right while nested *array_type* productions are read outside-in, with outer array type ranks to the right, inner array type ranks to the left. Thus, the type `T[R₁][R₂]?[R₃][R₄]` has an unannotated array type of `T[R₃][R₄][R₁][R₂]`. To obtain the unannotated array type of an array of nullable arrays, first take the ranks on the outermost array type in order from left to right, then move to the array type inside the nullable element type and take its ranks in order from left to right. Repeat until the element type is no longer a nullable array type. Then take this remaining element type and place on it all the collected ranks in order from first to last to obtain the unannotated array type.
+The unannotated array type of an array of nullable arrays cannot be found by simply removing the nullable annotations `?` from the grammar and reparsing. This is because array ranks are read left to right while nested *array_type* productions are read outside-in, with outer array type ranks to the right, inner array type ranks to the left. Thus, the type `T[R₁][R₂]?[R₃][R₄]` has an unannotated array type of `T[R₃][R₄][R₁][R₂]`.
+
+To obtain the unannotated array type of an array of nullable arrays, the following steps are followed:
+
+1. Take the ranks on the outermost array type in order from left to right. (From `T[R₁][R₂]?[R₃][R₄]`, take `[R₃]` and then `[R₄]`.)
+2. Move to the array type inside the nullable element type and take its ranks in order from left to right. (From `T[R₁][R₂]`, take `[R₁]` and then `[R₂]`.)
+3. Repeat in this fashion until the element type is no longer a nullable array type. (`T`)
+4. Take this remaining element type and place on it all the collected ranks in order from first to last to obtain the unannotated array type. (On `T`, place `[R₃]`, then `[R₄]`, then `[R₁]`, then `[R₂]`, obtaining the final result of `T[R₃][R₄][R₁][R₂]`.)
 
 > *Example*:
 >
