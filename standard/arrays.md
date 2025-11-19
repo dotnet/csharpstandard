@@ -52,9 +52,9 @@ At run-time, a value of an array type can be `null` or a reference to an instanc
 
 ### §arrays-of-nullable-arrays Arrays of nullable arrays
 
-The nullable annotation `?` may be placed on an array type, as in `T[R]?`. Such an array type may be used as the element type of another array type, as in `T[R]?[R₂]`.
+The nullable annotation `?` may be placed on an array type, as in `T[R]?`. Such an annotated array type may be used as the element type of another array type, as in `T[R]?[R₂]`.
 
-The intervening nullable annotation `?` separates the grammar into multiple *array_types*. `T[R₁][R₂]?[R₃][R₄]` is not a single *array_type* with four ranks. Rather, it is two *array_type*s, each of which has two ranks. The outer *array_type* has ranks `[R₃][R₄]`, read left to right, and its element type is `T[R₁][R₂]?`. The element type is another *array_type* with a nullable annotation, and this inner *array_type* has ranks `[R₁][R₂]`, read left to right.
+`T[R₁][R₂]?[R₃][R₄]` is not a single *array_type* with four ranks. Rather, it is two *array_type*s, each of which has two ranks. The outer *array_type* has ranks `[R₃][R₄]`, read left to right, and its element type is `T[R₁][R₂]?`. The element type is another *array_type* with a nullable annotation, and this inner *array_type* has ranks `[R₁][R₂]`, read left to right.
 
 > *Note*: This is the sole exception to the general rule that the meaning of a program remains the same when nullable reference types annotations are removed. *end note*
 
