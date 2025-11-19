@@ -28,7 +28,7 @@ jobs:
         statuses: write
 
     steps:
-    - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493
+    - uses: actions/checkout@71cf2267d89c5cb81562390fa70a37fa40b1305e
     - name: Use Node.js
       uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903
       with:
