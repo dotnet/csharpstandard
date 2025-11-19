@@ -29,7 +29,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 
 A non-ref-valued property access or non-ref-valued indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.23.2](expressions.md#12232-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
-A ref-valued property access or non-ref-valued indexer access is always reclassified as a variable by performing an invocation of the get accessor ([§15.7.3](classes.md#1573-accessors)).
+A ref-valued property access or ref-valued indexer access is always reclassified as a variable by performing an invocation of the get accessor ([§15.7.3](classes.md#1573-accessors)).
 
 An ***instance accessor*** is a property access on an instance, an event access on an instance, or an indexer access.
 
