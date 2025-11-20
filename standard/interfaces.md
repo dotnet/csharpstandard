@@ -476,7 +476,7 @@ Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.m
 
 This clause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
 
-For an *operator_declaration* in an interface the *operator_body* may only be a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)).
+For an *operator_declaration* in an interface the *operator_body* shall only be a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)).
 
 It is a compile-time error for an interface to declare a conversion, equality, or inequality operator.
 
@@ -1066,7 +1066,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 ### 19.6.5 Interface mapping
 
-A class or struct shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which are not implemented in any of those listed interfaces. The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
+A class or struct shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
 
 Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class, interface, or struct `S`, starting with `C` and repeating for each successive base class and implemented interface of `C`, until a match is located:
 
@@ -1463,7 +1463,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 19.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations of all abstract members of the interfaces that are listed in the base class list of the class which are not implemented in any of those listed interfaces. However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >
