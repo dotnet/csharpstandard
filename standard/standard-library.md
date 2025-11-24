@@ -399,10 +399,10 @@ namespace System
 {
     public interface IAsyncDisposable
     {
-        ValueTask DisposeAsync();
+        System.Threading.Tasks.ValueTask DisposeAsync();
     }
 
-    public class FormattableString : IFormattable { }
+    public abstract class FormattableString : IFormattable { }
 
     public class OperationCanceledException : Exception
     {
@@ -686,7 +686,7 @@ namespace System.Collections.Generic
 
     public interface IAsyncEnumerator<out T> : IAsyncDisposable
     {
-        ValueTask<bool> MoveNextAsync();
+        System.Threading.Tasks.ValueTask<bool> MoveNextAsync();
         T Current { get; }
     }
 }
@@ -698,7 +698,7 @@ namespace System.Diagnostics.CodeAnalysis
       Inherited=false)]
     public sealed class AllowNullAttribute : Attribute
     {
-        public AllowNullAttribute() { }
+        public AllowNullAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Field |
@@ -706,19 +706,19 @@ namespace System.Diagnostics.CodeAnalysis
       Inherited=false)]
     public sealed class DisallowNullAttribute : Attribute
     {
-        public DisallowNullAttribute() {}
+        public DisallowNullAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method, Inherited=false)]
     public sealed class DoesNotReturnAttribute : Attribute
     {
-        public DoesNotReturnAttribute() {}
+        public DoesNotReturnAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
     public sealed class DoesNotReturnIfAttribute : Attribute
     {
-        public DoesNotReturnIfAttribute(bool parameterValue) {}
+        public DoesNotReturnIfAttribute(bool parameterValue);
     }
 
     [System.AttributeUsage(System.AttributeTargets.Field | 
@@ -726,13 +726,13 @@ namespace System.Diagnostics.CodeAnalysis
       System.AttributeTargets.ReturnValue, Inherited=false)]
     public sealed class MaybeNullAttribute : Attribute
     {
-        public MaybeNullAttribute() {}
+        public MaybeNullAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
     public sealed class MaybeNullWhenAttribute : Attribute
     {
-        public MaybeNullWhenAttribute(bool returnValue) {}
+        public MaybeNullWhenAttribute(bool returnValue);
     }
 
     [System.AttributeUsage(System.AttributeTargets.Field |
@@ -740,7 +740,7 @@ namespace System.Diagnostics.CodeAnalysis
       System.AttributeTargets.ReturnValue, Inherited=false)]
     public sealed class NotNullAttribute : Attribute
     {
-        public NotNullAttribute() {}
+        public NotNullAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Parameter | 
@@ -748,13 +748,13 @@ namespace System.Diagnostics.CodeAnalysis
       AllowMultiple=true, Inherited=false)]
     public sealed class NotNullIfNotNullAttribute : Attribute
     {
-        public NotNullIfNotNullAttribute(string parameterName) {}
+        public NotNullIfNotNullAttribute(string parameterName);
     }
 
     [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
     public sealed class NotNullWhenAttribute : Attribute
     {
-        public NotNullWhenAttribute(bool returnValue) {}
+        public NotNullWhenAttribute(bool returnValue);
     }
 }
 
@@ -773,7 +773,7 @@ namespace System.Runtime.CompilerServices
         Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
-        public AsyncMethodBuilderAttribute(Type builderType) {}
+        public AsyncMethodBuilderAttribute(Type builderType);
  
         public Type BuilderType { get; }
     }
@@ -781,25 +781,25 @@ namespace System.Runtime.CompilerServices
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
-        public CallerFilePathAttribute() { }
+        public CallerFilePathAttribute();
     }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerLineNumberAttribute : Attribute
     {
-        public CallerLineNumberAttribute() { }
+        public CallerLineNumberAttribute();
     }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerMemberNameAttribute : Attribute
     {
-        public CallerMemberNameAttribute() { }
+        public CallerMemberNameAttribute();
     }
 
     [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
     public sealed class EnumeratorCancellationAttribute : Attribute
     {
-        public EnumeratorCancellationAttribute() {}
+        public EnumeratorCancellationAttribute();
     }
     
     public static class FormattableStringFactory
