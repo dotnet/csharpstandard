@@ -4129,7 +4129,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   int operator +(int x, int y);
   uint operator +(uint x, uint y);
   long operator +(long x, long y);
-  ulong operator +(ulong x, ulong y
+  ulong operator +(ulong x, ulong y);
   ```
 
   In a `checked` context, if the sum is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
