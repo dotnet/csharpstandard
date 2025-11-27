@@ -46,6 +46,7 @@ The following exceptions are thrown by certain C# operations.
 `System.DivideByZeroException`           | Thrown when an attempt to divide an integral value by zero occurs.
 `System.IndexOutOfRangeException`        | Thrown when an attempt to index an array via an index that is less than zero or outside the bounds of the array.
 `System.InvalidCastException`            | Thrown when an explicit conversion from a base type or interface to a derived type fails at run-time.
+`System.InvalidOperationException`       | Thrown when a method call is invalid for the object's current state.
 `System.NullReferenceException`          | Thrown when a `null` reference is used in a way that causes the referenced object to be required.
 `System.OutOfMemoryException`            | Thrown when an attempt to allocate memory (via `new`) fails.
 `System.OverflowException`               | Thrown when an arithmetic operation in a `checked` context overflows.
