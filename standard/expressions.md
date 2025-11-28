@@ -472,7 +472,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e.P = value</code></td>
->     <td>If <code>P</code> is non-ref-valued (§15.7.1), the set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. If <code>P</code> is ref-valued, the get accessor of the property <code>P</code> in the containing class, struct, or interface given by the type of <code>E</code> is invoked is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code>, if <code>P</code> is non-ref-valued and read-only, or if <code>P</code> is ref-valued and returns a readonly reference.</td>
+>     <td>If <code>P</code> is non-ref-valued (§15.7.1), the set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. If <code>P</code> is ref-valued, the get accessor of the property <code>P</code> in the containing class, struct, or interface given by the type of <code>E</code> is invoked is invoked with the instance expression <code>e</code> to obtain a variable, and <code>value</code> is assigned to that variable. A binding-time error occurs if <code>P</code> is <code>static</code>, if <code>P</code> is non-ref-valued and read-only, or if <code>P</code> is ref-valued and returns a readonly reference.</td>
 >   </tr>  
 >   <tr>
 >     <td rowspan="6">Event access</td>
@@ -506,7 +506,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e[x, y] = value</code></td>
->     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. If the indexer is non-ref-valued (§15.9.1), the set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. If the indexer is ref-valued, the get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is non-ref valued and read-only or if the indexer is ref-valued and returns a readonly reference.
+>     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. If the indexer is non-ref-valued (§15.9.1), the set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. If the indexer is ref-valued, the get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code> to obtain a variable, and <code>value</code> is assigned to that variable. A binding-time error occurs if the indexer is non-ref valued and read-only or if the indexer is ref-valued and returns a readonly reference.
 > </td>
 >   </tr>
 >   <tr>
