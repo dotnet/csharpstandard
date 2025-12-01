@@ -681,6 +681,7 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
 - Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
 
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` to a type encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, `Sₓ` is the most-encompassed type in the combined set of source types of the operators in `U`. If exactly one most-encompassed type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific target type, `Tₓ`, of the operators in `U`:
