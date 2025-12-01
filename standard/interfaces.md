@@ -699,16 +699,16 @@ When an interface is part of a namespace, a qualified interface member name can 
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedInterfaceMemberNames2"} -->
 > ```csharp
-> namespace System
+> namespace GraphicsLib
 > {
->     public interface ICloneable
+>     interface IPolygon
 >     {
->         object Clone();
+>         void CalculateArea();
 >     }
 > }
 > ```
 >
-> Within the `System` namespace, both `ICloneable.Clone` and `System.ICloneable.Clone` are qualified interface member names for the `Clone` method.
+> Within the `GraphicsLib` namespace, both `IPolygon.CalculateArea` and `GraphicsLib.IPolygon.CalculateArea` are qualified interface member names for the `CalculateArea` method.
 >
 > *end example*
 
