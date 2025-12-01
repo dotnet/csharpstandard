@@ -1027,7 +1027,7 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 > }
 > ```
 >
-> When null reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
+> When nullable reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
 
 #### 23.5.7.9 The NotNullIfNotNull attribute
 
