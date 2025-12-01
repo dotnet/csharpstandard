@@ -543,13 +543,13 @@ A call to a conditional method is included if one or more of its associated cond
 A conditional method is subject to the following restrictions:
 
 - The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if the `Conditional` attribute is specified on a method in an interface declaration.
-- The conditional method shall not be an event or property accessor.
+- The conditional method shall not be an accessor of a property, indexer or event.
 - The conditional method shall have a return type of `void`.
 - The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with a `Conditional` attribute.
 - The conditional method shall not be an implementation of an interface method. Otherwise, a compile-time error occurs.
 - The parameters of the conditional method shall not be output parameters.
 
-> *Note*: Attributes with an `AttributeUsage` ([§23.2.2](attributes.md#2322-attribute-usage))  including `AttributeTargets.Method` can normally be applied to property accessors and event accessors. The restrictions above prohibit this usage of the `Conditional` attribute. *end note*
+> *Note*: Attributes with an `AttributeUsage` ([§23.2.2](attributes.md#2322-attribute-usage))  including `AttributeTargets.Method` can normally be applied to accessors of properties, indexers and events. The restrictions above prohibit this usage of the `Conditional` attribute. *end note*
 
 In addition, a compile-time error occurs if a delegate is created from a conditional method.
 
