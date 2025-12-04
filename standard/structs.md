@@ -114,6 +114,8 @@ struct_body
 
 ## 16.3 Struct members
 
+### §struct_general General
+
 The members of a struct consist of the members introduced by its *struct_member_declaration*s and the members inherited from the type `System.ValueType`.
 
 ```ANTLR
@@ -137,6 +139,51 @@ struct_member_declaration
 > *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
 
 Except for the differences noted in [§16.4](structs.md#164-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
+
+### §struct_readonly Readonly members
+
+An instance member definition that includes the `readonly` modifier has the following restrictions:
+
+- The member shall not modify the value of a direct instance member of the receiver.
+- A readonly member may call a non-readonly member using the receiver instance only if it ensures no modifications to the receiver are observable after the readonly member returns.
+
+> *Example*: The following code demonstrates the rule that a readonly member shall not modify the value of a direct instance member, but can modify the members of a direct instance member:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadonlyMember" } -->
+> ```csharp
+> public struct S
+> {
+>    private bool[] flags;
+>
+>    public S(int size)
+>    {
+>       flags = new bool[size];
+>    }
+>
+>    public readonly bool this[int index]
+>    {
+>       get => flags[index]; 
+>       set => flags[index] = value;
+>    }
+>
+>    // Not readonly
+>    public void ResetFlags()
+>    {
+>       flags = new bool[flags.Length];
+>    }
+>
+>    // Allowed on readonly member
+>    public readonly void ReadonlyResetFlags()
+>    {
+>       for (int i = 0; i < flags.Length; i++)
+>       {
+>          flags[i] = false;
+>       }
+>    }
+> }
+> ```
+>
+> The `readonly` indexer can change the state of a single member of the `flags` array. The `ReadonlyResetFlags` member can set all flags to false. In both those cases, the direct member, `flags` has not been reassigned. The `ResetFlags` member reassigns the direct member, and therefore cannot include the `readonly` modifier. *end example*
 
 ## 16.4 Class and struct differences
 
