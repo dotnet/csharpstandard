@@ -855,17 +855,17 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 
 **Attribute**  | **Meaning**
 ------------------  | ------------------
-``AllowNull`` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
-``DisallowNull`` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
-``MaybeNull`` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
-``NotNull`` ([§23.5.7.8](attributes.md#23578-the-notnull-attribute))  | A nullable return value will never be null.
-``MaybeNullWhen`` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified ``bool`` value.
-``NotNullWhen`` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument won't be null when the method returns the specified ``bool`` value.
-``NotNullIfNotNull`` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value isn't null if the argument for the specified parameter isn't null.
-``MemberNotNull`` (§membernotnull-attribute)  | The listed member won't be null when the method returns.
-``MemberNotNullWhen`` (§membernotnullwhen-attribute)  | The listed member won't be null when the method returns the specified ``bool`` value.
-``DoesNotReturn`` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
-``DoesNotReturnIf`` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated ``bool`` parameter has the specified value.
+`AllowNull` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
+`DisallowNull` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
+`MaybeNull` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
+`NotNull` ([§23.5.7.8](attributes.md#23578-the-notnull-attribute))  | A nullable return value will never be null.
+`MaybeNullWhen` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
+`NotNullWhen` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument won't be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value isn't null if the argument for the specified parameter isn't null.
+`MemberNotNull` (§membernotnull-attribute)  | The listed member won't be null when the method returns.
+`MemberNotNullWhen` (§membernotnullwhen-attribute)  | The listed member won't be null when the method returns the specified `bool` value.
+`DoesNotReturn` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
+`DoesNotReturnIf` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
 The following subclauses in [§23.5.7.1](attributes.md#23571-general) are conditionally normative.
 
