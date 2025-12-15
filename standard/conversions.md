@@ -119,18 +119,20 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 The implicit numeric conversions are:
 
-- From `sbyte` to `short`, `int`, `long`, `float`, `double`, or `decimal`.
-- From `byte` to `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
-- From `short` to `int`, `long`, `float`, `double`, or `decimal`.
-- From `ushort` to `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
-- From `int` to `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `sbyte` to `short`, `int`, `nint`, `long`, `float`, `double`, or `decimal`.
+- From `byte` to `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
+- From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `nint` to `long`, `float`, `double`, or `decimal`.
+- From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
 - From `ulong` to `float`, `double`, or `decimal`.
-- From `char` to `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `char` to `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `float` to `double`.
 
-Conversions from `int`, `uint`, `long` or `ulong` to `float` and from `long` or `ulong` to `double` may cause a loss of precision, but will never cause a loss of magnitude. The other implicit numeric conversions never lose any information.
+Conversions from `int`, `uint`, `nint`, `nuint`, `long`, or `ulong` to `float` and from `nint`, `nuint`, `long`, or `ulong` to `double` may cause a loss of precision, but will never cause a loss of magnitude. The other implicit numeric conversions never lose any information.
 
 There are no predefined implicit conversions to the `char` type, so values of the other integral types do not automatically convert to the `char` type.
 
