@@ -6,7 +6,7 @@ This specification is intended to be used by implementers, academics, and applic
 
 This specification is divided into the following subdivisions: front matter; language syntax, constraints, and semantics; and annexes.
 
-Examples are provided to illustrate possible forms of the constructions described, and some might make use of types and members that are outside this specification. References are used to refer to related clauses and subclauses. Notes are provided to give advice or guidance to implementers or programmers. Annexes provide additional information and summarize the information contained in this specification.
+Examples are provided to illustrate possible forms of the constructions described, and some make use of types and members that are outside this specification. References are used to refer to related clauses and subclauses. Notes are provided to give advice or guidance to implementers or programmers. Annexes provide additional information and summarize the information contained in this specification.
 
 **End of informative text.**
 
