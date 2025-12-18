@@ -142,12 +142,17 @@ Except for the differences noted in [§16.4](structs.md#164-class-and-struct-dif
 
 ### §struct_readonly Readonly members
 
-An instance member definition that includes the `readonly` modifier has the following restrictions:
+An instance member definition or property accessor of an instance property that includes the `readonly` modifier has the following restrictions:
 
-- The member shall not modify the value of a direct instance member of the receiver.
+- The member shall not reassign the value of an instance field of the receiver.
+- The member shall not reassign the value of an instance field-like event (§15.8.2) of the receiver.
 - A readonly member may call a non-readonly member using the receiver instance only if it ensures no modifications to the receiver are observable after the readonly member returns.
 
-> *Example*: The following code demonstrates the rule that a readonly member shall not modify the value of a direct instance member, but can modify the members of a direct instance member:
+> *Note:* Instance fields include the hidden backing field used for automatically implemented properties (§15.7.4). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following code demonstrates the reassigning and modifying an instance field. Obfuscating the intent of `readonly` in this manner is discouraged:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ReadonlyMember" } -->
 > ```csharp
@@ -183,7 +188,7 @@ An instance member definition that includes the `readonly` modifier has the foll
 > }
 > ```
 >
-> The `readonly` indexer can change the state of a single member of the `flags` array. The `ReadonlyResetFlags` member can set all flags to false. In both those cases, the direct member, `flags` has not been reassigned. The `ResetFlags` member reassigns the direct member, and therefore cannot include the `readonly` modifier. *end example*
+> The `readonly` indexer can change the state of a single member of the `flags` array. The `ReadonlyResetFlags` member can set all flags to false. In both those cases, the field, `flags` has not been reassigned to a new array. The `ResetFlags` member reassigns the direct member, and therefore cannot include the `readonly` modifier. *end example*
 
 ## 16.4 Class and struct differences
 
