@@ -677,10 +677,11 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
 - Determine the types `S`, `S₀` and `T₀`.
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
-  - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sₓ` and `Tᵢ`, respectively.
+  - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
 - Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
 
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` to a type encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, `Sₓ` is the most-encompassed type in the combined set of source types of the operators in `U`. If exactly one most-encompassed type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific target type, `Tₓ`, of the operators in `U`:
@@ -730,7 +731,7 @@ A user-defined explicit conversion from a type `S` to a type `T` exists if a u
 
 ### 10.6.1 Nullable Conversions
 
-***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
+A ***nullable conversion*** permits a predefined conversion that operates on a non-nullable value type to also be used with the nullable form of that type. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
 
 - An implicit or explicit conversion from `S?` to `T?`
 - An implicit or explicit conversion from `S` to `T?`

@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations must be supplied by classes or structs that implement the interface, or derived interface that provide an overriding definition.
+Interfaces may contain various kinds of members, as described in [§19.4](interfaces.md#194-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations must be supplied by classes or structs that implement the interface, and may be supplied by derived interfaces through an explicit implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)).
 
 <!-- This note needs to be updated in C# 13, when ref struct types can implement interfaces. -->
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
@@ -128,7 +128,7 @@ A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Bᵥ
 
 ### 19.2.4 Base interfaces
 
-An interface can inherit from zero or more interface types, which are called the ***explicit base interfaces*** of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
+An interface can inherit from zero or more interface types, which are called the ***explicit base interface***s of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
 
 A derived interface may declare new members that hide inherited members ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)) declared in base interfaces or explicitly implement inherited members ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)) declared in base interfaces.
 
@@ -148,7 +148,7 @@ The explicit base interfaces of an interface shall be at least as accessible as 
 
 It is a compile-time error for an interface to directly or indirectly inherit from itself.
 
-The ***base interfaces*** of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
+The ***base interface***s of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
 
 > *Example*: In the following code
 >
@@ -233,12 +233,12 @@ interface_member_declaration
     ;
 ```
 
-This clause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with restrictions for interfaces. The Interface members are declared using *member_declaration*s with the following additional rules:
+This clause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with the differences and restrictions for interfaces:
 
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
 - All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)).
-- The `abstract` modifier is implied for interface function members without bodies; that modifier may be given explicitly.
+- The `abstract` modifier is implied for interface function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly.
 - An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly.
 - A `private` or `sealed` function member of an interface shall have a body.
 - A `private` function member shall not have the modifier `sealed`.
@@ -476,7 +476,7 @@ Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.m
 
 This clause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
 
-An *operator_declaration* in an interface is the implementation ([§19.1](interfaces.md#191-general)).
+For an *operator_declaration* in an interface the *operator_body* shall only be a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)).
 
 It is a compile-time error for an interface to declare a conversion, equality, or inequality operator.
 
@@ -514,7 +514,7 @@ It is an error to declare a class type, struct type, or enum type within the sco
 >
 > *end example*
 
-### 19.4.10 most specific implementation
+### 19.4.10 Most specific implementation
 
 Every class and struct shall have a most specific implementation for every virtual member declared in all interfaces implemented by that type among the implementations appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique implementation that is more specific than every other implementation.
 
@@ -699,16 +699,16 @@ When an interface is part of a namespace, a qualified interface member name can 
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedInterfaceMemberNames2"} -->
 > ```csharp
-> namespace System
+> namespace GraphicsLib
 > {
->     public interface ICloneable
+>     interface IPolygon
 >     {
->         object Clone();
+>         void CalculateArea();
 >     }
 > }
 > ```
 >
-> Within the `System` namespace, both `ICloneable.Clone` and `System.ICloneable.Clone` are qualified interface member names for the `Clone` method.
+> Within the `GraphicsLib` namespace, both `IPolygon.CalculateArea` and `GraphicsLib.IPolygon.CalculateArea` are qualified interface member names for the `CalculateArea` method.
 >
 > *end example*
 
@@ -793,7 +793,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 ### 19.6.2 Explicit interface member implementations
 
 <!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.7.2](basic-concepts.md#772-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
 
@@ -886,7 +886,7 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 > Explicit interface member implementations serve two primary purposes:
 >
 > - Because explicit interface member implementations are not accessible through class or struct instances, they allow interface implementations to be excluded from the public interface of a class or struct. This is particularly useful when a class or struct implements an internal interface that is of no interest to a consumer of that class or struct.
-> - Explicit interface member implementations allow disambiguation of interface members with the same signature. Without explicit interface member implementations it would be impossible for a class, struct, or interface to have different implementations of interface members with the same signature and return type, as would it be impossible for a class, struct, or interface to have any implementation at all of interface members with the same signature but with different return types.
+> - Explicit interface member implementations allow disambiguation of interface members with the same signature. Without explicit interface member implementations it would be impossible for a class, struct, or interface to have different implementations of interface members with the same signature and return type; and it would be impossible for a class, struct, or interface to have any implementation at all of interface members with the same signature but with different return types.
 >
 > *end note*
 
@@ -1066,7 +1066,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 ### 19.6.5 Interface mapping
 
-A class or struct shall provide implementations of all abstract members of the interfaces that are listed in the base class list of the class or struct. The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
+A class or struct shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
 
 Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class, interface, or struct `S`, starting with `C` and repeating for each successive base class and implemented interface of `C`, until a match is located:
 
@@ -1463,7 +1463,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 19.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations of all abstract members of the interfaces that are listed in the base class list of the class. However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >
@@ -1479,7 +1479,7 @@ Like a non-abstract class, an abstract class shall provide implementations of al
 > {
 >     public abstract void F();
 >     public abstract void G();
->     }
+> }
 > ```
 >
 > Here, the implementation of `IMethods` maps `F` and `G` onto abstract methods, which shall be overridden in non-abstract classes that derive from `C`.

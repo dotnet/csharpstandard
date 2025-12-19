@@ -714,7 +714,7 @@
     - [§19.4.7](interfaces.md#1947-interface-operators)  Interface operators
     - [§19.4.8](interfaces.md#1948-interface-static-constructors)  Interface static constructors
     - [§19.4.9](interfaces.md#1949-interface-nested-types)  Interface nested types
-    - [§19.4.10](interfaces.md#19410-most-specific-implementation)  most specific implementation
+    - [§19.4.10](interfaces.md#19410-most-specific-implementation)  Most specific implementation
     - [§19.4.11](interfaces.md#19411-interface-member-access)  Interface member access
   - [§19.5](interfaces.md#195-qualified-interface-member-names)  Qualified interface member names
   - [§19.6](interfaces.md#196-interface-implementations)  Interface implementations

@@ -39,7 +39,7 @@ The ***effective entry point*** of an application is the entry point declared wi
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-defined policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameters***, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
@@ -49,7 +49,7 @@ Other than the situations listed above, entry point methods behave like those th
 
 ## 7.2 Application termination
 
-***Application termination*** returns control to the execution environment.
+The return of control to the execution environment is known as ***application termination***.
 
 If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
@@ -205,7 +205,7 @@ The textual order in which names are declared is generally of no significance. I
 
 ### 7.4.1 General
 
-Namespaces and types have ***members***.
+Namespaces and types have ***member***s.
 
 > *Note*: The members of an entity are generally available through the use of a qualified name that starts with a reference to the entity, followed by a “`.`” token, followed by the name of the member. *end note*
 
@@ -402,7 +402,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 ### 7.5.4 Protected access
 
-When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class. Instance interface members defined with `protected` or `private protected` access cannot be accessed from a `class` or `struct` that implements that interface; these can be accessed only from derived interfaces. However, `class` and `struct` types can define overridden `protected` instance members declared in an interface it implements.
+When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class. Instance interface members defined with `protected` or `private protected` access cannot be accessed from a `class` or `struct` that implements that interface; these can be accessed only from derived interfaces. However, `class` and `struct` types can implement `protected` instance members declared in an interface they implement.
 
 Let `B` be a base class that declares a protected instance member `M`, and let `D` be a class that derives from `B`. Within the *class_body* of `D`, access to `M` can take one of the following forms:
 
@@ -546,7 +546,7 @@ The following accessibility constraints exist:
 
 ## 7.6 Signatures and overloading
 
-Methods, instance constructors, indexers, and operators are characterized by their ***signatures***:
+Methods, instance constructors, indexers, and operators are characterized by their ***signature***s:
 
 - The signature of a method consists of the name of the method, the number of type parameters, and the type and parameter-passing mode of each of its parameters, considered in the order left to right. For these purposes, any type parameter of the method that occurs in the type of a parameter is identified not by its name, but by its ordinal position in the type parameter list of the method. The signature of a method specifically does not include the return type, parameter names, type parameter names, type parameter constraints, the `params` or `this` parameter modifiers, nor whether parameters are required or optional.
 - The signature of an instance constructor consists of the type and parameter-passing mode of each of its parameters, considered in the order left to right. The signature of an instance constructor specifically does not include the `params` modifier that may be specified for the right-most parameter, nor whether parameters are required or optional.
@@ -599,6 +599,8 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 ### 7.7.1 General
 
 The ***scope*** of a name is the region of program text within which it is possible to refer to the entity declared by the name without qualification of the name. Scopes can be *nested*, and an inner scope may redeclare the meaning of a name from an outer scope. (This does not, however, remove the restriction imposed by [§7.3](basic-concepts.md#73-declarations) that within a nested block it is not possible to declare a local variable or local constant with the same name as a local variable or local constant in an enclosing block.) The name from the outer scope is then said to be ***hidden*** in the region of program text covered by the inner scope, and access to the outer name is only possible by qualifying the name.
+
+> *Note*: It may not be possible to access the hidden outer name from the inner scope because there is no way of qualifying it, such as with type parameters on nested type declarations. *end note*
 
 - The scope of a namespace member declared by a *namespace_member_declaration* ([§14.6](namespaces.md#146-namespace-member-declarations)) with no enclosing *namespace_declaration* is the entire program text.
 - The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period.
@@ -972,7 +974,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 >
 > interface C : A, B
 > {
->     public void Test() { NestedClass.M(); } // ambiguity between A.NestedClass and B.NestedClass
+>     public void Test() { NestedClass.M(); } // ambiguity between
+>                                             // A.NestedClass and B.NestedClass
 > }
 > ```
 >

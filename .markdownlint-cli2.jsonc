@@ -1,0 +1,28 @@
+{
+    "config": {
+        "default": true,
+        "MD013": false,
+        "MD033": false,
+        "MD034": false,
+        "MD036": false,
+        "MD046": {
+            "style": "fenced"
+        },
+        "MD060": false,
+        "proper-names": {
+            "code_blocks": false,
+            "names": [
+            ]
+        }
+    },
+    "ignores": [
+        ".github/",
+        "standard/README.md",
+        "admin/*.md",
+        "tools/**/*.md",
+        "README.md",
+        "CONTRIBUTING.md",
+        "CODE_OF_CONDUCT.md"
+    ]
+}
+

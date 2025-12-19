@@ -28,13 +28,8 @@ jobs:
         statuses: write
 
     steps:
-    - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493
-    - name: Use Node.js
-      uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+    - uses: DavidAnson/markdownlint-cli2-action@07035fd053f7be764496c0f8d8f9f41f98305101 # v22.0.0
       with:
-        node-version: 16.x
-    - name: Run Markdownlint
-      run: |
-        echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"
-        npm i -g markdownlint-cli
-        markdownlint "standard/*.md"
+        config: ".markdownlint-cli2.jsonc"
+        globs: "standard/*.md"

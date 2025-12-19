@@ -2,7 +2,7 @@
 
 ## 8.1 General
 
-The types of the C# language are divided into two main categories: ***reference types*** and ***value types***. Both value types and reference types may be ***generic types***, which take one or more ***type parameters***. Type parameters can designate both value types and reference types.
+The types of the C# language are divided into two main categories: ***reference type*** and ***value type***. A value type or a reference type may be a ***generic type***, which takes one or more ***type parameter***s. Type parameters can designate both value types and reference types.
 
 ```ANTLR
 type
@@ -15,7 +15,7 @@ type
 
 *pointer_type* ([§24.3](unsafe-code.md#243-pointer-types)) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
+Value types differ from reference types in that a variable of a value types directly contains its data, whereas a variable of a reference type stores a ***reference*** to its data, the latter being known as an ***object***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
 > *Note*: When a variable is a reference or output parameter, it does not have its own storage but references the storage of another variable. In this case, the ref or out variable is effectively an alias for another variable and not a distinct variable. *end note*
 
@@ -91,7 +91,7 @@ A reference type value is a reference to an ***instance*** of the type, the latt
 
 ### 8.2.2 Class types
 
-A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
+A class type defines a data structure that contains ***data member***s (constants and fields), ***function member***s (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
 
 Class types are described in [§15](classes.md#15-classes).
 
@@ -151,7 +151,7 @@ Delegate types are described in [§21](delegates.md#21-delegates).
 
 ### 8.3.1 General
 
-A value type is either a struct type or an enumeration type. C# provides a set of predefined struct types called the ***simple types***. The simple types are identified through keywords.
+A value type is either a struct type or an enumeration type. C# provides a set of predefined struct types called the ***simple type***s. The simple types are identified through keywords.
 
 ```ANTLR
 value_type
@@ -403,7 +403,7 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### 8.3.11 Tuple types
 
-A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element names***.
+A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element name***s.
 
 This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of directly expressing tuple types of any arity between two and seven inclusive.
 There does not need to exist a `System.ValueTuple<...>` declaration that directly matches the arity of any tuple type with a corresponding number of type parameters. Instead, tuples with an arity greater than seven are represented with a generic struct type `System.ValueTuple<T1, ..., T7, TRest>` that in addition to tuple elements has a `Rest` field containing a nested value of the remaining elements, using another `System.ValueTuple<...>` type. Such nesting may be observable in various ways, e.g. via the presence of a `Rest` field. Where only a single additional field is required, the generic struct type `System.ValueTuple<T1>` is used; this type is not considered a tuple type in itself. Where more than seven additional fields are required, `System.ValueTuple<T1, ..., T7, TRest>` is used recursively.
@@ -480,7 +480,7 @@ Boxing is described in more detail in [§10.2.9](conversions.md#1029-boxing-conv
 
 ### 8.4.1 General
 
-A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)).
+A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type argument***s. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)).
 
 Constructed types can also be used in expressions as simple names ([§12.8.4](expressions.md#1284-simple-names)) or when accessing a member ([§12.8.7](expressions.md#1287-member-access)).
 
@@ -547,7 +547,7 @@ Each type argument shall satisfy any constraints on the corresponding type param
 
 ### 8.4.3 Open and closed types
 
-All types can be classified as either ***open types*** or ***closed types***. An open type is a type that involves type parameters. More specifically:
+A type is either an ***open type*** or a ***closed type***. An open type is a type that involves type parameters. More specifically:
 
 - A type parameter defines an open type.
 - An array type is an open type if and only if its element type is an open type.
@@ -633,7 +633,7 @@ As a type, type parameters are purely a compile-time construct. At run-time, eac
 
 ## 8.6 Expression tree types
 
-***Expression trees*** permit lambda expressions to be represented as data structures instead of executable code. Expression trees are values of ***expression tree types*** of the form `System.Linq.Expressions.Expression<TDelegate>`, where `TDelegate` is any delegate type. For the remainder of this specification these types will be referred to using the shorthand `Expression<TDelegate>`.
+An ***expression tree*** permits a lambda expression to be represented as a data structure instead of executable code. An expression trees is a value of ***expression tree type*** of the form `System.Linq.Expressions.Expression<TDelegate>`, where `TDelegate` is any delegate type. For the remainder of this specification these types will be referred to using the shorthand `Expression<TDelegate>`.
 
 If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression. More details of this conversion are provided in [§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types).
 
@@ -947,13 +947,17 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > {
 >     int length = s.Length; // No warning. s is not null
 >
->     _ = s == null; // Null check by testing equality. The null state of s is maybe null
->     length = s.Length; // Warning, and changes the null state of s to not null
+>     _ = s == null; // Null check by testing equality. The null state of s
+>                    // is maybe null
+>     length = s.Length; // Warning, and changes the null state of s
+>                        // to not null
 >
->     _ = s?.Length; // The ?. is a null check and changes the null state of s to maybe null
+>     _ = s?.Length; // The ?. is a null check and changes the null state of s
+>                    // to maybe null
 >     if (s.Length > 4) // Warning. Changes null state of s to not null
 >     {
->         _ = s?[4]; // ?[] is a null check and changes the null state of s to maybe null
+>         _ = s?[4]; // ?[] is a null check and changes the null state of s
+>                    // to maybe null
 >         _ = s.Length; // Warning. s is maybe null
 >     }
 > }
@@ -1013,7 +1017,8 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume property is stateful
+>             int len = t.DisappearingProperty.Length; // No warning. A compiler can
+>                                                      // assume property is stateful
 >         }
 >     }
 > }
@@ -1163,4 +1168,4 @@ A compiler may issue a warning when nullability differs in either direction in t
 >
 > *end example*
 
-***End of conditionally normative text***
+**End of conditionally normative text**
