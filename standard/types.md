@@ -1171,7 +1171,7 @@ A compiler may issue a warning when nullability differs in either direction in t
 >
 > *end example*
 
-A compiler may issue a warning when the result of a lifted conversion operator (§10.6.2) is the `null` reference and that value is assigned to a non-nullable reference type.
+A compiler may issue a warning when the result of a lifted conversion operator (§10.6.2) is a reference type and is converted to a non-nullable reference type, since the result of a lifted conversion operator is maybe-null.
 
 > <!-- Example: {template:"code-in-class-lib", name:"LiftedOperator", ignoredWarnings:["CS8600"]} -->
 > ```csharp
