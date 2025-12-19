@@ -142,7 +142,7 @@ Except for the differences noted in [§16.4](structs.md#164-class-and-struct-dif
 
 ### §struct_readonly Readonly members
 
-An instance member definition or property accessor of an instance property that includes the `readonly` modifier has the following restrictions:
+An instance member definition or accessor of an instance property, indexer, or event that includes the `readonly` modifier has the following restrictions:
 
 - The member shall not reassign the value of `this` or an instance field of the receiver.
 - The member shall not reassign the value of an instance field-like event (§15.8.2) of the receiver.
