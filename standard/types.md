@@ -1168,4 +1168,24 @@ A compiler may issue a warning when nullability differs in either direction in t
 >
 > *end example*
 
+A compiler may issue a warning when the result of a lifted conversion operator (§10.6.2) is the `null` reference and that value is assigned to a non-nullable reference type.
+
+> <!-- Example: {template:"code-in-class-lib", name:"LiftedOperator", ignoredWarnings:["CS8600"]} -->
+> ```csharp
+> #nullable enable
+> class C
+> {
+>     void M()
+>     {
+>         C? a = (int?)null; // No warning
+>         C b = (int?)null; // Warning: Possible assignment to null
+>         C c = 1; // No warning
+>     }
+> 
+>     public static implicit operator C(int v) => new C();
+> }
+> ```
+>
+> *end example*
+
 **End of conditionally normative text**
