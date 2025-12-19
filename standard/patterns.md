@@ -2,7 +2,7 @@
 
 ## 11.1 General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.14.12](expressions.md#121412-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.
+A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.15.12](expressions.md#121512-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.
 
 A pattern is tested against a value in a number of contexts:
 
@@ -88,7 +88,7 @@ single_variable_designation
 
 A *simple_designation* with the token `_` shall be considered a *discard_designation* rather than a *single_variable_designation*.
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.15.12.1](expressions.md#1215121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
 
 > *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn’t a nullable type. *end note*
 
@@ -410,7 +410,7 @@ It is a compile-time error to use a discard pattern in a *relational_expression*
 > Here, a discard pattern is used to handle `null` and any integer value that doesn’t have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
 > *end example*
 
-### §type-pattern-new-clause Type pattern
+### 11.2.8 Type pattern
 
 A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
 
@@ -420,9 +420,9 @@ type_pattern
     ;
 ```
 
-The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.15.12.1](expressions.md#1215121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
 
-### §relational-pattern-new-clause Relational pattern
+### 11.2.9 Relational pattern
 
 A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
 
@@ -468,7 +468,7 @@ When the input value has a type for which a suitable built-in binary relational 
 >
 > *end example*
 
-### §logical-pattern-new-clause Logical pattern
+### 11.2.10 Logical pattern
 
 A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
 

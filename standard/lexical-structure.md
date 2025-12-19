@@ -135,7 +135,7 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 >
 > *end example*
 
-When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 ## 6.3 Lexical analysis
 
@@ -976,7 +976,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.14.8](expressions.md#12148-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1204,7 +1204,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.25](expressions.md#1225-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.26](expressions.md#1226-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
