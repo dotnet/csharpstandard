@@ -669,9 +669,9 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 #### §conditional-local-function Conditional local functions
 
-A local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
+A static local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
 
-A conditional local function shall have the modifier `static`.
+A compile time error ocurrs if a non-static local function is made conditional.
 
 #### 23.5.3.3 Conditional attribute classes
 
@@ -842,7 +842,7 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
-For an invocation that occurs within a local function, the name of the method that calls that local function is used. Consider the following: if method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member!
+For an invocation that occurs within a local function, the name of the member method that calls that local function is used. Consider the following: if member method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member!
 
 ### 23.5.7 Code analysis attributes
 
