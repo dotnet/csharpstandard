@@ -7163,11 +7163,11 @@ constant_expression
     ;
 ```
 
-A constant expression shall either have the value `null` or one of the following types:
+A constant expression may be either a value type or a reference type. If a constant expression has a value type, that type shall be one of the following: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, the expression shall:
 
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
-- an enumeration type; or
-- a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) for a reference type.
+- have a value of type `string`;
+- have a value of `null`; or
+- be a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) of reference type.
 
 A *constant_expression* of type `nint` shall have a value in the range \[`int.MinValue`,`int.MaxValue`\]. A *constant_expression* of type `nuint` shall have a value in the range \[`uint.MinValue`,`uint.MaxValue`\].
 
@@ -7219,7 +7219,15 @@ Whenever an expression fulfills the requirements listed above, the expression is
 
 The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
 
-Due to the implementation-defined nature of native integers ([§8.3.6](types.md#836-integral-types)), constant folding operations on `nint` and `nuint` operands shall be evaluated as if they had type `System.Int32` and `System.UInt32`, respectively. If the operation results in a constant value representable in 32 bits, constant folding may be performed at compile-time. Otherwise, the operation is executed at runtime and is not considered to be a constant.
+The compile-time evaluation of a *constant_expression* shall:
+
+- treat all values of type `nint` as `System.Int32`;
+- treat all values of type `nuint` as `System.UInt32`;
+- and otherwise use the same evaluation rules as for run-time non-constant expressions.
+
+If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the run-time evaluation of the whole expression would throw an exception, then a compile-time error shall be produced.
+
+> *Note*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision. *end note*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
