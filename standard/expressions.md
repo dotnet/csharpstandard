@@ -1144,10 +1144,10 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
-  - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
-  - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
-  - `S₁` is `int` and `S₂` is `uint`, or `ulong`
-  - `S₁` is `long` and `S₂` is `ulong`
+  - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, `nuint`, or `ulong`
+  - `S₁` is `short` and `S₂` is `ushort`, `uint`, `nuint`, or `ulong`
+  - `S₁` is `int` and `S₂` is `uint`, `nuint`, `nuint`, or `ulong`
+  - `S₁` is `long` and `S₂` is `nuint`, or `ulong`
 
 #### 12.6.4.8 Overloading in generic classes
 
@@ -2253,6 +2253,10 @@ In this case the compile-time type of the *element_access* depends on the compil
 > *end example*
 
 If the *primary_expression* of an *element_access* is:
+
+- a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
+- a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
+- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
 
 #### 12.8.12.2 Array access
 
