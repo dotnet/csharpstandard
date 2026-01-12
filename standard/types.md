@@ -324,9 +324,9 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
+Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions, unary operators (§12.9) and arithmetic operators (§12.12) for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
 
-While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
+While the language provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
 
 <!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
 ```csharp
@@ -367,13 +367,15 @@ public string ToString(string format);
 
 Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
 
+`typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
+
+<!-- The following three paragraphs can be deleted for C# 10 -->
+
 `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
 
 Overloads cannot differ by `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
 
 Methods hide other methods that differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
-
-`typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
 
 ### 8.3.6 Integral types
 
