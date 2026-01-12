@@ -324,6 +324,8 @@ An implicit constant expression conversion permits the following conversions:
 - A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
+The range for constants of `nint` is the same range as `int`. The range of constants for `nuint` is the same range as `uint`.
+
 ### 10.2.12 Implicit conversions involving type parameters
 
 For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following implicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exist:
@@ -848,17 +850,6 @@ Conversion from `A` to `Nullable<B>` is:
 
 - an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
 - an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `B` is:
-
-- an explicit nullable conversion if there is an identity conversion or implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `Nullable<B>` is:
-
-- an identity conversion if there is an identity conversion from `A` to `B`;
-- an explicit nullable conversion if there is an implicit or explicit numeric conversion from `A` to `B`;
 - otherwise, invalid.
 
 ### 10.6.2 Lifted conversions
