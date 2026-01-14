@@ -871,11 +871,11 @@ The ***default null state*** of an expression is determined by its type, and the
 
 - The default state of the `null` literal (§6.4.5.7) is maybe null.
 - The default state of a default value expression (§12.8.21) is not null when the type is a non-nullable value type, otherwise maybe null.
-- For all other expressions
-  - The default null state of a nullable reference type is:
+- For all other expressions:
+  - The default null state of an expression whose type is a nullable reference type is:
     - Maybe null when its declaration is in text where the annotations flag is enabled.
     - Not null when its declaration is in text where the annotations flag is disabled.
-  - The default null state of a non-nullable reference type is not null.
+  - The default null state of an expression whose type is a non-nullable reference type is not null.
 
 > *Note:* The *maybe default* state is used with unconstrained type parameters when the type is a non-nullable type, such as `string` and the expression `default(T)` is the null value. Because null is not in the domain for the non-nullable type, the state is maybe default. *end note*
 
