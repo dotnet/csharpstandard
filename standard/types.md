@@ -869,10 +869,13 @@ Every expression has one of three ***null state***s:
 
 The ***default null state*** of an expression is determined by its type, and the state of the annotations flag when it is declared:
 
-- The default null state of a nullable reference type is:
-  - Maybe null when its declaration is in text where the annotations flag is enabled.
-  - Not null when its declaration is in text where the annotations flag is disabled.
-- The default null state of a non-nullable reference type is not null.
+- The default state of the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) is maybe null.
+- The default state of a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) is not null when the type is a non-nullable value type, otherwise maybe null.
+- For all other expressions:
+  - The default null state of an expression whose type is a nullable reference type is:
+    - Maybe null when its declaration is in text where the annotations flag is enabled.
+    - Not null when its declaration is in text where the annotations flag is disabled.
+  - The default null state of an expression whose type is a non-nullable reference type is not null.
 
 > *Note:* The *maybe default* state is used with unconstrained type parameters when the type is a non-nullable type, such as `string` and the expression `default(T)` is the null value. Because null is not in the domain for the non-nullable type, the state is maybe default. *end note*
 
@@ -1163,6 +1166,26 @@ A compiler may issue a warning when nullability differs in either direction in t
 >         List<string> v1 = p; // Warning
 >         List<string> v2 = p!; // No warning
 >     }
+> }
+> ```
+>
+> *end example*
+
+A compiler may issue a warning when the result of a lifted conversion operator ([§10.6.2](conversions.md#1062-lifted-conversions)) is a reference type and is converted to a non-nullable reference type, since the result of a lifted conversion operator is maybe-null.
+
+> <!-- Example: {template:"code-in-class-lib", name:"LiftedOperator", ignoredWarnings:["CS8600"]} -->
+> ```csharp
+> #nullable enable
+> class C
+> {
+>     void M()
+>     {
+>         C? a = (int?)null; // No warning
+>         C b = (int?)null; // Warning: Possible assignment to null
+>         C c = 1; // No warning
+>     }
+> 
+>     public static implicit operator C(int v) => new C();
 > }
 > ```
 >
