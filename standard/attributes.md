@@ -888,7 +888,7 @@ For an invocation that occurs within a local function or an anonymous function, 
 
 The attribute `System.Runtime.CompilerServices.CallerArgumentExpression` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
-The target parameter shall have a *default_argument*.
+Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*.
 
 Consider the following method declaration:
 
@@ -921,7 +921,8 @@ The type of the target parameter shall have a standard conversion from `string`.
 
 If an explicit argument is passed for the target parameter, no string is captured, and that parameter takes on that argument’s value. Otherwise, the text for the argument corresponding to the sibling parameter is converted to a captured string, according to the following rules:
 
-- Leading and trailing white space is removed.
+- Leading and trailing white space is removed both before and after any outermost grouping parentheses are removed.
+- All outermost grouping parentheses are removed both before and after any leading and trailing white space is removed.
 - All other *input_element*s are retained verbatim (including white space, comments, *Unicode_Escape_Sequence*s, and `@` prefixes on identifiers).
 
 The captured string is then passed as the argument corresponding to the target parameter. However, if the argument for the sibling parameter is omitted, the target parameter takes on its *default_argument* value.
@@ -935,6 +936,7 @@ The captured string is then passed as the argument corresponding to the target p
 > Test.M(123, null);
 > Test.M(123, "xyz");
 > Test.M(  1  +      2 );
+> Test.M( ( ((123) + 0) ) );
 > int local = 10;
 > Test.M(l\u006fcal /*...*/ + // xxx
 >   5);
@@ -948,6 +950,7 @@ The captured string is then passed as the argument corresponding to the target p
 > val = 123, text = <>
 > val = 123, text = <xyz>
 > val = 3, text = <1  +      2>
+> val = 123, text = <(123 + 0)>
 > val = 15, text = <l\u006fcal /*...*/ + // xxx
 >   5>
 > ```
