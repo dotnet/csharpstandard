@@ -936,7 +936,7 @@ The captured string is then passed as the argument corresponding to the target p
 > Test.M(123, null);
 > Test.M(123, "xyz");
 > Test.M(  1  +      2 );
-> Test.M( ( ((123) + 0) ) );
+> Test.M(( ( (123) + 0) ) );
 > int local = 10;
 > Test.M(l\u006fcal /*...*/ + // xxx
 >   5);
@@ -950,7 +950,7 @@ The captured string is then passed as the argument corresponding to the target p
 > val = 123, text = <>
 > val = 123, text = <xyz>
 > val = 3, text = <1  +      2>
-> val = 123, text = <((123) + 0)>
+> val = 123, text = <(123) + 0>
 > val = 15, text = <l\u006fcal /*...*/ + // xxx
 >   5>
 > ```
