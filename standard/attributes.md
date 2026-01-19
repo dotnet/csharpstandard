@@ -939,7 +939,7 @@ The captured string is then passed as the argument corresponding to the target p
 > Test.M(l\u006fcal /*...*/ + // xxx
 >   5);
 > ```
-> 
+>
 > the output produced is
 >
 > ```console
