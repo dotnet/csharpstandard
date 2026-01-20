@@ -735,6 +735,22 @@ namespace System.Diagnostics.CodeAnalysis
         public MaybeNullWhenAttribute(bool returnValue);
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method | 
+    System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
+    public sealed class MemberNotNullAttribute : Attribute
+    {
+        public MemberNotNullAttribute(string member) {}
+        public MemberNotNullAttribute(params string[] members) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method | 
+      System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
+    public sealed class MemberNotNullWhenAttribute : Attribute
+    {
+        public MemberNotNullWhenAttribute(bool returnValue, string member) {}
+        public MemberNotNullWhenAttribute(bool returnValue, params string[] members) {}
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Field |
       System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
       System.AttributeTargets.ReturnValue, Inherited=false)]
@@ -1356,6 +1372,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute`
 - `global::System.Diagnostics.CodeAnalysis.MaybeNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
