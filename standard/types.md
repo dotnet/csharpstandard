@@ -417,7 +417,7 @@ Element names within a tuple type shall be distinct. A tuple element name of the
 
 Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
 
-Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation (§tuple-runtime-representation) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions). 
+Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation (§tuple-runtime-representation) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
 
 Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` is the tuple arity and the numbers have no leading zeros, and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
@@ -445,20 +445,22 @@ Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` i
 If the result of constructing a tuple (§12.8.6) is not required outside of the context in which it is constructed implementations are explicitly allowed to elide the construction as an optimisation provide all other semantic requirements are met.
 
 > *Example*: Such a situation may commonly arise from deconstructing assignments ($deconstructing-assignment), deconstructing declarations (§local-deconstructing-declarations), and switch statements (§13.8.3). Consider the deconstructing assignment:
-
+>
 > ```csharp
 >    (a, b) = (b, a);
 > ```
-
+>
 > The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side deconstructor `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple literal elements. In the code:
-
+>
 > ```csharp
 >    (a, b, _) = (b, a, thing.expensiveMethod(x));
 > ```
+>
+> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.expensiveMethod(x)`; before doing so. *end example*
+<!-- markdownlint-disable MD028 -->
 
-> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.expensiveMethod(x)`; before doing so.
-
-> *Note*: In an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
+<!-- markdownlint-enable MD028 -->
+> *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
 
 #### §tuple-runtime-representation Runtime representation
 
@@ -478,7 +480,7 @@ The runtime representation of tuples is directly accessible, and tuple & `System
 - Any value of type `(T1, ..., Tn)` may be treated as the equivalent `System.ValueType<...>` value.
 - Any value of type `System.ValueType<T1, T2>` through `System.ValueType<T1, T2, T3, T4, T5, T6, T7>` may be treated as the equivalent `(T1, T2)` through `(T1, T2, T3, T4, T5, T6, T7)` tuple value.
 - A value of type `System.ValueTuple<T1, ..., T7, TRest>` may only be treated as a tuple if `TRest` is a tuple or any `System.ValueTuple<...>` type, the latter including `System.ValueType<T1>`.
-- Any other value of type `System.ValueType<T1>` may not be treated as a tuple. 
+- Any other value of type `System.ValueType<T1>` may not be treated as a tuple.
 
 Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not meet the above requirements is a compile-time error.
 
@@ -502,6 +504,7 @@ Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not me
 >             (1, 2, 3, 4, 5, 6, 7, new ValueTuple<int>(8));
 > var c8 = c.Item8;   // OK, c can be treated as a tuple and so has a field Item8
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -513,6 +516,7 @@ Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not me
 > (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
 > ValueTuple<int, string> pair7 = (7, "Seven");
 > ```
+>
 > The declarations for `pair6` and `pair7` demonstrate that tuple types and expressions are generally interchangeable with `ValueTuple<...>` types and object creation expressions ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
 >
 > *end example*
@@ -525,6 +529,7 @@ Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not me
 > ```csharp
 > var squares = (1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225);
 > ```
+>
 > Then the 15th square (`225`) can be addressed as `squares.Item15`, `squares.Rest.Item8` and `squares.Rest.Rest.Item1`.
 >
 > *end example*
@@ -539,6 +544,7 @@ Though tuple and `System.ValueType<...>` values may be treated as equivalent, su
 > (string name, int age) b = a;                        // Treat as a tuple with named elements
 > Console.WriteLine($"{b.name} is {b.age} years old"); // Access using element names
 > ```
+>
 > *end example*
 
 In the remainder of this Standard the interchangeability of tuple and `ValueTuple<...>` types and values, as defined above, is usually taken as read and not explicitly mentioned.

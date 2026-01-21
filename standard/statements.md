@@ -549,7 +549,7 @@ The run-time processing of a deconstructing declaration, now `d = e`, proceeds a
 
 An *abridged_deconstructor* is a shorthand syntax for a *declaration_deconstructor* containing implicitly typed declaration expressions.
 
-```ANTLR    
+```ANTLR
 abridged_deconstructor
     : 'var' abridged_elements
     ;

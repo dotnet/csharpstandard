@@ -1280,8 +1280,10 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
   >    return (v1, ..., vn);
   > } 
   >```
+<!-- markdownlint-disable MD028 -->
 
-  > *Note*: “is semantically equivalent to” – there is no requirement, or even expectation, that an implementation will actually implement this deconstruction by defining a method and calling it, just that the observable semantics follow this sample. (Inlining a method is not “observable” in this sense.) *end note* 
+<!-- markdownlint-enable MD028 -->
+  > *Note*: “is semantically equivalent to” – there is no requirement, or even expectation, that an implementation will actually implement this deconstruction by defining a method and calling it, just that the observable semantics follow this sample. (Inlining a method is not “observable” in this sense.) *end note*
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
@@ -1617,7 +1619,7 @@ A tuple literal has a type if and only if each of its element expressions `Eᵢ`
 
 A tuple value can be obtained from a tuple literal when:
 
-- it is the subject of a conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions), §10.3.13), the conversion replaces any type it may inherently have;
+- it is the subject of a conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)), the conversion replaces any type it may inherently have;
 - it is the target of a deconstructing assignment (§deconstructing-assignment);
 - it is the target of a local deconstructing declaration (§local-deconstructing-declarations); or
 - it is reclassified as a value ([§12.2.2](expressions.md#1222-values-of-expressions))).
