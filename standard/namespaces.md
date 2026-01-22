@@ -134,7 +134,7 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 A *file_scoped_namespace_declaration* permits a namespace declaration to be written without an accompanying `{ … }` block.
 
 > *Example*:
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
 > ```csharp
 > namespace Name;
@@ -143,9 +143,9 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 > {
 > }
 > ```
-> 
+>
 > is semantically equivalent to
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
 > ```csharp
 > namespace Name
@@ -156,9 +156,9 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 >     }
 > }
 > ```
-> 
+>
 > *end example*
- 
+
 A *file_scoped_namespace_declaration* is treated the same as a *namespace_declaration* at the same location in the *compilation_unit* with the same *qualified_identifier*.  The *extern_alias_directive*s, *using_directive*s and *type_declaration*s of that *file_scoped_namespace_declaration* act as if they were declared in the same order inside the *namespace_body* of that *namespace_declaration*.
 
 > *Note*: As determined by the grammar, a compilation unit cannot contain both a *file_scoped_namespace_declaration* and a *namespace_declaration*. It cannot contain multiple *file_scoped_namespace_declaration*s. It cannot contain both a *file_scoped_namespace_declaration* and any top level *statement*s. *type_declaration*s cannot precede a *file_scoped_namespace_declaration*. *end note*
