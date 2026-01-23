@@ -1102,7 +1102,7 @@ For an expression *expr* of the form:
 «expr_first» == «expr_second»
 ```
 
-where `==` is a predefined comparison operator ([§12.12](expressions.md#1212-relational-and-type-testing-operators)) or a lifted operator ([§12.4.8](expressions.md#1248-lifted-operators)), the definite assignment state of *v* after *expr* is determined by:
+where `==` is a predefined comparison operator ([§12.15](expressions.md#1215-relational-and-type-testing-operators)) or a lifted operator ([§12.4.8](expressions.md#1248-lifted-operators)), the definite assignment state of *v* after *expr* is determined by:
 
 - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E* and *expr_second* is a constant expression with value *null*, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
 - If *expr_first* directly contains a null-conditional expression *E* and *expr_second* is an expression of a non-nullable value type, or a constant expression with a non-null value, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
