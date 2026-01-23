@@ -780,7 +780,7 @@ namespace System.Linq.Expressions
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
-        AttributeTargets.Interface, 
+        AttributeTargets.Interface | AttributeTargets.Method, 
         Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
