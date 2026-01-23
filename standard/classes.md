@@ -5923,7 +5923,7 @@ public async ValueTask<T> ExampleAsync() { … }
 
 This will be compiled to something like the following:
 
-```C#
+```csharp
 [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
 [CompilerGenerated]
 static ValueTask<int> ExampleAsync()
@@ -5939,14 +5939,14 @@ static ValueTask<int> ExampleAsync()
 
 However, the following code fragment:
 
-```C#
+```csharp
 [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
 static async ValueTask<int> ExampleAsync() { … }
 ```
 
 in which the attribute `AsyncMethodBuilder ` is applied to that method, would instead be compiled to something like:
 
-```C#
+```csharp
 [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
 [CompilerGenerated]
 [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
