@@ -4,6 +4,13 @@
 
 An expression is a sequence of operators and operands. This clause defines the syntax, order of evaluation of operands and operators, and meaning of expressions.
 
+An expression *E* is said to ***directly contain*** a subexpression *E₁* if it is not subject to a user-defined conversion [§10.5](conversions.md#105-user-defined-conversions) whose parameter is not of a non-nullable value type, and one of the following conditions holds:
+
+- *E* is *E₁*.
+- If *E* is a parenthesized expression `(E₂)`, and *E₂* directly contains *E₁*.
+- If *E* is a null-forgiving operator expression `E₂!`, and *E₂* directly contains *E₁*.
+- If *E* is a cast expression `(T)E₂`, and the cast does not subject *E₂* to a non-lifted user-defined conversion whose parameter is not of a non-nullable value type, and *E₂* directly contains *E₁*.
+
 ## 12.2 Expression classifications
 
 ### 12.2.1 General
