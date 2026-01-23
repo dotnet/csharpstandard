@@ -849,7 +849,7 @@ For an expression *expr* of the form:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* (§qdot-expressions), then the definite assignment state of *v* after *expr* is the same as the definite assignment state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
- 
+
 > *Note*: The rule above formalizes that for an expression like `a?.M(out x) ?? (x = false)`, either the `a?.M(out x)` was fully evaluated and produced a non-null value, in which case `x` was assigned, or the `x = false` was evaluated, in which case `x` was also assigned. Therefore `x` is always assigned after this expression.
 >
 > This also handles the `dict?.TryGetValue(key, out var value) ?? false` scenario, by observing that *v* is definitely assigned after `dict.TryGetValue(key, out var value)`, and *v* is “definitely assigned when true” after `false`, and concluding that *v* must be “definitely assigned when true.”
