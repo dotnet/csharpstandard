@@ -236,7 +236,11 @@ subpatterns
     ;
 subpattern
     : pattern
-    | identifier ':' pattern
+    | subpattern_name ':' pattern
+    ;
+subpattern_name
+    : identifier
+    | subpattern_name '.' identifier
     ;
 ```
 
@@ -349,6 +353,12 @@ At runtime, the expression is tested against *T*. If this fails then the propert
 
 The *property_pattern* may be used to pattern-match with anonymous types.
 
+A *property_subpattern* may reference a nested member. In such a case, the receiver for each name lookup is the type of the previous member *T₀*, starting from the *input type* of the *property_pattern*. If *T* is a nullable type, *T₀* is its underlying type, otherwise *T₀* is equal to *T*. For example, a pattern of the form `{ Prop1.Prop2: pattern }` is exactly equivalent to `{ Prop1: { Prop2: pattern } }`.
+
+> *Note*: This will include the null check when *T* is a nullable value type or a reference type. This null check means that the nested properties available will be the properties of *T₀*, not of *T*. As repeated member paths are allowed, the compilation of pattern matching can take advantage of common parts of patterns. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console", name:"PropertyPattern2", replaceEllipsis:true, customEllipsisReplacements: ["new object()", ";"], ignoredWarnings:["CS0642"]} -->
