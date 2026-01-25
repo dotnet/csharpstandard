@@ -1520,6 +1520,7 @@ An *interpolated_string_expression* is classified as a value, which is evaluated
 
 1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
 1. If the target of an assignment or method-call argument has a custom interpolated string handler (§custInterpStrExpHandler) type, then
+
   - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
   - Otherwise, the expression is processed by the custom interpolated string handler and the result has that custom interpolated string handler’s type.
 
@@ -1532,7 +1533,7 @@ static void M(SomeInterpolatedStringHandler s) { }
 int val = 255;
 M($"no interpolations");// invokes M(string)
 M($"{val}");            // invokes M(SomeInterpolatedStringHandler)
-string s1 = $"{val}";	// default handler used, as target has type string
+string s1 = $"{val}";   // default handler used, as target has type string
 M(s1);                  // invokes M(string)
 SomeInterpolatedStringHandler str2 = $"{val}";	 // custom handler used
 M(s2);                  // invokes M(SomeInterpolatedStringHandler)
@@ -1605,6 +1606,7 @@ Then:
 *end example*
 
 A *constant interpolated string* is an *interpolated_string_expression* that contains
+
   - no interpolations, or
   - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
 
