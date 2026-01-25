@@ -1248,7 +1248,7 @@ val = {  FF}; 2 * val = 510.
 
 In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As such, according to [§12.8.3](expressions.md#1283-interpolated-string-expressions), the default interpolated string expression handler is invoked. The following subclause (§custInterpStrExpCustHandling) shows how to use a custom handler.
 
-In order to provide custom processing to the program shown in §custInterpStrExpDefHandling, a *custom interpolated string expression handler* is needed. Here then is the message logger with a custom handler added (which although it does nothing more than behave like the default handler, it provides the hooks for customization):
+In order to provide custom processing to the program above, a *custom interpolated string expression handler* is needed. Here then is the message logger with a custom handler added (which although it does nothing more than behave like the default handler, it provides the hooks for customization):
 
 <!-- Example: {template:"standalone-console-without-using", name:"DeclCustomHandler2", inferOutput:true} -->
 ```csharp
@@ -1313,7 +1313,7 @@ The output produced is, as follows:
 val = {  FF}; 2 * val = 510.
 ```
 
-A type having the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*. 
+A type having the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*.
 
 To qualify as a custom interpolated string expression handler, a class or struct type shall have the following characteristics:
 
