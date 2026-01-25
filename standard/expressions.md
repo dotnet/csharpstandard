@@ -1052,6 +1052,7 @@ A function member is said to be an ***applicable function member*** with respect
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+  - for a reference parameter whose type is a struct type, an implicit interpolated string handler conversion exists from the argument to the type of the corresponding parameter, or
   - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
@@ -1375,7 +1376,13 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 ### 12.8.3 Interpolated string expressions
 
-An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications. Any quoted text that is not part of an interpolation (as defined by the grammar rules *Interpolated_Regular_String_Mid* and *Interpolated_Verbatim_String_Mid* shown below) is part of an *interpolated string expression segment*. As such, the quoted text contains zero or more interpolated string expression segments. Consider the following *interpolated_string_expression*:
+
+```csharp
+$"val = {{{val,4:X}}}; 2 * val = {2 * val}."
+```
+
+This contains the interpolated string expression segments `"val = {"`, `"}; 2 * val = "`, and `"."`, the first of which factors in the presence of the open/close brace escape sequences described in the grammar below. The quoted text also contains the interpolations `"{val,4:X}"` and `"{2 * val}"`.
 
 Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
 and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
@@ -1509,13 +1516,31 @@ other tokens in the language. *end note*
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this specification. *end note*
 
-An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), the interpolated string expression has that type. Otherwise, it has the type `string`.
+An *interpolated_string_expression* is classified as a value, which is evaluated in one of the following ways depending on the context in which it appears:
 
-> *Note*: The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
+1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
+1. If the target of an assignment or method-call argument has a custom interpolated string handler (§custInterpStrExpHandler) type, then
+  - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
+  - Otherwise, the expression is processed by the custom interpolated string handler and the result has that custom interpolated string handler’s type.
+
+These rules are illustrated by the following:
+
+```csharp
+static void M(string s) { }
+static void M(SomeInterpolatedStringHandler s) { }
+
+int val = 255;
+M($"no interpolations");// invokes M(string)
+M($"{val}");            // invokes M(SomeInterpolatedStringHandler)
+string s1 = $"{val}";	// default handler used, as target has type string
+M(s1);                  // invokes M(string)
+SomeInterpolatedStringHandler str2 = $"{val}";	 // custom handler used
+M(s2);                  // invokes M(SomeInterpolatedStringHandler)
+```
+
+The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in §custInterpStrExpHandler.
 
 The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
-
-> *Note*: How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
 
 In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
 
@@ -1524,9 +1549,7 @@ In an *interpolation_minimum_width* the *constant_expression* shall have an impl
   - If the alignment is positive the formatted string is right-aligned by prepending the padding,
   - Otherwise it is left-aligned by appending the padding.
 
-The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type shall be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`.
-
-In both cases, the argument list of the call consists of a *format string literal* with *format specifications* for each interpolation, and an argument for each expression corresponding to the format specifications.
+The interpolated string expression is treated as a *format string literal* with *format specifications* for each interpolation.
 
 The format string literal is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*. The format string literal consists of, in order:
 
@@ -1580,6 +1603,14 @@ Then:
 | `$"{(number==0?"Zero":"Non-zero")}"` | `string.Format("{0}", (number==0?"Zero":"Non-zero"))`         | `"Non-zero"` |
 
 *end example*
+
+A *constant interpolated string* is an *interpolated_string_expression* that contains
+  - no interpolations, or
+  - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
+
+For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
+
+For simplicity, the term *ISE* is used throughout this specification to mean either an *interpolated_string_expression* or an *additive_expression* composed entirely of *interpolated_string_expression*s and binary `+` operators.
 
 ### 12.8.4 Simple names
 
@@ -7359,6 +7390,7 @@ A *constant_expression* of type `nint` shall have a value in the range \[-214748
 Only the following constructs are permitted in constant expressions:
 
 - Literals (including the `null` literal).
+- Constant interpolated strings.
 - References to `const` members of class, struct, and interface types.
 - References to members of enumeration types.
 - References to local constants.
