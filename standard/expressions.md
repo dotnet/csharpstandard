@@ -5356,7 +5356,9 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > x => x + 1                             // Implicitly typed, expression body
 > x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
-> static (int x) => { return x + 1; }    // Explicitly typed, block body
+> (int x) => { return x + 1; }           // Explicitly typed, block body
+> static (int x) => x + 1                // static anonymous function, explicitly typed, expression body
+> static (int x) => { return x + 1; }    // static anonymous function, explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
@@ -5391,7 +5393,7 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - Except for by-reference parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a by-reference parameter.
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
 - If the modifier `static` is present, it is a compile-time error for the body to access `this` or `base`.
-- If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
+- If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 - If the modifier `static` is absent, the body has access to the outer variables ([§12.21.6](expressions.md#12216-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.21.7](expressions.md#12217-evaluation-of-anonymous-function-expressions)).
 - If the modifier `static` is present, the body may use outer variable names as operands to `nameof`.
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
@@ -5476,9 +5478,9 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 
 #### 12.21.6.1 General
 
-Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the this value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
+Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
-That said, if the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
+If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 
 #### 12.21.6.2 Captured outer variables
 
