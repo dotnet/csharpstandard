@@ -54,17 +54,22 @@ interface_type
     ;
 
 array_type
+    : array_type nullable_type_annotation rank_specifier+
     : non_array_type rank_specifier+
     ;
 
 non_array_type
+    : non_array_non_nullable_type nullable_type_annotation?
+    | pointer_type      // unsafe code support
+    ;
+
+non_array_non_nullable_type
     : value_type
     | class_type
     | interface_type
     | delegate_type
     | 'dynamic'
     | type_parameter
-    | pointer_type      // unsafe code support
     ;
 
 rank_specifier
@@ -839,7 +844,9 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Other than in the meaning of array types, neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+
+The meaning of array types is significantly impacted by the presence of *nullable_type_annotation* within an *array_type*, as described in [§17.2.1](arrays.md#1721-general).
 
 ### 8.9.2 Non-nullable reference types
 
@@ -862,6 +869,8 @@ The default state of the nullable context is implementation defined.
 Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed to have been compiled using a nullable context where both annotations and warnings are enabled.
 
 > *Note:* A nullable context where both flags are disabled matches the previous standard behavior for reference types. *end note*
+
+The rank and element of an array type declared using *nullable_type_annotation* is not affected by the nullable context.
 
 #### 8.9.4.2 Nullable disable
 
@@ -1213,6 +1222,8 @@ A compiler may issue a warning when nullability annotations differ between two t
 
 A compiler may follow rules for interface variance ([§19.2.3.3](interfaces.md#19233-variance-conversion)), delegate variance ([§21.4](delegates.md#214-delegate-compatibility)), and array covariance ([§17.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
 
+(See [§17.2.1](arrays.md#1721-general) for the specification of the corresponding non-nullable array type used in `M7` and `M8`.)
+
 > <!-- Example: {template:"code-in-class-lib", name:"NullVariance", ignoredWarnings:["CS8619"]} -->
 > ```csharp
 > #nullable enable
@@ -1249,6 +1260,17 @@ A compiler may follow rules for interface variance ([§19.2.3.3](interfaces.md#1
 >     {
 >         string[] v1 = p; // Warning
 >         string[] v2 = p!; // No warning
+>     }
+>
+>     public void M7(string[][,] p)
+>     {
+>         string[,]?[] v1 = p; // No warning
+>     }
+>
+>     public void M8(string[]?[,] p)
+>     {
+>         string[,][] v1 = p; // Warning
+>         string[,][] v2 = p!; // No warning
 >     }
 > }
 > ```

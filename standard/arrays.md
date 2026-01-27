@@ -31,20 +31,64 @@ Every array type is a reference type ([§8.2](types.md#82-reference-types)). The
 
 The grammar productions for array types are provided in [§8.2.1](types.md#821-general).
 
-An array type is written as a *non_array_type* followed by one or more *rank_specifier*s.
+An array type is written as a *non_array_type* followed by one or more *rank_specifier*s, or an *array_type* followed by a *nullable_type_annotation* followed by one or more *rank_specifier*s. The latter production is used to represent array types where the element type is includes a nullable array type.
 
 A *non_array_type* is any *type* that is not itself an *array_type*.
 
+When determining the rank and element type of array type as specified below, only the *rank_specifier*s in the top-most production are considered, so in the production `array_type nullable_type_annotation rank_specifier+`, any `rank_specifier` within the `array_type` is ignored.
+
 The rank of an array type is given by the leftmost *rank_specifier* in the *array_type*: A *rank_specifier* indicates that the array is an array with a rank of one plus the number of “`,`” tokens in the *rank_specifier*.
 
-The element type of an array type is the type that results from deleting the leftmost *rank_specifier*:
-
-- An array type of the form `T[R]` is an array with rank `R` and a non-array element type `T`.
-- An array type of the form `T[R][R₁]...[Rₓ]` is an array with rank `R` and an element type `T[R₁]...[Rₓ]`.
+The element type of an array type is the type that results from deleting the leftmost *rank_specifier*.
 
 In effect, the *rank_specifier*s are read from left to right *before* the final non-array element type.
 
-> *Example*: The type in `T[][,,][,]` is a single-dimensional array of three-dimensional arrays of two-dimensional arrays of `int`. *end example*
+> *Example*: The following code shows several variable declarations, including a mixture of single-dimensional arrays, multi-dimensional arrays, and arrays of arrays, with some using nullable reference types. In each case, the rank and element type is described, and then demonstrated with a second variable declaration which is initialized using an element access expression.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"ArraysOfArrays", replaceEllipsis:true, customEllipsisReplacements:["default!","default!","default!","default!","default!","default!","default!","default!","default!", "default!"], expectedException:"NullReferenceException"} -->
+> ```csharp
+> // Rank 1, element type int
+> int[] array1 = ...;
+> int element1 = array1[0];
+>
+> // Rank 2, element type int
+> int[,] array2 = ...;
+> int element2 = array2[0, 1];
+>
+> // Rank 1, element type int? (Nullable<int>)
+> int?[] array3 = ...;
+> int? element3 = array3[0];
+>
+> // Rank 1, element type string? (nullable string)
+> string?[] array4 = ...;
+> string? element4 = array4[0];
+>
+> // Rank 1, element type string[,,][,]
+> string[][,,][,] array5 = ...;
+> string[,,][,] element5 = array5[0];
+>
+> // Rank 1, element type string; the array itself is nullable
+> string[]? array6 = ...;
+> string element6 = array6?[0] ?? "";
+>
+> // Rank 1, element type string[,]?
+> string[,]?[] array7 = ...;
+> string[,]? element7 = array7[0];
+>
+> // Rank 3, element type int[]?[,]
+> int[]?[,,][,] array8 = ...;
+> int[]?[,] element8 = array8[0, 1, 2];
+> 
+> // Rank 1, element type string[,]?[]?[,,]
+> string[,]?[]?[][,,] array9 = ...;
+> string[,]?[]?[,,] element9 = array9[0];
+>
+> // Rank 2, element type string[][][,,]
+> // Note that this appears the same as the array9 example above other
+> // than for the use of ? but the rank and element type are significantly different.
+> string[,][][][,,] array10 = ...;
+> string[][][,,] element10 = array10[0, 1];
+> ```
 
 At run-time, a value of an array type can be `null` or a reference to an instance of that array type.
 
