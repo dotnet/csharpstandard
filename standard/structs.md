@@ -42,7 +42,7 @@ A *struct_declaration* is for either a ***non-record struct*** or a ***record st
 
 A *non_record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
-A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](standard/classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
+A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.2.1](standard/classes.md#1521-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
 
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -297,7 +297,7 @@ This method performs the following tasks:
 5. Returns the builder’s contents with `builder.ToString()`.
 
 > *Example*: Consider the following record struct:
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"RecordStructPrintingMembers1", additionalFiles:["T1T2T3.cs"]} -->
 > ```csharp
 > record struct R1(T1 P1, T2 P2);
@@ -408,7 +408,7 @@ For a record struct:
 - It is an error if the inherited property does not have `public` `get` and `set`/`init` accessors.
 
 - It is an error if the inherited property or field is hidden.
- 
+
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
 
 - Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record struct parameter.
