@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8773"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
