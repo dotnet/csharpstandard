@@ -6465,7 +6465,9 @@ Expression variables declared in *argument_list* are in scope within the *argume
 
 #### 15.16.5.3 Properties
 
-For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) that has the same name and type as an inherited or explicitly declared instance field, the remainder of this subclause does not apply.
+
+For each parameter of a positional *record_declaration* there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
 
 For a record class:
 
