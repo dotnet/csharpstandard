@@ -513,7 +513,7 @@ A class that is decorated with the `AttributeUsage` attribute shall derive from 
 
 #### 23.5.3.1 General
 
-The attribute `Conditional` enables the definition of ***conditional methods***, ***conditional local function***s, and ***conditional attribute class***es.
+The attribute `Conditional` enables the definition of ***conditional method***s, ***conditional local function***s, and ***conditional attribute class***es.
 
 #### 23.5.3.2 Conditional methods
 
@@ -671,7 +671,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 A static local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
 
-A compile time error ocurrs if a non-static local function is made conditional.
+A compile time error occurs if a non-static local function is made conditional.
 
 #### 23.5.3.3 Conditional attribute classes
 
