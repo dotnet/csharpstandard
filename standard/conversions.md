@@ -83,6 +83,7 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+- Between a array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
@@ -324,7 +325,7 @@ An implicit constant expression conversion permits the following conversions:
 - A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
-The range for constants of `nint` is the same range as `int`. The range of constants for `nuint` is the same range as `uint`.
+The range for constants of `nint` is the same range as `int`. The range of constants for `nuint` is the same range as `uint`. (§12.25)
 
 ### 10.2.12 Implicit conversions involving type parameters
 

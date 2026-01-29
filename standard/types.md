@@ -356,14 +356,7 @@ public long ToInt64();
 public void* ToPointer();
 ```
 
-The remaining members of `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`. These are:
-
-```csharp
-public override bool Equals(object obj);
-public override int GetHashCode();
-public override string ToString();
-public string ToString(string format);
-```
+The remaining members of `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`.
 
 Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
 

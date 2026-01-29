@@ -297,7 +297,7 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `–`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary - operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
 
 **End of informative text.**
 
@@ -7229,7 +7229,17 @@ The compile-time evaluation of a *constant_expression* shall:
 
 If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the run-time evaluation of the whole expression would throw an exception, then a compile-time error shall be produced.
 
-> *Note*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision. *end note*
+> *Example*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConstantOverflow", expectedErrors:["CS0220"]} -->
+> ```csharp
+> public class C
+> {
+>     private const nint hugeNumber = int.MaxValue + 1;
+> }
+> ```
+>
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
