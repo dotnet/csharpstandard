@@ -3033,12 +3033,12 @@ When a *method declaration* includes a `partial` modifier, that method is said t
 
 In *method_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the *return_type*. A partial method cannot explicitly implement interface methods.
 
-There are classifications of a partial method declaration:
+Partial method declarations are classified as follows:
 
 - A method with an *expression-body* or a *block-body* or is declared with the `extern` modifier is said to be an ***implementing partial method declaration***.
 - Otherwise, a method declaration where the body of the method declaration is a semicolon is said to be a ***defining partial method declaration***.
 
-Across the parts of a type declaration, there shall be exactly one defining partial method declaration with a given signature. For an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+Across the parts of a type declaration, there shall be exactly one defining partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same method name, number of type parameters, and number of parameters.
 - The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
@@ -3099,7 +3099,7 @@ Only a defining partial method participates in overload resolution.
 
 If an implementing declaration exists for a given partial method, the invocations of the partial methods are retained. The partial method gives rise to a method declaration similar to the implementing partial method declaration except for the following:
 
-- All modifiers except the `partial` modifier are included in the resulting, including any `extern` or `async` modifier declared on the implementing declaration.
+- All modifiers except the `partial` modifier are included in the resulting method declaration, including any `extern` or `async` modifier declared on the implementing declaration.
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - Any default arguments (§15.6.2) in the implementing declaration are removed.
@@ -3205,7 +3205,7 @@ If a defining declaration but not an implementing declaration is given for a res
 
 #### §unrestricted-partial-methods Unrestricted partial methods
 
-An unrestriced partial method declartion incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
+An unrestricted partial method declaration incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
 The implementing declaration for an unrestricted partial method may be an external method (§15.6.8). The `extern` modifier is modifer allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
 
