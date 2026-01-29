@@ -313,7 +313,7 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`
 - Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
-- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `nint`, or `int`, both operands are converted to type `long`.
+- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `int`, or `nint`, both operands are converted to type `long`.
 - Otherwise, if either operand is of type `uint`, the other operand is converted to type `uint`.
 - Otherwise, if either operand is of type `nint`, the other operand is converted to type `nint`.
 - Otherwise, both operands are converted to type `int`.
@@ -1144,8 +1144,8 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, `nuint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, `nuint`, or `ulong`
-  - `S₁` is `int` and `S₂` is `uint`, `nuint`, `nuint`, or `ulong`
-  - `S₁` is `long` and `S₂` is `nuint`, or `ulong`
+  - `S₁` is `int` and `S₂` is `uint`, `nuint`, or `ulong`
+  - `S₁` is `long` and `S₂` is `nuint` or `ulong`
 
 #### 12.6.4.8 Overloading in generic classes
 
@@ -2264,7 +2264,7 @@ The number of expressions in the *argument_list* shall be the same as the rank o
 
 - of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`; or
 - for single rank array access only, of type `Index` or `Range`; or
-- be implicitly convertible to one or more of the above types.
+- implicitly convertible to one or more of the above types.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
@@ -2571,7 +2571,7 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
 
 `new nint()` is equivalent to `(nint)0`, and `new nuint()` is equivalent to `(nuint)0`.
 
-#### 12.8.17.2.2 Object initializers
+##### 12.8.17.2.2 Object initializers
 
 An ***object initializer*** specifies values for zero or more fields, properties, or indexed elements of an object.
 

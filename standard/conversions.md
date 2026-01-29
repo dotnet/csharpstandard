@@ -128,7 +128,7 @@ The implicit numeric conversions are:
 - From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
 - From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `nuint`, `ulong`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `nint` to `long`, `float`, `double`, or `decimal`.
 - From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
@@ -433,8 +433,8 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `ushort` to `sbyte`, `byte`, `short`, or `char`.
 - From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
 - From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `nint`, or `char`.
-- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `long`, `ulong`, or `char`.
-- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, or `char`.
+- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `ulong`, or `char`.
+- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `long`, or `char`.
 - From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `ulong`, or `char`.
 - From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `char`.
 - From `char` to `sbyte`, `byte`, or `short`.

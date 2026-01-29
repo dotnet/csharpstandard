@@ -616,7 +616,7 @@ T* operator –(T* x, ulong y);
 long operator –(T* x, T* y);
 ```
 
-There are no predefined operators for pointer addition or subtraction with native integer ([§8.3.6]( types.md#836-integral-types)) offsets. Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, with pointer arithmetic using the predefined operators for those types.
+There are no predefined operators for pointer addition or subtraction with native integer ([§8.3.6](types.md#836-integral-types)) offsets. Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, with pointer arithmetic using the predefined operators for those types.
 
 Given an expression `P` of a pointer type `T*` and an expression `N` of type `int`, `uint`, `long`, or `ulong`, the expressions `P + N` and `N + P` compute the pointer value of type `T*` that results from adding `N * sizeof(T)` to the address given by `P`. Likewise, the expression `P – N` computes the pointer value of type `T*` that results from subtracting `N * sizeof(T)` from the address given by `P`.
 
