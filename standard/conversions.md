@@ -722,11 +722,85 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - Otherwise, the conversion is ambiguous and a compile-time error occurs.
 - Finally, determine the runtime conversions required, in order:
   - If `E` does not already have the type `Sₓ`, then a standard explicit conversion from `E` to `Sₓ` is required.
-    - If this added standard explicit conversion is an explicit numeric (§10.3.2) or enumeration (§10.3.3) one which may result in information loss (§10.3.2), and the context is `unchecked` (§12.8.19), then a compile-time warning shall be issued.<br>*Note*: In a `checked` information loss would result in a runtime exception, hence no warning is required. If information loss is intended adding an explicit cast to the source will document this and silence the warning. *end note*
+    - If this added standard explicit conversion is an explicit numeric (§10.3.2) or enumeration (§10.3.3) one which may result in information loss (§10.3.2), and the context is `unchecked` (§12.8.20, §13.12), then a compile-time warning shall be issued.<br>*Note*: In a `checked` context information loss would result in a runtime exception, hence no warning is required. If information loss is intended adding an explicit cast to the source will document this and silence the warning. *end note*
   - The most-specific user-defined conversion operator is required to convert from `Sₓ` to `Tₓ`.
   - If `Tₓ` is not `T`, then a standard explicit conversion from `Tₓ` to `T` is required.
 
 A user-defined explicit conversion from a type `S` to a type `T` exists if a user-defined explicit conversion exists from a variable of type `S` to `T`.
+
+> *Example*:
+>
+> The user-defined type `Dose` is used by the examples below.
+> Note that for doses greater than `MaxDosage` the user-defined type `LargeDose` is mentioned,
+> however it is not otherwise used and no source is given.
+>
+> ```csharp
+> public readonly struct Dose
+> {
+>     private readonly ushort dose;
+>
+>     public Dose(ushort dose)
+>     {
+>         const ushort MaxDosage = 1000; // mg
+>
+>         if (dose > MaxDosage)
+>         {
+>             throw new ArgumentOutOfRangeException
+>             (   $"Dosage too large (> {MaxDosage}mg)."
+>                 + " Consider LargeDose."
+>             );
+>         }
+>         this.dose = dose;
+>     }
+>
+>     public static explicit operator Dose(ushort b) => new Dose(b);
+>
+>     public override string ToString() => $"{dose}mg";
+>
+>     // other methods
+> }
+> ```
+>
+>
+> The following examples illustrate the above rules for explicit casting involving user-defined conversions:
+>
+> ```csharp
+> ushort amt0 = 500;          // ≤ MaxDosage
+> var dose0 = (Dose)amt0;     // amt0 is ushort, no additional conversions added
+> Console.WriteLine(dose0);   // outputs 500mg
+>
+> byte amt1 = 250;            // ≤ MaxDosage
+> var dose1 = (Dose)amt1;     // amt0 is byte, byte to ushort conversion added
+>                             // this does not risk information loss, no warning
+> Console.WriteLine(dose1);   // outputs 250mg
+>
+> var amt3 = 500;             // > MaxDosage, var types amt3 as int
+> var dose3 = (Dose)amt3;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose3);   // outputs 500mg, no actual information loss
+>
+> ushort amt4 = 1500;         // > MaxDosage, requires LargeDose
+> var dose4 = (Dose)amt4;     // amt4 is ushort, no additional conversions added
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt5 = 1500;            // > MaxDosage, var types amt5 as int
+> var dose5 = (Dose)amt5;     // amt5 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+>                             // no actual information loss but out of range
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt6 = 66036;           // var types amt6 as int
+> var dose6 = (Dose)amt6;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose6);   // outputs 500mg, not 66036mg, due to information loss
+>
+> // Using a constructor instead of user-defined conversion:
+>
+> var dose7 = new Dose(amt6); // amt6 is int, constructor requires ushort
+>                             // compile time type error
+> ```
+>
+> *end example*
 
 ## 10.6 Conversions involving nullable types
 
