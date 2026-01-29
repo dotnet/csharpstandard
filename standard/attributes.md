@@ -842,7 +842,38 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
-For an invocation that occurs within a local function, the name of the member method that calls that local function is used. Consider the following: if member method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member!
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"CallerMemberName1", inferOutput:true} -->
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         F1();
+>
+>         void F1([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F1 MemberName: |{name}|");
+>             F2();
+>         }
+>
+>         static void F2([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F2 MemberName: |{name}|");
+>         }
+>     }
+> }
+> ```
+>
+> which produces the output
+>
+> ```console
+> F1 MemberName: |Main|
+> F2 MemberName: |Main|
+> ```
+>
+> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
 
 ### 23.5.7 Code analysis attributes
 
