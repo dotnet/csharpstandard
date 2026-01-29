@@ -369,7 +369,7 @@ Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly in
 
 `typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
 
-<!-- The following three paragraphs can be deleted for C# 10 -->
+<!-- The following three paragraphs can be deleted for C# 11 -->
 
 `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
 
