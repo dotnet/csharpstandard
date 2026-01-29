@@ -2152,7 +2152,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
-- If the declaration is for a restricted partial method (§restricted-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
+- If the declaration is for a required partial method (§required-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2389,7 +2389,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as a restricted partial method (§restricted-partial-methods) shall not have output parameters.
+A method declared as a required partial method (§required-partial-methods) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3042,12 +3042,12 @@ Across the parts of a type declaration, there shall be exactly one defining part
 
 - The declarations shall have the same method name, number of type parameters, and number of parameters.
 - The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names).
-- Corresponding type parameters in the declarations shall have the same constraints (modulo differences in type parameter names).
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
+- Corresponding type parameters in the declarations shall have the same constraints. An implementation may choose to issue a warning if the type parameter names are different in the defining and implementing declarations.
 
-There are two versions of partial methods: restricted and unrestricted. A ***restricted partial method*** (§restricted-partial-methods) has no explicit access modifiers, and is implicitly private. An ***unrestricted partial method*** (§unrestricted-partial-methods) is a partial method that includes one or more explicit access modifiers.
+There are two classifications of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) has no explicit access modifiers, and is implicitly private. An ***optional partial method*** (§optional-partial-methods) is a partial method that includes one or more explicit access modifiers.
 
-For an unrestricted partial method both the definition and implementation shall exist.
+For an optional partial method both the definition and implementation shall exist.
 
 > *Example*:
 >
@@ -3056,10 +3056,10 @@ For an unrestricted partial method both the definition and implementation shall 
 > // part containing defining partial method declarations
 > partial class C
 > {
->     partial void M1();                  // restricted, impl. optional
->     private partial void M2();          // unrestricted, impl. required
->     protected partial bool M3();        // unrestricted, impl. required
->     public partial void M4(out int i);  // unrestricted, impl. required
+>     partial void M1();                  // implementation optional
+>     private partial void M2();          // required, impl. required
+>     protected partial bool M3();        // required, impl. required
+>     public partial void M4(out int i);  // required, impl. required
 > }
 > 
 > // part containing implementing partial method declarations
@@ -3186,30 +3186,30 @@ class Customer
 }
 ```
 
-#### §restricted-partial-methods Restricted partial methods
+#### §required-partial-methods Required partial methods
 
-A restricted partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
+A required partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
 
-The implementing member for a restricted partial method shall not be an external method (§15.6.8).
+The implementing member for a required partial method shall not be an external method (§15.6.8).
 
-> *Note*: Because a restricted partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a restricted partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
+> *Note*: Because a required partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a required partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
 
-If a restricted partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
+If a required partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
 
-If a defining declaration but not an implementing declaration is given for a restricted partial method `M`, the following restrictions apply:
+If a defining declaration but not an implementing declaration is given for a required partial method `M`, the following restrictions apply:
 
 - It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
 
-#### §unrestricted-partial-methods Unrestricted partial methods
+#### optional-partial-methods Optional partial methods
 
-An unrestricted partial method declaration incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
+An optional partial method declaration incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
-The implementing declaration for an unrestricted partial method may be an external method (§15.6.8). The `extern` modifier is modifer allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
+The implementing declaration for an optional partial method may be an external method (§15.6.8). The `extern` modifier is modifer allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
 
-> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private unrestricted partial method. *end note*
+> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private optional partial method. *end note*
 
 ### 15.6.10 Extension methods
 
@@ -4278,7 +4278,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in §restricted-partial-methods. In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in §required-partial-methods. In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an event accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an event accessor to have that name.
 
