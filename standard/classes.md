@@ -3099,7 +3099,7 @@ Only a defining partial method participates in overload resolution.
 
 If an implementing declaration exists for a given partial method, the invocations of the partial methods are retained. The partial method gives rise to a method declaration similar to the implementing partial method declaration except for the following:
 
-- All modifiers except the `partial` modifier are included in the resulting method declaration, including any `extern` or `async` modifier declared on the implementing declaration.
+- The `partial` modifier is not included in the combined method declaration.
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - Any default arguments (§15.6.2) in the implementing declaration are removed.
@@ -3203,7 +3203,7 @@ If a defining declaration but not an implementing declaration is given for a req
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
 
-#### optional-partial-methods Optional partial methods
+#### §optional-partial-methods Optional partial methods
 
 An optional partial method declaration incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
