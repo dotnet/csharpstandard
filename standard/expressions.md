@@ -1287,7 +1287,7 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
-> *Note*: When deconstruction is used in a context; such as part of a deconstructing assignment or local deconstructing declaration; where only individual elements of the *tuple-literal* are used then an implementation is explicitly allowed to elide creating a tuple value from the *tuple-literal* provided the observable semantics remain the same, as specified in *Eliding tuples* (§eliding-tuples). *end note*
+> *Note*: When deconstruction is used in a context where only individual elements of the *tuple-literal* are used (such as part of a deconstructing assignment or local deconstructing declaration) then an implementation is explicitly allowed to elide creating a tuple value from the *tuple-literal* provided the observable semantics remain the same, as specified in *Eliding tuples* (§eliding-tuples). *end note*
 
 ## 12.8 Primary expressions
 
@@ -1606,15 +1606,15 @@ tuple_element
     ;
 ```
 
-A *tuple_literal* is classified as a tuple.
+A *tuple_literal* is classified as a tuple ([§12.2.1](expressions.md#1221-general)).
 
 A tuple literal has a type if and only if each of its element expressions `Eᵢ` has a type `Tᵢ`. The type is a tuple type of the same arity as the tuple literal, where each element is given by the following:
 
-- If the tuple element in the corresponding position has a name `Nᵢ`, then the tuple type element shall be `Tᵢ Nᵢ`.
-- Otherwise, if `Eᵢ` is of the form `Nᵢ` or `E.Nᵢ` or `E?.Nᵢ` then the tuple type element shall be `Tᵢ Nᵢ`, *unless* any of the following holds:
-  - Another element of the tuple literal has the name `Nᵢ`, or
-  - Another tuple element without a name has a tuple element expression of the form `Nᵢ` or `E.Nᵢ` or `E?.Nᵢ`, or
-  - `Nᵢ` is of the form `ItemX`, where `X` is a sequence of decimal digits, without any leading zeros, that could represent the position of a tuple element, and `X` does not represent the position of the element.
+- If the tuple element in the corresponding position has an element name `Iᵢ`, then the tuple type element shall be `Tᵢ Iᵢ`.
+- Otherwise, if `Eᵢ` is of the form `Iᵢ` or `E.Iᵢ` or `E?.Iᵢ`, where `Iᵢ` is an *identifier*,  then the tuple type element shall be `Tᵢ Iᵢ`, *unless* any of the following holds:
+  - Another element of the tuple literal has the element name `Iᵢ`, or
+  - Another tuple element without an element name has a tuple element expression of the form `Iᵢ` or `E.Iᵢ` or `E?.Iᵢ`, or
+  - `Iᵢ` is of the form `ItemX`, where `X` is a sequence of decimal digits, without any leading zeros, that could represent the position of a tuple element, and `X` does not represent the position of the element.
 - Otherwise, the tuple type element shall be `Tᵢ`.
 
 A tuple value can be obtained from a tuple literal when:
@@ -1640,7 +1640,7 @@ A tuple value can be obtained from a tuple literal when:
 > var t3 = (i: 3, null);              // Error: no type
 > ```
 >
-> In this example of three declaration statements, the initialising tuple literals themselves are all valid. In the case of `t1`, the implicit tuple conversion relies on the implicit conversions from `2` to `long` and from `null` to `string`. The second tuple literal has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t3`, on the other hand, is an error: the tuple literal has no type because its second element has no type and reclassifying at as a value therefore fails.
+> In this example of three declaration statements, the initialising tuple literals themselves are all valid. In the case of `t1`, the implicit tuple conversion relies on the implicit conversions from `1` to `long` and from `null` to `string`. The second tuple literal has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t3`, on the other hand, is an error: the tuple literal has no type because its second element has no type and reclassifying at as a value therefore fails.
 >
 > ```csharp
 > if ((x, y).Equals((1, 2))) { ... };

@@ -516,7 +516,9 @@ If the input can be recognised as both a *local_deconstructing_declaration* and 
 
 > *Note*: Put another way a *local_deconstructing_declaration* must contain at least one *declaration_expression* to be recognised as a declaration, otherwise it is recognised as a *deconstructing_assignment*. This follows the same split as for declaration vs. assignment for other types. *end note*
 
-If the input can be syntatically recognized as a *declaration_deconstructor* and as a *variable_reference* then the former shall be chosen. Likewise for *discard_token* and *variable_reference*.
+If the input can be syntatically recognized as a *declaration_deconstructor* and as a *variable_reference* then the former shall be chosen.
+
+If the input can be syntatically recognized as a *discard_token* and as a *variable_reference* then the former shall be chosen.
 
 > *Note:* Based on the order the alternatives are listed ANTLR grammar semantics automatically enforce these priorties. *end note*
 

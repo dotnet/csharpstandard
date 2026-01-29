@@ -415,7 +415,7 @@ Element names within a tuple type shall be distinct. A tuple element name of the
 <!-- markdownlint-enable MD028 -->
 > *Note* The optional element names are not represented in the runtime representation (§tuple-runtime-representation) of a tuple value.
 
-Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
+Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples of the same arity with identity-convertible sequences of element types.
 
 Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation (§tuple-runtime-representation) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
 
@@ -442,7 +442,7 @@ Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` i
 
 #### §eliding-tuples Eliding intermediate tuple creation
 
-If the result of constructing a tuple (§12.8.6) is not required outside of the context in which it is constructed implementations are explicitly allowed to elide the construction as an optimisation provide all other semantic requirements are met.
+If the result of constructing a tuple (§12.8.6) is not required outside of the context in which it is constructed implementations are explicitly allowed to elide the construction as an optimisation provided all other semantic requirements are met.
 
 > *Example*: Such a situation may commonly arise from deconstructing assignments ($deconstructing-assignment), deconstructing declarations (§local-deconstructing-declarations), and switch statements (§13.8.3). Consider the deconstructing assignment:
 >
@@ -453,14 +453,14 @@ If the result of constructing a tuple (§12.8.6) is not required outside of the 
 > The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side deconstructor `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple literal elements. In the code:
 >
 > ```csharp
->    (a, b, _) = (b, a, thing.expensiveMethod(x));
+>    (a, b, _) = (b, a, thing.ExpensiveMethod(x));
 > ```
 >
-> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.expensiveMethod(x)`; before doing so. *end example*
+> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.ExpensiveMethod(x)`; before doing so. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
+> *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, and the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
 
 #### §tuple-runtime-representation Runtime representation
 
