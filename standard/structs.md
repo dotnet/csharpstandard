@@ -144,51 +144,41 @@ Except for the differences noted in [§16.4](structs.md#164-class-and-struct-dif
 
 An instance member definition or accessor of an instance property, indexer, or event that includes the `readonly` modifier has the following restrictions:
 
+- The `this` parameter is a `ref readonly` reference.
 - The member shall not reassign the value of `this` or an instance field of the receiver.
 - The member shall not reassign the value of an instance field-like event (§15.8.2) of the receiver.
-- A readonly member may call a non-readonly member using the receiver instance only if it ensures no modifications to the receiver are observable after the readonly member returns.
+- If a readonly member invokes a non-readonly member, the structure referred to by `this` must be copied to use a writable reference for the `this` argument.
 
 > *Note:* Instance fields include the hidden backing field used for automatically implemented properties (§15.7.4). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The following code demonstrates the reassigning and modifying an instance field. Obfuscating the intent of `readonly` in this manner is discouraged:
+> *Example*: A readonly member can modify the state of an object referred to by an instance field, even though the readonly member can't reassign that instance member. The following code demonstrates the reassigning and modifying an instance field:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ReadonlyMember" } -->
 > ```csharp
 > public struct S
 > {
->    private bool[] flags;
+>     private List<string> messages;
 >
->    public S(int size)
->    {
->       flags = new bool[size];
->    }
+>     public S(IEnumerable<string> messages) =>
+>         this.messages = new List<string>(messages);
 >
->    public readonly bool this[int index]
->    {
->       get => flags[index]; 
->       set => flags[index] = value;
->    }
+>     public void InitializeMessages() =>
+>         messages = new List<string>();
 >
->    // Not readonly
->    public void ResetFlags()
->    {
->       flags = new bool[flags.Length];
->    }
->
->    // Allowed on readonly member
->    public readonly void ReadonlyResetFlags()
->    {
->       for (int i = 0; i < flags.Length; i++)
->       {
->          flags[i] = false;
->       }
->    }
+>     public readonly void AddMessage(string message)
+>     {
+>         if (messages == null)
+>         {
+>             throw new InvalidOperationException("Messages collection is not initialized.");
+>         }
+>         messages.Add(message);
+>     }
 > }
 > ```
 >
-> The `readonly` indexer can change the state of a single member of the `flags` array. The `ReadonlyResetFlags` member can set all flags to false. In both those cases, the field, `flags` has not been reassigned to a new array. The `ResetFlags` member reassigns the direct member, and therefore cannot include the `readonly` modifier. *end example*
+> The `readonly` method `AddMessage` can change the state of a message list. The `InitializeMessages` member can clear and re-initialize the list of messages. In the first case, the `readonly` modifier is valid. In the case of `InitializeMessages`, adding the `readonly` modifier is invalid. *end example*
 
 ## 16.4 Class and struct differences
 
