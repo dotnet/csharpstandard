@@ -194,8 +194,6 @@ Structs differ from classes in several important ways:
 - The default value of a struct is the value produced by setting all fields to their default value ([§16.4.5](structs.md#1645-default-values)).
 - Boxing and unboxing operations are used to convert between a struct type and certain reference types ([§16.4.6](structs.md#1646-boxing-and-unboxing)).
 - The meaning of `this` is different within struct members ([§16.4.7](structs.md#1647-meaning-of-this)).
-- Instance field declarations for a struct are not permitted to include variable initializers ([§16.4.8](structs.md#1648-field-initializers)).
-- A struct is not permitted to declare a parameterless instance constructor ([§16.4.9](structs.md#1649-constructors)).
 - A struct is not permitted to declare a finalizer.
 - Event declarations, property declarations, property accessors, indexer declarations, and method declarations are permitted to have the modifier `readonly` while that is not generally permitted for those same member kinds in classes.
 
@@ -429,41 +427,65 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 
 ### 16.4.8 Field initializers
 
-As described in [§16.4.5](structs.md#1645-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. For this reason, a struct does not permit instance field declarations to include variable initializers. This restriction applies only to instance fields. Static fields of a struct are permitted to include variable initializers.
+As described in [§16.4.5](structs.md#1645-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
-> *Example*: The following
+> *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FieldInitializers", expectedErrors:["CS8983"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-console", name:"FieldInitializers", inferOutput:true} -->
 > ```csharp
+> Console.WriteLine($"Point is {new Point()}");
+>
 > struct Point
 > {
->     public int x = 1; // Error, initializer not permitted
->     public int y = 1; // Error, initializer not permitted
+>     public int x = 1;
+>     public int y = 1;
+>
+>     public Point() { }
+>
+>     public override string ToString()
+>     {
+>         return "(" + x + ", " + y + ")";
+>     }
 > }
 > ```
 >
-> is in error because the instance field declarations include variable initializers.
+> ```console
+> Point is (1, 1)
+> ```
 >
 > *end example*
+
+When a struct instance constructor has no constructor initializer, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor.
+
+When a struct instance constructor has a `this()` constructor initializer that represents the default parameterless constructor, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all value type fields are set to their default value and all reference type fields are set to `null`. Immediately after that, a sequence of assignments corresponding to the *variable_initializer*s are executed.
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
 ### 16.4.9 Constructors
 
-Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
+A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
 
-> *Example*: Given the following
+An explicitly declared parameterless instance constructor shall have public accessibility.
+
+
+> *Example*: Given the following:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"Constructors1", ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"standalone-console", name:"Constructors1", ignoredWarnings:["CS0219"], inferOutput:true} -->
 > ```csharp
+> using System;
 > struct Point
 > {
->     int x, y;
+>     int x = -1, y = -2;
 >
 >     public Point(int x, int y) 
 >     {
 >         this.x = x;
 >         this.y = y;
+>     }
+>
+>     public override string ToString()
+>     {
+>         return "(" + x + ", " + y + ")";
 >     }
 > }
 >
@@ -471,21 +493,28 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 > {
 >     static void Main()
 >     {
->         Point p1 = new Point();
->         Point p2 = new Point(0, 0);
+>         Console.WriteLine($"Point is {new Point()}");
+>         Console.WriteLine($"Point is {new Point(0,0)}");
 >     }
 > }
 > ```
 >
-> the statements both create a `Point` with `x` and `y` initialized to zero.
+> ```console
+> Point is (0, 0)
+> Point is (0, 0)
+> ```
+>
+> the statements both create a `Point` with `x` and `y` initialized to zero, which in the case of the call to the parameterless instance constructor, may be surprising, as both instance fields have initializers, but they are *not* executed.
 >
 > *end example*
 
-A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
+A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional. The execution of an instance constructor shall not result in the execution of a constructor in the struct’s base type `System.ValueType`.
 
 The `this` parameter of a struct instance constructor corresponds to an output parameter of the struct type. As such, `this` shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
 
 If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
+
+Instance fields (other than `fixed` fields) shall be definitely assigned in struct instance constructors that do not have a `this()` initializer.
 
 > *Example*: Consider the instance constructor implementation below:
 >
