@@ -5316,7 +5316,7 @@ When a non-extern class instance constructor has no constructor initializer, or 
 
 When a struct instance constructor has no constructor initializer, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor.
 
-When a struct instance constructor has a `this()` constructor initializer that represents the _default parameterless constructor_, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all value type fields are set to their default value and all reference type fields are set to `null`. Immediately after that, a sequence of assignments corresponding to the *variable_initializer*s are executed.
+When a struct instance constructor has a `this()` constructor initializer that represents the *default parameterless constructor*, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all value type fields are set to their default value and all reference type fields are set to `null`. Immediately after that, a sequence of assignments corresponding to the *variable_initializer*s are executed.
 
 Variable initializers are not required to be executed by extern instance constructors.
 
