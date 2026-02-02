@@ -2569,8 +2569,6 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
   - An instance of type `T` is created by allocating a temporary local variable. Since an instance constructor of a *struct_type* is required to definitely assign a value to each field of the instance being created, no initialization of the temporary variable is necessary.
   - The instance constructor is invoked according to the rules of function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)). A reference to the newly allocated instance is automatically passed to the instance constructor and the instance can be accessed from within that constructor as this.
 
-`new nint()` is equivalent to `(nint)0`, and `new nuint()` is equivalent to `(nuint)0`.
-
 ##### 12.8.17.2.2 Object initializers
 
 An ***object initializer*** specifies values for zero or more fields, properties, or indexed elements of an object.
