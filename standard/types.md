@@ -302,7 +302,7 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
 
 Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
 
-> *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
+> *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes"} -->
 > ```csharp
