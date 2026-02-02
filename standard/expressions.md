@@ -2339,7 +2339,7 @@ The result of the indexer access is classified as follows:
 - If the indexer has a ref get accessor, the result is a variable with an associated type of the indexer type.
 - Otherwise, the result is a value with an associated type of the indexer type.
 
-If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T`, and searching through its base classes. If `T` is an interface type, the associated type is picked from the declaration or override of the indexer found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) of `T` or its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
+If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T`, and searching through its base classes. If `T` is an interface type, the associated type is picked from the declaration or override of the indexer found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
 
 The runtime processing of the indexer access consists of the following steps:
 

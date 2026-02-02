@@ -1102,9 +1102,9 @@ Members of a constructed interface type are considered to have any type paramete
 For purposes of interface mapping, a class, interface, or struct member `A` matches an interface member `B` when:
 
 - `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical, and the return type of `A` is convertible to the return type of `B` via an identity or implicit reference conversion.
-- `A` and `B` are properties, the name of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly property, an implicit reference conversion.
+- `A` and `B` are properties, the name of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the type of `B` via an identity conversion or, if `A` is a readonly property, an implicit reference conversion.
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
-- `A` and `B` are indexers, the parameter lists of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly indexer, an implicit reference conversion.
+- `A` and `B` are indexers, the parameter lists of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the type of `B` via an identity conversion or, if `A` is a readonly indexer, an implicit reference conversion.
 
 > *Note*: Prior to the introduction of covariant return types, matching required an identity conversion between the return type of `A` and the return type of `B`. Allowing implicit reference conversions changes which member is selected as the implementation when a derived class re-implements an interface with a method that has a more derived return type. *end note*
 
