@@ -324,51 +324,27 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions, unary operators (§12.9) and arithmetic operators (§12.12) for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
+<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr.
+     The following paragraphs describing the non-alias relationship should be updated or removed. -->
 
-While the language provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
+Although `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. There is an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-<!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
-```csharp
-M((nint)1);
+The language provides conversions ([§10.2](conversions.md#102-implicit-conversions)), unary operators ([§12.9](expressions.md#129-unary-operators)), and binary operators ([§12.12](expressions.md#1212-arithmetic-operators)) for `nint` and `nuint` that are appropriate for integral types. These operators follow the same patterns as the corresponding operators for `int`/`long` and `uint`/`ulong`.
 
-static void M(dynamic d)
-{
-    var v = d >> 2; // RuntimeBinderException: '>>' cannot be applied to operands
-                    // of type System.IntPtr/System.UIntPtr and int
-}
-```
+> *Note*: Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators. *end note*
 
-The only constructor for `nint` or `nuint` is the parameter-less constructor.
-
-The following members of `System.IntPtr` and `System.UIntPtr` are explicitly excluded from `nint` or `nuint`:
-
-```csharp
-// constructors
-// arithmetic operators
-// implicit and explicit conversions
-public static readonly IntPtr Zero; // use 0 instead
-public static int Size { get; }     // use sizeof() instead
-public static IntPtr Add(IntPtr pointer, int offset);
-public static IntPtr Subtract(IntPtr pointer, int offset);
-public int ToInt32();
-public long ToInt64();
-public void* ToPointer();
-```
-
-The remaining members of `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`.
-
-Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
+`sizeof(nint)` and `sizeof(nuint)` return the size of a native integer ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
 
 `typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
 
-<!-- The following three paragraphs can be deleted for C# 11 -->
+<!-- C# 11: The following three paragraphs about overriding/hiding equivalence can be removed
+     when nint/nuint become true aliases for IntPtr/UIntPtr. -->
 
-`nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
+`nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing.
 
-Overloads cannot differ by `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
+Overloads cannot differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone.
 
-Methods hide other methods that differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
+Methods hide other methods that differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone.
 
 ### 8.3.6 Integral types
 
@@ -382,7 +358,7 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
 - The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
-  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. *end note*
+  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. As a practical consideration, implementations are expected to be at least 32-bit, so the value range of `nint` includes at least that of `int`, and the value range of `nuint` includes at least that of `uint`. *end note*
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive, as a UTF-16 code unit.
