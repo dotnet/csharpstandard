@@ -892,6 +892,8 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 
 For an explicit interface member implementation to be valid, the class, struct, or interface shall name an interface in its base class or base interface list that contains a member whose qualified interface member name, type, number of type parameters, and parameter types exactly match those of the explicit interface member implementation. If an interface function member has a parameter array, the corresponding parameter of an associated explicit interface member implementation is allowed, but not required, to have the `params` modifier. If the interface function member does not have a parameter array then an associated explicit interface member implementation shall not have a parameter array.
 
+For an explicit interface member implementation of a method, property, or indexer that has a return type, there shall be an identity conversion or an implicit reference conversion from the return type of the explicit interface member implementation to the return type of every override of the interface member that is declared in a (direct or indirect) base interface.
+
 > *Example*: Thus, in the following class
 >
 > <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations3", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], expectedErrors:["CS0540"]} -->
@@ -1103,6 +1105,8 @@ For purposes of interface mapping, a class, interface, or struct member `A` matc
 - `A` and `B` are properties, the name of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly property, an implicit reference conversion.
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
 - `A` and `B` are indexers, the parameter lists of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly indexer, an implicit reference conversion.
+
+> *Note*: Prior to the introduction of covariant return types, matching required an identity conversion between the return type of `A` and the return type of `B`. Allowing implicit reference conversions changes which member is selected as the implementation when a derived class re-implements an interface with a method that has a more derived return type. *end note*
 
 Notable implications of the interface-mapping algorithm are:
 
