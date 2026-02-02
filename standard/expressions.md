@@ -2477,7 +2477,7 @@ If the *primary_expression* has the compile-time type `dynamic` then the operato
 
 If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
 
-Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
+Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
 There shall be an implicit conversion from the return type of the selected unary operator to the type of the *primary_expression*, otherwise a compile-time error occurs.
 
@@ -3593,6 +3593,8 @@ For an operation of the form `+x`, unary operator overload resolution ([§12.4.
 ```csharp
 int operator +(int x);
 uint operator +(uint x);
+nint operator +(nint x);
+nuint operator +(nuint x);
 long operator +(long x);
 ulong operator +(ulong x);
 float operator +(float x);
@@ -3606,7 +3608,7 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 ### 12.9.3 Unary minus operator
 
-For an operation of the form `–x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined unary minus operators are:
+For an operation of the form `-x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined unary minus operators are:
 
 - Integer negation:
 
@@ -3661,11 +3663,13 @@ For an operation of the form `~x`, unary operator overload resolution ([§12.4.4
 ```csharp
 int operator ~(int x);
 uint operator ~(uint x);
+nint operator ~(nint x);
+nuint operator ~(nuint x);
 long operator ~(long x);
 ulong operator ~(ulong x);
 ```
 
-For each of these operators, the result of the operation is the bitwise complement of `x`.
+For each of these operators, the result of the operation is the bitwise complement of `x`.
 
 Every enumeration type `E` implicitly provides the following bitwise complement operator:
 
@@ -3711,7 +3715,7 @@ The operand of a prefix increment or decrement operation shall be an expression 
 
 If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
 
-Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
+Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
 There shall be an implicit conversion from the return type of the selected unary operator to the type of the *unary_expression*, otherwise a compile-time error occurs.
 
@@ -4439,31 +4443,43 @@ The predefined integer comparison operators are:
 ```csharp
 bool operator ==(int x, int y);
 bool operator ==(uint x, uint y);
+bool operator ==(nint x, nint y);
+bool operator ==(nuint x, nuint y);
 bool operator ==(long x, long y);
 bool operator ==(ulong x, ulong y);
 
 bool operator !=(int x, int y);
 bool operator !=(uint x, uint y);
+bool operator !=(nint x, nint y);
+bool operator !=(nuint x, nuint y);
 bool operator !=(long x, long y);
 bool operator !=(ulong x, ulong y);
 
 bool operator <(int x, int y);
 bool operator <(uint x, uint y);
+bool operator <(nint x, nint y);
+bool operator <(nuint x, nuint y);
 bool operator <(long x, long y);
 bool operator <(ulong x, ulong y);
 
 bool operator >(int x, int y);
 bool operator >(uint x, uint y);
+bool operator >(nint x, nint y);
+bool operator >(nuint x, nuint y);
 bool operator >(long x, long y);
 bool operator >(ulong x, ulong y);
 
 bool operator <=(int x, int y);
 bool operator <=(uint x, uint y);
+bool operator <=(nint x, nint y);
+bool operator <=(nuint x, nuint y);
 bool operator <=(long x, long y);
 bool operator <=(ulong x, ulong y);
 
 bool operator >=(int x, int y);
 bool operator >=(uint x, uint y);
+bool operator >=(nint x, nint y);
+bool operator >=(nuint x, nuint y);
 bool operator >=(long x, long y);
 bool operator >=(ulong x, ulong y);
 ```
@@ -4910,21 +4926,27 @@ The predefined integer logical operators are:
 ```csharp
 int operator &(int x, int y);
 uint operator &(uint x, uint y);
+nint operator &(nint x, nint y);
+nuint operator &(nuint x, nuint y);
 long operator &(long x, long y);
 ulong operator &(ulong x, ulong y);
 
 int operator |(int x, int y);
 uint operator |(uint x, uint y);
+nint operator |(nint x, nint y);
+nuint operator |(nuint x, nuint y);
 long operator |(long x, long y);
 ulong operator |(ulong x, ulong y);
 
 int operator ^(int x, int y);
 uint operator ^(uint x, uint y);
+nint operator ^(nint x, nint y);
+nuint operator ^(nuint x, nuint y);
 long operator ^(long x, long y);
 ulong operator ^(ulong x, ulong y);
 ```
 
-The `&` operator computes the bitwise logical AND of the two operands, the `|` operator computes the bitwise logical OR of the two operands, and the `^` operator computes the bitwise logical exclusive OR of the two operands. No overflows are possible from these operations.
+The `&` operator computes the bitwise logical AND of the two operands, the `|` operator computes the bitwise logical OR of the two operands, and the `^` operator computes the bitwise logical exclusive OR of the two operands. No overflows are possible from these operations.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined integer logical operators defined above are also predefined.
 
