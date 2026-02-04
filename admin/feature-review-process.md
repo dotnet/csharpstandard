@@ -1,6 +1,6 @@
 # Feature PR workflow process
 
-The purpose if this PR workflow process is focus the right review focus at the right time for each feature. We need enough detail in the feature PR to provide focused feedback, but we also want to keep the discussion focused on the decisions to drive the PR forward.
+The purpose of this PR workflow process is to focus on the right review at the right time for each feature. We need enough detail in the feature PR to provide focused feedback, but we also want to keep the discussion focused on the decisions to drive the PR forward.
 
 The goal is to provide two sets of gates through the review process: First, agree on the overall structure and edits necessary to specify the new feature. Second, refine the spec updates and finalize before merging.
 
