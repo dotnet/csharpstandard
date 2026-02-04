@@ -18,7 +18,7 @@ Once the assignee has a good first draft, it's ready for the [First Reading](#fi
 
 The *first reading* is when the committee as a whole discusses the overall direction of the PR. This should focus on large-scale direction and concepts rather than nits in the specification language. (Although we likely can't help ourselves from pointing out the smaller issues we find as we read the PR.)
 
-The assignee leads the discussion based on the PR summary and comments from other committee members prior to the meeting.
+The assignee leads the discussion based on the PR summary and comments made by other committee members prior to the meeting.
 
 The outcome of the first reading is one of:
 
