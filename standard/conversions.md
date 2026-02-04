@@ -709,7 +709,7 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
 - Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
-  - If S exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
+  - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, if any of the operators in `U` convert from types that encompass `E`, then `Sₓ` is the most-encompassed type in the combined set of source types of those operators. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
   - Otherwise, `Sₓ` is the most-encompassing type in the combined set of source types of the operators in `U`. If exactly one most-encompassing type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific target type, `Tₓ`, of the operators in `U`:
@@ -717,15 +717,90 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - Otherwise, if any of the operators in `U` convert to types that are encompassed by `T`, then `Tₓ` is the most-encompassing type in the combined set of target types of those operators. If exactly one most-encompassing type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
   - Otherwise, `Tₓ` is the most-encompassed type in the combined set of target types of the operators in `U`. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific conversion operator:
-  - If U contains exactly one user-defined conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
+  - If `U` contains exactly one user-defined conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
   - Otherwise, if `U` contains exactly one lifted conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
   - Otherwise, the conversion is ambiguous and a compile-time error occurs.
-- Finally, apply the conversion:
-  - If `E` does not already have the type `Sₓ`, then a standard explicit conversion from E to `Sₓ` is performed.
-  - The most-specific user-defined conversion operator is invoked to convert from `Sₓ` to `Tₓ`.
-  - If `Tₓ` is not `T`, then a standard explicit conversion from `Tₓ` to `T` is performed.
+- Finally, determine the runtime conversions required, in order:
+  - If `E` does not already have the type `Sₓ`, then a standard explicit conversion from `E` to `Sₓ` is required.
+    - If this added standard explicit conversion is an explicit numeric (§10.3.2) or enumeration (§10.3.3) one which may result in information loss (§10.3.2), and the context is `unchecked` (§12.8.20, §13.12), then a compile-time warning shall be issued.<br>*Note*: In a `checked` context information loss would result in a runtime exception, hence no warning is required. If information loss is intended adding an explicit cast to the source will document this and silence the warning. *end note*
+  - The most-specific user-defined conversion operator is required to convert from `Sₓ` to `Tₓ`.
+  - If `Tₓ` is not `T`, then a standard explicit conversion from `Tₓ` to `T` is required.
 
 A user-defined explicit conversion from a type `S` to a type `T` exists if a user-defined explicit conversion exists from a variable of type `S` to `T`.
+
+> *Example*:
+>
+> The user-defined type `Dose` is used by the examples below.
+> Note that for doses greater than `MaxDosage` the user-defined type `LargeDose` is mentioned,
+> however it is not otherwise used and no source is given.
+>
+> ```csharp
+> public readonly struct Dose
+> {
+>     private readonly ushort dose;
+>
+>     public Dose(ushort dose)
+>     {
+>         const ushort MaxDosage = 1000; // mg
+>
+>         if (dose > MaxDosage)
+>         {
+>             throw new ArgumentOutOfRangeException
+>             (   $"Dosage too large (> {MaxDosage}mg)."
+>                 + " Consider LargeDose."
+>             );
+>         }
+>         this.dose = dose;
+>     }
+>
+>     public static explicit operator Dose(ushort b) => new Dose(b);
+>
+>     public override string ToString() => $"{dose}mg";
+>
+>     // other methods
+> }
+> ```
+>
+>
+> The following examples illustrate the above rules for explicit casting involving user-defined conversions:
+>
+> ```csharp
+> ushort amt0 = 500;          // ≤ MaxDosage
+> var dose0 = (Dose)amt0;     // amt0 is ushort, no additional conversions added
+> Console.WriteLine(dose0);   // outputs 500mg
+>
+> byte amt1 = 250;            // ≤ MaxDosage
+> var dose1 = (Dose)amt1;     // amt0 is byte, byte to ushort conversion added
+>                             // this does not risk information loss, no warning
+> Console.WriteLine(dose1);   // outputs 250mg
+>
+> var amt3 = 500;             // > MaxDosage, var types amt3 as int
+> var dose3 = (Dose)amt3;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose3);   // outputs 500mg, no actual information loss
+>
+> ushort amt4 = 1500;         // > MaxDosage, requires LargeDose
+> var dose4 = (Dose)amt4;     // amt4 is ushort, no additional conversions added
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt5 = 1500;            // > MaxDosage, var types amt5 as int
+> var dose5 = (Dose)amt5;     // amt5 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+>                             // no actual information loss but out of range
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt6 = 66036;           // var types amt6 as int
+> var dose6 = (Dose)amt6;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose6);   // outputs 500mg, not 66036mg, due to information loss
+>
+> // Using a constructor instead of user-defined conversion:
+>
+> var dose7 = new Dose(amt6); // amt6 is int, constructor requires ushort
+>                             // compile time type error
+> ```
+>
+> *end example*
 
 ## 10.6 Conversions involving nullable types
 
