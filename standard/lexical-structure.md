@@ -1558,7 +1558,7 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*. 
+Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*.
 
 *PP_Start_Line_Character* represents the start line (*PP_Start_Line*) and column (*PP_Start_Character*) pair of the first character on the line following the directive, which is the mapped file text; for example, `(1,1)`.
 
@@ -1568,7 +1568,7 @@ Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify 
 
 By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of UTF-16 characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
 
-The mapping specified by a *PP_Line* is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first. 
+The mapping specified by a *PP_Line* is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first.
 
 > *Example*: Consider the following:
 >
@@ -1576,7 +1576,7 @@ The mapping specified by a *PP_Line* is in scope until the following `#line` dir
 > ```csharp
 > ???
 > ```
-> 
+>
 > the output produced might be something like the following:
 >
 > ```console
