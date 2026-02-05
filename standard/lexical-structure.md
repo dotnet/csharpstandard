@@ -1493,7 +1493,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§23.5.6](attributes.md#2356-caller-info-attributes)).
 
-> *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
+> *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. The information these directives provide might be used for debugging purposes and error handling, by allowing mapping of errors back to the original source file, rather than to the generated intermediate file. *end note*
 
 ```ANTLR
 fragment PP_Line
@@ -1505,6 +1505,8 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+      PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
 fragment PP_Compilation_Unit_Name
@@ -1514,6 +1516,35 @@ fragment PP_Compilation_Unit_Name
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
+    ;
+
+fragment PP_Start_Line_Character
+    : '(' PP_Whitespace? PP_Start_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_Start_Character PP_Whitespace? ')'
+    ;
+fragment PP_End_Line_Character
+    : '(' PP_Whitespace? PP_End_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_End_Character PP_Whitespace? ')'
+    ;
+
+fragment PP_Start_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_Start_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_Character_Offset
+    : Decimal_Digit+
     ;
 ```
 
@@ -1526,6 +1557,33 @@ A `#line default` directive undoes the effect of all preceding `#line` directive
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
+
+Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*. 
+
+*PP_Start_Line_Character* represents the start line (*PP_Start_Line*) and column (*PP_Start_Character*) pair of the first character on the line following the directive, which is the mapped file text; for example, `(1,1)`.
+
+*PP_End_Line_Character* represents the end line (*PP_End_Line*) and column (*PP_End_Character*) pair of the mapped file text; for example, `(3,10)`.
+
+*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify UTF-16 character numbers. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first UTF-16 character on each line is assigned number 1.
+
+By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of UTF-16 characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
+
+The mapping specified by a *PP_Line* is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first. 
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"LineWithMapping"} -->
+> ```csharp
+> ???
+> ```
+> 
+> the output produced might be something like the following:
+>
+> ```console
+> ???
+> ```
+>
+> *end example*
 
 ### 6.5.9 Nullable directive
 
