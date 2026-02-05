@@ -1574,7 +1574,7 @@ The mapping specified by a *PP_Line* is in scope until the following `#line` dir
 >
 > <!-- Example: {template:"standalone-console", name:"LineWithMapping"} -->
 > ```csharp
-> ???
+> // exxample goes here
 > ```
 >
 > the output produced might be something like the following:
