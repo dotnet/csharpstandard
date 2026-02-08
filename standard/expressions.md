@@ -1120,11 +1120,12 @@ Parameter lists for each of the candidate function members are constructed in th
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
-1. for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not a *function_type_conversion*, and
+- for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not a *function_type_conversion*, and
 
   - `Mᵥ` is a non-generic method or `Mₓ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than a *function_type*, and
   - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is a *function_type_conversion*, or `Mᵥ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from a *function_type*, or
-1. for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
+
+- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
 In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
 
