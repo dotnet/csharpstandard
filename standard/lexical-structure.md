@@ -135,6 +135,24 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 >
 > *end example*
 
+When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+
+To differentiate a collection initializer ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
+
+```csharp
+var y = new C { [A] = x };    // OK: y[A] = x
+var z = new C { [A] x => x }; // OK: z[0] = [A] x => x
+```
+
+The parser shall treat `?[` as the start of a *null_conditional_element_access* ([[§12.8.13](expressions.md#12813-null-conditional-element-access)):
+
+```csharp
+x = b ? [A];               // OK
+y = b ? [A] () => { } : z; // error
+```
+
+To differentiate a method call `T()` from a lambda expression `T () => e`, the parser shall look ahead.
+
 ## 6.3 Lexical analysis
 
 ### 6.3.1 General
