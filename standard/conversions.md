@@ -428,6 +428,46 @@ For a *conditional_expression* `c ? e1 : e2`, when
 1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+### §anon-func-type-conversion Anonymous function type conversion
+
+The following conversions are permitted from an anonymous function type `F`(§anon-func-type):
+
+- To an anonymous function type `G` if the parameters and return types of `F` are variance-convertible to the parameters and return type of `G`.
+- To `System.Delegate` or its base classes or interfaces.
+- To `System.Linq.Expressions.Expression` or `System.Linq.Expressions.LambdaExpression`.
+
+There are no conversions to an anonymous function type from a type other than an anonymous function type.
+
+A conversion to `System.Delegate` or its base classes or interfaces realizes the anonymous function or method group as an instance of an appropriate delegate type.
+
+A conversion to `System.Linq.Expressions.Expression<TDelegate>` or its base classes realizes the anonymous function or method group as an expression tree with an appropriate delegate type.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "AnonFuncTypeConv1", ignoredWarnings:["CS8974"]} -->
+> ```csharp
+> Delegate d = delegate (object obj) { }; // Action<object>
+> Expression e = () => "";                // Expression<Func<string>>
+> object o = "".Clone;                    // Func<object>
+> ```
+>
+> *end example*
+
+Anonymous function type conversions are not implicit or explicit standard conversions and are not considered when determining whether a user-defined conversion operator is applicable to an anonymous function or method group.
+
+Although an implicit conversion to `object` is permitted, a warning shall be issued, as this may have been unintentional.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "AnonFuncTypeConv2", ignoredWarnings:["CS8974"]} -->
+> ```csharp
+> Random r = new Random();
+> object obj;
+> obj = r.NextDouble;         // warning: was this intentional?
+> obj = (object)r.NextDouble; // ok
+> ```
+>
+> *end example*
 
 ## 10.3 Explicit conversions
 
