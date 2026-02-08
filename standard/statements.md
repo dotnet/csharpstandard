@@ -410,7 +410,7 @@ Anonymous functions and method groups with anonymous function types may not be u
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name: "LocalVariableDecls6", ignoredWarnings:["CS8974"], expectedErrors:["CS8917","CS8917","CS8183"]} -->
+> <!-- Example: {template:"standalone-console", name: "LocalVariableDecls7", ignoredWarnings:["CS8974"], expectedErrors:["CS8917","CS8917","CS8183"]} -->
 > ```csharp
 > var f1 = () => default;           // error: cannot infer type
 > var f2 = x => x;                  // error: cannot infer type
