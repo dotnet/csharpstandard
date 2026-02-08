@@ -1120,9 +1120,10 @@ Parameter lists for each of the candidate function members are constructed in th
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
-1. for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not a _function_type_conversion_, and
-  - `Mᵥ` is a non-generic method or `Mₓ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than a _function_type_, and
-  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is a _function_type_conversion_, or `Mᵥ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from a _function_type_, or
+1. for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not a *function_type_conversion*, and
+
+  - `Mᵥ` is a non-generic method or `Mₓ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than a *function_type*, and
+  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is a *function_type_conversion*, or `Mᵥ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from a *function_type*, or
 1. for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
 In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
@@ -1161,7 +1162,7 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
 
-- `C1` is not a _function_type_conversion_ and `C2` is a _function_type_conversion_, or 
+- `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
 - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
