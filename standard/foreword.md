@@ -7,7 +7,7 @@ This specification replaces ECMA-334:2026. Changes from the previous edition inc
 - Record types can seal `ToString`
 - Enhanced `#line` directives
 - `CallerArgumentExpression` attribute for diagnostics
-- Interpolated string handler 
+- Interpolated string handler
 - Constant interpolated strings
 - File Scoped Namespaces
 - Allow `AsyncMethodBuilder` attribute on methods
