@@ -404,6 +404,24 @@ An *implicitly_typed_local_variable_declaration* introduces a single local varia
 >
 > *end example*
 
+Anonymous functions and method groups with anonymous function types may be used as initializers in an *implicitly_typed_local_variable_declaration*.
+
+Anonymous functions and method groups with anonymous function types may not be used in contexts in which the target is a discard.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "LocalVariableDecls6", ignoredWarnings:["CS8974"], expectedErrors:["CS8917","CS8917","CS8183"]} -->
+> ```csharp
+> var f1 = () => default;           // error: cannot infer type
+> var f2 = x => x;                  // error: cannot infer type
+> var f3 = () => 1;                 // Func<int>
+> var f4 = string () => "xx";       // Func<string>
+> var f5 = delegate (object o) { }; // Action<object>
+> _ = () => 1;                      // error
+> ```
+>
+> *end example*
+
 #### 13.6.2.3 Explicitly typed local variable declarations
 
 ```ANTLR
