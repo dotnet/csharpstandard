@@ -705,7 +705,6 @@ A struct can declare instance constructors, with zero or more parameters. If a s
 
 An explicitly declared parameterless instance constructor shall have public accessibility.
 
-
 > *Example*: Given the following:
 >
 > <!-- Example: {template:"standalone-console", name:"Constructors1", ignoredWarnings:["CS0219"], inferOutput:true} -->
