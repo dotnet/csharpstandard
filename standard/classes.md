@@ -5980,7 +5980,7 @@ However, the following code fragment:
 static async ValueTask<int> ExampleAsync() { … }
 ```
 
-in which the attribute `AsyncMethodBuilder ` is applied to that method, would instead be compiled to something like:
+in which the attribute `AsyncMethodBuilder` is applied to that method, would instead be compiled to something like:
 
 ```csharp
 [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
