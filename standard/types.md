@@ -870,7 +870,7 @@ Throughout this specification, all C# code that does not contain nullable direct
 
 > *Note:* A nullable context where both flags are disabled matches the previous standard behavior for reference types. *end note*
 
-The rank and element of an array type declared using *nullable_type_annotation* is not affected by the nullable context.
+The rank and element of an array type declared using *nullable_type_annotation* is not affected by the nullable context ([§8.9.4](types.md#894-nullable-context)).
 
 #### 8.9.4.2 Nullable disable
 
