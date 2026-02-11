@@ -35,7 +35,7 @@ An array type is written as a *non_array_type* followed by one or more *rank_spe
 
 A *non_array_type* is any *type* that is not itself an *array_type*.
 
-When determining the rank and element type of array type as specified below, only the *rank_specifier*s in the top-most production are considered, so in the production `array_type nullable_type_annotation rank_specifier+`, any `rank_specifier` within the `array_type` is ignored.
+When determining the rank and element type of array type as specified below, only the *rank_specifier*s in the outer-most production are considered, so in the production `array_type nullable_type_annotation rank_specifier+`, any `rank_specifier` within the `array_type` is ignored.
 
 The rank of an array type is given by the leftmost *rank_specifier* in the *array_type*: A *rank_specifier* indicates that the array is an array with a rank of one plus the number of “`,`” tokens in the *rank_specifier*.
 
