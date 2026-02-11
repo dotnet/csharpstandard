@@ -41,8 +41,6 @@ The rank of an array type is given by the leftmost *rank_specifier* in the *arra
 
 The element type of an array type is the type that results from deleting the leftmost *rank_specifier*.
 
-In effect, the *rank_specifier*s are read from left to right *before* the final non-array element type.
-
 > *Example*: The following code shows several variable declarations, including a mixture of single-dimensional arrays, multi-dimensional arrays, and arrays of arrays, with some using nullable reference types. In each case, the rank and element type is described, and then demonstrated with a second variable declaration which is initialized using an element access expression.
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"ArraysOfArrays", replaceEllipsis:true, customEllipsisReplacements:["default!","default!","default!","default!","default!","default!","default!","default!","default!", "default!"], expectedException:"NullReferenceException"} -->
