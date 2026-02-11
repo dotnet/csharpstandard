@@ -39,7 +39,7 @@ When determining the rank and element type of array type as specified below, onl
 
 The rank of an array type is given by the leftmost *rank_specifier* in the *array_type*: A *rank_specifier* indicates that the array is an array with a rank of one plus the number of “`,`” tokens in the *rank_specifier*.
 
-The element type of an array type is the type that results from deleting the leftmost *rank_specifier*.
+The element type of an array type is the type that results from deleting the leftmost *rank_specifier* from the *array_type*.
 
 > *Example*: The following code shows several variable declarations, including a mixture of single-dimensional arrays, multi-dimensional arrays, and arrays of arrays, with some using nullable reference types. In each case, the rank and element type is described, and then demonstrated with a second variable declaration which is initialized using an element access expression.
 >
