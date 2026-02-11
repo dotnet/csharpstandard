@@ -2175,7 +2175,7 @@ ref_method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'readonly'        // direct struct members only
+    | 'readonly'        // struct members only
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2259,7 +2259,7 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'readonly'        // direct struct members only
+    | 'readonly'        // struct members only
     | unsafe_modifier   // unsafe code support
     ;
     
@@ -2299,7 +2299,7 @@ accessor_modifier
     | 'internal' 'protected'
     | 'protected' 'private'
     | 'private' 'protected'
-    | 'readonly'        // direct struct members only
+    | 'readonly'        // struct members only
     ;
 
 accessor_body
@@ -2337,7 +2337,7 @@ event_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'readonly'        // direct struct members only
+    | 'readonly'        // struct members only
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2371,7 +2371,7 @@ indexer_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'readonly'        // direct struct members only
+    | 'readonly'        // struct members only
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2535,7 +2535,7 @@ struct_body
     : '{' struct_member_declaration* '}'
     ;
 
-// Source: §16.3 Struct members
+// Source: §16.3.1 General
 struct_member_declaration
     : constant_declaration
     | field_declaration
