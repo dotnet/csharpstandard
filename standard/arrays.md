@@ -31,7 +31,7 @@ Every array type is a reference type ([§8.2](types.md#82-reference-types)). The
 
 The grammar productions for array types are provided in [§8.2.1](types.md#821-general).
 
-An array type is written as a *non_array_type* followed by one or more *rank_specifier*s, or an *array_type* followed by a *nullable_type_annotation* followed by one or more *rank_specifier*s. The latter production is used to represent array types where the element type is a nullable array type.
+An array type is written as a *non_array_type* followed by one or more *rank_specifier*s, or an *array_type* followed by a *nullable_type_annotation* followed by one or more *rank_specifier*s. The latter production is used to represent array types where the element type is an array type which is nullable ([§8.9](types.md#89-reference-types-and-nullability)).
 
 A *non_array_type* is any *type* that is not itself an *array_type*.
 
