@@ -114,7 +114,7 @@ struct_body
 
 ## 16.3 Struct members
 
-### §struct_general General
+### 16.3.1 General
 
 The members of a struct consist of the members introduced by its *struct_member_declaration*s and the members inherited from the type `System.ValueType`.
 
@@ -140,20 +140,20 @@ struct_member_declaration
 
 Except for the differences noted in [§16.4](structs.md#164-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
-### §struct_readonly Readonly members
+### 16.3.2 Readonly members
 
 An instance member definition or accessor of an instance property, indexer, or event that includes the `readonly` modifier has the following restrictions:
 
 - The `this` parameter is a `ref readonly` reference.
 - The member shall not reassign the value of `this` or an instance field of the receiver.
-- The member shall not reassign the value of an instance field-like event (§15.8.2) of the receiver.
+- The member shall not reassign the value of an instance field-like event ([§15.8.2](classes.md#1582-field-like-events)) of the receiver.
 - If a readonly member invokes a non-readonly member, the structure referred to by `this` must be copied to use a writable reference for the `this` argument.
 
-> *Note:* Instance fields include the hidden backing field used for automatically implemented properties (§15.7.4). *end note*
+> *Note:* Instance fields include the hidden backing field used for automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: A readonly member can modify the state of an object referred to by an instance field, even though the readonly member can't reassign that instance member. The following code demonstrates the reassigning and modifying an instance field:
+> *Example*: A readonly member can modify the state of an object referred to by an instance field, even though the readonly member can’t reassign that instance member. The following code demonstrates the reassigning and modifying an instance field:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ReadonlyMember" } -->
 > ```csharp
