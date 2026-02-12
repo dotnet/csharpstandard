@@ -188,6 +188,10 @@
       - [§9.4.4.32](variables.md#94432-throw-expressions)  Throw expressions
       - [§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)  Rules for variables in local functions
       - [§9.4.4.34](variables.md#94434-is-pattern-expressions)  is-pattern expressions
+      - [§9.4.4.35](variables.md#94435--expressions)  ?. expressions
+      - [§9.4.4.36](variables.md#94436-boolean-constant-expressions)  Boolean constant expressions
+      - [§9.4.4.37](variables.md#94437--expressions)  ==/!= expressions
+      - [§9.4.4.38](variables.md#94438-is-operator-and-is-pattern-expressions)  is operator and is pattern expressions
   - [§9.5](variables.md#95-variable-references)  Variable references
   - [§9.6](variables.md#96-atomicity-of-variable-references)  Atomicity of variable references
   - [§9.7](variables.md#97-reference-variables-and-returns)  Reference variables and returns
@@ -225,6 +229,7 @@
     - [§10.2.18](conversions.md#10218-switch-expression-conversion)  Switch expression conversion
     - [§10.2.19](conversions.md#10219-implicit-object-creation-conversions)  Implicit object-creation conversions
     - [§10.2.20](conversions.md#10220-implicit-conditional-expression-conversions)  Implicit conditional expression conversions
+    - [§10.2.21](conversions.md#10221-anonymous-function-type-conversion)  Anonymous function type conversion
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
@@ -314,8 +319,9 @@
       - [§12.6.3.12](expressions.md#126312-upper-bound-inferences)  Upper-bound inferences
       - [§12.6.3.13](expressions.md#126313-fixing)  Fixing
       - [§12.6.3.14](expressions.md#126314-inferred-return-type)  Inferred return type
-      - [§12.6.3.15](expressions.md#126315-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
-      - [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
+      - [§12.6.3.15](expressions.md#126315-explicit-return-type-inference)  Explicit return type inference
+      - [§12.6.3.16](expressions.md#126316-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
+      - [§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
     - [§12.6.4](expressions.md#1264-overload-resolution)  Overload resolution
       - [§12.6.4.1](expressions.md#12641-general)  General
       - [§12.6.4.2](expressions.md#12642-applicable-function-member)  Applicable function member
@@ -442,7 +448,8 @@
       - [§12.22.6.2](expressions.md#122262-captured-outer-variables)  Captured outer variables
       - [§12.22.6.3](expressions.md#122263-instantiation-of-local-variables)  Instantiation of local variables
     - [§12.22.7](expressions.md#12227-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§12.22.8](expressions.md#12228-implementation-example)  Implementation Example
+    - [§12.22.8](expressions.md#12228-anonymous-function-type)  Anonymous function type
+    - [§12.22.9](expressions.md#12229-implementation-example)  Implementation Example
   - [§12.23](expressions.md#1223-query-expressions)  Query expressions
     - [§12.23.1](expressions.md#12231-general)  General
     - [§12.23.2](expressions.md#12232-ambiguities-in-query-expressions)  Ambiguities in query expressions
@@ -515,6 +522,10 @@
   - [§14.2](namespaces.md#142-compilation-units)  Compilation units
   - [§14.3](namespaces.md#143-namespace-declarations)  Namespace declarations
   - [§14.4](namespaces.md#144-extern-alias-directives)  Extern alias directives
+    - [§14.4.1](namespaces.md#1441-general)  General
+    - [§14.4.2](namespaces.md#1442-global-using-alias-directives)  Global using alias directives
+    - [§14.4.3](namespaces.md#1443-global-using-namespace-directives)  Global using namespace directives
+    - [§14.4.4](namespaces.md#1444-global-using-static-directives)  Global using static directives
   - [§14.5](namespaces.md#145-using-directives)  Using directives
     - [§14.5.1](namespaces.md#1451-general)  General
     - [§14.5.2](namespaces.md#1452-using-alias-directives)  Using alias directives
@@ -673,32 +684,40 @@
     - [§16.2.5](structs.md#1625-struct-interfaces)  Struct interfaces
     - [§16.2.6](structs.md#1626-struct-body)  Struct body
   - [§16.3](structs.md#163-struct-members)  Struct members
-    - [§16.3.1](structs.md#1631-general)  General
-    - [§16.3.2](structs.md#1632-readonly-members)  Readonly members
-  - [§16.4](structs.md#164-class-and-struct-differences)  Class and struct differences
+    - [§16.3.1](structs.md#1631-readonly-members)  Readonly members
+  - [§16.4](structs.md#164-synthesized-record-struct-members)  Synthesized record struct members
     - [§16.4.1](structs.md#1641-general)  General
-    - [§16.4.2](structs.md#1642-value-semantics)  Value semantics
-    - [§16.4.3](structs.md#1643-inheritance)  Inheritance
-    - [§16.4.4](structs.md#1644-assignment)  Assignment
-    - [§16.4.5](structs.md#1645-default-values)  Default values
-    - [§16.4.6](structs.md#1646-boxing-and-unboxing)  Boxing and unboxing
-    - [§16.4.7](structs.md#1647-meaning-of-this)  Meaning of this
-    - [§16.4.8](structs.md#1648-field-initializers)  Field initializers
-    - [§16.4.9](structs.md#1649-constructors)  Constructors
-    - [§16.4.10](structs.md#16410-static-constructors)  Static constructors
-    - [§16.4.11](structs.md#16411-properties)  Properties
-    - [§16.4.12](structs.md#16412-methods)  Methods
-    - [§16.4.13](structs.md#16413-indexers)  Indexers
-    - [§16.4.14](structs.md#16414-events)  Events
-    - [§16.4.15](structs.md#16415-safe-context-constraint)  Safe context constraint
-      - [§16.4.15.1](structs.md#164151-general)  General
-      - [§16.4.15.2](structs.md#164152-parameter-safe-context)  Parameter safe context
-      - [§16.4.15.3](structs.md#164153-local-variable-safe-context)  Local variable safe context
-      - [§16.4.15.4](structs.md#164154-field-safe-context)  Field safe context
-      - [§16.4.15.5](structs.md#164155-operators)  Operators
-      - [§16.4.15.6](structs.md#164156-method-and-property-invocation)  Method and property invocation
-      - [§16.4.15.7](structs.md#164157-stackalloc)  stackalloc
-      - [§16.4.15.8](structs.md#164158-constructor-invocations)  Constructor invocations
+    - [§16.4.2](structs.md#1642-equality-members)  Equality members
+    - [§16.4.3](structs.md#1643-printing-members)  Printing members
+    - [§16.4.4](structs.md#1644-positional-record-struct-members)  Positional record struct members
+      - [§16.4.4.1](structs.md#16441-general)  General
+      - [§16.4.4.2](structs.md#16442-primary-constructor)  Primary constructor
+      - [§16.4.4.3](structs.md#16443-properties)  Properties
+      - [§16.4.4.4](structs.md#16444-deconstruct)  Deconstruct
+  - [§16.5](structs.md#165-class-and-struct-differences)  Class and struct differences
+    - [§16.5.1](structs.md#1651-general)  General
+    - [§16.5.2](structs.md#1652-value-semantics)  Value semantics
+    - [§16.5.3](structs.md#1653-inheritance)  Inheritance
+    - [§16.5.4](structs.md#1654-assignment)  Assignment
+    - [§16.5.5](structs.md#1655-default-values)  Default values
+    - [§16.5.6](structs.md#1656-boxing-and-unboxing)  Boxing and unboxing
+    - [§16.5.7](structs.md#1657-meaning-of-this)  Meaning of this
+    - [§16.5.8](structs.md#1658-field-initializers)  Field initializers
+    - [§16.5.9](structs.md#1659-constructors)  Constructors
+    - [§16.5.10](structs.md#16510-static-constructors)  Static constructors
+    - [§16.5.11](structs.md#16511-properties)  Properties
+    - [§16.5.12](structs.md#16512-methods)  Methods
+    - [§16.5.13](structs.md#16513-indexers)  Indexers
+    - [§16.5.14](structs.md#16514-events)  Events
+    - [§16.5.15](structs.md#16515-safe-context-constraint)  Safe context constraint
+      - [§16.5.15.1](structs.md#165151-general)  General
+      - [§16.5.15.2](structs.md#165152-parameter-safe-context)  Parameter safe context
+      - [§16.5.15.3](structs.md#165153-local-variable-safe-context)  Local variable safe context
+      - [§16.5.15.4](structs.md#165154-field-safe-context)  Field safe context
+      - [§16.5.15.5](structs.md#165155-operators)  Operators
+      - [§16.5.15.6](structs.md#165156-method-and-property-invocation)  Method and property invocation
+      - [§16.5.15.7](structs.md#165157-stackalloc)  stackalloc
+      - [§16.5.15.8](structs.md#165158-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types
@@ -798,6 +817,7 @@
       - [§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)  The CallerLineNumber attribute
       - [§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)  The CallerFilePath attribute
       - [§23.5.6.4](attributes.md#23564-the-callermembername-attribute)  The CallerMemberName attribute
+      - [§23.5.6.5](attributes.md#23565-the-callerargumentexpression-attribute)  The CallerArgumentExpression attribute
     - [§23.5.7](attributes.md#2357-code-analysis-attributes)  Code analysis attributes
       - [§23.5.7.1](attributes.md#23571-general)  General
       - [§23.5.7.2](attributes.md#23572-the-allownull-attribute)  The AllowNull attribute
@@ -813,6 +833,10 @@
       - [§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute)  The NotNullWhen attribute
     - [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
     - [§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)  The ModuleInitializer attribute
+      - [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)  Custom interpolated string expression handlers
+        - [§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)  Declaring a custom handler
+        - [§23.5.9.1.2](attributes.md#235912-inhibiting-a-custom-handler)  Inhibiting a custom handler
+        - [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler)  Passing information to/from a custom handler
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
   - [§24.1](unsafe-code.md#241-general)  General

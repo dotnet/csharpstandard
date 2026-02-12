@@ -530,6 +530,8 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+      PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
 fragment PP_Compilation_Unit_Name
@@ -539,6 +541,35 @@ fragment PP_Compilation_Unit_Name
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
+    ;
+
+fragment PP_Start_Line_Character
+    : '(' PP_Whitespace? PP_Start_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_Start_Character PP_Whitespace? ')'
+    ;
+fragment PP_End_Line_Character
+    : '(' PP_Whitespace? PP_End_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_End_Character PP_Whitespace? ')'
+    ;
+
+fragment PP_Start_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_Start_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_Character_Offset
+    : Decimal_Digit+
     ;
 
 // Source: §6.5.9 Nullable directive
@@ -794,7 +825,11 @@ subpatterns
     ;
 subpattern
     : pattern
-    | identifier ':' pattern
+    | subpattern_name ':' pattern
+    ;
+subpattern_name
+    : identifier
+    | subpattern_name '.' identifier
     ;
 
 // Source: §11.2.6 Property pattern
@@ -1466,7 +1501,9 @@ conditional_expression
 
 // Source: §12.22.1 General
 lambda_expression
-    : anonymous_function_modifier? anonymous_function_signature '=>' anonymous_function_body
+    : attributes? anonymous_function_modifier?
+      (return_type | ref_kind ref_return_type)?
+      anonymous_function_signature '=>' anonymous_function_body
     ;
 
 anonymous_method_expression
@@ -1493,7 +1530,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type identifier
+    : attributes? anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -1513,7 +1550,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : identifier
+    : attributes? identifier
     ;
 
 anonymous_function_body
@@ -1998,7 +2035,7 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes?
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes?
       statement_list* namespace_member_declaration*
     ;
 
@@ -2019,6 +2056,28 @@ namespace_body
 // Source: §14.4 Extern alias directives
 extern_alias_directive
     : 'extern' 'alias' identifier ';'
+    ;
+
+// Source: §14.4.1 General
+global_using_directive
+    : global_using_alias_directive
+    | global_using_namespace_directive
+    | global_using_static_directive
+    ;
+
+// Source: §14.4.2 Global using alias directives
+global_using_alias_directive
+    : 'global' using_alias_directive
+    ;
+
+// Source: §14.4.3 Global using namespace directives
+global_using_namespace_directive
+    : 'global' using_namespace_directive
+    ;
+
+// Source: §14.4.4 Global using static directives
+global_using_static_directive
+    : 'global' using_static_directive
     ;
 
 // Source: §14.5.1 General
@@ -2071,7 +2130,7 @@ class_declaration
     ;
 
 class_tag
-    : 'class'
+    : 'record'? 'class'
     | 'record'
     ;
 
@@ -2591,9 +2650,25 @@ finalizer_body
 
 // Source: §16.2.1 General
 struct_declaration
+    : non_record_struct_declaration
+    | record_struct_declaration
+    ;
+
+non_record_struct_declaration
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
+    ;
+
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers
@@ -2617,7 +2692,7 @@ struct_body
     : '{' struct_member_declaration* '}'
     ;
 
-// Source: §16.3.1 General
+// Source: §16.3 Struct members
 struct_member_declaration
     : constant_declaration
     | field_declaration

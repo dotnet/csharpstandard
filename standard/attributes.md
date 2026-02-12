@@ -494,10 +494,10 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Diagnostics.ConditionalAttribute` ([§23.5.3](attributes.md#2353-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§23.5.4](attributes.md#2354-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
-- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` (§callargexpattr), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` ([§23.5.6.5](attributes.md#23565-the-callerargumentexpression-attribute)), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializer` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
-- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler (§custInterpStrExpHandler) and to call one of its constructors, respectively.
+- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -846,7 +846,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 For an invocation that occurs within a local function, the name of the method that calls that local function is used. Consider the following: if method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member!
 
-#### §callargexpattr The CallerArgumentExpression attribute
+#### 23.5.6.5 The CallerArgumentExpression attribute
 
 The attribute `System.Runtime.CompilerServices.CallerArgumentExpression` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter's argument as a string, referred to here as the *captured string*.
 
@@ -1247,9 +1247,9 @@ A module initializer shall have the following characteristics:
 - Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
 - Not be a local function.
 
-#### §custInterpStrExpHandler Custom interpolated string expression handlers
+#### 23.5.9.1 Custom interpolated string expression handlers
 
-##### §custInterpStrExpCustHandling Declaring a custom handler
+##### 23.5.9.1.1 Declaring a custom handler
 
 Consider the following program, which implements a simple message logger:
 
@@ -1280,7 +1280,7 @@ The output produced is, as follows:
 val = {  FF}; 2 * val = 510.
 ```
 
-In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As such, according to [§12.8.3](expressions.md#1283-interpolated-string-expressions), the default interpolated string expression handler is invoked. The following subclause (§custInterpStrExpCustHandling) shows how to use a custom handler.
+In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As such, according to [§12.8.3](expressions.md#1283-interpolated-string-expressions), the default interpolated string expression handler is invoked. The following subclause ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)) shows how to use a custom handler.
 
 In order to provide custom processing to the program above, a *custom interpolated string expression handler* is needed. Here then is the message logger with a custom handler added (which although it does nothing more than behave like the default handler, it provides the hooks for customization):
 
@@ -1352,7 +1352,7 @@ A type having the attribute `System.Runtime.CompilerServices.InterpolatedStringH
 To qualify as a custom interpolated string expression handler, a class or struct type shall have the following characteristics:
 
 - Be marked with the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`.
-- Have an accessible constructor whose first two parameters have type `int`. (Other parameters may follow, which are used to pass information to/from the handler. These are discussed in §custInterpStrExpPassInfo. An optional final parameter may be declared to inhibit the handler from processing the interpolated string. This is discussed in §custInterpStrExpInhibCustHandler).
+- Have an accessible constructor whose first two parameters have type `int`. (Other parameters may follow, which are used to pass information to/from the handler. These are discussed in [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler). An optional final parameter may be declared to inhibit the handler from processing the interpolated string. This is discussed in [§23.5.9.1.2](attributes.md#235912-inhibiting-a-custom-handler)).
 
 When the compiler-generated code calls the constructor, the first parameter is set to the sum of the lengths of the interpolated string expression segments ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) in the interpolated string expression, and the second parameter is set to the number of interpolations. (For `($"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.)
 
@@ -1374,7 +1374,7 @@ The new overload of `LogMessage` takes a custom handler instead of `string`, and
 - return the final string as the value of the interpolated string expression.
 - execute the body of `LogMessage`.
 
-##### §custInterpStrExpInhibCustHandler Inhibiting a custom handler
+##### 23.5.9.1.2 Inhibiting a custom handler
 
 If a handler constructor has a final parameter of type `bool` that is an out parameter, when that constructor is called that parameter’s value is tested. If it is true, the behavior is as if that parameter were omitted. However, if it is false, the interpolated string expression is not processed further; that is, the handler is *inhibited*. Specifically, the interpolation expressions are not evaluated, and the methods `AppendLiteral` and `AppendFormatted` are not called.
 
@@ -1397,7 +1397,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
 
 *Note*: The interpolations in an interpolated string expression may contain side effects (as result from `++`, `--`,  assignment, and some method calls). If a handler is inhibited, none of the side effects in the interpolated string expression are evaluated. If a handler is not inhibited, all of the side effects in the interpolated string expression are evaluated. *end note*
 
-##### §custInterpStrExpPassInfo Passing information to/from a custom handler
+##### 23.5.9.1.3 Passing information to/from a custom handler
 
 It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
 
@@ -1426,7 +1426,7 @@ public ref struct LogInterpolatedStringHandler
 
 Attribute `InterpolatedStringHandlerArgument` is applied to the handler parameter, which shall follow the declarations of the parameters that are to be passed to the handler. The attribute constructor argument shall be a comma-separated list of zero or more strings that name the parameters to be passed, along with their order. An empty string designates the instance from which the handler is being invoked. As such, the attribute constructor call above containing `"count","flag",""` requires a matching handler constructor. If the attribute constructor argument list is empty, the behavior is as if the attribute was omitted.
 
-If an `out bool` parameter is also declared to allow the handler to be inhibited (§custInterpStrExpInhibCustHandler) that parameter shall be the final one.
+If an `out bool` parameter is also declared to allow the handler to be inhibited ([§23.5.9.1.2](attributes.md#235912-inhibiting-a-custom-handler)) that parameter shall be the final one.
 
 ## 23.6 Attributes for interoperation
 

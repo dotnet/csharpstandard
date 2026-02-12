@@ -146,7 +146,7 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 ### 10.2.5 Implicit interpolated string conversions
 
-For any type `T` that is an applicable interpolated string handler type (§custInterpStrExpCustHandling), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
+For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -404,9 +404,9 @@ For a *conditional_expression* `c ? e1 : e2`, when
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
 
-### §anon-func-type-conversion Anonymous function type conversion
+### 10.2.21 Anonymous function type conversion
 
-The following conversions are permitted from an anonymous function type `F`(§anon-func-type):
+The following conversions are permitted from an anonymous function type `F`([§12.22.8](expressions.md#12228-anonymous-function-type)):
 
 - To an anonymous function type `G` if the parameters and return types of `F` are variance-convertible to the parameters and return type of `G`.
 - To `System.Delegate` or its base classes or interfaces.

@@ -166,7 +166,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
+The scope of an *extern_alias_directive* is described in [§7.7.1](basic-concepts.md#771-general).
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
@@ -195,7 +195,7 @@ An error occurs if a program declares an extern alias for which no external defi
 > The program declares the existence of the extern aliases `X` and `Y`, but the actual definitions of the aliases are external to the program. The identically named `N.B` classes can now be referenced as `X.N.B` and `Y.N.B`, or, using the namespace alias qualifier, `X::N.B` and `Y::N.B`.
 > *end example*
 
-### §global-using-directives-general General
+### 14.4.1 General
 
 A ***global using directive*** is a using directive ([§14.5](namespaces.md#145-using-directives)) at the top level of a compilation unit.
 
@@ -211,7 +211,7 @@ global_using_directive
 >
 > The effect of adding a *global_using_directive* to a program can be thought of as the effect of adding a similar *using_directive* that resolves to the same target namespace or type to every compilation unit of the program. However, the target of a *global_using_directive* is resolved in the context of the compilation unit that contains it. *end note*
 
-### §global-using-alias-directives Global using alias directives
+### 14.4.2 Global using alias directives
 
 A *global_using_alias_directive* introduces an identifier that serves as an alias for a namespace or type within the program.
 
@@ -235,7 +235,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 
 Using aliases can name a closed constructed type, but cannot name an unbound generic type declaration without supplying type arguments.
 
-### §global-using-namespace-directives Global using namespace directives
+### 14.4.3 Global using namespace directives
 
 A *global_using_namespace_directive* imports the types contained in a namespace into the program, enabling the identifier of each type to be used without qualification.
 
@@ -257,7 +257,7 @@ Furthermore, when more than one namespace or type imported by *global_using_name
 
 The *namespace_name* referenced by a *global_using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *global_using_alias_directive*. Thus, *global_using_namespace_directive*s in the same program do not affect each other and can be written in any order.
 
-### §global-using-static-directives Global using static directives
+### 14.4.4 Global using static directives
 
 A *global_using_static_directive* imports the nested types and static members contained directly in a type declaration into the containing program, enabling the identifier of each member and type to be used without qualification.
 
@@ -273,7 +273,7 @@ A *global_using_static_directive* specifically does not import extension methods
 
 A *global_using_static_directive* only imports members and types declared directly in the given type, not members and types declared in base classes.
 
-Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in §global-using-namespace-directives.
+Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in [§14.4.3](namespaces.md#1443-global-using-namespace-directives).
 
 ## 14.5 Using directives
 
@@ -295,7 +295,7 @@ A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-dir
 
 A *using_static_directive* ([§14.5.4](namespaces.md#1454-using-static-directives)) imports the nested types and static members of a type.
 
-The scope of a *using_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
+The scope of a *using_directive* is described in [§7.7.1](basic-concepts.md#771-general).
 
 ### 14.5.2 Using alias directives
 
