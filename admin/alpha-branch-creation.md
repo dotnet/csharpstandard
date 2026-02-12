@@ -56,7 +56,7 @@ For example, this order worked best for V9:
      - standard-library.md**
 1. *file scoped namespaces* 
    - **On 2/11/26, Rex noticed that all text edits to narrative in namespaces.md appear to have been applied, but neither of the sets of grammar changes was made.**
-   - - https://github.com/dotnet/csharpstandard/pull/1540.patch 
+   - https://github.com/dotnet/csharpstandard/pull/1540.patch 
    - small - 2 files
      - basic-concepts.md*
      - namespaces.md*
