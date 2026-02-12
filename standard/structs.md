@@ -167,9 +167,47 @@ Except for the differences noted in [§16.4](structs.md#164-class-and-struct-dif
 
 It is an error for a member of a record struct to be named `Clone`.
 
-It is an error for a member of a record struct to be named `Clone`.
-
 It is an error for an instance field of a record struct to have an unsafe type.
+
+### 16.3.2 Readonly members
+
+An instance member definition or accessor of an instance property, indexer, or event that includes the `readonly` modifier has the following restrictions:
+
+- The `this` parameter is a `ref readonly` reference.
+- The member shall not reassign the value of `this` or an instance field of the receiver.
+- The member shall not reassign the value of an instance field-like event ([§15.8.2](classes.md#1582-field-like-events)) of the receiver.
+- If a readonly member invokes a non-readonly member, the structure referred to by `this` must be copied to use a writable reference for the `this` argument.
+
+> *Note:* Instance fields include the hidden backing field used for automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A readonly member can modify the state of an object referred to by an instance field, even though the readonly member can’t reassign that instance member. The following code demonstrates the reassigning and modifying an instance field:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadonlyMember" } -->
+> ```csharp
+> public struct S
+> {
+>     private List<string> messages;
+>
+>     public S(IEnumerable<string> messages) =>
+>         this.messages = new List<string>(messages);
+>
+>     public void InitializeMessages() =>
+>         messages = new List<string>();
+>
+>     public readonly void AddMessage(string message)
+>     {
+>         if (messages == null)
+>         {
+>             throw new InvalidOperationException("Messages collection is not initialized.");
+>         }
+>         messages.Add(message);
+>     }
+> }
+> ```
+>
+> The `readonly` method `AddMessage` can change the state of a message list. The `InitializeMessages` member can clear and re-initialize the list of messages. In the case of `AddMessage`, the `readonly` modifier is valid. In the case of `InitializeMessages`, adding the `readonly` modifier is invalid. *end example*
 
 ## §synth-members Synthesized record struct members
 
@@ -253,8 +291,6 @@ The synthesized override of `GetHashCode()` shall return an `int` result of comb
 >         return HashCode.Combine(
 >             EqualityComparer<T1>.Default.GetHashCode(P1),
 >             EqualityComparer<T2>.Default.GetHashCode(P2));
->     }
-> }
 > ```
 >
 > *end example*

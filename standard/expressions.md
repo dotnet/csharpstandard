@@ -1734,12 +1734,12 @@ A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_ex
 
 A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
-- If the tuple element in the corresponding position has a name `Ni`, then the tuple type element shall be `Ti Ni`.
-- Otherwise, if `Ei` is of the form `Ni` or `E.Ni` or `E?.Ni` then the tuple type element shall be `Ti Ni`, *unless* any of the following holds:
-  - Another element of the tuple expression has the name `Ni`, or
-  - Another tuple element without a name has a tuple element expression of the form `Ni` or `E.Ni` or `E?.Ni`, or
-  - `Ni` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
-- Otherwise, the tuple type element shall be `Ti`.
+- If the tuple element in the corresponding position has a name `Nᵢ`, then the tuple type element shall be `Tᵢ Nᵢ`.
+- Otherwise, if `Eᵢ` is of the form `Nᵢ` or `E.Nᵢ` or `E?.Nᵢ` then the tuple type element shall be `Tᵢ Nᵢ`, *unless* any of the following holds:
+  - Another element of the tuple expression has the name `Nᵢ`, or
+  - Another tuple element without a name has a tuple element expression of the form `Nᵢ` or `E.Nᵢ` or `E?.Nᵢ`, or
+  - `Nᵢ` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
+- Otherwise, the tuple type element shall be `Tᵢ`.
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
@@ -4588,7 +4588,7 @@ equality_expression
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` on the right-hand-side of `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression.
+> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` on the right-hand-side of `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression. *end note*
 
 The `is` operator is described in [§12.15.12](expressions.md#121512-the-is-operator) and the `as` operator is described in [§12.15.13](expressions.md#121513-the-as-operator).
 
@@ -4923,16 +4923,16 @@ The tuple equality operators are applied pairwise to the elements of the tuple o
 
 If each operand `x` and `y` of a `==` or `!=` operator is classified either as a tuple or as a value with a tuple type ([§8.3.11](types.md#8311-tuple-types)), the operator is a *tuple equality operator*.
 
-If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
+If an operand `e` is classified as a tuple, the elements `e₁...eₙ` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
 
-The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator shall apply, and shall yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
+The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xᵢ` and `yᵢ`, the same equality operator shall apply, and shall yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
 
 The tuple equality operator `x == y` is evaluated as follows:
 
 - The left side operand `x` is evaluated.
 - The right side operand `y` is evaluated.
-- For each pair of elements `xi` and `yi` in lexical order:
-  - The operator `xi == yi` is evaluated, and a result of type `bool` is obtained in the following way:
+- For each pair of elements `xᵢ` and `yᵢ` in lexical order:
+  - The operator `xᵢ == yᵢ` is evaluated, and a result of type `bool` is obtained in the following way:
     - If the comparison yielded a `bool` then that is the result.
     - Otherwise if the comparison yielded a `dynamic` then the operator `false` is dynamically invoked on it, and the resulting `bool` value is negated with the logical negation operator (`!`).
     - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
@@ -4944,8 +4944,8 @@ The tuple equality operator `x != y` is evaluated as follows:
 
 - The left side operand `x` is evaluated.
 - The right side operand `y` is evaluated.
-- For each pair of elements `xi` and `yi` in lexical order:
-  - The operator `xi != yi` is evaluated, and a result of type `bool` is obtained in the following way:
+- For each pair of elements `xᵢ` and `yᵢ` in lexical order:
+  - The operator `xᵢ != yᵢ` is evaluated, and a result of type `bool` is obtained in the following way:
     - If the comparison yielded a `bool` then that is the result.
     - Otherwise if the comparison yielded a `dynamic` then the operator `true` is dynamically invoked on it, and the resulting `bool` value is the result.
     - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
@@ -7080,24 +7080,25 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > ```csharp
 > struct Point
 > {
->    int x, y;
+>     int x, y;
 >
->    public Point(int x, int y)
->    {
->       this.x = x;
->       this.y = y;
->    }
+>     public Point(int x, int y)
+>     {
+>         this.x = x;
+>         this.y = y;
+>     }
 >
->    public int X
->    {
->       get { return x; }
->       set { x = value; }
->    }
+>     public int X
+>     {
+>         get { return x; }
+>         set { x = value; }
+>     }
 >
->    public int Y {
->       get { return y; }
->       set { y = value; }
->    }
+>     public int Y
+>     {
+>         get { return y; }
+>         set { y = value; }
+>     }
 > }
 >
 > struct Rectangle
@@ -7181,17 +7182,18 @@ The ref assignment operator shall not read the storage location referenced by th
 > public static ref readonly int M3() { ... }
 > public static void Test()
 > {
-> int v = 42;
-> ref int r1 = ref v; // OK, r1 refers to v, which has value 42
-> r1 = ref M1();      // Error; M1 returns a value, not a reference
-> r1 = ref M2();      // OK; makes an alias
-> r1 = ref M2u();     // Error; lhs and rhs have different types
-> r1 = ref M3();    // error; M3 returns a ref readonly, which r1 cannot honor
-> ref readonly int r2 = ref v; // OK; make readonly alias to ref
-> r2 = ref M2();      // OK; makes an alias, adding read-only protection
-> r2 = ref M3();      // OK; makes an alias and honors the read-only
-> r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
->               // r2 is an alias (with read-only access) to the same variable
+>     int v = 42;
+>     ref int r1 = ref v; // OK, r1 refers to v, which has value 42
+>     r1 = ref M1();      // Error; M1 returns a value, not a reference
+>     r1 = ref M2();      // OK; makes an alias
+>     r1 = ref M2u();     // Error; lhs and rhs have different types
+>     r1 = ref M3();    // error; M3 returns a ref readonly, which r1 cannot honor
+>     ref readonly int r2 = ref v; // OK; make readonly alias to ref
+>     r2 = ref M2();      // OK; makes an alias, adding read-only protection
+>     r2 = ref M3();      // OK; makes an alias and honors the read-only
+>     r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
+>                                // r2 is an alias (with read-only access) 
+>                                // to the same variable
 > }
 > ```
 >
