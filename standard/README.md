@@ -328,7 +328,7 @@
     - [§12.8.3](expressions.md#1283-interpolated-string-expressions)  Interpolated string expressions
     - [§12.8.4](expressions.md#1284-simple-names)  Simple names
     - [§12.8.5](expressions.md#1285-parenthesized-expressions)  Parenthesized expressions
-    - [§12.8.6](expressions.md#1286-tuple-expressions)  Tuple expressions
+    - [§12.8.6](expressions.md#1286-tuple-literals)  Tuple literals
     - [§12.8.7](expressions.md#1287-member-access)  Member access
       - [§12.8.7.1](expressions.md#12871-general)  General
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names

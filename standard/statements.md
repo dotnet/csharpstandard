@@ -284,6 +284,7 @@ A *declaration_statement* declares one or more local variables, one or more loca
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
+    | local_deconstructing_declaration ';'
     | local_function_declaration
     ;
 ```
@@ -480,6 +481,126 @@ The value of a local constant is obtained in an expression using a *simple_name*
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
+
+### §local-deconstructing-declarations Local deconstructing declarations
+
+A local deconstructing declaration declares one or more local variables initialised with values obtained by deconstructing (§12.7) the initialising *expression*.
+<!--
+[TODO] For C#10 change the definition of declaration_deconstructor_element to:
+
+declaration_deconstructor_element
+    : declaration_expression
+    | discard_token
+    | declaration_deconstructor
+    | variable_reference
+    ;
+-->
+```ANTLR
+local_deconstructing_declaration
+    : declaration_deconstructor '=' expression
+    ;
+
+declaration_deconstructor
+    : '(' declaration_deconstructor_element (',' declaration_deconstructor_element)+ ')'
+    | abridged_deconstructor
+    ;
+
+declaration_deconstructor_element
+    : declaration_expression
+    | discard_token
+    | declaration_deconstructor
+    ;
+```
+
+If the input can be recognised as both a *local_deconstructing_declaration* and a *deconstructing_assignment* (§deconstructing-assignment) then the latter shall be chosen.
+
+> *Note*: Put another way a *local_deconstructing_declaration* must contain at least one *declaration_expression* to be recognised as a declaration, otherwise it is recognised as a *deconstructing_assignment*. This follows the same split as for declaration vs. assignment for other types. *end note*
+
+If the input can be syntatically recognized as a *declaration_deconstructor* and as a *variable_reference* then the former shall be chosen.
+
+If the input can be syntatically recognized as a *discard_token* and as a *variable_reference* then the former shall be chosen.
+
+> *Note:* Based on the order the alternatives are listed ANTLR grammar semantics automatically enforce these priorties. *end note*
+
+For backward compatibility if any *declaration_deconstructor_element* is a *discard_token* then:
+
+- If name lookup (§12.8.4) for “`_`” finds an associated declaration then the *discard_token* is reclassified as a *simple_name*, which is syntactically a *variable_reference*.
+- Otherwise the *discard token* is a simple discard (§12.19).
+
+It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *declaration_deconstructor_element* is not writeable.
+
+The compile-time processing of a deconstructing declaration of the form `d = y`, where `d` is a *declaration_deconstructor* of the form `(d₁, ..., dₙ)` with arity `n`, proceeds as follows:
+
+- The initialising expression (right operand) of the statement, `y`, is deconstructed (§12.7) to produce a *tuple_literal* `e` of the form `(e₁, ..., eₘ)`, it is a compile-time error if `m ≠ n`.
+- The type `T` of the overall deconstruction is determined, where `T` is the tuple type `(T₁, ..., Tₙ)` and each `Tᵢ` is calculated as follows based on the corresponding `dᵢ` and `eᵢ`:
+  - if `dᵢ` is a discard or implicitly typed *declaration_expression*, and `eᵢ` has a type `Eᵢ`, then `Tᵢ` is `Eᵢ`;
+  - otherwise if `dᵢ` is a *deconstructor* then `Tᵢ` is the type of `dᵢ = eᵢ` determined by applying this compile-time algorithm recursively.
+  - otherwise if `dᵢ` has a type `Dᵢ` and there is an implicit conversion from `eᵢ` to `Dᵢ`, then `Tᵢ` is `Dᵢ`;
+  - otherwise `dᵢ` and `eᵢ` are incompatible, and a compile-time error results.
+
+The run-time processing of a deconstructing declaration, now `d = e`, proceeds as follows:
+
+1. In the following steps each and every `dᵢ` and `eᵢ` must be evaluated exactly once.
+2. The tuple value `t`, of the form `(t₁, ..., tₙ)`, is created by converting `e` to `T` using an implicit tuple conversion (§10.2.13).
+3. For each non-discard `dᵢ` in order from left to right:
+   - if `dᵢ` is a *declaration_expression*, `Sᵢ nᵢ` where `Sᵢ` is the type or `var`, and `nᵢ` the introduced variable name, the initialising declaration `Sᵢ nᵢ = tᵢ` is performed;
+   - otherwise if `dᵢ` is a variable reference the assignment `dᵢ = tᵢ` is performed;
+   - otherwise `dᵢ` is a nested *deconstructor* and this step (3) is recursively applied with to elements of `dᵢ` and `tᵢ`.
+
+> *Note* The requirement that each and every `dᵢ` and `eᵢ` is evaluated exactly once ensures that any and all side-effects of evaluating them are performed exactly once. The implicit conversion of `e` will evaluate every `eᵢ`. *end note*
+
+An *abridged_deconstructor* is a shorthand syntax for a *declaration_deconstructor* containing implicitly typed declaration expressions.
+
+```ANTLR
+abridged_deconstructor
+    : 'var' abridged_elements
+    ;
+
+abridged_elements
+    : '(' abridged_element (',' abridged_element)+ ')'
+    ;
+
+abridged_element
+    : identifier
+    | abridged_elements
+    ;
+```
+
+An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *declaration_deconstructor* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *abridged_element*s in the *abridged_deconstructor*. Each identifier nested within a *abridged_deconstructor* thus introduces a declaration expression ([§12.19](expressions.md#1219-declaration-expressions)). As every abridged deconstructor has a standard (unabridged) counterpart the above description applies to them.
+
+> *Example*:
+> The following two examples both declare two variables: a and b. The first uses a standard *declaration_deconstructor* introducing explicitly typed variables, second an *abridged_deconstructor* declaring the same variables but implicitly type – in this case the second constant requires to the `L` suffix so that `b` is `long`.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions1"} -->
+> ```csharp
+> // standard declaration_deconstructor
+> (int a, long b) = (1, 2); // a is 1, b is 2
+>
+> // equivalent abridged_deconstructor
+> var (c, d) = (1, 2L);     // note the L suffix so d is inferred as long
+> ```
+>
+> Any of the individual elements of the assignment can itself be a deconstruction expression. For example, the following deconstruction expression assigns six variables, `a` through `f`.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions2"} -->
+> ```csharp
+> var (a, b, (c, d, (e, f))) = (1, 2, (3, 4, (5, 6)));
+> ```
+>
+> In this example, notice that the structure of nested tuples must match on both sides of the assignment.
+>
+> If the variable(s) on the left side are implicitly typed, the corresponding expression must have a type:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions3",expectedErrors:["CS8130","CS8130", "CS8130"]} -->
+> ```csharp
+> (int a, string? b) = (42, null); // OK, LHS typed
+> var (c, d) = (42, null);         // Invalid as type of d cannot be inferred
+> (int e, var f) = (42, null);     // Invalid as type of f cannot be inferred
+> var (g, h) = (10, "text");       // OK, RHS typed
+> (var i, var j) = (10, "text");   // OK, RHS typed
+> ```
+>
+> *end example*
 
 ### 13.6.4 Local function declarations
 
@@ -717,7 +838,7 @@ switch_statement
 
 selector_expression
     : '(' expression ')'
-    | tuple_expression
+    | tuple_literal
     ;
 
 switch_block
@@ -738,9 +859,9 @@ case_guard
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a *tuple_expression* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
+A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_expression*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
+> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
 The ***governing type*** of a `switch` statement is established by the switch’s *selector_expression*.
 

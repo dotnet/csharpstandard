@@ -345,10 +345,16 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### 10.2.13 Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
+An implicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an implicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
 
-If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
 
+An implicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an implicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple `t` with value `(t₁, ..., tₙ)` and of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"ImplicitTupleConversions", ignoredWarnings:["CS0219","CS8123"], expectedErrors:["CS0037"]} -->
@@ -360,7 +366,7 @@ If an element name in the tuple expression does not match a corresponding elemen
 > (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
 > ```
 >
-> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since in each case implicit conversions exist from the tuple literal elements to the corresponding target variable element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple literal differs from those in the tuple type.
 >
 > *end example*
 
@@ -502,7 +508,13 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### 10.3.6 Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
+An explicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an explicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
+
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+An explicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an explicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple value `(t₁, ..., tₙ)` of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
 
 ### 10.3.7 Unboxing conversions
 

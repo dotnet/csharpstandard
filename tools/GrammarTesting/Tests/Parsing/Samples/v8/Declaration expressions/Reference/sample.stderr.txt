@@ -1,0 +1,4 @@
+(29:40) Semantic error, expression is not a variable reference: A < B
+(29:47) Semantic error, expression is not a variable reference: C > q
+(32:26) Semantic error, expression is not a variable reference: A < B
+(32:33) Semantic error, expression is not a variable reference: C > q
