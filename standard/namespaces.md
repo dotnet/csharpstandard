@@ -12,8 +12,12 @@ A *compilation_unit* consists of zero or more *extern_alias_directive*s followed
 
 ```ANTLR
 compilation_unit
-    : extern_alias_directive* global_using_directive* using_directive* global_attributes?
-      statement_list* namespace_member_declaration*
+: extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    ;
+
+compilation_unit_body
+    : statement_list* namespace_member_declaration*
+    | file_scoped_namespace_declaration
     ;
 ```
 
