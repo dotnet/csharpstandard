@@ -673,6 +673,8 @@
     - [§16.2.5](structs.md#1625-struct-interfaces)  Struct interfaces
     - [§16.2.6](structs.md#1626-struct-body)  Struct body
   - [§16.3](structs.md#163-struct-members)  Struct members
+    - [§16.3.1](structs.md#1631-general)  General
+    - [§16.3.2](structs.md#1632-readonly-members)  Readonly members
   - [§16.4](structs.md#164-class-and-struct-differences)  Class and struct differences
     - [§16.4.1](structs.md#1641-general)  General
     - [§16.4.2](structs.md#1642-value-semantics)  Value semantics
