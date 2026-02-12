@@ -403,22 +403,24 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### 8.3.11 Tuple types
 
+#### §tuple-types-general General
+
 A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element name***s.
 
-This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of directly expressing tuple types of any arity between two and seven inclusive.
-There does not need to exist a `System.ValueTuple<...>` declaration that directly matches the arity of any tuple type with a corresponding number of type parameters. Instead, tuples with an arity greater than seven are represented with a generic struct type `System.ValueTuple<T1, ..., T7, TRest>` that in addition to tuple elements has a `Rest` field containing a nested value of the remaining elements, using another `System.ValueTuple<...>` type. Such nesting may be observable in various ways, e.g. via the presence of a `Rest` field. Where only a single additional field is required, the generic struct type `System.ValueTuple<T1>` is used; this type is not considered a tuple type in itself. Where more than seven additional fields are required, `System.ValueTuple<T1, ..., T7, TRest>` is used recursively.
+Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of decimal digits with no leading zeros, is only permitted at the position denoted by `X`.
 
-Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
-
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
-
-The `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
-
-Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
-
-> *Note*: Even when large tuples are represented with nested `System.ValueTuple<...>` values, each tuple element can still be accessed directly with the `Item...` name corresponding to its position. *end note*
+> *Note* This restriction on element names avoids any confusion between them and tuple field names, e.g. where element name `ItemX` is associated with field `ItemY` where `X ≠ Y`. *end note*
 <!-- markdownlint-disable MD028 -->
+
 <!-- markdownlint-enable MD028 -->
+> *Note* The optional element names are not represented in the runtime representation (§tuple-runtime-representation) of a tuple value.
+
+Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples of the same arity with identity-convertible sequences of element types.
+
+Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by creating a value using the underlying runtime representation (§tuple-runtime-representation) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
+
+Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` is the tuple arity and the numbers have no leading zeros, and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+
 > *Example*: Given the following examples:
 >
 > <!-- Example: {template:"standalone-console", name:"TupleTypes1", ignoredWarnings:["CS0219"], expectedErrors:["CS8125","CS8125"]} -->
@@ -427,10 +429,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 > (int, string word) pair2 = (2, "Two");
 > (int number, string word) pair3 = (3, "Three");
 > (int Item1, string Item2) pair4 = (4, "Four");
-> // Error: "Item" names do not match their position
-> (int Item2, string Item123) pair5 = (5, "Five");
-> (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
-> ValueTuple<int, string> pair7 = (7, "Seven");
+> (int Item2, string Item123) pair5 = (5, "Five"); // Error: “Item” names do not match position
 > Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
 > ```
 >
@@ -438,10 +437,117 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 >
 > The tuple type for `pair4` is valid because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
 >
-> The declarations for `pair6` and `pair7` demonstrate that tuple types are interchangeable with constructed types of the form `ValueTuple<...>`, and that the `new` operator is allowed with the latter syntax.
->
 >The last line shows that tuple elements can be accessed by the `Item` name corresponding to their position, as well as by the corresponding tuple element name, if present in the type.
 > *end example*
+
+#### §eliding-tuples Eliding intermediate tuple creation
+
+If the result of constructing a tuple (§12.8.6) is not required outside of the context in which it is constructed implementations are explicitly allowed to elide the construction as an optimisation provided all other semantic requirements are met.
+
+> *Example*: Such a situation may commonly arise from assignments and switch statements (§13.8.3). Consider the assignment:
+>
+> ```csharp
+>    (a, b) = (b, a);
+> ```
+>
+> The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side tuple expression `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple expression elements. In the code:
+>
+> ```csharp
+>    (a, b, _) = (b, a, thing.ExpensiveMethod(x));
+> ```
+>
+> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.ExpensiveMethod(x)`; before doing so. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, and the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
+
+#### §tuple-runtime-representation Runtime representation
+
+*Note*: Unlike other types such as arrays, the runtime representation of tuple types is specified in terms of a set of generic value types, and a tuple may be directly referenced in terms of this representation. However the runtime representation of these generic value types remains implementation defined. *end note*
+
+The runtime representation of a tuple `(T1, ..., Tn)` is constructed from `System.ValueTuple<...>`  ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) instances which are a set of generic struct types for representing tuple types of aritys two to seven. Tuples with an arity greater than seven are represented with the generic struct type `System.ValueTuple<T1, ..., T7, TRest>` that in addition to tuple elements has a `Rest` field containing a nested `System.ValueTuple` of the remaining elements. Where only a single additional field is required, the generic struct type `System.ValueTuple<T1>` is used; this type is not considered a tuple type in itself. Where more than seven additional fields are required further `System.ValueTuple<T1, ..., T7, TRest>` instances are nested.
+
+> *Example*:
+>
+> `(T1, T2)` is represented by `ValueTuple<T1, T2>`<br>
+> `(T1, ..., T15)` is represented by `ValueTuple<T1, ..., T7, ValueTuple<T8, ..., T14, ValueTuple<T15>>>`
+>
+> *end example*
+
+The runtime representation of tuples is directly accessible, and tuple & `System.ValueType<...>` types may be used interchangeably subject to the following:
+
+- Any value of type `(T1, ..., Tn)` may be treated as the equivalent `System.ValueType<...>` value.
+- Any value of type `System.ValueType<T1, T2>` through `System.ValueType<T1, T2, T3, T4, T5, T6, T7>` may be treated as the equivalent `(T1, T2)` through `(T1, T2, T3, T4, T5, T6, T7)` tuple value.
+- A value of type `System.ValueTuple<T1, ..., T7, TRest>` may only be treated as a tuple if `TRest` is a tuple or any `System.ValueTuple<...>` type, the latter including `System.ValueType<T1>`.
+- Any other value of type `System.ValueType<T1>` may not be treated as a tuple.
+
+Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not meet the above requirements is a compile-time error.
+
+> *Note*: Such a `System.ValueTuple<...>` value can be accessed using the public members it provides, just like any other constructed value, it just cannot be accessed as tuple. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: `ValueTuple`s which may be treated as tuples (`a` & `c`) or not (`b`):
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes2", expectedErrors:["CS1061"]} -->
+> ```csharp
+> var a = new ValueTuple<int, int, int, int, int, int, int>(1, 2, 3, 4, 5, 6, 7);
+> var (a1, a2, a3, a4, a5, a6, a7) = a;   // OK, a can be treated as a tuple
+>
+> var b = new ValueTuple<int, int, int, int, int, int, int, int>
+>             { Item1 = 1, Item2 = 2, Item3 = 3, Item4 = 4,
+>               Item5 = 5, Item6 = 6, Item7 = 7, Rest = 8 };
+> var b8 = b.Item8;   // Error, b cannot be treated as an 8-tuple
+>
+> var c = new ValueTuple<int, int, int, int, int, int, int, ValueTuple<int>>
+>             (1, 2, 3, 4, 5, 6, 7, new ValueTuple<int>(8));
+> var c8 = c.Item8;   // OK, c can be treated as a tuple and so has a field Item8
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Interchangeability of tuple and `ValueTuple`:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes3", ignoredWarnings:["CS0219"]} -->
+> ```csharp
+> (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
+> ValueTuple<int, string> pair7 = (7, "Seven");
+> ```
+>
+> The declarations for `pair6` and `pair7` demonstrate that tuple types and expressions are generally interchangeable with `ValueTuple<...>` types and object creation expressions ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: If the runtime representation of a tuple uses instances of `System.ValueTuple<T1, ..., T7, TRest>` then the `Rest` field is accessible. The use of this provides different ways to reference items in large tuples. Given:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes4", ignoredWarnings:["CS0219"]} -->
+> ```csharp
+> var squares = (1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225);
+> ```
+>
+> Then the 15th square (`225`) can be addressed as `squares.Item15`, `squares.Rest.Item8` and `squares.Rest.Rest.Item1`.
+>
+> *end example*
+
+Though tuple and `System.ValueType<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueType<...>` types – only the former support tuple element names (§tuple-types-general).
+
+> *Example*: Only tuple type syntax supports element names. However as the names are part of the compile-time type and not the value, treating a value of type `ValueTuple<...>` as a tuple can “attach” element names:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes5", expectedOutput:["Bert is 42 years old"]} -->
+> ```csharp
+> var a = new ValueTuple<string, int>("Bert", 42);     // Construct a ValueTuple
+> (string name, int age) b = a;                        // Treat as a tuple with named elements
+> Console.WriteLine($"{b.name} is {b.age} years old"); // Access using element names
+> ```
+>
+> *end example*
+
+In the remainder of this Standard the interchangeability of tuple and `ValueTuple<...>` types and values, as defined above, is usually taken as read and not explicitly mentioned.
 
 ### 8.3.12 Nullable value types
 
