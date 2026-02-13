@@ -512,7 +512,7 @@ An explicit conversion exists from a tuple expression `e`, of the form `(e₁, .
 
 An explicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an explicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple value `(t₁, ..., tₙ)` of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
 
-> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple expression, no warnings are required if element names do not match. *end note*
 
 ### 10.3.7 Unboxing conversions
 
