@@ -1572,9 +1572,9 @@ The mapping specified by a *PP_Line* is in scope until the following `#line` dir
 
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-console", name:"LineWithMapping"} -->
+> <!-- PendingAnExample: {template:"standalone-console", name:"LineWithMapping"} -->
 > ```csharp
-> // exxample goes here
+> // example goes here
 > ```
 >
 > the output produced might be something like the following:
