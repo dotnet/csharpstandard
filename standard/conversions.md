@@ -349,7 +349,7 @@ An implicit conversion exists from a tuple expression `e`, of the form `(e₁, .
 
 An implicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an implicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple `t` with value `(t₁, ..., tₙ)` and of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
 
-> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple expression, no warnings are required if element names do not match. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
