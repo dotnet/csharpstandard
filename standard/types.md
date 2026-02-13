@@ -450,7 +450,7 @@ If the result of constructing a tuple (§12.8.6) is not required outside of the 
 >    (a, b) = (b, a);
 > ```
 >
-> The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side tuple expression `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple expression elements. In the code:
+> The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side tuple expression `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple expression elements. In the code:
 >
 > ```csharp
 >    (a, b, _) = (b, a, thing.ExpensiveMethod(x));
