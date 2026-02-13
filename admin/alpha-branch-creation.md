@@ -26,6 +26,7 @@ For example, this order worked best for V9:
      - standard-library.md
 
 1. *record structs*
+   - **On 2/13/26, Rex noticed that when v10 PR #1556 was "merged" by tooling to make draft-v11 the final 2 source lines (containing } and }) of Example RecordStructEqualityMembers2 were omitted, causing compilation errors.**
    - https://github.com/dotnet/csharpstandard/pull/1556.patch
    - large - 3 files
      - classes.md
