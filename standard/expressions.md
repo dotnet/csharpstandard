@@ -3435,11 +3435,12 @@ When a *stackalloc_initializer* is present:
 
 Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
-If a *stackalloc_expression* occurs directly as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§24.3](unsafe-code.md#243-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T*` ([§24.9](unsafe-code.md#249-stack-allocation)). In this case the *stackalloc_expression* must appear in unsafe code. Otherwise the result of a *stackalloc_expression* is an instance of type `Span<T>`, where `T` is the *unmanaged_type*:
+If a *stackalloc_expression* occurs directly as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§24.3](unsafe-code.md#243-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T*` ([§24.9](unsafe-code.md#249-stack-allocation)). In this case the *stackalloc_expression* must appear in unsafe code. Otherwise the result of a *stackalloc_expression* is an instance of type `Span<T>` or `ReadOnlySpan<T>`, where `T` is the *unmanaged_type*:
 
-- `Span<T>` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) is a ref struct type ([§16.2.3](structs.md#1623-ref-modifier)), which presents a block of memory, here the block allocated by the *stackalloc_expression*, as an indexable collection of typed (`T`) items.
+- `Span<T>` and `ReadOnlySpan<T>` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) are ref struct types ([§16.2.3](structs.md#1623-ref-modifier)), which presents a block of memory, here the block allocated by the *stackalloc_expression*, as an indexable collection of typed (`T`) items.
 - The result’s `Length` property returns the number of items allocated.
-- The result’s indexer ([§15.9](classes.md#159-indexers)) returns a *variable_reference* ([§9.5](variables.md#95-variable-references)) to an item of the allocated block and is range checked.
+- The result’s indexer ([§15.9](classes.md#159-indexers)) is range checked.
+- For `Span<T>`, the result's indexer returns a *variable_reference* ([§9.5](variables.md#95-variable-references)) to an item of the allocated block. For `ReadOnlySpan<T>`, the result's indexer returns the value of an item of the allocated block.
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
