@@ -21,16 +21,24 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : '(' pattern ')'
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
     | declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
+    | parenthesized_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 ```
 
@@ -471,10 +479,10 @@ A *relational_pattern* is used to relationally test the pattern input value ([§
 
 ```ANTLR
 relational_pattern
-    : '<'  constant_expression
-    | '<=' constant_expression
-    | '>'  constant_expression
-    | '>=' constant_expression
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
     ;
 ```
 
@@ -532,7 +540,7 @@ conjunctive_pattern
 
 negated_pattern
     : 'not' negated_pattern
-    | pattern
+    | primary_pattern
     ;
 ```
 
