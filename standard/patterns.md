@@ -623,21 +623,31 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > 
 > // This is parsed as: (obj is (int or string)) && flag
 > bool result = obj is int or string && flag;
-> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}"); // True
+> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
 > 
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
 > result = obj is int || obj is string && flag;
-> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}"); // True
+> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}");
 > 
 > flag = false;
 > // This is parsed as: (obj is (int or string)) && flag
 > result = obj is int or string && flag;
-> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}"); // False
+> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}");
 > 
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
 > result = obj is int || obj is string && flag;
-> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}"); // True 
+> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}");
 > ```
+>
+> The output produced is
+>
+> ```console
+> True
+> True
+> False
+> True
+> ```
+>
 >
 > *end example*
 
