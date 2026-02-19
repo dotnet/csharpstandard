@@ -616,7 +616,7 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"LogicalPattern3"} -->
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
 > ```csharp
 > object obj = 5;
 > bool flag = true;
