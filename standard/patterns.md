@@ -638,6 +638,8 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > result = obj is int || obj is string && flag;
 > Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}"); // True 
 > ```
+>
+> *end example*
 
 ## 11.3 Pattern subsumption
 
