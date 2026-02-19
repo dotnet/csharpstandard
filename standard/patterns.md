@@ -642,10 +642,10 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > The output produced is
 >
 > ```console
-> True
-> True
-> False
-> True
+> obj (5), flag (true): obj is int or string && flag: True
+> obj (5), flag (true): obj is int || obj is string && flag: True
+> obj (5), flag (false): obj is int or string && flag: False
+> obj (5), flag (false): obj is int || obj is string && flag: True
 > ```
 >
 >
