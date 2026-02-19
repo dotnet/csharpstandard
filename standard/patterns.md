@@ -11,7 +11,7 @@ A pattern is tested against a value in a number of contexts:
 - In a *switch_expression*, the *pattern* of a *switch_expression_arm* is tested against the expression on the *switch_expression*’s left-hand-side.
 - In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.
 
-The value against which a pattern is tested is called the ***pattern input value***. Patterns may be combined using Boolean logic.
+The value against which a pattern is tested is called the ***pattern input value***.
 
 ## 11.2 Pattern forms
 
@@ -35,6 +35,8 @@ pattern
 ```
 
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
+
+The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
 
 Some *pattern*s can result in the declaration of a local variable.
 
@@ -478,7 +480,7 @@ relational_pattern
 
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
 
-It is a compile-time error if `constant_expression`is `double.NaN`, `float.NaN`, or `null_literal`.
+It is a compile-time error if `constant_expression` evaluates to one of `double.NaN`, `float.NaN`, or `null_literal`.
 
 When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of `constant_expression` using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the `constant_expression`.
 
@@ -511,7 +513,7 @@ When the input value has a type for which a suitable built-in binary relational 
 
 ### §logical-pattern-new-clause Logical pattern
 
-A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
+A *logical_pattern* is used to negate the result of matching a pattern input value ([§11.1](patterns.md#111-general)) or to combine that match result with a pattern using a Boolean operator.
 
 ```ANTLR
 logical_pattern
@@ -601,6 +603,33 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3"} -->
+> ```csharp
+> object obj = 5;
+> bool flag = true;
+> 
+> // This is parsed as: (obj is (int or string)) && flag
+> bool result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}"); // True
+> 
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}"); // True
+> 
+> flag = false;
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}"); // False
+> 
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}"); // True 
+> ```
 
 ## 11.3 Pattern subsumption
 
