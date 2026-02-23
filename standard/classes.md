@@ -4,7 +4,7 @@
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
-Structs ([§16](structs.md#16-structs)) and interfaces ([§18](ranges.md#18-extended-indexing-and-slicing)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
+Structs ([§16](structs.md#16-structs)) and interfaces ([§19](interfaces.md#19-interfaces)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
 
 ## 15.2 Class declarations
 
