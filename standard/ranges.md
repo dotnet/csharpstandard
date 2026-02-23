@@ -239,7 +239,7 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 <!-- markdownlint-enable MD028 -->
 > *Example*
 >
-> Using the variables defined above with `GetOffSetAndLength(6)`:
+> Using the variables defined above with `GetOffsetAndLength(6)`:
 >
 > ```csharp
 > var (ix0, len0) = firstQuad.GetOffsetAndLength(6); // ix0 = 0, len0 = 4
