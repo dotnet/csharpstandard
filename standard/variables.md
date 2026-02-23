@@ -301,7 +301,7 @@ The definite-assignment state of *v* on the control transfer to the first statem
 For an expression statement *stmt* that consists of the expression *expr*:
 
 - *v* has the same definite-assignment state at the beginning of *expr* as at the beginning of *stmt*.
-- If *v* if definitely assigned at the end of *expr*, it is definitely assigned at the end point of *stmt*; otherwise, it is not definitely assigned at the end point of *stmt*.
+- If *v* is definitely assigned at the end of *expr*, it is definitely assigned at the end point of *stmt*; otherwise, it is not definitely assigned at the end point of *stmt*.
 
 #### 9.4.4.5 Declaration statements
 
