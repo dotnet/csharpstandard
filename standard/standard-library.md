@@ -874,7 +874,7 @@ namespace System.Threading.Tasks
 
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
     }
 
     public readonly struct ValueTask : System.IEquatable<ValueTask>
@@ -1370,7 +1370,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
-- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.Unsafe`
