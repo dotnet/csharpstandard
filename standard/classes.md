@@ -4095,7 +4095,7 @@ It is a compile-time error for an *event_declaration* to include both the `abstr
 
 When an event declaration includes an `extern` modifier, the event is said to be an ***external event***. Because an external event declaration provides no actual implementation, it is an error for it to include both the `extern` modifier and *event_accessor_declaration*s.
 
-It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `external` modifier to include a *variable_initializer*.
+It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `extern` modifier to include a *variable_initializer*.
 
 An event can be used as the left operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
 
