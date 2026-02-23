@@ -959,7 +959,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 > {
 >     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string argumentName)
 >     {
->         if (!isNull)
+>         if (isNull)
 >         {
 >             throw new ArgumentException(argumentName,
 >               $"argument {argumentName} can't be null");
