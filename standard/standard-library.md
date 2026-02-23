@@ -1357,7 +1357,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
-- `global::System.Runtime.CompilerServices.CallerFileAttribute`
+- `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
 - `global::System.Runtime.CompilerServices.FormattableStringFactory`
