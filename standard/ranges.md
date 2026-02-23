@@ -43,7 +43,7 @@ For the purposes of this clause the following terms are defined:
 The above definitions are extended for uses of `Index` and `Range` as follows:
 
 - A type is also a *sequence* if an *element_access* expression taking a single required `Index` argument, rather than an `int` argument, is supported. Where a distinction is required the type is termed ***extended indexable***.
-- A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
+- A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather than a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
 
 Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility ([§7.5](basic-concepts.md#75-member-access)) and therefore dependent on where the type is being used.
 
