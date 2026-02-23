@@ -152,7 +152,7 @@ This method does **not** check that the return value is in the valid range of `0
 The `System.Range` type represents the abstract range of `Index`es from a `Start` index up to, but not including, an `End` index.
 
 ```csharp
-    public readonly struct Range : IEquatable<Index>
+    public readonly struct Range : IEquatable<Range>
     {
         public Index Start { get; }
         public Index End { get; }

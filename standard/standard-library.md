@@ -513,7 +513,7 @@ namespace System
     ///      with Range values, returning a sub-array/substring
     ///      of the indexed value respectively.
     /// </summary>
-    public readonly struct Range : IEquatable<Index>
+    public readonly struct Range : IEquatable<Range>
     {
         /// <summary>
         ///    Construct a Range from two Index values.
