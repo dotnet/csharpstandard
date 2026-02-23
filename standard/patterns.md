@@ -548,6 +548,10 @@ negated_pattern
 
 A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
 
+It is a compile-time error for a pattern variable to be declared beneath a `not` or `or` pattern operator.
+
+> *Note*: Because neither `not` nor `or` can produce a definite assignment for a pattern variable, it is an error to declare one in those positions. *end note*
+
 In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
 
 - If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
@@ -669,13 +673,29 @@ In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it 
 > *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
 The following rules define when a set of patterns subsumes a given pattern:
 
-A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
+A pattern `P` *would match* a constant `K` if any of the following conditions hold:
+
+- the specification for that pattern's runtime behavior is that `P` matches `K`.
+- `P` is a *type_pattern* for type `T` and `K` is not `null` and the runtime type of `K` is `T` or a type derived from `T` or a type that implements `T`.
+- `P` is a *relational_pattern* with operator «op» and constant `v`, and the expression `K` «op» `v` would evaluate to `true`.
+- `P` is a *negated_pattern* `not P₁` and `P₁` would not match `K`.
+- `P` is a *conjunctive_pattern* `P₁ and P₂` and both `P₁` would match `K` and `P₂` would match `K`.
+- `P` is a *disjunctive_pattern* `P₁ or P₂` and either `P₁` would match `K` or `P₂` would match `K`.
+- `P` is a *discard_pattern*.
 
 A set of patterns `Q` *subsumes* a pattern `P` if any of the following conditions hold:
 
-- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`’s *converted value*
+- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`'s *converted value*
 - `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
+- `P` is a *type_pattern* for type `T` and the set of patterns `Q` is *exhaustive* for the type `T`.
+- `P` is a *relational_pattern* with operator «op» and constant value `v`, and for every value of the input type satisfying the relation «op» `v`, some pattern in the set `Q` would match that value.
+- `P` is a *disjunctive_pattern* `P₁ or P₂` and the set of patterns `Q` subsumes `P₁` and `Q` subsumes `P₂`.
+- `P` is a *conjunctive_pattern* `P₁ and P₂` and at least one of the following holds: `Q` subsumes `P₁`, or `Q` subsumes `P₂`.
+- `P` is a *negated_pattern* `not P₁` and `Q` is *exhaustive* for the input type considering only the values not matched by `P₁`.
+- `P` is a *discard_pattern* and the set of patterns `Q` is *exhaustive* for the type of the pattern input value, and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
+- Some pattern in `Q` is a *disjunctive_pattern* `Q₁ or Q₂` and replacing that pattern with `Q₁` in `Q` would yield a set that subsumes `P`, or replacing it with `Q₂` would yield a set that subsumes `P`.
+- Some pattern in `Q` is a *negated_pattern* `not Q₁` and `P` would not match any value that `Q₁` would match.
 
 > *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
 >
@@ -702,8 +722,16 @@ The following rules define when a set of patterns is *exhaustive* for a type:
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
 
 1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
-2. Some pattern in `Q` is a *var pattern*; or
-3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
+1. Some pattern in `Q` is a *var pattern*; or
+1. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`; or
+1. Some pattern in `Q` is a *type_pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`; or
+1. Some pattern in `Q` is a *discard_pattern*; or
+1. The patterns in `Q` include a combination of *relational_pattern*s and *constant_pattern*s whose ranges collectively cover every possible value of `T`'s non-nullable underlying type. For `float` and `double` types, this includes `System.Double.NaN` or `System.Single.NaN` respectively, since `NaN` is not matched by any relational pattern; or
+1. Some pattern in `Q` is a *disjunctive_pattern* `P₁ or P₂`, and replacing that pattern with both `P₁` and `P₂` in `Q` yields a set that is *exhaustive* for `T`; or
+1. Some pattern in `Q` is a *negated_pattern* `not P₁`, and the patterns in `Q` together with the values not matched by `P₁` cover every possible value of `T`. A *negated_pattern* `not P₁` is exhaustive by itself when `P₁` matches no possible value of `T`; or
+1. Some pattern in `Q` is a *conjunctive_pattern* `P₁ and P₂`, and the set containing only `P₁` is *exhaustive* for `T` and the set containing only `P₂` is *exhaustive* for `T`.
+
+> *Note*: For floating-point types, the combination of patterns `< 0` and `>= 0` is *not* exhaustive because neither relational pattern matches `NaN`. A correct exhaustive set would be `< 0`, `>= 0`, and `double.NaN` (or `float.NaN`). *end note*
 
 > *Example*:
 >
