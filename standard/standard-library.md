@@ -1342,7 +1342,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Collections.Generic.IEnumerable<T>`
 - `global::System.Collections.Generic.IEnumerator<T>`
 - `global::System.Collections.Generic.IList<T>`
-- `global::System.Collections.Generic.IReadonlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyCollection<out T>`
 - `global::System.Collections.Generic.IReadOnlyList<out T>`
 - `global::System.Diagnostics.ConditionalAttribute`
 - `global::System.Diagnostics.CodeAnalysis.AllowNullAttribute`
