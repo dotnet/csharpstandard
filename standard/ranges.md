@@ -61,7 +61,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 >
 > public class B : A
 > {
->     public int this(int index) { … }
+>     public int this[int index] { … }
 > }
 >
 > public class C : B
