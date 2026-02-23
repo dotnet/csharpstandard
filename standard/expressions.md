@@ -5325,7 +5325,7 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.13](expressions.md#12813-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`. *end note*
+> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.8](expressions.md#1288-null-conditional-member-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
