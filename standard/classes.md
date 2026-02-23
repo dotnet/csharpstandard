@@ -134,7 +134,7 @@ If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-p
 A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
+- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
 
 A *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) is permitted to reference a static class if
 
