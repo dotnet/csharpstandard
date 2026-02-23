@@ -356,7 +356,7 @@ The definite-assignment state of *v* on the control flow transfer to a reachable
 - If the control transfer was due to a reachable switch label with a guard clause, then the state of *v* is the same as the state of *v* after the guard clause.
 - If the control transfer was due to a reachable switch label without a guard clause, then the state of *v* is
   - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
-  - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
+  - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
 A consequence of these rules is that a pattern variable declared in a *switch_label* will be “not definitely assigned” in the statements of its switch section if it is not the only reachable switch label in its section.
 
