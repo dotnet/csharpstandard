@@ -294,7 +294,7 @@ The following rules govern how the state of a variable *v* is determined at each
 
 #### 9.4.4.3 Block statements, checked, and unchecked statements
 
-The definite-assignment state of *v* on the control transfer to the first statement of the statement list in the block (or to the end point of the block, if the statement list is empty) is the same as the definite-assignment statement of *v* before the block, `checked`, or `unchecked` statement.
+The definite-assignment state of *v* on the control transfer to the first statement of the statement list in the block (or to the end point of the block, if the statement list is empty) is the same as the definite-assignment state of *v* before the block, `checked`, or `unchecked` statement.
 
 #### 9.4.4.4 Expression statements
 
@@ -787,7 +787,7 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after false expression”. Otherwise, it is not definitely assigned.
-- The definite-assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* after *expr* is determined by:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after true expression”, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after false expression”, then the state of *v* after *expr* is “definitely assigned after false expression”.
@@ -845,7 +845,7 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
-- The definite-assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
