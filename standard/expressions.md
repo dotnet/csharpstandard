@@ -2028,7 +2028,7 @@ Once a method has been selected and validated at binding-time by the above steps
 
 #### 12.8.10.3 Extension method invocations
 
-In a method invocation ([§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)) of one of the forms
+In a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) of one of the forms
 
 ```csharp
 «expr» . «identifier» ( )  
