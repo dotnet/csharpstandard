@@ -1274,7 +1274,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.ArgumentOutOfRangeException`
 - `global::System.ArithmeticException`
 - `global::System.Array`
-- `global::System.ArrayTypeMisMatchException`
+- `global::System.ArrayTypeMismatchException`
 - `global::System.Attribute`
 - `global::System.AttributeTargets`
 - `global::System.AttributeUsageAttribute`
