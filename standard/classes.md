@@ -4,7 +4,7 @@
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
-Structs ([§16](structs.md#16-structs)) and interfaces ([§18](ranges.md#18-extended-indexing-and-slicing)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
+Structs ([§16](structs.md#16-structs)) and interfaces ([§19](interfaces.md#19-interfaces)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
 
 ## 15.2 Class declarations
 
@@ -134,7 +134,7 @@ If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-p
 A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
+- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
 
 A *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) is permitted to reference a static class if
 
@@ -657,7 +657,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 
 - If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
-- If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
+- If `C` is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 - If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
 - If `C` is dynamic then `Cₓ` is `object`.
 - Otherwise, `Cₓ` is `C`.
@@ -4095,7 +4095,7 @@ It is a compile-time error for an *event_declaration* to include both the `abstr
 
 When an event declaration includes an `extern` modifier, the event is said to be an ***external event***. Because an external event declaration provides no actual implementation, it is an error for it to include both the `extern` modifier and *event_accessor_declaration*s.
 
-It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `external` modifier to include a *variable_initializer*.
+It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `extern` modifier to include a *variable_initializer*.
 
 An event can be used as the left operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
 
@@ -4234,7 +4234,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an event accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an event accessor to have that name.
 
@@ -5409,7 +5409,7 @@ The *return_type* of an async method shall be either `void`, a ***task type***, 
 
 An async method returning a task type is said to be ***task-returning***.
 
-Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded*, *canceled*, or *faulted*. A *faulted* task records a pertinent exception. A *canceled* task was stopped before it completed and records the `OperationCanceledException` as the pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 > *Example*: The task type `MyTask<T>` is associated with the task builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >

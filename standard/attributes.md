@@ -856,7 +856,7 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `DoesNotReturn` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
-The following subclauses in [§23.5.7.1](attributes.md#23571-general) are conditionally normative.
+The following subclauses in [§23.5.7](attributes.md#2357-code-analysis-attributes) are conditionally normative.
 
 #### 23.5.7.2 The AllowNull attribute
 
@@ -959,7 +959,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 > {
 >     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string argumentName)
 >     {
->         if (!isNull)
+>         if (isNull)
 >         {
 >             throw new ArgumentException(argumentName,
 >               $"argument {argumentName} can't be null");
