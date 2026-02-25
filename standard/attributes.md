@@ -156,7 +156,7 @@ The types of positional and named parameters for an attribute class are limited 
 
 ## 23.3 Attribute specification
 
-Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
+Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), *local_function_declaration*s ([§13.6.4](statements.md#1364-local-function-declarations)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
 
 Attributes are specified in ***attribute section***s. An attribute section consists of a pair of square brackets, which surround a comma-separated list of one or more attributes. The order in which attributes are specified in such a list, and the order in which sections attached to the same program entity are arranged, is not significant. For instance, the attribute specifications `[A][B]`, `[B][A]`, `[A, B]`, and `[B, A]` are equivalent.
 
@@ -252,10 +252,10 @@ The standardized *attribute_target* names are `event`, `field`, `method`, `param
 
 - `event` — an event.
 - `field` — a field. A field-like event (i.e., one without accessors) ([§15.8.2](classes.md#1582-field-like-events)) and an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)) can also have an attribute with this target.
-- `method` — a constructor, finalizer, method, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
-- `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, and operator.
+- `method` — a constructor, finalizer, method, local function, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, local function, and operator.
 - `property` — a property and an indexer.
-- `return` — a delegate, method, operator, property get accessor, and indexer get accessor.
+- `return` — a delegate, method, local function, operator, property get accessor, and indexer get accessor.
 - `type` — a delegate, class, struct, enum, and interface.
 - `typevar` — a type parameter.
 
@@ -266,6 +266,9 @@ Certain contexts permit the specification of an attribute on more than one targe
   - `return` — the target is the return value
 - For an attribute on a method declaration the default target is the method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the method
+  - `return` — the target is the return value
+- For an attribute on a local function declaration the default target is the local function. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the local function
   - `return` — the target is the return value
 - For an attribute on an operator declaration the default target is the operator. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the operator
