@@ -673,8 +673,6 @@ A static local function may be made conditional in the same sense as a condition
 
 A compile time error occurs if a non-static local function is made conditional.
 
-> *Note*: This restriction protects against side-effects for non-static local functions that write to captured outer variables. *end note*
-
 #### 23.5.3.3 Conditional attribute classes
 
 An attribute class ([§23.2](attributes.md#232-attribute-classes)) decorated with one or more `Conditional` attributes is a conditional attribute class. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
