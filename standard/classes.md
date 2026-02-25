@@ -3045,7 +3045,7 @@ Across the parts of a type declaration, there shall be exactly one defining part
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
 - Corresponding type parameters in the declarations shall have the same constraints. An implementation may choose to issue a warning if the type parameter names are different in the defining and implementing declarations.
 
-There are two classifications of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) has no explicit access modifiers, and is implicitly private. An ***optional partial method*** (§optional-partial-methods) is a partial method that includes one or more explicit access modifiers.
+There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
 
 For a required partial method both the definition and implementation shall exist.
 
@@ -3186,30 +3186,30 @@ class Customer
 }
 ```
 
-#### §required-partial-methods Required partial methods
+#### §optional-partial-methods Optional partial methods
 
-A required partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
+An optional partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
 
-The implementing member for a required partial method shall not be an external method (§15.6.8).
+The implementing member for an optional partial method shall not be an external method (§15.6.8).
 
-> *Note*: Because a required partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a required partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
+> *Note*: Because an optional partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because an optional partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
 
-If a required partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
+If an optional partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
 
-If a defining declaration but not an implementing declaration is given for a required partial method `M`, the following restrictions apply:
+If a defining declaration but not an implementing declaration is given for an optional partial method `M`, the following restrictions apply:
 
 - It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
 
-#### §optional-partial-methods Optional partial methods
+#### §required-partial-methods Required partial methods
 
-An optional partial method declaration incluces an explicit access modifier. There shall be exactly one implementing partial method declaration.
+An required partial method declaration includes an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
-The implementing declaration for an optional partial method may be an external method (§15.6.8). The `extern` modifier is modifer allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
+The implementing declaration for a required partial method may be an external method (§15.6.8). The `extern` modifier is modifier allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
 
-> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private optional partial method. *end note*
+> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private required partial method. *end note*
 
 ### 15.6.10 Extension methods
 
