@@ -2160,7 +2160,7 @@ Methods are classified according to what, if anything, they return:
 - Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
 - Otherwise, the method is ***returns-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
 
 The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
@@ -3047,7 +3047,7 @@ Across the parts of a type declaration, there shall be exactly one defining part
 
 There are two classifications of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) has no explicit access modifiers, and is implicitly private. An ***optional partial method*** (§optional-partial-methods) is a partial method that includes one or more explicit access modifiers.
 
-For an optional partial method both the definition and implementation shall exist.
+For a required partial method both the definition and implementation shall exist.
 
 > *Example*:
 >
