@@ -2152,7 +2152,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
-- If the declaration is for a required partial method (§required-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
+- If the declaration is for an optional partial method (§optional-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2389,7 +2389,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as a required partial method (§required-partial-methods) shall not have output parameters.
+A method declared as an optional partial method (§optional-partial-methods) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
