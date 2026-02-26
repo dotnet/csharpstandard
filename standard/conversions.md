@@ -118,7 +118,6 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-
 ### 10.2.3 Implicit numeric conversions
 
 The implicit numeric conversions are:
