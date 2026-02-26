@@ -5362,7 +5362,8 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
-> static delegate (int x) { return x + 1; } // Anonymous method expression
+> delegate (int x) { return x + 1; } // Anonymous method expression
+> static delegate (int x) { return x + 1; } // static anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
 > ```
 >
