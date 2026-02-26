@@ -324,27 +324,13 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr.
-     The following paragraphs describing the non-alias relationship should be updated or removed. -->
+<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
 
-Although `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. There is an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
+The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
 
-The language provides conversions ([§10.2](conversions.md#102-implicit-conversions)), unary operators ([§12.9](expressions.md#129-unary-operators)), and binary operators ([§12.12](expressions.md#1212-arithmetic-operators)) for `nint` and `nuint` that are appropriate for integral types. These operators follow the same patterns as the corresponding operators for `int`/`long` and `uint`/`ulong`.
-
-> *Note*: Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators. *end note*
-
-`sizeof(nint)` and `sizeof(nuint)` return the size of a native integer ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
-
-`typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
-
-<!-- C# 11: The following three paragraphs about overriding/hiding equivalence can be removed
-     when nint/nuint become true aliases for IntPtr/UIntPtr. -->
-
-`nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing.
-
-Overloads cannot differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone.
-
-Methods hide other methods that differ by `nint` and `System.IntPtr`, or by `nuint` and `System.UIntPtr`, alone.
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
+- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
 ### 8.3.6 Integral types
 
