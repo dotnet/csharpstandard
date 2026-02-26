@@ -325,7 +325,7 @@ An implicit constant expression conversion permits the following conversions:
 
 The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-constant-expressions)).
 
-> *Note*: This is a consequence of most common implementations being at least 32-bit ([§8.3.6](types.md#836-integral-types)). *end note*
+> *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
 ### 10.2.12 Implicit conversions involving type parameters
 
