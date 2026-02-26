@@ -297,7 +297,7 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary - operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary `-` operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
 
 **End of informative text.**
 
@@ -7191,7 +7191,7 @@ A constant expression may be either a value type or a reference type. If a const
 - have a value of `null`; or
 - be a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) of reference type.
 
-A *constant_expression* of type `nint` shall have a value in the range \[`int.MinValue`,`int.MaxValue`\]. A *constant_expression* of type `nuint` shall have a value in the range \[`uint.MinValue`,`uint.MaxValue`\].
+A *constant_expression* of type `nint` shall have a value in the range \[-2147483648, 2147483647\]. A *constant_expression* of type `nuint` shall have a value in the range \[0, 4294967295\].
 
 Only the following constructs are permitted in constant expressions:
 
