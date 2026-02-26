@@ -344,7 +344,6 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
 - The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
-  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. As a practical consideration, implementations are expected to be at least 32-bit, so the value range of `nint` includes at least that of `int`, and the value range of `nuint` includes at least that of `uint`. *end note*
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive, as a UTF-16 code unit.
