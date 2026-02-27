@@ -32,7 +32,6 @@ primary_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
-    | parenthesized_pattern
     | type_pattern
     | relational_pattern
     ;
@@ -486,11 +485,13 @@ relational_pattern
     ;
 ```
 
+The *relational_expression* in a *relational_pattern* is required to evaluate to a constant value.
+
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
 
-It is a compile-time error if `constant_expression` evaluates to one of `double.NaN`, `float.NaN`, or `null_literal`.
+It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
 
-When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of `constant_expression` using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the `constant_expression`.
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of the constant expression using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the constant expression.
 
 > *Example*:
 >
