@@ -3612,9 +3612,9 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
 - Integer negation:
 
   ```csharp
-  int operator –(int x);
-  nint operator –(nint x);
-  long operator –(long x);
+  int operator -(int x);
+  nint operator -(nint x);
+  long operator -(long x);
   ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
@@ -3627,15 +3627,15 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
 - Floating-point negation:
 
   ```csharp
-  float operator –(float x);
-  double operator –(double x);
+  float operator -(float x);
+  double operator -(double x);
   ```
 
   The result is the value of `X` with its sign inverted. If `x` is `NaN`, the result is also `NaN`.
 - Decimal negation:
 
   ```csharp
-  decimal operator –(decimal x);
+  decimal operator -(decimal x);
   ```
 
   The result is computed by subtracting `X` from zero. Decimal negation is equivalent to using the unary minus operator of type `System.Decimal`.
@@ -4224,20 +4224,20 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Integer subtraction:
 
   ```csharp
-  int operator –(int x, int y);
-  uint operator –(uint x, uint y);
-  nint operator –(nint x, nint y);
-  nuint operator –(nuint x, nuint y);
-  long operator –(long x, long y);
-  ulong operator –(ulong x, ulong y);
+  int operator -(int x, int y);
+  uint operator -(uint x, uint y);
+  nint operator -(nint x, nint y);
+  nuint operator -(nuint x, nuint y);
+  long operator -(long x, long y);
+  ulong operator -(ulong x, ulong y);
   ```
 
   In a `checked` context, if the difference is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
 - Floating-point subtraction:
 
   ```csharp
-  float operator –(float x, float y);
-  double operator –(double x, double y);
+  float operator -(float x, float y);
+  double operator -(double x, double y);
   ```
 
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
@@ -4255,7 +4255,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Decimal subtraction:
 
   ```csharp
-  decimal operator –(decimal x, decimal y);
+  decimal operator -(decimal x, decimal y);
   ```
 
   If the magnitude of the resulting value is too large to represent in the decimal format, a `System.OverflowException` is thrown. The scale of the result, before any rounding, is the larger of the scales of the two operands.
@@ -4265,13 +4265,13 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Enumeration subtraction. Every enumeration type implicitly provides the following predefined operator, where `E` is the enum type, and `U` is the underlying type of `E`:
 
   ```csharp
-  U operator –(E x, E y);
+  U operator -(E x, E y);
   ```
 
   This operator is evaluated exactly as `(U)((U)x – (U)y)`. In other words, the operator computes the difference between the ordinal values of `x` and `y`, and the type of the result is the underlying type of the enumeration.
 
   ```csharp
-  E operator –(E x, U y);
+  E operator -(E x, U y);
   ```
 
   This operator is evaluated exactly as `(E)((U)x – y)`. In other words, the operator subtracts a value from the underlying type of the enumeration, yielding a value of the enumeration.
@@ -4279,7 +4279,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Delegate removal. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
 
   ```csharp
-  D operator –(D x, D y);
+  D operator -(D x, D y);
   ```
 
   The semantics are as follows:
@@ -4535,7 +4535,7 @@ If either operand is NaN, the result is `false` for all operators except `!=`, 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
 
 ```csharp
-–∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
+-∞ < -max < ... < -min < -0.0 == +0.0 < +min < ... < +max < +∞
 ```
 
 where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
