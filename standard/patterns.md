@@ -526,7 +526,7 @@ When the input value has a type for which a suitable built-in binary relational 
 
 ### §logical-pattern-new-clause Logical pattern
 
-A *logical_pattern* is used to negate the result of matching a pattern input value ([§11.1](patterns.md#111-general)) or to combine that match result with a pattern using a Boolean operator.
+A *logical_pattern* is used to negate the result of a pattern match, or to combine the results of multiple pattern matches using conjunction (`and`) or disjunction (`or`).
 
 ```ANTLR
 logical_pattern
@@ -571,7 +571,7 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
 
-When a *pattern* is used with `is`, any pattern operators in that *pattern* have higher precedence than their logical operator counterparts. Otherwise, those pattern operators have lower precedence.
+When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar; as a result, the pattern operators `and`, `or`, and `not` within the pattern bind more tightly than the logical operators `&&`, `||`, and `!` outside the pattern.
 
 > *Example*:
 >
