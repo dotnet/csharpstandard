@@ -847,12 +847,6 @@ Evaluation of a nullable conversion based on an underlying conversion from `S` 
 - If the nullable conversion is from `S` to `T?`, the conversion is evaluated as the underlying conversion from `S` to `T` followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S?` to `T`, the conversion is evaluated as an unwrapping from `S?` to `S` followed by the underlying conversion from `S` to `T`.
 
-Conversion from `A` to `Nullable<B>` is:
-
-- an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
-- an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
-- otherwise, invalid.
-
 ### 10.6.2 Lifted conversions
 
 Given a user-defined conversion operator that converts from a non-nullable value type `S` to a non-nullable value type `T`, a ***lifted conversion operator*** exists that converts from `S?` to `T?`. This lifted conversion operator performs an unwrapping from `S?` to `S` followed by the user-defined conversion from `S` to `T` followed by a wrapping from `T` to `T?`, except that a null valued `S?` converts directly to a null valued `T?`. A lifted conversion operator has the same implicit or explicit classification as its underlying user-defined conversion operator.
