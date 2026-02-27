@@ -222,7 +222,7 @@ nullable_value_type
     ;
 ```
 
-Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. In context if type resolution (§7.8.1) on either of these names succeeds then that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
 
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
@@ -328,7 +328,7 @@ Every simple type has members. Each simple type that is an alias for a predefine
 
 The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
 
-- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
 - Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
 - In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
@@ -351,7 +351,9 @@ C# supports the following integral types, with the sizes and value ranges, as sh
   
 All signed integral types are represented using two’s complement format.
 
-The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, unsigned 64-bit precision, native signed precision, or native unsigned precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+
+> *Note*: Native precision means 32-bit on 32-bit platforms and 64-bit on 64-bit platforms. Operators on `nint` and `nuint` use native precision rather than being promoted to a larger type. *end note*
 
 The `char` type is classified as an integral type, but it differs from the other integral types in two ways:
 
