@@ -297,7 +297,7 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary `-` operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary `-` operator, unary numeric promotion converts operands of type `uint` to type `long`.
 
 **End of informative text.**
 
@@ -1145,6 +1145,7 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, `nuint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, `nuint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, `nuint`, or `ulong`
+  - `S₁` is `nint` and `S₂` is `nuint` or `ulong`
   - `S₁` is `long` and `S₂` is `nuint` or `ulong`
 
 #### 12.6.4.8 Overloading in generic classes
