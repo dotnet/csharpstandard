@@ -470,6 +470,8 @@ type_pattern
     ;
 ```
 
+A type pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T` (§11.2.2).
+
 The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
 
 ### §relational-pattern-new-clause Relational pattern
@@ -488,6 +490,8 @@ relational_pattern
 The *relational_expression* in a *relational_pattern* is required to evaluate to a constant value.
 
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
+
+A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
 
 It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
 
