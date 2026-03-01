@@ -5014,7 +5014,7 @@ An *operator_declaration* containing `checked` declares a ***checked operator***
 
 > *Note*: The opposite is not required. Specifically, an *operator_declaration* without `checked` need not have a matching checked operator. When this is the case, the operator is neither a checked operator nor a regular operator. *end note*
 
-It is suggested that a user-defined checked operator throw an exception (such as `System.OverflowException`) when the result of an operation is too large to represent in the destination type, whatever that might mean for that type. 
+It is suggested that a user-defined checked operator throw an exception (such as `System.OverflowException`) when the result of an operation is too large to represent in the destination type, whatever that might mean for that type.
 
 It is suggested that a user-defined regular operator not throw an exception when the result of an operation is too large to represent in the destination type, whatever that might mean for that type. Instead, it should return an instance representing a truncated result, whatever that might mean for that type.
 
