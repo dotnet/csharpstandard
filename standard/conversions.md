@@ -789,7 +789,10 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+- Find the set of conversion operators, `U₀`. This set consists of:
+  - In an `unchecked` evaluation context, the user-defined implicit or regular explicit conversion operators declared by the classes or structs in `D`.
+  - In a `checked` evaluation context, the user-defined implicit or regular/checked explicit conversion operators declared by the classes or structs in `D` except for regular explicit conversion operators that have a pair-wise matching checked operator declaration within the same declaring type.
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
@@ -1078,6 +1081,10 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It contains a dynamically bound expression
 >
 > *end note*
+
+The addition of support for checked operators resulted in the addition of the following factory methods to `System.Linq.Expressions.Expression`: `NegateChecked`, `AddChecked`, `SubtractChecked`, `MultiplyChecked`, and `ConvertChecked`. (There is no factory method for checked division.)
+
+> *Note*: As assignment is not supported in an expression tree, there are no such factory methods for checked increment or checked decrement. *end note*
 
 ## 10.8 Method group conversions
 
