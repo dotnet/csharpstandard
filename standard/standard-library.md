@@ -774,6 +774,16 @@ namespace System.Linq.Expressions
     public sealed class Expression<TDelegate>
     {
         public TDelegate Compile();
+        public static UnaryExpression NegateChecked(Expression expression,
+            MethodInfo? method);
+        public static BinaryExpression AddChecked(Expression left,
+            Expression right, MethodInfo? method);
+        public static BinaryExpression SubtractChecked(Expression left,
+            Expression right, MethodInfo? method);
+        public static BinaryExpression MultiplyChecked(Expression left,
+            Expression right, MethodInfo? method);
+        public static UnaryExpression ConvertChecked(Expression expression,
+            Type type, MethodInfo? method);
     }
 }
 
