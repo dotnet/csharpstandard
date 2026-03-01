@@ -264,6 +264,9 @@ An operation of the form `x «op» y`, where «op» is an overloadable binary 
 Given a type `T` and an operation `operator «op»(A)`, where «op» is an overloadable operator and `A` is an argument list, the set of candidate user-defined operators provided by `T` for operator `«op»(A)` is determined as follows:
 
 - Determine the type `T₀`. If `T` is a nullable value type, `T₀` is its underlying type; otherwise, `T₀` is equal to `T`.
+- Find the set of user-defined operators, `U`. This set consists of:
+  - In an `unchecked` evaluation context, all regular `operator «op»` declarations in `T₀`.
+  - In a `checked` evaluation context, all checked and non-checked `operator «op»` declarations in `T₀` except regular declarations that have a pair-wise matching checked operator declaration.
 - For all `operator «op»` declarations in `T₀` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators in `T₀`.
 - Otherwise, if `T₀` is `object`, the set of candidate operators is empty.
 - Otherwise, the set of candidate operators provided by `T₀` is the set of candidate operators provided by the direct base class of `T₀`, or the effective base class of `T₀` if `T₀` is a type parameter.
@@ -3358,7 +3361,7 @@ For all other operand types, the `sizeof` operator is specified in [§24.6.9](un
 
 ### 12.8.20 The checked and unchecked operators
 
-The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions.
+The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](15104-conversion-operators)).
 
 ```ANTLR
 checked_expression
