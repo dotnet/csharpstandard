@@ -1976,7 +1976,7 @@ The end point of a `try` statement is reachable if both of the following are tru
 
 ## 13.12 The checked and unchecked statements
 
-The `checked` and `unchecked` statements are used to control the ***overflow-checking context*** for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](15104-conversion-operators)).
+The `checked` and `unchecked` statements are used to control the ***overflow-checking context*** for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](classes.md#15104-conversion-operators)).
 
 ```ANTLR
 checked_statement
