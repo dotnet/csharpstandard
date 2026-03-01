@@ -3361,7 +3361,7 @@ For all other operand types, the `sizeof` operator is specified in [§24.6.9](un
 
 ### 12.8.20 The checked and unchecked operators
 
-The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](15104-conversion-operators)).
+The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](classes.md#15104-conversion-operators)).
 
 ```ANTLR
 checked_expression
