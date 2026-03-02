@@ -40,6 +40,7 @@ interface_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -51,6 +52,10 @@ It is a compile-time error for the same modifier to appear multiple times in an 
 The `new` modifier is only permitted on interfaces defined within a class. It specifies that the interface hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier).
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the interface. Depending on the context in which the interface declaration occurs, only some of these modifiers might be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)). When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), the rules in [§15.2.2](classes.md#1522-class-modifiers) apply.
+
+It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
+
+The modifier `file` is described in [§15.2.2](classes.md#1522-class-modifiers).
 
 ### 19.2.3 Variant type parameter lists
 
