@@ -5064,7 +5064,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<` or `>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?`, and can return any type.
 
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
