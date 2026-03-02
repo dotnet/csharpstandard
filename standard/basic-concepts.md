@@ -783,12 +783,12 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)) is the *return_type*, *parameter_list*, and *type_parameter_constraints_clause*s of that *delegate_declaration*.
-- The scope of a type parameter declared by a *type_parameter_list* on a *method_declaration* ([§15.6.1](classes.md#1561-general)) is the *method_declaration*.
+- The scope of a type parameter declared by a *type_parameter_list* on a *method_declaration* ([§15.6.1](classes.md#1561-general)) is the *method_declaration* and `nameof` expressions in an attribute on the *method_declaration* or its parameters.
 - The scope of a member declared by a *class_member_declaration* ([§15.3.1](classes.md#1531-general)) is the *class_body* in which the declaration occurs. In addition, the scope of a class member extends to the *class_body* of those derived classes that are included in the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the member.
 - The scope of a member declared by a *struct_member_declaration* ([§16.3](structs.md#163-struct-members)) is the *struct_body* in which the declaration occurs.
 
 - The scope of a member declared by an *enum_member_declaration* ([§20.4](enums.md#204-enum-members)) is the *enum_body* in which the declaration occurs.
-- The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* or *ref_method_body* of that *method_declaration*.
+- The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* or *ref_method_body* of that *method_declaration* and `nameof` expressions in an attribute on the method declaration or its parameters.
 - The scope of a parameter declared in an *indexer_declaration* ([§15.9](classes.md#159-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§15.10](classes.md#1510-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§15.11](classes.md#1511-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
