@@ -322,6 +322,8 @@ A *global_using_static_directive* only imports members and types declared direct
 
 Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-global-using-namespace-directives).
 
+It is a compile-time error to use a file-local type in a *global_using_static_directive*.
+
 ## 14.6 Using directives
 
 ### 14.6.1 General
