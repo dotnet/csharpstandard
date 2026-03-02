@@ -87,10 +87,13 @@ enum_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'file'
     ;
 ```
 
 It is a compile-time error for the same modifier to appear multiple times in an enum declaration.
+
+It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
 
 The modifiers of an enum declaration have the same meaning as those of a class declaration ([§15.2.2](classes.md#1522-class-modifiers)). However, the `abstract`, and `sealed`, and `static` modifiers are not permitted in an enum declaration. Enums cannot be abstract and do not permit derivation.
 
