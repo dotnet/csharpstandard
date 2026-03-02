@@ -893,7 +893,7 @@ If a slice subpattern matches a list or a length value, subpatterns shall be tre
 The following assumptions are made on the members being used:
 
 - The property that makes the type *countable* is assumed to always return a non-negative value, if and only if the type is *indexable*. For instance, the pattern `{ Length: -1 }` can never match an array.
-- The member that makes the type *sliceable* is assumed to be well-behaved; that is, the return value is never `null` and that it is a proper subslice of the containing list. 
+- The member that makes the type *sliceable* is assumed to be well-behaved; that is, the return value is never `null` and that it is a proper subslice of the containing list.
 
 The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn't hold.[
 
