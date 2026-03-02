@@ -2235,7 +2235,7 @@ The name, the number of type parameters, and the parameter list of a method defi
 
 The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
-The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
+The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*, except within a `nameof` expression in *attributes*.
 
 All parameters and type parameters shall have different names.
 
@@ -2323,9 +2323,9 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > *end example*
 
-A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
+A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the parameter list of the method. Names are also introduced into this declaration space by the type parameter list and the formal parameter list of the method in `nameof` expressions in attributes placed on the method or its parameters. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
 
-A method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) creates a copy, specific to that invocation, of the parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created parameters. Within the *block* of a method, parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
+A method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) creates a copy, specific to that invocation, of the parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created parameters. Within the *block* of a method, parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)). Within a `nameof` expression in attributes placed on the method or its parameters, formal parameters can be referenced by their identifiers in *simple_name* expressions.
 
 The following kinds of parameters exist:
 
