@@ -704,7 +704,7 @@ list_pattern_clause
     ;
 ```
 
-A *list_pattern* is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj1.1])) as well as *indexable* ([§xxx](classes.md#xxx))[rcj2.1]—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj3.1] for details of implicit index support.)
+A *list_pattern* is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *indexable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support)  for details of implicit index support.)
 
 A pattern of the form `expr is [1, 2, 3]` is equivalent to the following code:
 
@@ -755,7 +755,7 @@ slice_pattern
     ;
 ```
 
-A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj4.1])) as well as *sliceable* ([§xxx](classes.md#xxx))[rcj5.1]—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj6.1] for details of implicit index support.)
+A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *sliceable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support) for details of implicit index support.)
 
 A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]`  is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
 
