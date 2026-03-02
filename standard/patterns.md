@@ -865,7 +865,8 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 >
 > Arms 1 and 2 have non-constant guards and so are not *unguarded*; only arm 3 is *unguarded* with pattern `int i`, which does not subsume the final `_` arm because it does not match a non-`int` value such as `null`. *end example*
 
-Subsumption checking of *list_pattern*s and *slice_pattern*s works just like positional patterns with `ITuple` ([xxx](patterns.md#xxx-positional-pattern))—[rcj7.1]corresponding subpatterns are matched by position plus an additional node for testing length.
+Subsumption checking of *list_pattern*s and *slice_pattern*s works just like positional patterns with `ITuple` ([§11.2.5](patterns.md#1125-positional-pattern)) corresponding subpatterns are matched by position plus an additional node for testing length.
+
 For example, the following code produces an error because both patterns yield the same DAG:
 
 ```csharp
