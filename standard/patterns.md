@@ -717,7 +717,8 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 - `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
 
-Subsumption checking of *list_pattern*s and *slice_pattern*s works just like positional patterns with `ITuple` ([xxx](patterns.md#xxx-positional-pattern))—[rcj7.1]corresponding subpatterns are matched by position plus an additional node for testing length.
+Subsumption checking of *list_pattern*s and *slice_pattern*s works just like positional patterns with `ITuple` ([§11.2.5](patterns.md#1125-positional-pattern)) corresponding subpatterns are matched by position plus an additional node for testing length.
+
 For example, the following code produces an error because both patterns yield the same DAG:
 
 ```csharp
