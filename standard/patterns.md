@@ -40,6 +40,8 @@ primary_pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
+    | list_pattern
+    | slice_pattern
     ;
 
 parenthesized_pattern
@@ -701,3 +703,133 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 >
 >
 > *end example*
+
+
+### §list-pattern-new-clause List pattern
+
+A *list_pattern* matches a sequence of elements in a list or an array.
+
+```ANTLR
+list_pattern
+    : list_pattern_clause simple_designation?
+    ;
+
+list_pattern_clause
+    : '[' (pattern (',' pattern)* ','?)? ']'
+    ;
+```
+
+A *list_pattern* is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj1.1])) as well as *indexable* ([§xxx](classes.md#xxx))[rcj2.1]—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj3.1] for details of implicit index support.)
+
+A pattern of the form `expr is [1, 2, 3]` is equivalent to the following code:
+
+```csharp
+expr.Length is 3
+&& expr[new Index(0, fromEnd: false)] is 1
+&& expr[new Index(1, fromEnd: false)] is 2
+&& expr[new Index(2, fromEnd: false)] is 3
+```
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"ListPattern1", expectedOutput:["True", "False", "False", "True"]} -->
+> ```csharp
+> int[] numbers = { 1, 2, 3 };
+>
+> Console.WriteLine(numbers is [1, 2, 3]);  // True
+> Console.WriteLine(numbers is [1, 2, 4]);  // False
+> Console.WriteLine(numbers is [1, 2, 3, 4]);  // False
+> Console.WriteLine(numbers is [0 or 1, <= 2, >= 3 and not 7]);  // True
+> ```
+>
+> *end example*
+
+The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any single element.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"ListPattern2", expectedOutput:["The second element is 2."]} -->
+> ```csharp
+> List<int> numbers = new() { 1, 2, 3 };
+>
+> if (numbers is [_, var second, _])
+> {
+>     Console.WriteLine($"The second element is {second}.");
+> }
+> ```
+>
+> *end example*
+
+### §slice-pattern-new-clause Slice pattern
+
+A *slice_pattern* discards zero or more elements. It shall only be used directly in a *list_pattern_clause*, and then only once at most in that clause.
+
+```ANTLR
+slice_pattern
+    : '..' pattern?
+    ;
+```
+
+A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj4.1])) as well as *sliceable* ([§xxx](classes.md#xxx))[rcj5.1]—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj6.1] for details of implicit index support.)
+
+A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]`  is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
+
+```csharp
+expr.Length is >= 2
+&& expr[new Index(0, fromEnd: false)] is 1
+&& expr[new Range(new Index(1, fromEnd: false), new Index(1, fromEnd: true))] is var s
+&& expr[new Index(1, fromEnd: true)] is 3
+```
+
+The input type for a *slice_pattern* is the return type of the underlying `this[Range]` or `Slice` method with two exceptions: For `string`s and arrays, `string.Substring` and `RuntimeHelpers.GetSubArray`, respectively, shall be used.
+
+> *Example*: A slice pattern  can be used to match elements only at the start or/and the end of an input sequence.
+>
+> <!-- Example: {template:"standalone-console", name:"SlicePattern1", expectedOutput:[ "True", "True", "False", "False", "True", "False", "True", "True", "True", "False"]} -->
+> ```csharp
+> Console.WriteLine(new[] { 1, 2, 3, 4, 5 } is [> 0, > 0, ..]);  // True
+> Console.WriteLine(new[] { 1, 1 } is [_, _, ..]);  // True
+> Console.WriteLine(new[] { 0, 1, 2, 3, 4 } is [> 0, > 0, ..]);  // False
+> Console.WriteLine(new[] { 1 } is [1, 2, ..]);  // False
+>
+> Console.WriteLine(new[] { 1, 2, 3, 4 } is [.., > 0, > 0]);  // True
+> Console.WriteLine(new[] { 2, 4 } is [.., > 0, 2, 4]);  // False
+> Console.WriteLine(new[] { 2, 4 } is [.., 2, 4]);  // True
+>
+> Console.WriteLine(new[] { 1, 2, 3, 4 } is [>= 0, .., 2 or 4]);  // True
+> Console.WriteLine(new[] { 1, 0, 0, 1 } is [1, 0, .., 0, 1]);  // True
+> Console.WriteLine(new[] { 1, 0, 1 } is [1, 0, .., 0, 1]);  // False
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A subpattern can be nested within a slice pattern:
+>
+> <!-- Example: {template:"standalone-console", name:" SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
+> ```csharp
+> MatchMessage("aBBA");  // output: Message aBBA matches; inner part is BB.
+> MatchMessage("apron"); // output: Message apron doesn't match.
+>
+> void MatchMessage(string message)
+> {
+>     var result = message is ['a' or 'A', .. var s, 'a' or 'A']
+>         ? $"Message {message} matches; inner part is {s}."
+>         : $"Message {message} doesn't match.";
+>     Console.WriteLine(result);
+> }
+>
+> Validate(new[] { -1, 0, 1 });     // output: not valid
+> Validate(new[] { -1, 0, 0, 1 });  // output: valid
+>
+> void Validate(int[] numbers)
+> {
+>     var result = numbers is [< 0, .. { Length: 2 or 4 }, > 0]
+>         ? "valid" : "not valid";
+>     Console.WriteLine(result);
+> }
+> ```
+>
+> *end example*
+
