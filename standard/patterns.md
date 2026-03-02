@@ -34,6 +34,8 @@ primary_pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
+    | list_pattern
+    | slice_pattern
     ;
 
 parenthesized_pattern
@@ -688,6 +690,134 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 >
 > *end example*
 
+### §list-pattern-new-clause List pattern
+
+A *list_pattern* matches a sequence of elements in a list or an array.
+
+```ANTLR
+list_pattern
+    : list_pattern_clause simple_designation?
+    ;
+
+list_pattern_clause
+    : '[' (pattern (',' pattern)* ','?)? ']'
+    ;
+```
+
+A *list_pattern* is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj1.1])) as well as *indexable* ([§xxx](classes.md#xxx))[rcj2.1]—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj3.1] for details of implicit index support.)
+
+A pattern of the form `expr is [1, 2, 3]` is equivalent to the following code:
+
+```csharp
+expr.Length is 3
+&& expr[new Index(0, fromEnd: false)] is 1
+&& expr[new Index(1, fromEnd: false)] is 2
+&& expr[new Index(2, fromEnd: false)] is 3
+```
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"ListPattern1", expectedOutput:["True", "False", "False", "True"]} -->
+> ```csharp
+> int[] numbers = { 1, 2, 3 };
+>
+> Console.WriteLine(numbers is [1, 2, 3]);  // True
+> Console.WriteLine(numbers is [1, 2, 4]);  // False
+> Console.WriteLine(numbers is [1, 2, 3, 4]);  // False
+> Console.WriteLine(numbers is [0 or 1, <= 2, >= 3 and not 7]);  // True
+> ```
+>
+> *end example*
+
+The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any single element.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"ListPattern2", expectedOutput:["The second element is 2."]} -->
+> ```csharp
+> List<int> numbers = new() { 1, 2, 3 };
+>
+> if (numbers is [_, var second, _])
+> {
+>     Console.WriteLine($"The second element is {second}.");
+> }
+> ```
+>
+> *end example*
+
+### §slice-pattern-new-clause Slice pattern
+
+A *slice_pattern* discards zero or more elements. It shall only be used directly in a *list_pattern_clause*, and then only once at most in that clause.
+
+```ANTLR
+slice_pattern
+    : '..' pattern?
+    ;
+```
+
+A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§14.7.1](classes.md#1471-general[rcj4.1])) as well as *sliceable* ([§xxx](classes.md#xxx))[rcj5.1]—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See ([§xxx](classes.md#xxx-implicit-index-support))[rcj6.1] for details of implicit index support.)
+
+A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]`  is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
+
+```csharp
+expr.Length is >= 2
+&& expr[new Index(0, fromEnd: false)] is 1
+&& expr[new Range(new Index(1, fromEnd: false), new Index(1, fromEnd: true))] is var s
+&& expr[new Index(1, fromEnd: true)] is 3
+```
+
+The input type for a *slice_pattern* is the return type of the underlying `this[Range]` or `Slice` method with two exceptions: For `string`s and arrays, `string.Substring` and `RuntimeHelpers.GetSubArray`, respectively, shall be used.
+
+> *Example*: A slice pattern  can be used to match elements only at the start or/and the end of an input sequence.
+>
+> <!-- Example: {template:"standalone-console", name:"SlicePattern1", expectedOutput:[ "True", "True", "False", "False", "True", "False", "True", "True", "True", "False"]} -->
+> ```csharp
+> Console.WriteLine(new[] { 1, 2, 3, 4, 5 } is [> 0, > 0, ..]);  // True
+> Console.WriteLine(new[] { 1, 1 } is [_, _, ..]);  // True
+> Console.WriteLine(new[] { 0, 1, 2, 3, 4 } is [> 0, > 0, ..]);  // False
+> Console.WriteLine(new[] { 1 } is [1, 2, ..]);  // False
+>
+> Console.WriteLine(new[] { 1, 2, 3, 4 } is [.., > 0, > 0]);  // True
+> Console.WriteLine(new[] { 2, 4 } is [.., > 0, 2, 4]);  // False
+> Console.WriteLine(new[] { 2, 4 } is [.., 2, 4]);  // True
+>
+> Console.WriteLine(new[] { 1, 2, 3, 4 } is [>= 0, .., 2 or 4]);  // True
+> Console.WriteLine(new[] { 1, 0, 0, 1 } is [1, 0, .., 0, 1]);  // True
+> Console.WriteLine(new[] { 1, 0, 1 } is [1, 0, .., 0, 1]);  // False
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A subpattern can be nested within a slice pattern:
+>
+> <!-- Example: {template:"standalone-console", name:" SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
+> ```csharp
+> MatchMessage("aBBA");  // output: Message aBBA matches; inner part is BB.
+> MatchMessage("apron"); // output: Message apron doesn't match.
+>
+> void MatchMessage(string message)
+> {
+>     var result = message is ['a' or 'A', .. var s, 'a' or 'A']
+>         ? $"Message {message} matches; inner part is {s}."
+>         : $"Message {message} doesn't match.";
+>     Console.WriteLine(result);
+> }
+>
+> Validate(new[] { -1, 0, 1 });     // output: not valid
+> Validate(new[] { -1, 0, 0, 1 });  // output: valid
+>
+> void Validate(int[] numbers)
+> {
+>     var result = numbers is [< 0, .. { Length: 2 or 4 }, > 0]
+>         ? "valid" : "not valid";
+>     Console.WriteLine(result);
+> }
+> ```
+>
+> *end example*
+
 ## 11.3 Pattern subsumption
 
 In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.12](expressions.md#1212-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
@@ -734,6 +864,37 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 > ```
 >
 > Arms 1 and 2 have non-constant guards and so are not *unguarded*; only arm 3 is *unguarded* with pattern `int i`, which does not subsume the final `_` arm because it does not match a non-`int` value such as `null`. *end example*
+
+Subsumption checking of *list_pattern*s and *slice_pattern*s works just like positional patterns with `ITuple` ([xxx](patterns.md#xxx-positional-pattern))—[rcj7.1]corresponding subpatterns are matched by position plus an additional node for testing length.
+For example, the following code produces an error because both patterns yield the same DAG:
+
+```csharp
+case [_, .., 1]: // expr.Length is >= 2 && expr[^1] is 1
+case [.., _, 1]: // expr.Length is >= 2 && expr[^1] is 1
+```
+
+Unlike:
+
+```csharp
+case [_, 1, ..]: // expr.Length is >= 2 && expr[1] is 1
+case [.., 1, _]: // expr.Length is >= 2 && expr[^2] is 1
+```
+
+Given a specific length, it's possible that two subpatterns refer to the same element, in which case, a test for this value is inserted into the decision DAG.
+
+- For instance, `[_, >0, ..] or [.., <=0, _]` becomes `length >= 2 && ([1] > 0 || length == 3 || [^2] <= 0)` where the length value of 3 implies the other test.
+- Conversely, `[_, >0, ..] and [.., <=0, _]` becomes `length >= 2 && [1] > 0 && length != 3 && [^2] <= 0` where the length value of 3 disallows the other test.
+
+As a result, an error shall result for something like `case [.., p]: case [p]:` because at runtime, the same element is being matched in the second case.
+
+If a slice subpattern matches a list or a length value, subpatterns shall be treated as if they were a direct subpattern of the containing list. For instance, `[..[1, 2, 3]]` subsumes a pattern of the form `[1, 2, 3]`.
+
+The following assumptions are made on the members being used:
+
+- The property that makes the type *countable* is assumed to always return a non-negative value, if and only if the type is *indexable*. For instance, the pattern `{ Length: -1 }` can never match an array.
+- The member that makes the type *sliceable* is assumed to be well-behaved; that is, the return value is never `null` and that it is a proper subslice of the containing list. 
+
+The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn't hold.[
 
 ## 11.4 Pattern exhaustiveness
 
