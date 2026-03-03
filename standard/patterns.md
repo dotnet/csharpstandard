@@ -639,9 +639,14 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 >
 > <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
 > ```csharp
+> object msg = "msg";
 > object obj = 5;
 > bool flag = true;
 > 
+> // This is parsed as: (msg is (not int) or string)
+> result = msg is not int or string;
+> Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
+>
 > // This is parsed as: (obj is (int or string)) && flag
 > bool result = obj is int or string && flag;
 > Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
@@ -663,6 +668,7 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 > The output produced is
 >
 > ```console
+> msg ("msg"): msg is not int or string: True
 > obj (5), flag (true): obj is int or string && flag: True
 > obj (5), flag (true): obj is int || obj is string && flag: True
 > obj (5), flag (false): obj is int or string && flag: False
@@ -675,7 +681,9 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 ## 11.3 Pattern subsumption
 
 In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
+
 > *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
+
 The following rules define when a set of patterns subsumes a given pattern:
 
 A pattern `P` *would match* a constant `K` if any of the following conditions hold:
@@ -721,8 +729,7 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 
 ## 11.4 Pattern exhaustiveness
 
-Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable.
-The following rules define when a set of patterns is *exhaustive* for a type:
+Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable. The following rules define when a set of patterns is *exhaustive* for a type:
 
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
 
@@ -735,6 +742,9 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 1. Some pattern in `Q` is a *disjunctive_pattern* `P₁ or P₂`, and replacing that pattern with both `P₁` and `P₂` in `Q` yields a set that is *exhaustive* for `T`; or
 1. Some pattern in `Q` is a *negated_pattern* `not P₁`, and the patterns in `Q` together with the values not matched by `P₁` cover every possible value of `T`. A *negated_pattern* `not P₁` is exhaustive by itself when `P₁` matches no possible value of `T`; or
 1. Some pattern in `Q` is a *conjunctive_pattern* `P₁ and P₂`, and the set containing only `P₁` is *exhaustive* for `T` and the set containing only `P₂` is *exhaustive* for `T`.
+
+> *Note*: When a type pattern includes nullable types, the pattern may be exhaustive for the type but still generate a warning because the type pattern won't match a `null` value. *end note*
+<!-- markdownlint-disable MD028 -->
 
 > *Note*: For floating-point types, the combination of patterns `< 0` and `>= 0` is *not* exhaustive because neither relational pattern matches `NaN`. A correct exhaustive set would be `< 0`, `>= 0`, and `double.NaN` (or `float.NaN`). *end note*
 
@@ -756,3 +766,4 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 > ```
 >
 > *end example*
+<!-- markdownlint-enable MD028 -->
