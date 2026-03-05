@@ -404,6 +404,15 @@ namespace System
 
     public abstract class FormattableString : IFormattable { }
 
+    public static class MemoryExtensions
+    {
+        public static ReadOnlySpan<char> AsSpan (this string? text);
+        public static bool SequenceEqual<T> (this Span<T> span, ReadOnlySpan<T> other)
+          where T : IEquatable<T>;
+        public static bool SequenceEqual<T> (this ReadOnlySpan<T> span,
+          ReadOnlySpan<T> other) where T : IEquatable<T>;
+    }
+
     public class OperationCanceledException : Exception
     {
         public OperationCanceledException();
@@ -1414,6 +1423,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.IntPtr`
 - `global::System.InvalidCastException`
 - `global::System.InvalidOperationException`
+- `global::System.MemoryExtensions`
 - `global::System.NotSupportedException`
 - `global::System.Nullable<T>`
 - `global::System.NullReferenceException`
