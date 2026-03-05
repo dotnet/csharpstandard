@@ -171,6 +171,7 @@ For a constant pattern `P`, its *converted value* is
 Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
 
 - if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
+- if *e* is of type `System.Span<char>` or `System.ReadOnlySpan<char>`, and *v* is a constant string, and *v* does not have a constant value of `null`, then the pattern is considered matching if `System.MemoryExtensions.SequenceEqual<char>(e, System.MemoryExtensions.AsSpan(v))` returns `true`; otherwise
 - the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
 
 > *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
