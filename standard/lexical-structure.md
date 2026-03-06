@@ -1033,11 +1033,19 @@ right_shift
 right_shift_assignment
     : '>' '>='
     ;
+
+unsigned_right_shift
+    : '>'  '>'  '>'
+    ;
+
+unsigned_right_shift_assignment
+    : '>'  '>'  '>='
+    ;
 ```
 
-> *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
+> *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. Similarly, *unsigned_right_shift* and *unsigned_right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of three tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)).
+*right_shift* is made up of the two tokens `>` and `>`, and *unsigned_right_shift* is made up of the three tokens `>`, `>`, and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`, and *unsigned_right_shift_assignment* is made up of the three tokens `>`, `>`, and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)).
 
 > *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed. *end note*
 
