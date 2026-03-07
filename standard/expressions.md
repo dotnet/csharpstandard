@@ -287,6 +287,8 @@ As an example of numeric promotion, consider the predefined implementations of t
 ```csharp
 int operator *(int x, int y);
 uint operator *(uint x, uint y);
+nint operator *(nint x, nint y);
+nuint operator *(nuint x, nuint y);
 long operator *(long x, long y);
 ulong operator *(ulong x, ulong y);
 float operator *(float x, float y);
