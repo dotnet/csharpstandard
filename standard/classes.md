@@ -3495,9 +3495,10 @@ To build the required member list `R` for a type `T`, the following steps are us
 
 1. For every type `Tb`, starting with `T` and working through the base type chain until `object` is reached.
 1. If `Tb` is decorated with the `RequiredMember` attribute (§RequiredMember), then all members of `Tb` marked with that attribute are gathered into `Rb`
-  1. For every `Ri` in `Rb`, if `Ri` is overridden by any member of `R`, it is skipped.
-  1. Otherwise, if any `Ri` is hidden by a member of `R`, then the lookup of required members fails, and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` is an error.
-  1. Otherwise, `Ri` is added to `R`.
+
+  - For every `Ri` in `Rb`, if `Ri` is overridden by any member of `R`, it is skipped.
+  - Otherwise, if any `Ri` is hidden by a member of `R`, then the lookup of required members fails, and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` is an error.
+  - Otherwise, `Ri` is added to `R`.
 
 A required member shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
 With regard to nullable reference type analysis ([§8.9](types.md#8.9-types-and-nullability)), a required member need not be initialized to a valid nullable state when any of its instance constructors returns. Any required member in a type and its base types is considered by nullable analysis to have its default value at the beginning of any instance constructor in that type, unless it chains to a `this` or `base` constructor that is decorated with the `SetsRequiredMembersAttribute` attribute.
