@@ -117,8 +117,6 @@ All identity conversions are symmetric. If an identity conversion exists from `T
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.8](expressions.md#1298-cast-expressions)).
 
-There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
-
 For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
 
 ### 10.2.3 Implicit numeric conversions
