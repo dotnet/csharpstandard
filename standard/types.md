@@ -273,7 +273,7 @@ A struct type is a value type that can declare constants, fields, methods, prope
 
 ### 8.3.5 Simple types
 
-Except for `nint` and `nuint`, the simple types are aliases for predefined `struct` types in the `System` namespace, as described in the table below.
+The simple types are aliases for predefined `struct` types in the `System` namespace, as described in the table below.
 
 **Keyword** | **Aliased type**
 ----------- | ------------------
@@ -283,8 +283,8 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
   `ushort`  |   `System.UInt16`
   `int`     |   `System.Int32`
   `uint`    |   `System.UInt32`
-  `nint`    |    none; see below
-  `nuint`   |    none; see below
+  `nint`    |   `System.IntPtr`
+  `nuint`   |   `System.UIntPtr`
   `long`    |   `System.Int64`
   `ulong`   |   `System.UInt64`
   `char`    |   `System.Char`
@@ -293,7 +293,7 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
   `bool`    |   `System.Boolean`
   `decimal` |   `System.Decimal`
 
-Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
+Every simple type has members. Each simple type has its aliased struct type’s members.
 
 > *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
 >
