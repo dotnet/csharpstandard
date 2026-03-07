@@ -3510,6 +3510,25 @@ A reference variable field `rv` of type `T` shall not have an explicit initializ
 
 > *Note*: If one tries to initialize `rv` using `rv = default`, this does not set the reference variable to `null`. Instead, it attempts to set the value of the (possibly non-existent) referent to the default value for type `T`. *end note*
 
+When an instance of a struct `S` having a required member list ([§15.7.1](classes.md#1571-general)) is created with a value of `default` or `default(S)`, required-member setting is not enforced. However, such setting is enforced for an instance created with `new S()`, even when `S` has no parameterless constructor and the default struct constructor is used.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"RequiredMembers", expectedErrors:["CS9035"], expectedWarnings:["CS0219","CS0219","CS0219"]} -->
+> ```csharp
+> S v1 = default;     // OK: no checking for required members
+> S v2 = default(S);  // OK: no checking for required members
+> S v3 = new S();     // error: required member must be set
+> S v4 = new S() { reqInt = default };  // OK: required member is set
+>
+> public struct S
+> {
+>     public required int reqInt;
+> }
+> ```
+>
+> *end example*
+
 ### 12.8.22 Stack allocation
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
