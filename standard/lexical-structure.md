@@ -629,9 +629,9 @@ contextual_keyword
     | 'group'    | 'init'       | 'into'       | 'join'       | 'let'
     | 'managed'  | 'nameof'     | 'nint'       | 'not'        | 'notnull'
     | 'nuint'    | 'on'         | 'or'         | 'orderby'    | 'partial'
-    | 'record'   | 'remove'     | 'select'     | 'set'        | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'        | 'when'
-    | 'where'    | 'yield'
+    | 'record'   | 'remove'     | 'required'   | 'select'     | 'set'
+    | 'Stdcall'  | 'Thiscall'   | 'unmanaged'  | 'value'      | 'var'
+    | 'when'     | 'where'      | 'yield'
     ;
 ```
 
