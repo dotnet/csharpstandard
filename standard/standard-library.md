@@ -777,6 +777,13 @@ namespace System.Diagnostics.CodeAnalysis
     {
         public UnscopedRefAttribute();
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Constructor,
+      AllowMultiple=false, Inherited=false)]
+    public sealed class SetsRequiredMembersAttribute : Attribute
+    {
+        public SetsRequiredMembersAttribute() {}
+    }
 }
 
 namespace System.Linq.Expressions
@@ -890,6 +897,14 @@ namespace System.Runtime.CompilerServices
     public sealed class ModuleInitializerAttribute : Attribute
     {
         public ModuleInitializerAttribute() { }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class |
+      System.AttributeTargets.Field | System.AttributeTargets.Property |
+      System.AttributeTargets.Struct, AllowMultiple=false, Inherited=false)]
+    public sealed class RequiredMemberAttribute : Attribute
+    {
+        public RequiredMemberAttribute() {}
     }
 
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
@@ -1443,6 +1458,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute`
 - `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
@@ -1460,6 +1476,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`
 - `global::System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`
 - `global::System.Runtime.CompilerServices.ModuleInitializerAttribute`
+- `global::System.Runtime.CompilerServices.RequiredMemberAttribute`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
 - `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
