@@ -290,6 +290,8 @@ As an example of numeric promotion, consider the predefined implementations of t
 ```csharp
 int operator *(int x, int y);
 uint operator *(uint x, uint y);
+nint operator *(nint x, nint y);
+nuint operator *(nuint x, nuint y);
 long operator *(long x, long y);
 ulong operator *(ulong x, ulong y);
 float operator *(float x, float y);
@@ -300,8 +302,6 @@ decimal operator *(decimal x, decimal y);
 When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resolution)) are applied to this set of operators, the effect is to select the first of the operators for which implicit conversions exist from the operand types.
 
 > *Example*: For the operation `b * s`, where `b` is a `byte` and `s` is a `short`, overload resolution selects `operator *(int, int)` as the best operator. Thus, the effect is that `b` and `s` are converted to `int`, and the type of the result is `int`. Likewise, for the operation `i * d`, where `i` is an `int` and `d` is a `double`, `overload` resolution selects `operator *(double, double)` as the best operator. *end example*
-
-There are no predefined operators for dealing with native integer ([§8.3.6](types.md#836-integral-types)). Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, and the resulting corresponding predefined operators used instead.
 
 **End of informative text.**
 
@@ -3762,6 +3762,8 @@ For an operation of the form `+x`, unary operator overload resolution ([§12.4.
 ```csharp
 int operator +(int x);
 uint operator +(uint x);
+nint operator +(nint x);
+nuint operator +(nuint x);
 long operator +(long x);
 ulong operator +(ulong x);
 float operator +(float x);
@@ -3781,6 +3783,7 @@ For an operation of the form `–x`, unary operator overload resolution ([§12.
 
   ```csharp
   int operator –(int x);
+  nint operator –(nint x);
   long operator –(long x);
   ```  
 
@@ -3830,6 +3833,8 @@ For an operation of the form `~x`, unary operator overload resolution ([§12.4.4
 ```csharp
 int operator ~(int x);
 uint operator ~(uint x);
+nint operator ~(nint x);
+nuint operator ~(nuint x);
 long operator ~(long x);
 ulong operator ~(ulong x);
 ```
@@ -4175,6 +4180,8 @@ The predefined multiplication operators are listed below. The operators all comp
   ```csharp
   int operator *(int x, int y);
   uint operator *(uint x, uint y);
+  nint operator *(nint x, nint y);
+  nuint operator *(nuint x, nuint y);
   long operator *(long x, long y);
   ulong operator *(ulong x, ulong y);
   ```
@@ -4222,6 +4229,8 @@ The predefined division operators are listed below. The operators all compute th
   ```csharp
   int operator /(int x, int y);
   uint operator /(uint x, uint y);
+  nint operator /(nint x, nint y);
+  nuint operator /(nuint x, nuint y);
   long operator /(long x, long y);
   ulong operator /(ulong x, ulong y);
   ```
@@ -4273,6 +4282,8 @@ The predefined remainder operators are listed below. The operators all compute t
   ```csharp
   int operator %(int x, int y);
   uint operator %(uint x, uint y);
+  nint operator %(nint x, nint y);
+  nuint operator %(nuint x, nuint y);
   long operator %(long x, long y);
   ulong operator %(ulong x, ulong y);
   ```
@@ -4323,6 +4334,8 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```csharp
   int operator +(int x, int y);
   uint operator +(uint x, uint y);
+  nint operator +(nint x, nint y);
+  nuint operator +(nuint x, nuint y);
   long operator +(long x, long y);
   ulong operator +(ulong x, ulong y);
   ```
@@ -4425,6 +4438,8 @@ The predefined subtraction operators are listed below. The operators all subtrac
   ```csharp
   int operator –(int x, int y);
   uint operator –(uint x, uint y);
+  nint operator –(nint x, nint y);
+  nuint operator –(nuint x, nuint y);
   long operator –(long x, long y);
   ulong operator –(ulong x, ulong y
   ```
@@ -4557,6 +4572,8 @@ The predefined shift operators are listed below.
   ```csharp
   int operator <<(int x, int count);
   uint operator <<(uint x, int count);
+  nint operator <<(nint x, int count);
+  nuint operator <<(nuint x, int count);
   long operator <<(long x, int count);
   ulong operator <<(ulong x, int count);
   ```
@@ -4569,6 +4586,8 @@ The predefined shift operators are listed below.
   ```csharp
   int operator >>(int x, int count);
   uint operator >>(uint x, int count);
+  nint operator >>(nint x, int count);
+  nuint operator >>(nuint x, int count);
   long operator >>(long x, int count);
   ulong operator >>(ulong x, int count);
   int operator >>>(int x, int count);
@@ -4663,31 +4682,43 @@ The predefined integer comparison operators are:
 ```csharp
 bool operator ==(int x, int y);
 bool operator ==(uint x, uint y);
+bool operator ==(nint x, nint y);
+bool operator ==(nuint x, nuint y);
 bool operator ==(long x, long y);
 bool operator ==(ulong x, ulong y);
 
 bool operator !=(int x, int y);
 bool operator !=(uint x, uint y);
+bool operator !=(nint x, nint y);
+bool operator !=(nuint x, nuint y);
 bool operator !=(long x, long y);
 bool operator !=(ulong x, ulong y);
 
 bool operator <(int x, int y);
 bool operator <(uint x, uint y);
+bool operator <(nint x, nint y);
+bool operator <(nuint x, nuint y);
 bool operator <(long x, long y);
 bool operator <(ulong x, ulong y);
 
 bool operator >(int x, int y);
 bool operator >(uint x, uint y);
+bool operator >(nint x, nint y);
+bool operator >(nuint x, nuint y);
 bool operator >(long x, long y);
 bool operator >(ulong x, ulong y);
 
 bool operator <=(int x, int y);
 bool operator <=(uint x, uint y);
+bool operator <=(nint x, nint y);
+bool operator <=(nuint x, nuint y);
 bool operator <=(long x, long y);
 bool operator <=(ulong x, ulong y);
 
 bool operator >=(int x, int y);
 bool operator >=(uint x, uint y);
+bool operator >=(nint x, nint y);
+bool operator >=(nuint x, nuint y);
 bool operator >=(long x, long y);
 bool operator >=(ulong x, ulong y);
 ```
@@ -5142,16 +5173,22 @@ The predefined integer logical operators are:
 ```csharp
 int operator &(int x, int y);
 uint operator &(uint x, uint y);
+nint operator &(nint x, nint y);
+nuint operator &(nuint x, nuint y);
 long operator &(long x, long y);
 ulong operator &(ulong x, ulong y);
 
 int operator |(int x, int y);
 uint operator |(uint x, uint y);
+nint operator |(nint x, nint y);
+nuint operator |(nuint x, nuint y);
 long operator |(long x, long y);
 ulong operator |(ulong x, ulong y);
 
 int operator ^(int x, int y);
 uint operator ^(uint x, uint y);
+nint operator ^(nint x, nint y);
+nuint operator ^(nuint x, nuint y);
 long operator ^(long x, long y);
 ulong operator ^(ulong x, ulong y);
 ```
