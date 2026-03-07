@@ -611,9 +611,9 @@ contextual_keyword
     | 'global'   | 'group'      | 'init'       | 'into'      | 'join'
     | 'let'      | 'managed'    | 'nameof'     | 'nint'      | 'not'
     | 'notnull'  | 'nuint'      | 'on'         | 'or'        | 'orderby'
-    | 'partial'  | 'record'     | 'remove'     | 'scoped'    | 'select'
-    | 'set'      | 'Stdcall'    | 'Thiscall'   | 'unmanaged' | 'value'
-    | 'var'      | 'when'       | 'where'      | 'yield'
+    | 'partial'  | 'record'     | 'remove'     | 'required'  | 'scoped'
+    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
+    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
     ;
 ```
 
