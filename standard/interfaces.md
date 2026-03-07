@@ -299,7 +299,7 @@ This clause augments the description of fields in classes [§15.5](classes.md#15
 
 Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#1551-general)) with the following additional rules:
 
-- It is a compile-time error for *field_declaration* to declare an instance field. (As such, an interface field cannot be marked `required`.) 
+- It is a compile-time error for *field_declaration* to declare an instance field. (As such, an interface field cannot be marked `required`.)
 
 > *Example*: The following program contains static members of various kinds:
 >
