@@ -1404,14 +1404,14 @@ $"val = {{{val,4:X}}}; 2 * val = {2 * val}."
 
 This contains the interpolated string expression segments `"val = {"`, `"}; 2 * val = "`, and `"."`, the first of which factors in the presence of the open/close brace escape sequences described in the grammar below. The quoted text also contains the interpolations `"{val,4:X}"` and `"{2 * val}"`.
 
-Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
-and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
-literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)).
+An *interpolated_string_expression* has one of the following forms; regular (*interpolated_regular_string_expression*),
+verbatim (*interpolated_verbatim_string_expression*), and raw (*interpolated_raw_string_expression*); which are lexically similar to, but differ semantically from, the corresponding forms of string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)).
 
 ```ANTLR
 interpolated_string_expression
     : interpolated_regular_string_expression
     | interpolated_verbatim_string_expression
+    | interpolated_raw_string_expression
     ;
 
 // interpolated regular string expressions
@@ -1516,16 +1516,79 @@ fragment Open_Brace_Escape_Sequence
 fragment Close_Brace_Escape_Sequence
     : '}}'
     ;
+
+// interpolated raw string expressions
+
+interpolated_raw_string_expression
+    : single_line_interpolated_raw_string_expression
+    | multi_line_interpolated_raw_string_expression
+    ;
+
+single_line_interpolated_raw_string_expression
+    : Interpolated_Raw_String_Start  Interpolated_Raw_String_Mid
+        Interpolated_Raw_String_End
+    ;
+
+Interpolated_Raw_String_Prefix
+    : '$'+
+    ;
+
+Interpolated_Raw_String_Start
+    : Interpolated_Raw_String_Prefix  Raw_String_Literal_Delimiter
+    ;
+
+// the following two lexical rules are context sensitive, see details below
+
+Interpolated_Raw_String_Mid
+    : (Raw_String_Literal_Content | raw_interpolation)+
+    ;
+
+Interpolated_Raw_String_End
+    : Raw_String_Literal_Delimiter
+    ;
+
+raw_interpolation
+    : raw_interpolation_start expression
+        (',' interpolation_minimum_width)? Raw_Interpolation_Format?
+        raw_interpolation_end
+    ;
+
+raw_interpolation_start
+    : '{'+
+    ;
+
+raw_interpolation_end
+    : '}'+
+    ;
+
+// the following lexical rule is context sensitive, see details below
+
+Raw_Interpolation_Format
+    : ':' Interpolated_Raw_String_Character+
+;
+
+fragment Interpolated_Raw_String_Character
+    // Any character except " (U+0022), \\ (U+005C),
+    // { (U+007B), } (U+007D), and New_Line_Character.
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
+    ;
+
+multi_line_interpolated_raw_string_expression
+    : Interpolated_Raw_String_Start Whitespace* New_Line
+      (Interpolated_Raw_String_Mid | New_Line)* New_Line 
+      Whitespace* Interpolated_Raw_String_End
+    ;
 ```
 
-Six of the lexical rules defined above are *context sensitive* as follows:
+A number of the lexical rules defined above are *context sensitive* as follows:
 
 | **Rule** | **Contextual Requirements** |
 | :------- | :-------------------------- |
 | *Interpolated_Regular_String_Mid* | Only recognised after an *Interpolated_Regular_String_Start*, between any following interpolations, and before the corresponding *Interpolated_Regular_String_End*. |
 | *Regular_Interpolation_Format* | Only recognised within a *regular_interpolation* and when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). |
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
-| *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
+| *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding first three rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
+| *Interpolated_Raw_String_Mid* *Raw_Interpolation_Format* *Interpolated_Raw_String_End* | Recognition of these three rules follows that of the corresponding first three rules above with each mentioned *regular* grammar rule replaced by the corresponding *raw* one. |
 
 > *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
@@ -1562,7 +1625,7 @@ M(str2);                // invokes M(SomeInterpolatedStringHandler)
 
 The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers).
 
-The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
+The meaning of an interpolation (*regular_interpolation*, *verbatim_interpolation*, and *raw_interpolation*) is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
 In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
 
@@ -1575,17 +1638,17 @@ The interpolated string expression is treated as a *format string literal* with 
 
 The format string literal is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*. The format string literal consists of, in order:
 
-- The characters of the *Interpolated_Regular_String_Start* or *Interpolated_Verbatim_String_Start*
-- The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid*, if any
+- The characters of the *Interpolated_Regular_String_Start*, *Interpolated_Verbatim_String_Start*, or *Interpolated_Raw_String_Start*
+- The characters of the *Interpolated_Regular_String_Mid*, *Interpolated_Verbatim_String_Mid*, or *Interpolated_Raw_String_Mid*, if any
 - Then if `N ≥ 1` for each number `I` from `0` to `N-1`:
   - A placeholder specification:
     - A left brace (`{`) character
     - The decimal representation of `I`
-    - Then, if the corresponding *regular_interpolation* or *verbatim_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
-    - The characters of the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, if any, of the corresponding *regular_interpolation* or *verbatim_interpolation*
+    - Then, if the corresponding *regular_interpolation*, *verbatim_interpolation*, or *raw_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
+    - The characters of the *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format*, if any, of the corresponding *regular_interpolation*, *verbatim_interpolation*, or *raw_interpolation*
     - A right brace (`}`) character
-  - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid* immediately following the corresponding interpolation, if any
-- Finally the characters of the *Interpolated_Regular_String_End* or *Interpolated_Verbatim_String_End*.
+  - The characters of the *Interpolated_Regular_String_Mid*, *Interpolated_Verbatim_String_Mid*, or *Interpolated_Raw_String_Mid* immediately following the corresponding interpolation, if any
+- Finally the characters of the *Interpolated_Regular_String_End*, *Interpolated_Verbatim_String_End*, or *Interpolated_Raw_String_End*.
 
 The subsequent arguments are the *expression*s from the interpolations, if any, in order.
 
@@ -1623,6 +1686,9 @@ Then:
 | `$"{text + '?'} {number % 3}"`       | `string.Format("{0} {1}", text + '?', number % 3)`            | `"red? 2"`   |
 | `$"{text + $"[{number}]"}"`          | `string.Format("{0}", text + string.Format("[{0}]", number))` | `"red[14]"`  |
 | `$"{(number==0?"Zero":"Non-zero")}"` | `string.Format("{0}", (number==0?"Zero":"Non-zero"))`         | `"Non-zero"` |
+| `$$""""{number}""""`                 | `string.Format("{{number}}")`                                 | `"{number}"` |
+| `$$"""{{number}}"""`                 | `string.Format("{0}", number)`                                | `"14"`       |
+| `$$"""""{{{number}}}"""""`           | `string.Format("{{{0}}}", number)`                            | `"{14}"`     |
 
 *end example*
 
