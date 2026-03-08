@@ -977,11 +977,11 @@ For brevity, a *Raw_String_Literal_Delimiter* is referred to as a “delimiter,�
 For any *Raw_String_Literal*:
 
 - A delimiter shall be the longest set of contiguous `"` characters found at the start or end. The number of `"` characters in a delimiter is called the ***raw string literal delimiter length***.
-  >  *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
-- The beginning and end delimiters shall have the same raw string literal delimiter length. 
-  >  *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
+  > *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
+- The beginning and end delimiters shall have the same raw string literal delimiter length.
+  > *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
 - A *Raw_String_Literal Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
-  >  *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
+  > *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
 - As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal Content*.
 
 For a *Single_Line_Raw_String_Literal* only:
@@ -1097,7 +1097,7 @@ Each string literal does not necessarily result in a new string instance. When t
 >         object e = """
 >           hello
 >           """;
-
+>
 >         System.Console.WriteLine(a == b);
 >         System.Console.WriteLine(a == c);
 >         System.Console.WriteLine(a == d);
