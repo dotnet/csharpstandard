@@ -896,7 +896,7 @@ The type of a *Character_Literal* is `char`.
 
 #### 6.4.5.6 String literals
 
-C# supports two forms of string literals: ***regular string literal***s and ***verbatim string literal***s. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences.
+C# supports a number of forms of string literals: ***regular string literal***s, ***verbatim string literal***s, and ***raw string literals***. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences.
 
 A verbatim string literal consists of an `@` character followed by a double-quote character, zero or more characters, and a closing double-quote character.
 
@@ -904,10 +904,13 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
+A raw string literal consists of arbitrary text and newlines between multi-`"`-sequence delimiters (which better supports the readability of XML, JSON, and other forms of text that have some visually pleasing structure). A raw string literal may span multiple lines.
+
 ```ANTLR
 String_Literal
     : Regular_String_Literal
     | Verbatim_String_Literal
+    | Raw_String_Literal
     ;
 
 fragment Regular_String_Literal
@@ -942,7 +945,58 @@ fragment Single_Verbatim_String_Literal_Character
 fragment Quote_Escape_Sequence
     : '""'
     ;
+
+fragment Raw_String_Literal
+    : Single_Line_Raw_String_Literal
+    | Multi_Line_Raw_String_Literal
+    ;
+
+fragment Single_Line_Raw_String_Literal
+    : Raw_String_Literal_Delimiter  Raw_String_Literal Content
+      Raw_String_Literal_Delimiter
+    ;
+
+fragment Raw_String_Literal_Delimiter
+    : '"""'  '"'*
+    ;
+
+fragment Raw_String_Literal Content
+    // anything except New_Line
+    : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
+    ;
+
+fragment Multi_Line_Raw_String_Literal
+    : Raw_String_Literal_Delimiter Whitespace* New_Line
+      (Raw_String_Literal Content | New_Line)* New_Line
+      Whitespace* Raw_String_Literal_Delimiter
+    ;
 ```
+
+For brevity, a *Raw_String_Literal_Delimiter* is referred to as a “delimiter,” the start *Raw_String_Literal_Delimiter* is referred to as the “start delimiter,” and the end *Raw_String_Literal_Delimiter* is referred to as the “end delimiter.”
+
+For any *Raw_String_Literal*:
+
+- A delimiter shall be the longest set of contiguous `"` characters found at the start or end. The number of `"` characters in a delimiter is called the ***raw string literal delimiter length***.
+  >  *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
+- The beginning and end delimiters shall have the same raw string literal delimiter length. 
+  >  *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
+- A *Raw_String_Literal Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
+  >  *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
+- As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal Content*.
+
+For a *Single_Line_Raw_String_Literal* only:
+
+- A *Single_Line_Raw_String_Literal* cannot be empty; it must contain at least one character.
+- A *Raw_String_Literal Content* cannot begin with `"`, as such a character is considered to belong to the preceding start delimiter. Similarly, a *Raw_String_Literal Content* cannot end with `"`, as such a character is considered to belong to the following end delimiter.
+- The value of the literal is *Raw_String_Literal Content*, which can contain leading, embedded, and trailing horizontal whitespace (as in `"""x  x   x"""` and `""" xxx           """`, the latter having a leading space and trailing tabs).
+
+For a *Multi_Line_Raw_String_Literal* only:
+
+- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal Content*s.
+- A *Raw_String_Literal Content* shall not appear on the same line as a start or end delimiter.
+- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal Content*s and one or more *New_Line*s).
+- A *Raw_String_Literal Content* can begin or end with `"`.
+- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal Content*s and *New_Lines* after any whitespace at the beginning of each *Raw_String_Literal Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
 
 > *Example*: The example
 >
@@ -968,6 +1022,56 @@ fragment Quote_Escape_Sequence
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
+> *Example*: Consider the following multi-line string literals:
+>
+> <!-- Example: {template:"standalone-console", name:"RawStringLiteral1", inferOutput:true, ignoredWarnings:["CS0219"]} -->
+> ```csharp
+> var xml1= """
+>         <element attr="content">
+>           <body>
+>           </body>
+>         </element>
+>         """;
+> Console.WriteLine(xml1);
+>
+> var xml2 = """
+>         <element attr="content">
+>           <body>
+>           </body>
+>         </element>
+>     """;
+> Console.WriteLine(xml2);
+>
+> var xml3 = """
+>         <element attr="content">
+>           <body>
+>           </body>
+>         </element>
+> """;
+> Console.WriteLine(xml3);
+> ```
+>
+> which produces the output
+>
+> ```console
+> <element attr="content">
+>   <body>
+>   </body>
+> </element>
+>     <element attr="content">
+>       <body>
+>       </body>
+>     </element>
+>         <element attr="content">
+>           <body>
+>           </body>
+>         </element>
+> ```
+>
+> In the case of `xml1`, the end delimiter has 8 leading spaces, so that is the amount of leading whitespace removed from each content line. With `xm12`, 4 leading spaces are removed, and with `xml3`, no leading spaces are removed. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Note*: Any line breaks within verbatim string literals are part of the resulting string. If the exact characters used to form line breaks are semantically relevant to an application, any tools that translate line breaks in source code to different formats (between “`\n`” and “`\r\n`”, for example) will change application behavior. Developers should be careful in such situations. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -980,7 +1084,7 @@ Each string literal does not necessarily result in a new string instance. When t
 
 > *Example*: For instance, the output produced by
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ObjectReferenceEquality", expectedOutput:["True","True","True","True"]} -->
 > ```csharp
 > class Test
 > {
@@ -988,12 +1092,21 @@ Each string literal does not necessarily result in a new string instance. When t
 >     {
 >         object a = "hello";
 >         object b = "hello";
+>         object c = @"hello";
+>         object d = """hello""";
+>         object e = """
+>           hello
+>           """;
+
 >         System.Console.WriteLine(a == b);
+>         System.Console.WriteLine(a == c);
+>         System.Console.WriteLine(a == d);
+>         System.Console.WriteLine(a == e);
 >     }
 > }
 > ```
 >
-> is `True` because the two literals refer to the same string instance.
+> is all `True` because the five literals refer to the same string instance.
 >
 > *end example*
 
