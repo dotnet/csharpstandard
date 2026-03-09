@@ -91,7 +91,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 > }
 > ```
 >
-> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it doesn’t provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract.
+> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it does not provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract.
 >
 > *end example*
 
@@ -440,9 +440,9 @@ The class type, reference type constraint, and secondary constraints can include
 - If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
 - If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
-The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
+The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter does not match the nullability of the type argument.
 
-> *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
+> *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
 <!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
 The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
@@ -488,7 +488,7 @@ The nullable type annotation, `?`, can only be used on a type parameter that has
 >
 > *end example*
 
-The not null constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
+The not null constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that is not a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
 Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it shall be treated as a `class_type`. Otherwise it shall be treated as the not null constraint.
 
@@ -534,7 +534,7 @@ The unmanaged type constraint specifies that a type argument used for the type p
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
-Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
+Pointer types are never allowed to be type arguments, and do not satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
@@ -1033,7 +1033,7 @@ A *class_member_declaration* is permitted to declare a member with the same name
 
 An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
-If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
+If a `new` modifier is included in a declaration that does not hide an available inherited member, a warning to that effect is issued.
 
 ### 15.3.6 Access modifiers
 
@@ -1775,7 +1775,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 > }
 > ```
 >
-> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` isn’t recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled.
+> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` is not recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled.
 >
 > *end example*
 
@@ -2441,7 +2441,7 @@ A method declared as a partial method ([§15.6.9](classes.md#1569-partial-method
 
 A parameter declared with a `params` modifier is a parameter array. If a parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` cannot. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3665,7 +3665,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 >
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
 >
-> The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object.
+> The “no side-effects” convention for get accessors does not mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object.
 >
 > *end example*
 
@@ -5013,7 +5013,7 @@ Variable initializers are transformed into assignment statements, and these assi
 > }
 > ```
 >
-> contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations isn’t valid, but merely serves to illustrate the mechanism).
+> contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations is not valid, but merely serves to illustrate the mechanism).
 >
 > ```csharp
 > class A
@@ -5480,7 +5480,7 @@ A compiler shall generate code that uses the «TaskBuilderType» to implement th
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren’t the same are identity convertible. *end note*
+> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that are not the same are identity convertible. *end note*
 
 ### 15.14.3 Evaluation of a task-returning async function
 
@@ -5583,7 +5583,7 @@ The precise action performed by `MoveNext` or `MoveNextAsync` depends on the sta
 
 When `MoveNext` executes the iterator block, execution can be interrupted in four ways: By a `yield return` statement, by a `yield break` statement, by encountering the end of the iterator block, and by an exception being thrown and propagated out of the iterator block.
 
-> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that hasn’t completed. *end note*
+> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that has not completed. *end note*
 
 - When a `yield return` statement is encountered ([§9.4.4.20](variables.md#94420-yield-statements)):
   - The expression given in the statement is evaluated, implicitly converted to the yield type, and assigned to the `Current` property of the enumerator object.

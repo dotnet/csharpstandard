@@ -278,7 +278,7 @@ The body of a function member may declare one or more initially unassigned varia
 The definite-assignment state of *v* can be either:
 
 - Definitely assigned. This indicates that on all possible control flows to this point, *v* has been assigned a value.
-- Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that isn’t definitely assigned might (but doesn’t necessarily) fall into one of the following sub-states:
+- Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that is not definitely assigned might (but does not necessarily) fall into one of the following sub-states:
   - Definitely assigned after true expression. This state indicates that *v* is definitely assigned if the Boolean expression evaluated as true, but is not necessarily assigned if the Boolean expression evaluated as false.
   - Definitely assigned after false expression. This state indicates that *v* is definitely assigned if the Boolean expression evaluated as false, but is not necessarily assigned if the Boolean expression evaluated as true.
 
@@ -1115,7 +1115,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     // ref safe context is "function-member"
 >     public ref int M2(int v1)
 >     {
->         return ref v1; // error: v1 isn't safe to ref return
+>         return ref v1; // error: v1 is not safe to ref return
 >     }
 >
 >     public ref int M3()
@@ -1184,7 +1184,7 @@ For a local variable `v`:
 
 For a parameter `p`:
 
-- If `p` is a reference or input parameter, its ref-safe-context is the caller-context. If `p` is an input parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is a reference or input parameter, its ref-safe-context is the caller-context. If `p` is an input parameter, it cannot be returned as a writable `ref` but can be returned as `ref readonly`.
 - If `p` is an output parameter, its ref-safe-context is the caller-context.
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
