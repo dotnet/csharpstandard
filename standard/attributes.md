@@ -467,7 +467,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
   - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§23.4.3](attributes.md#2343-run-time-retrieval-of-an-attribute-instance)).
-  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
+  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which is not immediately followed by a low surrogate code unit is not well-formed. *end note*
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list* `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
 ### 23.4.3 Run-time retrieval of an attribute instance
@@ -840,7 +840,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### 23.5.7.1 General
 
-The attributes in this subclause are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this subclause for any of these attributes which it uses to inform its diagnostics.
+The attributes in this subclause are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler is not required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that does not provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this subclause for any of these attributes which it uses to inform its diagnostics.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
@@ -851,8 +851,8 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `MaybeNull` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
 `NotNull` ([§23.5.7.8](attributes.md#23578-the-notnull-attribute))  | A nullable return value will never be null.
 `MaybeNullWhen` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
-`NotNullWhen` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
-`NotNullIfNotNull` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
+`NotNullWhen` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument will not be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value is not null if the argument for the specified parameter is not null.
 `DoesNotReturn` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
@@ -911,7 +911,7 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 > }
 > ```
 >
-> The get accessor could return the default value of `null`, so a compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn’t explicitly set it to null. *end example*
+> The get accessor could return the default value of `null`, so a compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers should not explicitly set it to null. *end example*
 
 #### 23.5.7.4 The DoesNotReturn attribute
 
@@ -942,7 +942,7 @@ Specifies that a given method never returns.
 > }
 > ```
 >
-> The presence of the attribute helps a compiler in a number of ways. First, a compiler can issue a warning if there’s a path where the method can exit without throwing an exception. Second, a compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won’t affect any null states.
+> The presence of the attribute helps a compiler in a number of ways. First, a compiler can issue a warning if there is a path where the method can exit without throwing an exception. Second, a compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code will not affect any null states.
 >
 > The attribute does not change reachability ([§13.2](statements.md#132-end-points-and-reachability)) or definite assignment ([§9.4](variables.md#94-definite-assignment)) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
 
@@ -962,7 +962,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >         if (!isNull)
 >         {
 >             throw new ArgumentException(argumentName,
->               $"argument {argumentName} can't be null");
+>               $"argument {argumentName} cannot be null");
 >         }
 >     }
 >
@@ -1027,11 +1027,11 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 > }
 > ```
 >
-> When nullable reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
+> When nullable reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it is acceptable to call `ThrowWhenNull` with a null reference. *end example*
 
 #### 23.5.7.9 The NotNullIfNotNull attribute
 
-Specifies that a return value isn’t `null` if the argument for the specified parameter isn’t `null`.
+Specifies that a return value is not `null` if the argument for the specified parameter is not `null`.
 
 > *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist a compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
 >
@@ -1041,7 +1041,7 @@ Specifies that a return value isn’t `null` if the argument for the specified p
 > string GetTopLevelDomainFromFullUrl(string url) { ... }
 > ```
 >
-> If the `url` argument isn’t `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
+> If the `url` argument is not `null`, `null` is not returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
@@ -1054,9 +1054,9 @@ Specifies that a return value isn’t `null` if the argument for the specified p
 
 #### 23.5.7.10 The NotNullWhen attribute
 
-Specifies that a nullable argument won’t be `null` when the method returns the specified `bool` value.
+Specifies that a nullable argument will not be `null` when the method returns the specified `bool` value.
 
-> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It’s a form of null-check: Callers don’t need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
+> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It is a form of null-check: Callers do not need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullWhenAttribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
@@ -1073,10 +1073,10 @@ Specifies the parameter representing the `CancellationToken` for an asynchronous
 It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
 - The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
-- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that isn’t an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
+- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)).
 
-The iterator won’t have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
+The iterator will not have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 
 > *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be canceled. If cancellation is requested, no further action is taken.
 >

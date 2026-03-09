@@ -12,7 +12,7 @@ An implementation that does not support unsafe code is required to diagnose any 
 >
 > In unsafe code, it is possible to declare and operate on pointers, to perform conversions between pointers and integral types, to take the address of variables, and so forth. In a sense, writing unsafe code is much like writing C code within a C# program.
 >
-> Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can’t possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment.
+> Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers cannot possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment.
 >
 > *end note*
 
@@ -400,7 +400,7 @@ pointer_indirection_expression
     ;
 ```
 
-The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an expression of type `void*` or to an expression that isn’t of a pointer type.
+The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an expression of type `void*` or to an expression that is not of a pointer type.
 
 The effect of applying the unary `*` operator to a `null`-valued pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
 
@@ -717,7 +717,7 @@ It is the programmer’s responsibility to ensure that pointers created by fixed
 
 > *Example*: When pointers created by `fixed` statements are passed to external APIs, it is the programmer’s responsibility to ensure that the APIs retain no memory of these pointers. *end example*
 
-Fixed objects can cause fragmentation of the heap (because they can’t be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible.
+Fixed objects can cause fragmentation of the heap (because they cannot be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible.
 
 > *Example*: The example
 >
@@ -1065,7 +1065,7 @@ When a *stackalloc_expression* occurs as the initializing expression of a *local
 >     int* p2 = stackalloc int[3] { -10, -15, -30 };
 >     // Type int is inferred
 >     int* p3 = stackalloc[] { 11, 12, 13 };
->     // Can't infer context, so pointer result assumed
+>     // Cannot infer context, so pointer result assumed
 >     var p4 = stackalloc[] { 11, 12, 13 };
 >     // Error; no conversion exists
 >     long* p5 = stackalloc[] { 11, 12, 13 };
