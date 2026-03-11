@@ -8,6 +8,8 @@ The goal is to provide two sets of gates through the review process: First, agre
 
 A committee member takes ownership of the draft PR and self-assigns it. The *assignee* reviews and modifies the initial PR. At the assignee's discretion, they can tag other members for help or opinion on the overall direction of the PR.
 
+The owner can bring a PR for discussion of its overall direction. This could be preliminary, before a more complete first draft is produced.
+
 Once the assignee has a good first draft, it's ready for the [First Reading](#first-reading). As part of getting ready for the first reading, the assignee should provide a summary of the PR to guide reviewers. This should cover:
 
 - Roadmap of the PR.
