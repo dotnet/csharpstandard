@@ -25,7 +25,7 @@ The outcome of the first reading is one of:
 - Direction approved, move on to final edits and [Second reading](#second-reading).
 - Direction or content needs major work. Bring a revised PR back for a new first reading. (Task list comes from meeting review comments.)
 
-The goal for this review is to minimize major rewrites to large new issues discovered later in the process. On rare occasion that a feature PR is quite small, the first reading and second reading can be combined. 
+The goal for this review is to minimize major rewrites to large new issues discovered later in the process. On the rare occasion that a feature PR is quite small, the first reading and second reading can be combined. 
 
 ## Second reading
 
