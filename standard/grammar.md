@@ -828,7 +828,7 @@ primary_expression
     | interpolated_string_expression
     | simple_name
     | parenthesized_expression
-    | tuple_expression
+    | tuple_literal
     | member_access
     | null_conditional_member_access
     | invocation_expression
@@ -975,25 +975,25 @@ parenthesized_expression
     ;
 
 // Source: §12.8.6 Tuple expressions
-tuple_expression
+tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
-    | deconstruction_expression
+    | abridged_deconstructor
     ;
     
 tuple_element
     : (identifier ':')? expression
     ;
     
-deconstruction_expression
-    : 'var' deconstruction_tuple
+abridged_deconstructor
+    : 'var' abridged_elements
     ;
     
-deconstruction_tuple
-    : '(' deconstruction_element (',' deconstruction_element)+ ')'
+abridged_elements
+    : '(' abridged_element (',' abridged_element)+ ')'
     ;
 
-deconstruction_element
-    : deconstruction_tuple
+abridged_element
+    : abridged_elements
     | identifier
     ;
 
@@ -1758,7 +1758,7 @@ switch_statement
 
 selector_expression
     : '(' expression ')'
-    | tuple_expression
+    | tuple_literal
     ;
 
 switch_block
