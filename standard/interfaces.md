@@ -483,6 +483,7 @@ For an *operator_declaration* in an interface the *operator_body* shall only be 
 A static *operator_declaration* may have `abstract`, `virtual`, and `sealed` modifiers.
 
 In the context of a class or struct, at least one of the *fixed_parameter*s in a *unary_operator_declarator* and *binary_operator_declarator* is required to have type `T` or `T?`, where `T` is the instance type of the enclosing type. This requirement is relaxed in the context of an interface in that a restricted operand is allowed to be of a type parameter that counts as “the instance type of the enclosing type.” In order for a type parameter `T` to count as that it shall meet the following requirements:
+
 - `T` is a direct type parameter on the interface in which the operator declaration occurs, and
 - `T` is directly constrained by the instance type; i.e., the surrounding interface with its own type parameters used as type arguments.
 
