@@ -94,7 +94,7 @@ If a generic interface is declared in multiple parts ([§15.2.3](classes.md#1523
 
 #### 19.2.3.2 Variance safety
 
-The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration. However, these restrictions do not apply to occurrences of types within a declaration of a static member.
+The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration. However, these restrictions do not apply to occurrences of types within a declaration of a non-virtual, non-abstract static member.
 
 A type `T` is ***output-unsafe*** if one of the following holds:
 
@@ -233,15 +233,15 @@ interface_member_declaration
     ;
 ```
 
-This clause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with the differences and restrictions for interfaces:
+This subclause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with the differences and restrictions for interfaces:
 
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
 - All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)).
-- The `abstract` modifier is implied for interface function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly.
-- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly.
+- The `abstract` modifier is implied for interface instance function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly. For interface static function members without bodies the `abstract` modifier shall be present.
+- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly. An interface static member whose declaration includes a body may have a `virtual` modifier.
 - A `private` or `sealed` function member of an interface shall have a body.
-- A `private` function member shall not have the modifier `sealed`.
+- A `private` instance function member shall not have the modifier `sealed`.
 - A derived interface may override an abstract or virtual member declared in a base interface.
 - An explicitly implemented function member shall not have the modifier `sealed`.
 
@@ -429,7 +429,7 @@ A virtual method with implementation declared in an interface may be overridden 
 
 ### 19.4.4 Interface properties
 
-This clause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
+This subclause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
 
 Interface properties are declared using *property_declaration*s ([§15.7.1](classes.md#1571-general)) with the following additional rules:
 
@@ -440,25 +440,27 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
-- An interface property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
-- An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- An interface instance method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed. For a static method the `virtual` modifier is permitted.
+- An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)). However, the `abstract` modifier shall be present if a static property is to be abstract.
+- A *property_declaration* may contain the `sealed` modifier.
 
 ### 19.4.5 Interface events
 
-This clause augments the description of events in classes [§15.8](classes.md#158-events) for events declared in interfaces.
+This subclause augments the description of events in classes [§15.8](classes.md#158-events) for events declared in interfaces.
 
 Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#1581-general)), with the following additional rules:
 
 - *event_modifier* shall not include `override`.
 - A derived interface may implement an abstract interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
-- It is a compile-time error for *variable_declarators* in an interface *event_declaration* to contain any *variable_initializer*s.
-- An interface event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
-- An interface event with the `abstract` modifier must not declare accessors.
+- It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
+- An instance event with the `virtual` or `sealed` modifiers shall declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An instance event with the `abstract` modifier shall not declare accessors.
+- A static event may have `abstract`, `virtual`, and `sealed` modifiers.
 - The type of an interface event shall be input-safe.
 
 ### 19.4.6 Interface indexers
 
-This clause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
+This sub clause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
 
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
@@ -474,15 +476,19 @@ Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.m
 
 ### 19.4.7 Interface operators
 
-This clause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
+This subclause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
 
 For an *operator_declaration* in an interface the *operator_body* shall only be a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)).
 
-It is a compile-time error for an interface to declare a conversion, equality, or inequality operator.
+A static *operator_declaration* may have `abstract`, `virtual`, and `sealed` modifiers.
+
+In the context of a class or struct, at least one of the *fixed_parameter*s in a *unary_operator_declarator* and *binary_operator_declarator* is required to have type `T` or `T?`, where `T` is the instance type of the enclosing type. This requirement is relaxed in the context of an interface in that a restricted operand is allowed to be of a type parameter that counts as “the instance type of the enclosing type.” In order for a type parameter `T` to count as that it shall meet the following requirements:
+- `T` is a direct type parameter on the interface in which the operator declaration occurs, and
+- `T` is directly constrained by the instance type; i.e., the surrounding interface with its own type parameters used as type arguments.
 
 ### 19.4.8 Interface static constructors
 
-This clause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
+This subclause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
 
 The static constructor for a closed ([§8.4.3](types.md#843-open-and-closed-types)) interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
@@ -498,7 +504,7 @@ To initialize a new closed interface type, first a new set of static fields for 
 
 ### 19.4.9 Interface nested types
 
-This clause augments the description of nested types in classes [§15.3.9](classes.md#1539-nested-types) for nested types declared in interfaces.
+This subclause augments the description of nested types in classes [§15.3.9](classes.md#1539-nested-types) for nested types declared in interfaces.
 
 It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§19.2.3.1](interfaces.md#19231-general)).
 
@@ -950,6 +956,8 @@ The qualified interface member name of an explicit interface member implementati
 > the explicit interface member implementation of Paint must be written as `IControl.Paint`, not `ITextBox.Paint`.
 >
 > *end example*
+
+An explicit interface member implementation that implements a static member shall itself be static.
 
 ### 19.6.3 Uniqueness of implemented interfaces
 
