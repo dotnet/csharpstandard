@@ -64,7 +64,7 @@ non_array_type
     ;
 
 non_array_non_nullable_type
-    : value_type
+    : non_nullable_value_type
     | class_type
     | interface_type
     | delegate_type
