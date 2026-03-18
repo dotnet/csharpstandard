@@ -904,6 +904,8 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
+All string literal forms may optionally have a trailing *Utf8_Suffix*. The representation of each form is discussed below.
+
 ```ANTLR
 String_Literal
     : Regular_String_Literal
@@ -911,7 +913,7 @@ String_Literal
     ;
 
 fragment Regular_String_Literal
-    : '"' Regular_String_Literal_Character* '"'
+    : '"' Regular_String_Literal_Character* '"' Utf8_Suffix?
     ;
 
 fragment Regular_String_Literal_Character
@@ -927,7 +929,7 @@ fragment Single_Regular_String_Literal_Character
     ;
 
 fragment Verbatim_String_Literal
-    : '@"' Verbatim_String_Literal_Character* '"'
+    : '@"' Verbatim_String_Literal_Character* '"' Utf8_Suffix?
     ;
 
 fragment Verbatim_String_Literal_Character
@@ -941,6 +943,10 @@ fragment Single_Verbatim_String_Literal_Character
 
 fragment Quote_Escape_Sequence
     : '""'
+    ;
+
+fragment Utf8_Suffix
+    : 'u8' | 'U8'
     ;
 ```
 
@@ -974,7 +980,24 @@ fragment Quote_Escape_Sequence
 <!-- markdownlint-enable MD028 -->
 > *Note*: Since a hexadecimal escape sequence can have a variable number of hex digits, the string literal `"\x123"` contains a single character with hex value `123`. To create a string containing the character with hex value `12` followed by the character `3`, one could write `"\x00123"` or `"\x12"` + `"3"` instead. *end note*
 
-The type of a *String_Literal* is `string`.
+A *String_Literal* that does not contain a *Utf8_Suffix* is a ***UTF-16 string literal***, whose type is `string`.
+
+A *String_Literal* that contains a *Utf8_Suffix* is a ***UTF-8 string literal***, whose type is `System.ReadOnlySpan<byte>` (an indexable collection type), and whose value contains a UTF-8 byte representation of the string. A null terminator (a byte with value zero) is placed beyond the last byte in memory (and outside the length of the `ReadOnlySpan<byte>`) in order to support scenarios that expect null-terminated byte strings. A UTF-8 string literal is not a constant. A UTF-8 string literal without its *Utf8_Suffix* shall be valid UTF-16. (For example, `"\uDC00\uDD00"u8` is ill-formed as one low surrogate cannot be followed by another.)
+
+> *Note*: While every UTF-8 string literal is a `ReadOnlySpan<byte>`, not every `ReadOnlySpan<byte>` represents a UTF-8 string literal. See the description of UTF-8 string concatenation in [§12.13.5](expressions.md#12135-addition-operator). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: As `ReadOnlySpan<byte>` is a ref struct type, a UTF-8 string literal cannot be converted to `object` or used as a type parameter ([§16.2.3]( structs.md#1623-ref-modifier)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Here are examples of each form of string literal:
+> | **Encoding** | **Type**             | **Regular String Literal** | **Verbatim String Literal** | **Raw String Literal** |
+> |--------------|----------------------|---------------------|--------------------|--------------------|
+> | UTF-16       | `string`             | `"Hello"`           | `@"Hello"`         | `"""Hello"""`      |
+> | UTF-8        | `ReadOnlySpan<byte>` | `"Hello"u8`         | `@"Hello"u8`       | `"""Hello"""u8`    |
+> *end example*
 
 Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
