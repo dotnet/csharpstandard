@@ -249,13 +249,13 @@ Some declarations, such as *constant_declaration* ([§15.4](classes.md#154-const
 
 The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does result in a warning ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)).
 
-If a `new` modifier is included in a declaration that doesn’t hide an inherited member, a warning is issued to that effect.
+If a `new` modifier is included in a declaration that does not hide an inherited member, a warning is issued to that effect.
 
 > *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§19.4](interfaces.md#194-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
 The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
-> *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` doesn’t provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` or `IB`. These members aren’t found through member lookup on a variable of type `C`.
+> *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` does not provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` or `IB`. These members are not found through member lookup on a variable of type `C`.
 >
 > <!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
 > ```csharp
@@ -406,7 +406,7 @@ These rules ensure that any covariant or contravariant usage of the interface re
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example that not only shows a static method with an implementation, but as that method is called `Main` and has the right return type and signature, it’s also an entry point. *end note*
+> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example that not only shows a static method with an implementation, but as that method is called `Main` and has the right return type and signature, it is also an entry point. *end note*
 
 A virtual method with implementation declared in an interface may be overridden to be abstract in a derived interface. This is known as ***reabstraction***.
 
@@ -562,7 +562,7 @@ Interface members are accessed through member access ([§12.8.7](expressions.md#
 
 In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`, the expression `base.M()` is valid only if `base.M()` staticly ([§12.3](expressions.md#123-static-and-dynamic-binding)) binds to an implementation of `M()` in a class type.
 
-For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
+For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which do not. In all cases, explicit casts can be used to resolve the ambiguities.
 
 > *Example*: In the following code
 >
@@ -745,7 +745,7 @@ A class or struct `C` that implements an interface `I` must provide or inherit a
 >
 > *end example*
 
-A class or struct that directly implements an interface also implicitly implements all of the interface’s base interfaces. This is true even if the class or struct doesn’t explicitly list all base interfaces in the base class list.
+A class or struct that directly implements an interface also implicitly implements all of the interface’s base interfaces. This is true even if the class or struct does not explicitly list all base interfaces in the base class list.
 
 > *Example*:
 >
@@ -841,7 +841,7 @@ A derived interface member that satisfies interface mapping ([§19.6.5](interfac
 >
 >     public void Close()
 >     {
->         // Do what's necessary to close the file
+>         // Do what is necessary to close the file
 >         System.GC.SuppressFinalize(this);
 >     }
 > }
@@ -1391,7 +1391,7 @@ A re-implementation of an interface follows exactly the same interface mapping r
 > }
 > ```
 >
-> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` doesn’t affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`.
+> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` does not affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`.
 >
 > *end example*
 

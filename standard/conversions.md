@@ -572,7 +572,7 @@ For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](clas
 
 - From the effective base class `C` of `T` to `T` and from any base class of `C` to `T`.
 - From any *interface_type* to `T`.
-- From `T` to any *interface_type* `I` provided there isn’t already an implicit reference conversion from `T` to `I`.
+- From `T` to any *interface_type* `I` provided there is not already an implicit reference conversion from `T` to `I`.
 - From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   > *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of U will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
 
@@ -701,7 +701,7 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
 
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` to a type encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
@@ -729,7 +729,7 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.

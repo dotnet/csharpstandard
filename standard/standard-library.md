@@ -513,7 +513,7 @@ namespace System
     ///      with Range values, returning a sub-array/substring
     ///      of the indexed value respectively.
     /// </summary>
-    public readonly struct Range : IEquatable<Index>
+    public readonly struct Range : IEquatable<Range>
     {
         /// <summary>
         ///    Construct a Range from two Index values.
@@ -659,11 +659,6 @@ namespace System
         public TRest Rest;
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6, T7 item7, TRest rest);
-    }
-
-    public interface IAsyncDisposable
-    {
-        public System.Threading.Tasks.ValueTask DisposeAsync();
     }
 }
 
@@ -904,7 +899,7 @@ namespace System.Threading.Tasks
 
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
     }
 
     public readonly struct ValueTask : System.IEquatable<ValueTask>
@@ -1309,7 +1304,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.ArgumentOutOfRangeException`
 - `global::System.ArithmeticException`
 - `global::System.Array`
-- `global::System.ArrayTypeMisMatchException`
+- `global::System.ArrayTypeMismatchException`
 - `global::System.Attribute`
 - `global::System.AttributeTargets`
 - `global::System.AttributeUsageAttribute`
@@ -1377,7 +1372,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Collections.Generic.IEnumerable<T>`
 - `global::System.Collections.Generic.IEnumerator<T>`
 - `global::System.Collections.Generic.IList<T>`
-- `global::System.Collections.Generic.IReadonlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyCollection<out T>`
 - `global::System.Collections.Generic.IReadOnlyList<out T>`
 - `global::System.Diagnostics.ConditionalAttribute`
 - `global::System.Diagnostics.CodeAnalysis.AllowNullAttribute`
@@ -1394,7 +1389,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
-- `global::System.Runtime.CompilerServices.CallerFileAttribute`
+- `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
 - `global::System.Runtime.CompilerServices.FormattableStringFactory`
@@ -1403,7 +1398,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
 - `global::System.Runtime.CompilerServices.ModuleInitializerAttribute`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
-- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.Unsafe`
