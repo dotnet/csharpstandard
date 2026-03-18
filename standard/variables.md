@@ -845,13 +845,8 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
-<<<<<<< HEAD
 - The definite-assignment statement of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
-=======
-- The definite-assignment state of *v* after *expr* is determined by:
-  - If *expr_first* is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
->>>>>>> draft-v9
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 #### 9.4.4.30 ?: expressions
