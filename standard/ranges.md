@@ -43,7 +43,7 @@ For the purposes of this clause the following terms are defined:
 The above definitions are extended for uses of `Index` and `Range` as follows:
 
 - A type is also a *sequence* if an *element_access* expression taking a single required `Index` argument, rather than an `int` argument, is supported. Where a distinction is required the type is termed ***extended indexable***.
-- A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
+- A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather than a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
 
 Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility ([§7.5](basic-concepts.md#75-member-access)) and therefore dependent on where the type is being used.
 
@@ -61,7 +61,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 >
 > public class B : A
 > {
->     public int this(int index) { … }
+>     public int this[int index] { … }
 > }
 >
 > public class C : B
@@ -152,7 +152,7 @@ This method does **not** check that the return value is in the valid range of `0
 The `System.Range` type represents the abstract range of `Index`es from a `Start` index up to, but not including, an `End` index.
 
 ```csharp
-    public readonly struct Range : IEquatable<Index>
+    public readonly struct Range : IEquatable<Range>
     {
         public Index Start { get; }
         public Index End { get; }
@@ -239,7 +239,7 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 <!-- markdownlint-enable MD028 -->
 > *Example*
 >
-> Using the variables defined above with `GetOffSetAndLength(6)`:
+> Using the variables defined above with `GetOffsetAndLength(6)`:
 >
 > ```csharp
 > var (ix0, len0) = firstQuad.GetOffsetAndLength(6); // ix0 = 0, len0 = 4
