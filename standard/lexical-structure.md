@@ -993,10 +993,12 @@ A *String_Literal* that contains a *Utf8_Suffix* is a ***UTF-8 string literal***
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Here are examples of each form of string literal:
+>
 > | **Encoding** | **Type**             | **Regular String Literal** | **Verbatim String Literal** | **Raw String Literal** |
 > |--------------|----------------------|---------------------|--------------------|--------------------|
 > | UTF-16       | `string`             | `"Hello"`           | `@"Hello"`         | `"""Hello"""`      |
 > | UTF-8        | `ReadOnlySpan<byte>` | `"Hello"u8`         | `@"Hello"u8`       | `"""Hello"""u8`    |
+>
 > *end example*
 
 Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
