@@ -562,7 +562,7 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration does not include the `unsafe` modifier.
 
 A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
@@ -578,7 +578,7 @@ It is a compile-time error for a local function to declare a parameter, type par
 
 Local function bodies are always reachable. The endpoint of a local function declaration is reachable if the beginning point of the local function declaration is reachable.
 
-> *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` isn’t reachable, the statement following the endpoint of `L` is not reachable:
+> *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` is not reachable, the statement following the endpoint of `L` is not reachable:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"LocalFunctionDeclarations2", expectedWarnings:["CS0162"]} -->
 > ```csharp
@@ -601,7 +601,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 > }
 > ```
 >
-> In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
+> In other words, the location of a local function declaration does not affect the reachability of any statements in the containing function. *end example*
 
 If the type of the argument to a local function is `dynamic`, the function to be called shall be resolved at compile time, not runtime.
 
@@ -1341,7 +1341,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
 
-- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
+- «GetEnumerator» is a `GetAsyncEnumerator` method that returns an instance of a type that implements `System.Collections.Generic.IAsyncEnumerable<T>`.
 - «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.9.3](expressions.md#12993-classification-of-await-expressions)).
 - «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
@@ -1425,7 +1425,7 @@ The body of the `finally` block is constructed according to the following steps:
 
 The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
 
-> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn’t available. *end note*
+> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
 ## 13.10 Jump statements
 

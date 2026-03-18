@@ -510,7 +510,7 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 >
 > *end example*
 
-The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn’t specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)).
+The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it does not specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)).
 
 > *Example*:
 >
@@ -543,7 +543,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A reference type argument whose nullability doesn’t match the nullability of the type parameter satisfies the constraint; however a warning may be issued.
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A reference type argument whose nullability does not match the nullability of the type parameter satisfies the constraint; however a warning may be issued.
 
 ### 8.4.3 Open and closed types
 
@@ -623,9 +623,10 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) and [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 > - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.14.7](expressions.md#12147-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-> - A type parameter cannot be used anywhere within an attribute.
+> - A type parameter cannot be used anywhere within an attribute ([§23.2.1](attributes.md#2321-general)).
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
-> - A type parameter cannot be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
+> - A type parameter can only be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) if the type parameter is constrained by the unmanaged constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
+> - Nullable annotations (`?`) aren’t allowed on an instance of a type parameter unless that type parameter is constrained to be either a reference type or a value type ([§15.2.5](classes.md#1525-type-parameter-constraints)).  
 >
 > *end note*
 
@@ -847,7 +848,7 @@ When the nullable context is ***enabled***:
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - A compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default* and
 - The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
-- A compiler can issue a warning if the nullability of a type parameter doesn’t match the nullability of its corresponding type argument.
+- A compiler can issue a warning if the nullability of a type parameter does not match the nullability of its corresponding type argument.
 
 ### 8.9.5 Nullabilities and null states
 
@@ -990,7 +991,7 @@ Both auto-property and field-like event declarations make use of a compiler-gene
 > }
 > ```
 >
-> In the previous example, the constructor doesn’t set `P` to a not null value, and a compiler may issue a warning. There’s no warning when the `P` property is accessed, because the type of the property is a non nullable reference type. *end example*
+> In the previous example, the constructor does not set `P` to a not null value, and a compiler may issue a warning. There is no warning when the `P` property is accessed, because the type of the property is a non nullable reference type. *end example*
 
 A compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)).
 
@@ -1027,7 +1028,7 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 > }
 > ```
 >
-> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn’t change the null state of that expression. *end example*
+> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property does not change the null state of that expression. *end example*
 
 A compiler may use any expression that dereferences a variable, property, or event to set the null state to not null. If it were null, the dereference expression would have thrown a `NullReferenceException`:
 

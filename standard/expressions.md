@@ -239,7 +239,7 @@ The descriptions of individual operators in [§12.9](expressions.md#129-unary-op
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
 - The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
-- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
+- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined unary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
 
 ### 12.4.5 Binary operator overload resolution
@@ -1122,7 +1122,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
-  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.13](expressions.md#126313-fixing)), and an identity conversion exists from `X` to the return type of `D`
+  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.14](expressions.md#126314-inferred-return-type)), and an identity conversion exists from `X` to the return type of `D`
   - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.14.1](classes.md#15141-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
@@ -1901,7 +1901,7 @@ warning and may inform any ongoing analysis.
 >     Person? p = Find("John");                  // returns Person?
 >     if (IsValid(p))
 >     {
->        Console.WriteLine($"Found {p!.Name}");  // p can't be null
+>        Console.WriteLine($"Found {p!.Name}");  // p cannot be null
 >     }
 > }
 >
@@ -2028,7 +2028,7 @@ Once a method has been selected and validated at binding-time by the above steps
 
 #### 12.8.10.3 Extension method invocations
 
-In a method invocation ([§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)) of one of the forms
+In a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) of one of the forms
 
 ```csharp
 «expr» . «identifier» ( )  
@@ -3773,7 +3773,7 @@ To resolve *cast_expression* ambiguities, the following rule exists: A sequence 
 
 The term “correct grammar” above means only that the sequence of tokens shall conform to the particular grammatical production. It specifically does not consider the actual meaning of any constituent identifiers.
 
-> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type. *end example*
+> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` does not actually denote a type. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -5325,7 +5325,7 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.13](expressions.md#12813-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`. *end note*
+> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.8](expressions.md#1288-null-conditional-member-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -6773,7 +6773,7 @@ The type of a simple assignment `x = y` is the type of an assignment to `x` of `
 
 The run-time processing of a simple assignment of the form `x = y` with type `T` is performed as an assignment to `x` of `y` with type `T`, which consists of the following recursive steps:
 
-- `x` is evaluated if it wasn’t already.
+- `x` is evaluated if it was not already.
 - If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - If the variable given by `x` is an array element of a *reference_type*, a run-time check is performed to ensure that the value computed for `y` is compatible with the array instance of which `x` is an element. The check succeeds if `y` is `null`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the type of the instance referenced by `y` to the actual element type of the array instance containing `x`. Otherwise, a `System.ArrayTypeMismatchException` is thrown.
   - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`, and is yielded as a result of the assignment.
@@ -6940,7 +6940,7 @@ The ref assignment operator shall not read the storage location referenced by th
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it’s important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
+> *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it is important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
 
 ### 12.23.4 Compound assignment
 

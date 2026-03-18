@@ -45,7 +45,7 @@ Each pattern form defines the set of types for input values that the pattern may
 > }
 > ```
 >
-> However, the following doesn’t generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference-compatible with `string`:
+> However, the following does not generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference-compatible with `string`:
 >
 > <!-- Example: {template:"standalone-console", name:"PatternFormGen2"} -->
 > ```csharp
@@ -86,7 +86,7 @@ A *simple_designation* with the token `_` shall be considered a *discard_designa
 
 The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
 
-> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn’t a nullable type. *end note*
+> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` is not a nullable type. *end note*
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is *discard_designation*, it denotes a discard ([§9.2.9.2](variables.md#9292-discards)), and the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) Otherwise, if the *simple_designation* is *single_variable_designation*, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.  
 
@@ -309,7 +309,8 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 > ```
 >
 > *end note*
-Given a match of an expression *e* to the pattern *type* `{` *property_pattern_list* `}`, it is a compile-time error if the expression *e* is not pattern-compatible with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *property_pattern_list* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.  
+
+Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern-compatible with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.  
 
 At runtime, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.  
 
@@ -403,7 +404,7 @@ It is a compile-time error to use a discard pattern in a *relational_expression*
 > 0.0
 > ```
 >
-> Here, a discard pattern is used to handle `null` and any integer value that doesn’t have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
+> Here, a discard pattern is used to handle `null` and any integer value that does not have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
 > *end example*
 
 ## 11.3 Pattern subsumption
