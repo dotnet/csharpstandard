@@ -378,7 +378,7 @@ Namespaces and types have ***member***s.
 
 > *Note*: The members of an entity are generally available through the use of a qualified name that starts with a reference to the entity, followed by a “`.`” token, followed by the name of the member. *end note*
 
-Members of a type are either declared in the type declaration or ***inherited*** from the base class of the type. When a type inherits from a base class, all members of the base class, except instance constructors, finalizers, and static constructors become members of the derived type. The declared accessibility of a base class member does not control whether the member is inherited—inheritance extends to any member that isn’t an instance constructor, static constructor, or finalizer.
+Members of a type are either declared in the type declaration or ***inherited*** from the base class of the type. When a type inherits from a base class, all members of the base class, except instance constructors, finalizers, and static constructors become members of the derived type. The declared accessibility of a base class member does not control whether the member is inherited—inheritance extends to any member that is not an instance constructor, static constructor, or finalizer.
 
 > *Note*: However, an inherited member might not be accessible in a derived type, for example because of its declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)). *end note*
 
@@ -983,7 +983,7 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 > }
 > ```
 >
-> the declaration of `F` in `Derived` causes a warning to be reported. Hiding an inherited name is specifically not an error, since that would preclude separate evolution of base classes. For example, the above situation might have come about because a later version of `Base` introduced an `F` method that wasn’t present in an earlier version of the class.
+> the declaration of `F` in `Derived` causes a warning to be reported. Hiding an inherited name is specifically not an error, since that would preclude separate evolution of base classes. For example, the above situation might have come about because a later version of `Base` introduced an `F` method that was not present in an earlier version of the class.
 >
 > *end example*
 

@@ -4,7 +4,7 @@
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
-Structs ([§16](structs.md#16-structs)) and interfaces ([§18](ranges.md#18-extended-indexing-and-slicing)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
+Structs ([§16](structs.md#16-structs)) and interfaces ([§19](interfaces.md#19-interfaces)) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
 
 ## 15.2 Class declarations
 
@@ -108,7 +108,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 > }
 > ```
 >
-> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it doesn’t provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract.
+> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it does not provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract.
 >
 > *end example*
 
@@ -151,7 +151,7 @@ If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-p
 A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
+- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
 
 A *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) is permitted to reference a static class if
 
@@ -468,9 +468,9 @@ The class type, reference type constraint, and secondary constraints can include
 - If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
 - If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
-The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
+The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter does not match the nullability of the type argument.
 
-> *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
+> *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
 <!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
 The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
@@ -516,7 +516,7 @@ The nullable type annotation, `?`, can only be used on a type parameter that has
 >
 > *end example*
 
-The not null constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
+The not null constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that is not a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
 Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it shall be treated as a `class_type`. Otherwise it shall be treated as the not null constraint.
 
@@ -564,7 +564,7 @@ Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged cons
 
 The `default` constraint allows a *nullable_type_annotation* on a type parameter that is not constrained to reference types or value types.
 
-Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
+Pointer types are never allowed to be type arguments, and do not satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
@@ -687,7 +687,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 
 - If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
-- If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
+- If `C` is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 - If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
 - If `C` is dynamic then `Cₓ` is `object`.
 - Otherwise, `Cₓ` is `C`.
@@ -1072,7 +1072,7 @@ A *class_member_declaration* is permitted to declare a member with the same name
 
 An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
-If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
+If a `new` modifier is included in a declaration that does not hide an available inherited member, a warning to that effect is issued.
 
 ### 15.3.6 Access modifiers
 
@@ -1818,7 +1818,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 > }
 > ```
 >
-> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` isn’t recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled.
+> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` is not recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled.
 >
 > *end example*
 
@@ -2489,7 +2489,7 @@ A method declared as a restricted partial method ([§15.6.9](classes.md#1569-par
 
 A parameter declared with a `params` modifier is a parameter array. If a parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` cannot. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3789,7 +3789,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 >
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
 >
-> The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object.
+> The “no side-effects” convention for get accessors does not mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object.
 >
 > *end example*
 
@@ -4431,7 +4431,7 @@ It is a compile-time error for an *event_declaration* to include both the `abstr
 
 When an event declaration includes an `extern` modifier, the event is said to be an ***external event***. Because an external event declaration provides no actual implementation, it is an error for it to include both the `extern` modifier and *event_accessor_declaration*s.
 
-It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `external` modifier to include a *variable_initializer*.
+It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `extern` modifier to include a *variable_initializer*.
 
 An event can be used as the left operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
 
@@ -4570,7 +4570,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an event accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an event accessor to have that name.
 
@@ -5352,7 +5352,7 @@ Variable initializers are transformed into assignment statements, and these assi
 > }
 > ```
 >
-> contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations isn’t valid, but merely serves to illustrate the mechanism).
+> contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations is not valid, but merely serves to illustrate the mechanism).
 >
 > ```csharp
 > class A
@@ -5781,7 +5781,7 @@ The *return_type* of an async method shall be either `void`, a ***task type***, 
 
 An async method returning a task type is said to be ***task-returning***.
 
-Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded*, *canceled*, or *faulted*. A *faulted* task records a pertinent exception. A *canceled* task was stopped before it completed and records the `OperationCanceledException` as the pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 > *Example*: The task type `MyTask<T>` is associated with the task builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >
@@ -5852,7 +5852,7 @@ A compiler shall generate code that uses the «TaskBuilderType» to implement th
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren’t the same are identity convertible. *end note*
+> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that are not the same are identity convertible. *end note*
 
 ### 15.14.3 Evaluation of a task-returning async function
 
@@ -5955,7 +5955,7 @@ The precise action performed by `MoveNext` or `MoveNextAsync` depends on the sta
 
 When `MoveNext` executes the iterator block, execution can be interrupted in four ways: By a `yield return` statement, by a `yield break` statement, by encountering the end of the iterator block, and by an exception being thrown and propagated out of the iterator block.
 
-> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that hasn’t completed. *end note*
+> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that has not completed. *end note*
 
 - When a `yield return` statement is encountered ([§9.4.4.20](variables.md#94420-yield-statements)):
   - The expression given in the statement is evaluated, implicitly converted to the yield type, and assigned to the `Current` property of the enumerator object.
