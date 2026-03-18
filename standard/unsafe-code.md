@@ -12,7 +12,7 @@ An implementation that does not support unsafe code is required to diagnose any 
 >
 > In unsafe code, it is possible to declare and operate on pointers, to perform conversions between data pointers and integral types, to take the address of variables and methods, and so forth. In a sense, writing unsafe code is much like writing C code within a C# program.
 >
-> Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can’t possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment.
+> Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers cannot possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment.
 >
 > *end note*
 
@@ -905,7 +905,7 @@ It is the programmer’s responsibility to ensure that pointers created by fixed
 
 > *Example*: When pointers created by `fixed` statements are passed to external APIs, it is the programmer’s responsibility to ensure that the APIs retain no memory of these pointers. *end example*
 
-Fixed objects can cause fragmentation of the heap (because they can’t be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible.
+Fixed objects can cause fragmentation of the heap (because they cannot be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible.
 
 > *Example*: The example
 >
@@ -1255,7 +1255,7 @@ In all other respects the semantics of *local_variable_declaration*s ([§13.6.2]
 >     int* p2 = stackalloc int[3] { -10, -15, -30 };
 >     // Type int is inferred
 >     int* p3 = stackalloc[] { 11, 12, 13 };
->     // Can't infer context, so pointer result assumed
+>     // Cannot infer context, so pointer result assumed
 >     var p4 = stackalloc[] { 11, 12, 13 };
 >     // Error; no conversion exists
 >     long* p5 = stackalloc[] { 11, 12, 13 };
