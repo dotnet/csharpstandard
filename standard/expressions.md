@@ -4286,7 +4286,7 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 For an operation of the form `x + y`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator.
 
-The predefined addition operators are listed below. For numeric and enumeration types, the predefined addition operators compute the sum of the two operands. When one or both operands are of type `string`, the predefined addition operators concatenate the string representation of the operands.
+The predefined addition operators are listed below. For numeric and enumeration types, the predefined addition operators compute the sum of the two operands. When one or both operands are of type `string`, or both are of type `ReadOnlySpan<byte>`, the predefined addition operators concatenate the string representation of the operands.
 
 - Integer addition:
 
@@ -4336,7 +4336,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```
 
   At run-time these operators are evaluated exactly as `(E)((U)x + (U)y`).
-- String concatenation:
+- UTF-16 string concatenation:
 
   ```csharp
   string operator +(string x, string y);
@@ -4344,8 +4344,8 @@ The predefined addition operators are listed below. For numeric and enumeration 
   string operator +(object x, string y);
   ```
 
-  These overloads of the binary `+` operator perform string concatenation. If an operand of string concatenation is `null`, an empty string is substituted. Otherwise, any non-`string` operand is converted to its string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty string is substituted.
-
+  These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3]( structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
+  
   > *Example*:
   >
   > <!-- Example: {template:"standalone-console", name:"AdditionOperator", expectedOutput:["s = ><","i = 1","f = 1.23E+15","d = 2.900"]} -->
@@ -4373,7 +4373,28 @@ The predefined addition operators are listed below. For numeric and enumeration 
   >
   > *end example*
 
-  The result of the string concatenation operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
+  The result of the operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
+- UTF-8 string concatenation:
+
+  ```csharp
+  ReadOnlySpan<byte> operator +(ReadOnlySpan<byte> x, ReadOnlySpan<byte> y);
+  ```
+
+  This overload of the binary `+` operator performs concatenation of UTF-8 string literals and the concatenated results thereof (which is much more restrictive than for UTF-16 string concatenation). The operands shall be UTF-8-encoded values.
+  The result of the operator is a ReadOnlySpan<byte> that consists of the bytes of the left operand followed by the bytes of the right operand. The result may be used directly as an operand to the UTF-8 string concatenation operator.
+
+  > *Example*:
+  >
+  > <!-- Example: {template:"standalone-console", name:"AdditionOperator2", expectedErrors:["CS9047","CS9047"]} -->
+  > ```csharp
+  > ReadOnlySpan<byte> sp1 = "ABC"u8 + "DEF"u8;             // OK
+  > ReadOnlySpan<byte> sp2 = sp1 + "DEF"u8;                 // error
+  > ReadOnlySpan<byte> sp3 = "ABC"u8 + "DEF"u8 + "123"u8;   // OK
+  > ReadOnlySpan<byte> sp4 = "ABC"u8 + (ReadOnlySpan<byte>)stackalloc byte[]
+  >   { (byte)'D', (byte)'E', (byte)'F', (byte)'\x0' };     // error
+  > ```
+  >
+  > In the case of `sp1`, both operands are UTF-8 string literals. However, once `sp1` is initialized, that UTF-8 pedigree is no longer tracked. That is, `sp1` itself is not seen as being UTF-8 encoded. As such, it is not permitted to be an operand in the case of the initialization of `sp2`. In the initializer for `sp3`, the left pair of operands is evaluated, and as they are both UTF-8 string literals, the result is deemed to also be UTF-8 encoded, so it can further be used as the left operand of the right operator. In the case of `sp4`, while both operands are `ReadOnlySpan<byte>`s, only the left operand is UTF-8 encoded, even though the `Span<byte>` returned by `stackalloc` has the internal form of a UTF-8 string literal (that is, an array of bytes with a null-byte terminator). See [§6.4.5.6](lexical-structure.md#6456-string-literals). *end example*
 - Delegate combination. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
 
   ```csharp
@@ -7493,7 +7514,7 @@ A *constant_expression* of type `nint` shall have a value in the range \[-214748
 
 Only the following constructs are permitted in constant expressions:
 
-- Literals (including the `null` literal).
+- Literals (including the `null` literal, but excluding UTF-8 string literals).
 - Constant interpolated strings.
 - References to `const` members of class, struct, and interface types.
 - References to members of enumeration types.
