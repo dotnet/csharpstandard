@@ -800,13 +800,13 @@ Caller information is only substituted when a function is explicitly invoked in 
 
 One exception is query expressions. These are considered syntactic expansions, and if the calls they expand to omit optional parameters with caller-info attributes, caller information will be substituted. The location used is the location of the query clause which the call was generated from.
 
-If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumber`, `CallerFilePath`, `CallerMemberName`. Consider the following parameter declaration:
+If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumber`, `CallerFilePath`, `CallerMemberName`, `CallerArgumentExpression`. Consider the following parameter declaration:
 
 ```csharp
 [CallerMemberName, CallerFilePath, CallerLineNumber] object p = ...
 ```
 
-`CallerLineNumber` takes precedence, and the other two attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` would be ignored. The lexical ordering of these attributes is irrelevant.
+`CallerLineNumber` takes precedence, and the other three attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` and `CallerArgumentExpression` would be ignored. The lexical ordering of these attributes is irrelevant.
 
 #### 23.5.6.2 The CallerLineNumber attribute
 
@@ -886,9 +886,9 @@ For an invocation that occurs within a local function or an anonymous function, 
 
 #### §callargexpattr The CallerArgumentExpression attribute
 
-The attribute `System.Runtime.CompilerServices.CallerArgumentExpression` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
+The attribute `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
-Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*.
+Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*. When applied to the first parameter of an extension method, the captured string is the source text of the receiver expression in an extension method invocation. If the method is invoked using static method syntax, the captured string is the argument corresponding to the first parameter.
 
 Consider the following method declaration:
 
