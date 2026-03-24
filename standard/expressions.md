@@ -1150,14 +1150,16 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
-  - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
-    > *Note*: This is only applicable in unsafe code. *end note*
-- `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+- `E` is a non-constant *interpolated_string_expression*, `C₁` is an implicit interpolated string handler conversion, `T₁` is an applicable interpolated string handler type, and `C₂` is not an implicit interpolated string handler conversion.
+- `E` does not exactly match `T₂` and at least one of the following holds:
+  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+    - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+      > *Note*: This is only applicable in unsafe code. *end note*
+  - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 12.6.4.6 Exactly matching expression
 
@@ -1519,6 +1521,7 @@ but this is an implementation detail and therefore not part of this specificatio
 An *interpolated_string_expression* is classified as a value, which is evaluated in one of the following ways depending on the context in which it appears:
 
 1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
+1. If the target of an assignment or method-call argument has type `System.IFormattable` or `System.FormattableString`, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created.
 1. If the target of an assignment or method-call argument has a custom interpolated string handler (§custInterpStrExpHandler) type, then
 
 - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
@@ -1536,7 +1539,7 @@ M($"{val}");            // invokes M(SomeInterpolatedStringHandler)
 string s1 = $"{val}";   // default handler used, as target has type string
 M(s1);                  // invokes M(string)
 SomeInterpolatedStringHandler str2 = $"{val}";   // custom handler used
-M(s2);                  // invokes M(SomeInterpolatedStringHandler)
+M(str2);                // invokes M(SomeInterpolatedStringHandler)
 ```
 
 The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in §custInterpStrExpHandler.
