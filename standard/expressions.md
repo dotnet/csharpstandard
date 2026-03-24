@@ -3926,6 +3926,7 @@ All non-positional properties being changed shall have both set and init accesso
 This expression is evaluated as follows:
 
 - For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
 
