@@ -5912,30 +5912,16 @@ If the return type of the async function is `void`, evaluation differs from the 
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
 
-## 15.15 Synchronous and asynchronous iterators
-
-### 15.15.1 General
-
-A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
-
-An async function ([§15.14](classes.md#1514-async-functions)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
-
-An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
-
-When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
-
-An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute).
-
 Rather than using a task builder type based on the *return_type* of an async method, the attribute `AsyncMethodBuilder` can be applied to that method to indicate a different task builder type.
 
 It is an error to apply this attribute to a lambda with an implicit return type.
 
-The ability to provide an alternate builder type shall not be used when the synthesized entry-point for top-level statements is async ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). For that, an explicit entry-point is needed.
+The ability to provide an alternate builder type shall not be used when the synthesized entry-point for top-level statements is async (§7.1.3). For that, an explicit entry-point is needed.
 
 When an async method is compiled, the builder type is determined by:
 
 1. Using the builder type from the `AsyncMethodBuilder` attribute, if one is present;
-1. Otherwise, falling back to the builder type determined by the method’s *return_type*.
+1. Otherwise, falling back to the builder type determined by the method's *return_type*.
 
 If an `AsyncMethodBuilder` attribute is present, the builder type specified by that attribute is constructed, if necessary.
 
@@ -5997,6 +5983,20 @@ static ValueTask<int> ExampleAsync()
     return stateMachine.<>t__builder.Task;
 }
 ```
+
+## 15.15 Synchronous and asynchronous iterators
+
+### 15.15.1 General
+
+A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+
+An async function ([§15.14](classes.md#1514-async-functions)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+
+An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
+
+When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
+
+An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute).
 
 ### 15.15.2 Enumerator interfaces
 
