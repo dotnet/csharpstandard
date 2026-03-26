@@ -297,7 +297,7 @@ As described in [§9.3](variables.md#93-default-values), several kinds of variab
 >
 > *end example*
 
-The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all fields to their default values.
+The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). When a struct does not declare an explicit parameterless instance constructor, the default constructor is synthesized and always returns the value that results from setting all fields to their default values. The `default` expression always produces the zero-initialized default value, even when a struct declares an explicit parameterless instance constructor ([§16.4.9](structs.md#1649-constructors)).
 
 > *Note*: Structs should be designed to consider the default initialization state a valid state. In the example
 >
