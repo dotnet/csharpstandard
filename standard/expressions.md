@@ -2619,7 +2619,8 @@ If any of the arguments in the optional *argument_list* has the compile-time typ
 The binding-time processing of an *object_creation_expression* of the form `new T(A)`, where the specified or implied type `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
 
 - If `T` is a *value_type* and `A` is not present:
-  - The *object_creation_expression* is a default constructor invocation. The result of the *object_creation_expression* is a value of type `T`, namely the default value for `T` as defined in [§8.3.3](types.md#833-default-constructors).
+  - If `T` is a *struct_type* that has an explicitly declared parameterless instance constructor, that constructor is a candidate and is selected via overload resolution as described below.
+  - Otherwise, the *object_creation_expression* is a default constructor invocation. The result of the *object_creation_expression* is a value of type `T`, namely the default value for `T` as defined in [§8.3.3](types.md#833-default-constructors).
 - Otherwise, if `T` is a *type_parameter* and `A` is not present:
   - If no value type constraint or constructor constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)) has been specified for `T`, a binding-time error occurs.
   - The result of the *object_creation_expression* is a value of the run-time type that the type parameter has been bound to, namely the result of invoking the default constructor of that type. The run-time type may be a reference type or a value type.
