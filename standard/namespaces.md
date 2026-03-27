@@ -4,7 +4,7 @@
 
 C# programs are organized using namespaces. Namespaces are used both as an “internal” organization system for a program, and as an “external” organization system—a way of presenting program elements that are exposed to other programs.
 
-Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to facilitate the use of namespaces.
+Using directives (§14.5) and global using directives (§global-using-directives) are provided to facilitate the use of namespaces.
 
 ## 14.2 Compilation units
 
@@ -19,9 +19,11 @@ compilation_unit
 
 A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *extern_alias_directive*s of a compilation unit affect the *global_using_directive*s, *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
 
 The *using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+
+The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
@@ -154,6 +156,8 @@ An error occurs if a program declares an extern alias for which no external defi
 >
 > The program declares the existence of the extern aliases `X` and `Y`, but the actual definitions of the aliases are external to the program. The identically named `N.B` classes can now be referenced as `X.N.B` and `Y.N.B`, or, using the namespace alias qualifier, `X::N.B` and `Y::N.B`.
 > *end example*
+
+## §global-using-directives Global using directives
 
 ### §global-using-directives-general General
 
