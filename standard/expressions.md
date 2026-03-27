@@ -2093,8 +2093,7 @@ The search for `C` proceeds as follows:
 
 - Starting with the closest enclosing namespace declaration, continuing with each enclosing namespace declaration, and ending with the containing compilation unit, successive attempts are made to find a candidate set of extension methods:
   - If the given namespace or compilation unit directly contains non-generic type declarations `Cᵢ` with eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
-  - If types `Ci` imported by *using_static_declarations* and directly declared in namespaces imported by *using_namespace_directive*s in the given namespace or compilation unit **and, if containing compilation unit is reached, imported by *global_using_static_declarations* and directly declared in namespaces imported by *global_using_namespace_directive*s in the program** directly contain eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
-- `Mₑ`, then the set of those extension methods is the candidate set.
+  - If types `Cᵢ` imported by *using_static_directive*s and directly declared in namespaces imported by *using_namespace_directive*s in the given namespace or compilation unit, and, if the containing compilation unit is reached, imported by *global_using_static_directive*s and directly declared in namespaces imported by *global_using_namespace_directive*s in the program, directly contain eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
 - If no candidate set is found in any enclosing namespace declaration or compilation unit, a compile-time error occurs.
 - Otherwise, overload resolution is applied to the candidate set as described in [§12.6.4](expressions.md#1264-overload-resolution). If no single best method is found, a compile-time error occurs.
 - `C` is the type within which the best method is declared as an extension method.
