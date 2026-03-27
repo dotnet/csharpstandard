@@ -1558,30 +1558,37 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*.
+Together, the tokens *PP_Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*.
 
 *PP_Start_Line_Character* represents the start line (*PP_Start_Line*) and column (*PP_Start_Character*) pair of the first character on the line following the directive, which is the mapped file text; for example, `(1,1)`.
 
 *PP_End_Line_Character* represents the end line (*PP_End_Line*) and column (*PP_End_Character*) pair of the mapped file text; for example, `(3,10)`.
 
-*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify UTF-16 character numbers. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first UTF-16 character on each line is assigned number 1.
+*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify character numbers. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first character on each line is assigned number 1.
 
-By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of UTF-16 characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
+By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
 
 The mapping specified by a *PP_Line* is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first.
 
-> *Example*: Consider the following:
+> *Example*: A code generator that produces C# from a template file can use the enhanced form of the `#line` directive to map diagnostics back to positions in the original source. If line 5, columns 3 through 17 of `template.dsl` contains `Greet("Hello")`, the generator might emit:
 >
-> <!-- PendingAnExample: {template:"standalone-console", name:"LineWithMapping"} -->
 > ```csharp
-> // example goes here
+> #line (5,3)-(5,17) "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
 > ```
 >
-> the output produced might be something like the following:
+> Any diagnostic produced for the `output.Add(Greet("Hello"));` statement would be reported at line 5, columns 3–17 in `template.dsl`.
 >
-> ```console
-> ???
+> The *PP_Character_Offset* form allows the generator to account for an inserted prefix. With a character offset of `11` for the prefix `output.Add(`:
+>
+> ```csharp
+> #line (5,3)-(5,17) 11 "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
 > ```
+>
+> the offset causes the mapped span to begin at `Greet("Hello")` rather than at `output.Add(`, mapping `Greet("Hello")` to line 5, column 3 in `template.dsl`.
 >
 > *end example*
 
