@@ -398,7 +398,7 @@ An *implicitly_typed_local_variable_declaration* introduces a single local varia
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
 > var z = null;           // Error, null does not have a type
-> var u = x => x + 1;     // Error, anonymous functions do not have a type
+> var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
 > ```
 >
