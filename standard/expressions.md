@@ -1020,8 +1020,6 @@ Instead, all `Xᵢ` are considered *unfixed*, and a *lower-bound inference* is 
 
 #### 12.6.3.16 Finding the best common type of a set of expressions
 
-**TBD**
-
 In some cases, a common type needs to be inferred for a set of expressions. In particular, the element types of implicitly typed arrays and the return types of anonymous functions with *block* bodies are found in this way.
 
 The best common type for a set of expressions `E₁...Eᵥ` is determined as follows:
@@ -1161,12 +1159,13 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if:
 
-- `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+- `C₁` is not an anonymous function type conversion and `C₂` is an anonymous function type conversion, or
+- `E` does not exactly match `T₂` and at least one of the following holds:
+  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
   - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
     > *Note*: This is only applicable in unsafe code. *end note*
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
