@@ -5606,7 +5606,6 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 >   => (s is not null) ? int.Parse(s) : null;
 > var lambda = (in int p1, out bool p2, scoped ref float p3, 
 >   scoped Span<int> p4) => Mlam(in p1, out p2, ref p3, p4);
-
 > ```
 >
 > *end example*
