@@ -3501,7 +3501,7 @@ A *default_value_expression* is a constant expression ([§12.26](expressions.md#
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`; or
 - any enumeration type.
 
-A reference variable field `rv` of type `T`, may not have an explicit initializer of `default`. 
+A reference variable field `rv` of type `T`, may not have an explicit initializer of `default`.
 
 > *Note*: If one tries to initialize `rv` using `rv = default`, this does not set the reference variable to `null`. Instead, it attempts to set the value of the (possibly non-existent) referent to the default value for type `T`. *end note*
 
