@@ -375,6 +375,7 @@ namespace System.Runtime.CompilerServices
     public static class Unsafe
     {
         public static ref T NullRef<T>();
+        public static bool IsNullRef<T>(ref T source);
     }
 }
 
@@ -766,6 +767,15 @@ namespace System.Diagnostics.CodeAnalysis
     public sealed class NotNullWhenAttribute : Attribute
     {
         public NotNullWhenAttribute(bool returnValue);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method
+      | System.AttributeTargets.Parameter
+      | System.AttributeTargets.Property,
+      AllowMultiple=false, Inherited=false)]
+    public sealed class UnscopedRefAttribute : Attribute
+    {
+        public UnscopedRefAttribute();
     }
 }
 
@@ -1469,6 +1479,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
