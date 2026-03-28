@@ -1253,11 +1253,11 @@ A member annotated with `[UnscopedRef]` may not implement an interface.
 
 It is an error to use `[UnscopedRef]` on
 
-  - A member that is not declared on a `struct`.
-  - A `static` member, `init` member, or constructor on a `struct`
-  - A parameter marked `scoped`.
-  - A parameter passed by value.
-  - A parameter passed by reference that is not implicitly scoped.
+- A member that is not declared on a `struct`.
+- A `static` member, `init` member, or constructor on a `struct`.
+- A parameter marked `scoped`.
+- A parameter passed by value.
+- A parameter passed by reference that is not implicitly scoped.
 
 See §scoped-modifier for more information.
 
