@@ -1448,11 +1448,11 @@ The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-c
 
 Consider the following declarations and their safe contexts:
 
-| Local Variable               | ref-safe-context | safe-context |
+| Local Variable              | ref-safe-context | safe-context |
 |---|---|---|
-| `Span<int> s`			 | *function-member* | *caller-context* | 
-| `scoped Span<int> s`		 | *function-member* | *function-member* | 
-| `ref Span<int> s`		 | *caller-context*  | *caller-context* | 
-| `scoped ref Span<int> s`	 | *function-member* | *caller-context* | 
+| `Span<int> s`               | *function-member*  | *caller-context* |
+| `scoped Span<int> s`        | *function-member*  | *function-member* |
+| `ref Span<int> s`           | *caller-context*   | *caller-context* |
+| `scoped ref Span<int> s`    | *function-member*  | *caller-context* |
 
 In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*. 
