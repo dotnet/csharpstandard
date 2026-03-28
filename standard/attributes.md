@@ -504,6 +504,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializer` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
 - `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
+- System.Diagnostics.CodeAnalysis.UnscopedRefAttribute (§UnscopedRefAttribute), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1225,6 +1226,40 @@ Specifies that a nullable argument will not be `null` when the method returns th
 > ```
 >
 > *end example*
+
+### §UnscopedRefAttribute The UnscopedRef attribute
+
+There are several cases in which a ref is treated as being implicitly scoped; that is, the ref is not allowed to escape a method. For example:
+
+- `this` for struct instance methods.
+- ref parameters that refer to ref struct types.
+- out parameters.
+
+This attribute is used in those situations where the ref should be allowed to escape.
+
+This attribute may can be applied to any `ref` and it changes the ref-safe-context to be one level wider than its default. For example:
+
+| UnscopedRef applied to | Original ref-safe-context | New ref-safe-context |
+| --- | --- | --- |
+| instance member | function-member | return-only |
+| `in` / `ref` parameter | return-only | caller-context |
+| `out` parameter | function-member | return-only |
+
+When applying this attribute to an instance method of a struct it modifies the implicit `this` parameter; that is, `this` acts as an unannotated `ref` of the same type.
+
+An instance method or property annotated with `[UnscopedRef]` has the ref-safe-context of `this` set to the *caller-context*.
+
+A member annotated with `[UnscopedRef]` may not implement an interface.
+
+It is an error to use `[UnscopedRef]` on
+
+  - A member that is not declared on a `struct`.
+  - A `static` member, `init` member, or constructor on a `struct`
+  - A parameter marked `scoped`.
+  - A parameter passed by value.
+  - A parameter passed by reference that is not implicitly scoped.
+
+See §scoped-modifier for more information.
 
 ### 23.5.8 The EnumeratorCancellation attribute
 
