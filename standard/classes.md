@@ -2270,8 +2270,9 @@ default_argument
 
 parameter_modifier
     : parameter_mode_modifier
-    | 'this' parameter_mode_modifier?
-    | parameter_mode_modifier? 'this'
+    | 'this' 'scoped'? parameter_mode_modifier?
+    | 'scoped'? parameter_mode_modifier? 'this'
+    | 'scoped' parameter_mode_modifier?
     ;
 
 parameter_mode_modifier
@@ -2287,7 +2288,11 @@ parameter_array
 
 The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+
+An output parameter implicitly has the `scoped` modifier.
+
+For a discussion of `scoped`, see §scoped-modifier.
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
@@ -2335,7 +2340,7 @@ The following kinds of parameters exist:
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
 - Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
 
 #### 15.6.2.2 Value parameters
 
