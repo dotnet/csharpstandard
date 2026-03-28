@@ -1455,4 +1455,4 @@ Consider the following declarations and their safe contexts:
 | `ref Span<int> s`           | *caller-context*   | *caller-context* |
 | `scoped ref Span<int> s`    | *function-member*  | *caller-context* |
 
-In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*. 
+In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
