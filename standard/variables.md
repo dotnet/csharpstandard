@@ -190,15 +190,19 @@ A discard is not initially assigned, so it is always an error to access its valu
 The following categories of variables are automatically initialized to their default values:
 
 - Static variables.
-- Instance variables of class instances.
+- Instance variables of class and struct instances.
 - Array elements.
 
 The default value of a variable depends on the type of the variable and is determined as follows:
 
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
-- For a variable of a *reference_type*, the default value is `null`.
+- For a variable of a *reference_type* or a reference variable, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
+
+To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`.
+
+> *Note*: One cannot test a ref variable to see if it has been assigned a referent, by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
 
 ## 9.4 Definite assignment
 
@@ -1184,7 +1188,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### 9.7.1 General
 
-A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable or ref struct field declared with the `ref` modifier.
 
 A reference variable stores a *variable_reference* ([§9.5](variables.md#95-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 
@@ -1339,6 +1343,8 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
+A reference variable can be scoped explicitly; see §scoped-modifier.
+
 #### 9.7.2.2 Local variable ref safe context
 
 For a local variable `v`:
@@ -1359,8 +1365,26 @@ For a parameter `p`:
 
 For a variable designating a reference to a field, `e.F`:
 
-- If `e` is of a reference type, its ref-safe-context is the caller-context.
+- If `F` is a reference variable, its ref-safe-context is the safe-context of `e`.
+- Else if `e` is of a reference type, its ref-safe-context is the caller-context.
 - Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
+
+As a result, a field that is a reference variable may be returned as a reference variable from a `ref struct` or `readonly ref struct`, but a non-reference variable field may not.
+
+> *Example*:
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldsSafeContext", expectedErrors:["CS8170"]} -->
+>
+> ```csharp
+> ref struct RS
+> {
+>     ref int _refField;
+>     int _field;
+>     public ref int Prop1 => ref _refField;  // OK
+>     public ref int Prop2 => ref _field;     // Error
+> }
+> ```
+>
+> *end example*
 
 #### 9.7.2.5 Operators
 
@@ -1415,3 +1439,20 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
 - For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be the caller-context.
+
+### §scoped-modifier The scoped modifier
+
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of a variable. The presence of this modifier asserts that related code doesn’t extend the lifetime of the variable.
+
+`scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type.
+
+Consider the following declarations and their safe contexts:
+
+| Local Variable               | ref-safe-context | safe-context |
+|---|---|---|
+| `Span<int> s`			 | *function-member* | *caller-context* | 
+| `scoped Span<int> s`		 | *function-member* | *function-member* | 
+| `ref Span<int> s`		 | *caller-context*  | *caller-context* | 
+| `scoped ref Span<int> s`	 | *function-member* | *caller-context* | 
+
+In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*. 
