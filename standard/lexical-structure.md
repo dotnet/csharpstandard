@@ -78,13 +78,14 @@ These productions occur in contexts where a value can occur in an expression, an
 
 If a sequence of tokens can be parsed, in context, as one of the disambiguated productions including an optional *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), then the token immediately following the closing `>` token shall be examined and if it is:
 
-- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [ =>`; or
 - one of the relational operators `<  <=  >=  is as`; or
 - a contextual query keyword appearing inside a query expression.
+- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
-> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
+> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -133,24 +134,6 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 > The case label `case A<B> C:` uses a declaration pattern.
 >
 > *end example*
-
-When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
-
-To differentiate a collection initializer ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
-
-```csharp
-var y = new C { [A] = x };    // OK: y[A] = x
-var z = new C { [A] x => x }; // OK: z[0] = [A] x => x
-```
-
-The parser shall treat `?[` as the start of a *null_conditional_element_access* ([[§12.8.13](expressions.md#12813-null-conditional-element-access)):
-
-```csharp
-x = b ? [A];               // OK
-y = b ? [A] () => { } : z; // error
-```
-
-To differentiate a method call `T()` from a lambda expression `T () => e`, the parser shall look ahead.
 
 ## 6.3 Lexical analysis
 
@@ -377,7 +360,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, keyword or contextual keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -622,14 +605,15 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
-    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
-    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
-    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
-    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
-    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
-    | 'var'       | 'when'       | 'where'     | 'yield'
+    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
+    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
+    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
+    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
+    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
+    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
+    | 'record'   | 'remove'     | 'scoped'     | 'select'    | 'set'       | 'Stdcall'
+    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
+    | 'where'    | 'yield'
     ;
 ```
 
@@ -1522,7 +1506,7 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
-    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
       PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
