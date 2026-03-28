@@ -569,7 +569,7 @@ argument_value
     : expression
     | 'in' variable_reference
     | 'ref' variable_reference
-    | 'out' variable_reference
+    | 'out' 'scoped'? variable_reference
     ;
 ```
 
@@ -580,7 +580,7 @@ The *argument_value* can take one of the following forms:
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
 - The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
 - The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `out` optionally followed by `scoped`, optionally followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see §scoped-modifier.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
@@ -2728,7 +2728,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : initializer_target '=' initializer_value
+    : initializer_target '=' 'ref'? initializer_value
     ;
 
 initializer_target
@@ -2737,7 +2737,7 @@ initializer_target
     ;
 
 initializer_value
-    : expression
+    : 'ref'? expression
     | object_or_collection_initializer
     ;
 ```
@@ -3517,6 +3517,10 @@ A *default_value_expression* is a constant expression ([§12.26](expressions.md#
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`; or
 - any enumeration type.
+
+A reference variable field `rv` of type `T`, may not have an explicit initializer of `default`. 
+
+> *Note*: If one tries to initialize `rv` using `rv = default`, this does not set the reference variable to `null`. Instead, it attempts to set the value of the (possibly non-existent) referent to the default value for type `T`. *end note*
 
 ### 12.8.22 Stack allocation
 
@@ -5295,7 +5299,7 @@ A declaration expression declares a local variable.
 
 ```ANTLR
 declaration_expression
-    : local_variable_type identifier
+    : 'scoped'? local_variable_type identifier
     ;
 
 local_variable_type
@@ -5303,6 +5307,8 @@ local_variable_type
     | 'var'
     ;
 ```
+
+'scoped' shall only be permitted with *local_variable_type* if *local_variable_type* is 'var' or a ref struct type, and *identifer* is not a discard.
 
 The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§12.8.4](expressions.md#1284-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
@@ -5466,7 +5472,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : attributes? anonymous_function_parameter_modifier? type identifier
+    : attributes? 'scoped'? anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -5498,6 +5504,8 @@ anonymous_function_body
 ```
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope.
+
+For a discussion of `scoped`, see §scoped-modifier.
 
 A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing static anonymous function.
 
@@ -5565,6 +5573,9 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > var concat = string ([DisallowNull] string a, [DisallowNull] string b) => a + b;
 > Func<string, int?> parse = [X][return: Y] ([Z] s)
 >   => (s is not null) ? int.Parse(s) : null;
+> var lambda = (in int p1, out bool p2, scoped ref float p3, 
+>   scoped Span<int> p4) => Mlam(in p1, out p2, ref p3, p4);
+
 > ```
 >
 > *end example*
@@ -5575,6 +5586,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
+- Only *lambda_expression* parameters may contain 'scoped'.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 
 ### 12.22.2 Anonymous function signatures
@@ -7159,6 +7171,10 @@ The `= ref` operator is known as the *ref assignment* operator.
 The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, or an input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
 It is a compile time error if the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of the left operand is wider than the ref-safe-context of the right operand.
+
+The left operand shall have the same safe-context as the right operand.
+
+> *Note*: This requirement exists because the lifetime of the value pointed to by a ref location is invariant. The indirection prevents one from allowing any kind of variance here, even to narrower lifetimes. *end note*
 
 The right operand shall be definitely assigned at the point of the ref assignment.
 
