@@ -150,7 +150,7 @@ The members of a struct consist of the members introduced by its *struct_member_
 ```ANTLR
 struct_member_declaration
     : constant_declaration
-    | field_declaration
+    | struct_field_declaration
     | method_declaration
     | property_declaration
     | event_declaration
@@ -165,7 +165,7 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
+Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
 
 Except for the differences noted in [§16.5](structs.md#165-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
@@ -505,7 +505,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 
 With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of by-reference parameters), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
-> *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
+> *Note*: If a struct contains a field of reference type or that is a reference variable then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -560,7 +560,7 @@ When a property or indexer of a struct is the target of an assignment, the insta
 
 ### 16.5.5 Default values
 
-As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
+As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, as well as reference variable fields, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference variable fields and reference type fields to `null`.
 
 > *Example*: Referring to the `Point` struct declared above, the example
 >
@@ -701,9 +701,11 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > *end example*
 
-### 16.5.8 Field initializers
+### 16.5.8 Fields
 
-As described in [§16.5.5](structs.md#1655-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
+#### 16.5.8.1 Field initializers
+
+As described in [§16.5.5](structs.md#1655-default-values), the default value of a struct consists of the value that results from setting all value type and reference variable fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
 > *Example*:
 >
@@ -736,6 +738,58 @@ When a struct instance constructor has no constructor initializer, that construc
 When a struct instance constructor has a `this()` constructor initializer that represents the default parameterless constructor, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all value type fields are set to their default value and all reference type fields are set to `null`. Immediately after that, a sequence of assignments corresponding to the *variable_initializer*s are executed.
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
+
+#### §Ref-Fields Ref fields
+
+```ANTLR
+struct_field_declaration
+    : attributes? ('readonly'? 'ref')? field_modifier* type variable_declarators ';'
+    ;
+```
+
+*field_modifier* is described in [§15.5.1](classes.md#1551-general).
+
+A *struct_field_declaration* without `ref` or `readonly ref` is as described in [§15.5](classes.md#155-fields).
+
+A `ref` or `readonly ref` field is a reference variable and shall only be declared in a `ref` struct.
+
+Consider the following ref struct declaration:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"refFields1"} -->
+
+```csharp
+ref struct RwS
+{
+    public static int rwField = 100;
+
+    public ref int                   rwRefToRwData = ref rwField;
+    public ref readonly int          rwRefToRoData = ref rwField;
+    public readonly ref int          roRefToRwData = ref rwField;
+    public readonly ref readonly int roRefToRoData = ref rwField;
+    public RwS() { /*…*/ }
+}
+```
+
+`rwRefToRwData` is a writable reference variable, whose referent is seen as a writable `int`. `rwRefToRoData` is a writable reference variable, whose referent is seen as a read-only `int`. `roRefToRwData` is a read-only reference variable, whose referent is seen as a writable `int`. `roRefToRoData` is a read-only reference variable, whose referent is seen as a read-only `int`. The read/write field `rwField` can be written directly, and via the reference variables `rwRefToRwData` and `roRefToRwData`.
+
+A readonly reference variable may take on a value via an initializer, or via an assignment inside a constructor or an init-only setter.
+
+Consider the following readonly ref struct declaration:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"refFields2"} -->
+
+```csharp
+readonly ref struct RoS
+{
+    public static int rwField = 200;
+
+    public readonly ref int          roRefToRwData = ref rwField;
+    public readonly ref readonly int roRefToRoData = ref rwField;
+    public RoS() { /*...*/ }
+}
+```
+
+`roRefToRwData` is a read-only reference variable, whose referent is seen as a writable `int`. `roRefToRoData` is a read-only reference variable, whose referent is seen as a read-only `int`. The read/write field `rwField` can be written directly, and via the reference variable `roRefToRwData`.
 
 ### 16.5.9 Constructors
 
@@ -933,6 +987,8 @@ A local variable of a ref struct type has a safe-context as follows:
 - If the variable is an iteration variable of a `foreach` loop, then the variable’s safe-context is the same as the safe-context of the `foreach` loop’s expression.
 - Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
+
+See [§9.7.2.1](variables.md#9721-general) and [§9.7.2.2](variables.md#9722-local-variable-ref-safe-context).
 
 #### 16.5.15.4 Field safe context
 
