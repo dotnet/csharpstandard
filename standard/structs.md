@@ -69,16 +69,18 @@ It is a compile-time error if a ref struct type is used in any of the following 
 
 - As the element type of an array.
 - As the declared type of a field of a class or a struct that does not have the `ref` modifier.
-- Being boxed to `System.ValueType` or `System.Object`.
 - As a type argument.
 - As the type of a tuple element.
-- An async method.
-- An iterator.
-- There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
+- In an async method.
+- In an iterator.
+- As the receiver type for a method group conversion to a delegate type.
+- As a captured variable in a lambda expression or a local function.
+
+In addition, the following restrictions apply to a `ref struct` type:
+
+- A `ref struct` type shall not be boxed to `System.ValueType` or `System.Object`.
 - A `ref struct` type shall not be declared to implement any interface.
 - An instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type shall not be called with a receiver of that `ref struct` type.
-- An instance method of a `ref struct` type shall not be captured by method group conversion to a delegate type.
-- A ref struct shall not be captured by a lambda expression or a local function.
 
 > *Note*: A `ref struct` shall not declare `async` instance methods nor use a `yield return` or `yield break` statement within an instance method, because the implicit `this` parameter cannot be used in those contexts. *end note*
 
