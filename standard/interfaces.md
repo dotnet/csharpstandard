@@ -451,9 +451,9 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 
 - *event_modifier* shall not include `override`.
 - A derived interface may implement an abstract interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
-- It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
-- An instance event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
-- An instance event with the `abstract` modifier must not declare accessors.
+- It is a compile-time error for *variable_declarators* in an interface *event_declaration* to contain any *variable_initializer*s.
+- An interface event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An interface event with the `abstract` modifier must not declare accessors.
 - The type of an interface event shall be input-safe.
 
 ### 19.4.6 Interface indexers
