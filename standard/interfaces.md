@@ -1463,7 +1463,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 19.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >
