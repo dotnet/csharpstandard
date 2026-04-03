@@ -743,13 +743,14 @@ A *field_declaration* declared directly inside a *struct_declaration* having the
 
 ```ANTLR
 struct_field_declaration
-    : attributes? ('readonly'? 'ref')? field_modifier* type variable_declarators ';'
+    : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
+      variable_declarators ';'
     ;
 ```
 
 *field_modifier* is described in [§15.5.1](classes.md#1551-general).
 
-A *struct_field_declaration* without `ref` or `readonly ref` is as described in [§15.5](classes.md#155-fields).
+A *struct_field_declaration* without `ref`, `readonly ref`, or `ref readonly` is as described in [§15.5](classes.md#155-fields).
 
 A `ref` or `readonly ref` field is a reference variable and shall only be declared in a `ref` struct.
 
