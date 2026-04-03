@@ -378,7 +378,7 @@ For a discussion of `scoped`, see §scoped-modifier.
 > var orders = new Dictionary<int,Order>();
 > ref var j = ref i;
 > ref readonly var k = ref i;
-> scoped var r = new RS();   // ref struct RS {} 
+> scoped var r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
 > ```
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
@@ -392,7 +392,7 @@ For a discussion of `scoped`, see §scoped-modifier.
 > Dictionary<int,Order> orders = new Dictionary<int,Order>();
 > ref int j = ref i;
 > ref readonly int k = ref i;
-> scoped RS r = new RS();   // ref struct RS {} 
+> scoped RS r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
 > ```
 >
 > The following are incorrect implicitly typed local variable declarations:
