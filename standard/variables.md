@@ -1472,3 +1472,18 @@ Consider the following declarations and their safe contexts:
 | `scoped ref Span<int> s`    | *function-member*  | *caller-context* |
 
 In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
+
+### §parameter-scope-variance Parameter scope variance
+
+The `scoped` modifier (§scoped-modifier) and `[UnscopedRef]` attribute (§UnscopedRefAttribute) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
+
+- Add `scoped` to a `ref` or `in` parameter.
+- Add `scoped` to a parameter of a `ref struct` type.
+- Remove `[UnscopedRef]` from an `out` parameter.
+- Remove `[UnscopedRef]` from a `ref` parameter of a `ref struct` type.
+
+Any other difference with respect to `scoped` or `[UnscopedRef]` between the base and the overriding, implementing, or converting signature is a mismatch.
+
+The `scoped` modifier and `[UnscopedRef]` attribute do not affect hiding.
+
+Overloads shall not differ only on `scoped` or `[UnscopedRef]`.
