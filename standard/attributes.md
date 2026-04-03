@@ -1229,7 +1229,7 @@ Specifies that a nullable argument will not be `null` when the method returns th
 
 ### §UnscopedRefAttribute The UnscopedRef attribute
 
-There are several cases in which a ref is treated as being implicitly scoped; that is, the ref is not allowed to escape a method. For example:
+There are several cases in which a ref is treated as being implicitly scoped (§scoped-modifier); that is, the ref is not allowed to escape a method. For example:
 
 - `this` for struct instance methods.
 - ref parameters that refer to ref struct types.
