@@ -1023,6 +1023,48 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
+#### §method-arguments-must-match Method arguments must match
+
+For any method invocation `e.M(a1, a2, ... aN)`:
+
+1. Calculate the narrowest safe-context from:
+   - caller-context.
+   - The safe-context of all arguments.
+   - The ref-safe-context of all `ref` arguments whose corresponding parameters have a ref-safe-context of caller-context.
+
+2. All `ref` arguments of `ref struct` types shall be assignable by a value with that safe-context. In this rule, `ref` does **not** generalize to include `in` and `out`.
+
+For any method invocation `e.M(a1, a2, ... aN)`:
+
+1. Calculate the narrowest safe-context from:
+   - caller-context.
+   - The safe-context of all arguments.
+   - The ref-safe-context of all `ref` arguments whose corresponding parameters are not `scoped`.
+
+2. All `out` arguments of `ref struct` types shall be assignable by a value with that safe-context.
+
+The presence of `scoped` allows developers to reduce the friction this rule creates by marking parameters which are not returned as `scoped`. This removes their arguments from (1) in both cases above and provides greater flexibility to callers.
+
+#### §declaration-expression-safe-context Infer safe-context of declaration expressions
+
+The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
+
+- caller-context.
+- If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
+- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+  - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
+  - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
+
+#### §object-initializer-safe-context Object initializer safe context
+
+The safe-context of an object initializer expression is the narrowest of:
+
+1. The safe-context of the constructor invocation.
+2. The safe-context and ref-safe-context of arguments to member initializer indexers that can escape to the receiver.
+3. The safe-context of the RHS of assignments in member initializers to non-readonly setters, or the ref-safe-context in the case of ref assignment.
+
+> *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
+
 #### 16.5.15.7 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
@@ -1031,12 +1073,4 @@ The result of a stackalloc expression has safe-context of function-member.
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
-
-> *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
->
-> ```csharp
-> public Span<T>(ref T p)
-> ```
->
-> Such a constructor makes instances of `Span<T>` used as fields indistinguishable from a `ref` field. The safety rules described in this document depend on `ref` fields not being a valid construct in C# or .NET. *end note*
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.
