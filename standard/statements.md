@@ -1145,13 +1145,10 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 ```ANTLR
 foreach_statement
     : // synchronous foreach
-      'foreach' '(' ref_kind? local_variable_type identifier 'in' expression ')'
+      'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // asynchronous foreach
-      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
-          embedded_statement
-    | 'await'? 'foreach' '(' ('scoped'? ref_kind) local_variable_type identifier
-      'in' expression ')'
+      'await' 'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // deconstructing foreach
       'await'? 'foreach' '(' deconstructor 'in' expression ')'
@@ -1160,6 +1157,12 @@ foreach_statement
 ```
 
 There are three forms of the *foreach_statement*: *synchronous*, *asynchronous* and *deconstructing*; corresponding to the three alternatives of the above grammar.
+
+It is a compile-time error for `scoped` to be present in a *foreach_statement* unless a *ref_kind* is also present or the *local_variable_type* denotes a ref struct type.
+
+It is a compile-time error for an *asynchronous* *foreach_statement* to omit the `scoped` modifier if *ref_kind* is present or the *local_variable_type* denotes a ref struct type.
+
+The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
 The deconstructing foreach supports both synchronous and asynchronous forms and is described in [§13.9.5.4](statements.md#13954-deconstructing-foreach).
 
