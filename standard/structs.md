@@ -969,16 +969,19 @@ For any non-default expression whose compile-time type is a ref struct has a saf
 
 The safe-context records which context a value may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. The safe-context of an expression constrains its use as follows:
+There are four different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, **return-only**, and **caller-context**. The safe-context of an expression constrains its use as follows:
 
-- For a return statement `return e1`, the safe-context of `e1` shall be caller-context.
+- For a return statement `return e1`, the safe-context of `e1` shall be at least return-only.
 - For an assignment `e1 = e2` the safe-context of `e2` shall be at least as wide a context as the safe-context of `e1`.
-
-For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
+- For an assignment to an `out` parameter, the safe-context of the right-hand side shall be at least return-only.
 
 #### 16.5.15.2 Parameter safe context
 
 A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
+
+An `out` parameter of a ref struct type has a safe-context of return-only.
+
+A `this` parameter in a struct constructor has a safe-context of return-only.
 
 #### 16.5.15.3 Local variable safe context
 
