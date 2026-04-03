@@ -200,9 +200,7 @@ The default value of a variable depends on the type of the variable and is deter
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
 
-To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`.
-
-> *Note*: One cannot test a ref variable to see if it has been assigned a referent, by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
+> *Note*: To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`. One cannot test a ref variable to see if it has been assigned a referent by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
 
 ## 9.4 Definite assignment
 
@@ -1350,7 +1348,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
-A reference variable can be scoped explicitly; see §scoped-modifier.
+A reference variable that is a local variable or parameter can be scoped explicitly; see §scoped-modifier.
 
 #### 9.7.2.2 Local variable ref safe context
 
@@ -1458,9 +1456,9 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 
 ### §scoped-modifier The scoped modifier
 
-The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of a variable. The presence of this modifier asserts that related code doesn’t extend the lifetime of the variable.
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
 
-`scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type.
+`scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type. `scoped` shall not be applied to fields, array elements, or return types.
 
 Consider the following declarations and their safe contexts:
 
