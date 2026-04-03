@@ -1143,10 +1143,12 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'await'? 'foreach' '(' ('scoped'? ref_kind) local_variable_type identifier
+    : 'await'? 'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier
       'in' expression ')' embedded_statement
     ;
 ```
+
+It is a compile-time error for `scoped` to be present in a *foreach_statement* unless a *ref_kind* is also present or the *local_variable_type* denotes a ref struct type.
 
 The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
