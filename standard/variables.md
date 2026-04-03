@@ -1401,12 +1401,19 @@ The conditional operator ([§12.21](expressions.md#1221-conditional-operator)), 
 
 #### 9.7.2.6 Function invocation
 
-For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
+For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, where `M()` does not return ref-to-ref-struct, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
-- For each input parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
-- The safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of all argument expressions (including the receiver).
+- The safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
+- The ref-safe-context contributed by all `ref` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+
+If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
+
+For the purpose of these rules, a given argument `expr` passed to parameter `p`:
+
+1. If `p` is `scoped ref`, then `expr` does not contribute ref-safe-context.
+2. If `p` is `scoped`, then `expr` does not contribute safe-context.
+3. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
 
 > *Example*: the last bullet is necessary to handle code such as
 >

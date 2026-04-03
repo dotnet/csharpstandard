@@ -1007,10 +1007,19 @@ For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the saf
 
 #### 16.5.15.6 Method and property invocation
 
-A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P` has safe-context of the smallest of the following contexts:
+A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P`, where `M()` does not return ref-to-ref-struct, has safe-context of the smallest of the following contexts:
 
-- caller-context.
-- The safe-context of all argument expressions (including the receiver).
+- The caller-context.
+- When the return is a `ref struct`, the safe-context contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
+- When the return is a `ref struct`, the ref-safe-context contributed by all `ref` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+
+If `M()` does return ref-to-ref-struct, the safe-context is the same as the safe-context of all arguments which are ref-to-ref-struct. It is an error if there are multiple such arguments with different safe-contexts.
+
+For the purpose of these rules, a given argument `expr` passed to parameter `p`:
+
+1. If `p` is `scoped ref`, then `expr` does not contribute ref-safe-context.
+2. If `p` is `scoped`, then `expr` does not contribute safe-context.
+3. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
