@@ -3500,7 +3500,7 @@ A *default_value_expression* is a constant expression ([§12.26](expressions.md#
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`; or
 - any enumeration type.
 
-A reference variable field `rv` of type `T`, may not have an explicit initializer of `default`.
+A reference variable field `rv` of type `T` shall not have an explicit initializer of `default`.
 
 > *Note*: If one tries to initialize `rv` using `rv = default`, this does not set the reference variable to `null`. Instead, it attempts to set the value of the (possibly non-existent) referent to the default value for type `T`. *end note*
 
@@ -7348,9 +7348,7 @@ The operator `= ref`  is called the ***ref assignment operator***. The expressio
 
 The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, an input parameter, or a discard. When the left operand is a discard, the right operand is evaluated but no variable reference is stored. Otherwise, the right operand shall be an expression that yields a *variable_reference* ([§9.5](variables.md#95-variable-references)) designating a value of the same type as the left operand.
 
-It is a compile time error if the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of the left operand is wider than the ref-safe-context of the right operand.
-
-The left operand shall have the same safe-context as the right operand.
+The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand (§9.7.2).
 
 > *Note*: This requirement exists because the lifetime of the value pointed to by a ref location is invariant. The indirection prevents one from allowing any kind of variance here, even to narrower lifetimes. *end note*
 

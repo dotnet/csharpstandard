@@ -165,6 +165,8 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields (§Ref-Fields). *end note*
+
 Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
 
 Except for the differences noted in [§16.5](structs.md#165-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
@@ -794,7 +796,7 @@ readonly ref struct RoS
 
 ### 16.5.9 Constructors
 
-A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
+A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value, all reference variable fields to null references, and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
 
 An explicitly declared parameterless instance constructor shall have public accessibility.
 
