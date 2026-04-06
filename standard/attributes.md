@@ -1566,7 +1566,7 @@ This attribute indicates that the constructor it decorates sets all required mem
 
 This attribute indicates that the current type has one or more required members ([§15.7.1](classes.md#1571-general)), or that a specific member of that type is required. However, it is an error for this attribute to be used explicitly. Instead, the presence of the modifier `required` results in the type or member being treated as if it were decorated with this attribute.
 
-###  §InlineArrayAttribute The InlineArray attribute
+### §InlineArrayAttribute The InlineArray attribute
 
 The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see §InlineArray.
 
