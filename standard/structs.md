@@ -1152,6 +1152,37 @@ The safe-context of an object initializer expression is the narrowest of:
 
 > *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
 
+> *Example*: The following illustrates how an object initializer narrows the safe-context of the resulting value:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ObjectInitializerSafeContext", expectedErrors:["CS8352"]} -->
+> ```csharp
+> using System;
+>
+> ref struct S
+> {
+>     public Span<int> Field;
+>     public S(ref int i) { }
+> }
+>
+> class C
+> {
+>     static S Example()
+>     {
+>         Span<int> stackSpan = stackalloc int[42];
+>         int i = 0;
+>
+>         // safe-context is narrowest of:
+>         //   constructor safe-context (caller-context) and
+>         //   RHS of Field assignment (stackSpan: function-member)
+>         // = function-member
+>         var x = new S(ref i) { Field = stackSpan };
+>         return x; // Error: x has safe-context of function-member
+>     }
+> }
+> ```
+>
+> *end example*
+
 #### 16.5.15.7 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
