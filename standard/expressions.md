@@ -2520,7 +2520,7 @@ with *argument* as the index, on an instance of `System.ReadOnlySpan<T>` that wa
 
 ```csharp
 static T GetItem(«InlineArrayType» array)
-``` 
+```
 
 > *Example*:
 > <!-- Example: {template:"standalone-lib-without-using", name:"InlineArays1", expectedErrors:["CS8329","CS8156","CS1510"]} -->
@@ -2562,7 +2562,7 @@ The value of *argument* is converted to `int` and the element access is interpre
 
 *argument* is converted to `System.Index` and then to an `int`-based index value indicating the element position relative to the start of the inline array. Then, the element access is interpreted as described when *argument*’s type is `int`.
 
-Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See §InlineArray for more information .] 
+Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See §InlineArray for more information.
 
 **When *argument*’s type is implicitly convertible to `System.Range`**
 
@@ -2584,15 +2584,15 @@ If *primary_no_array_creation_expression* is a readonly variable, the result of 
 public ReadOnlySpan<T> Slice (int start, int length)
 ```
 
-passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature 
+passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature
 
 ```csharp
 static System.ReadOnlySpan<T> GetSlice(in «InlineArrayType» array)
 ```
 
-Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See §InlineArray for more information .] 
+Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See §InlineArray for more information.
 
-If *primary_no_array_creation_expression* is a value, an error is reported. 
+If *primary_no_array_creation_expression* is a value, an error is reported.
 
 > *Example*:
 >
