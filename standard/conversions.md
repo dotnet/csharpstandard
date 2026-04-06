@@ -481,6 +481,16 @@ A warning shall be issued for an implicit conversion of a method group to `objec
 >
 > *end example*
 
+### §ImplicitInlineArrayConversions Implicit inline array conversions
+
+The implicit inline array (§InlineArray) conversions are:
+
+- From an expression designating a writable inline array with element type `T` to `System.Span<T>`
+- From an expression designating a writable inline array with element type `T` to `System.ReadonlySpan<T>`
+- From an expression designating a readonly inline array with element type `T` to `System.ReadonlySpan<T>`
+
+The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See §InlineArray for more information.] 
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
