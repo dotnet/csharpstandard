@@ -1,10 +1,10 @@
-# Plan: Apply 18 Git Patches for C# 9/10 Features
+# Plan: Apply 16 Git Patches for C# 11 Features
 
-Sequential application of 18 git patches to the current branch, adding C# 9 and 10 language features to the standard specification. After each patch, pause for user validation. Track changes via both git history and detailed notes to resolve conflicts caused by earlier patches in the series.
+Sequential application of 16 git patches to the current branch, adding C# 11 language features to the standard specification. After each patch, pause for user validation. Track changes via both git history and detailed notes to resolve conflicts caused by earlier patches in the series.
 
 ## Workflow
 
-For each patch URL provided by the user:
+For each patch (URLs listed below in Patch Application Order):
 
 1. **Download and preview patch**: Use curl to download patch file, parse to identify affected files, report to user for context preparation
 2. **Apply with git am**: Execute `git am <patchfile>` and monitor for success or conflicts
@@ -19,15 +19,19 @@ For each patch URL provided by the user:
   - Git history showing what previous patches modified
   - Running notes of key section modifications per file
 - **Key principle**: Accept changes from both patches and merge updates, as each patch was originally non-conflicting
+- **Ambiguous merges**: Flag for human review when it's unclear how to combine overlapping edits
+- **Section renumbering**: Do NOT manually renumber sections or update cross-reference links during patch application. An automated renumbering tool will be run on the completed branch after all patches are applied
 
 ## Change Tracking
 
 Maintain notes for files with high conflict risk:
 - **expressions.md** (12 patches) - most heavily modified
-- **classes.md** (5 patches)
-- **lexical-structure.md** (5 patches)
-- **conversions.md** (4 patches)
-- **portability-issues.md** (4 patches)
+- **classes.md** (9 patches)
+- **lexical-structure.md** (6 patches)
+- **standard-library.md** (4 patches)
+- **interfaces.md** (3 patches)
+- **attributes.md** (3 patches)
+- **patterns.md** (3 patches)
 
 For each successfully applied patch, document:
 - Modified sections and approximate line ranges
@@ -36,9 +40,7 @@ For each successfully applied patch, document:
 
 ## Patch Application Order
 
-The user will provide patch URLs in their chosen order. The planned order from the prompt file is:
-
-***fill in using algorithm form [notes](./alpha-branch-creation.md).***
+Patches are applied in the order listed below (largest to smallest file count, per the algorithm in [alpha-branch-creation.md](./alpha-branch-creation.md)):
 
 1. *Ref fields and scoped*
    - https://github.com/dotnet/csharpstandard/pull/1614.patch
@@ -154,12 +156,20 @@ The user will provide patch URLs in their chosen order. The planned order from t
 
 - All patches applied in one continuous session to maintain full context and change history
 - User validation checkpoint after each patch before proceeding to next
-- No intermediate validation tools (grammar checks, example extraction) between patches
 - All patches applied directly to current branch (no feature branch creation)
+- Changes to this plan file are expected and will be committed alongside patch work
+
+## Post-Patch Verification
+
+After each patch, perform extra checks inspired by V9 lessons learned:
+- **Code example completeness**: Verify that code examples have matching opening/closing braces and no truncated lines (V9 issue: missing `}` lines in record struct examples)
+- **Grammar block completeness**: Confirm grammar productions were fully applied, not partially dropped (V9 issue: file-scoped namespace grammar changes were omitted)
+- **Diff review**: Summarize the changes for user validation
 
 ## Success Criteria
 
-- All 18 patches successfully applied with git commits
+- All 16 patches successfully applied with git commits
 - Working directory clean after entire series
 - User validates correctness after each patch application
 - Change notes maintained for conflict resolution reference
+- Automated section renumbering tool run on completed branch (post all patches)
