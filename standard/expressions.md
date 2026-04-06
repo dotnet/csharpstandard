@@ -1261,7 +1261,7 @@ In these situations, the boxed instance is considered to contain a variable of t
 
 ## 12.7 Deconstruction
 
-Deconstruction is a compile-time transformation whereby an expression gets turned into a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment (§deconstructing-assignment).
+Deconstruction is a compile-time transformation whereby an expression is replaced by a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment (§deconstructing-assignment).
 
 An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed*** to a *tuple-literal* if one of the following hold:
 
@@ -1269,9 +1269,7 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 
 - Otherwise, if `E` has a tuple type `(T₁, ..., Tₙ)`, then the result of deconstruction is semantically equivalent to the expression `(E.Item1, ..., E.Itemn)` except `E` is evaluated only once.
 
-- Otherwise if there is a unique instance or extension method `S.Deconstruct`; with `n ≥ 2` output parameters, with types `T₁` to `Tₙ`, and no other parameters; then `E` can be deconstructed.
-
-  The result of the deconstruction is the *tuple-literal* formed from the values returned via the out parameters of a call to `E.Deconstruct(...)`. The result is semantically equivalent to replacing `E` with the following pseudo-code:
+- Otherwise if there is a unique instance or extension method `S.Deconstruct`; with `n ≥ 2` output parameters, with types `T₁` to `Tₙ`, and no other parameters; then `E` can be deconstructed. The result of the deconstruction is semantically equivalent to replacing `E` with the following pseudo-code:
 
   >```csharp
   > E.Deconstruct(out T1 v1, ..., out TN vn) andThen (v1, ..., vn);
@@ -1281,7 +1279,7 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-  >> *Note*: `andThen` is the equivalent of C & C++’s comma operator. *end note*
+  >> *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
@@ -6713,7 +6711,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.5](expressions.md#12235-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns new values to one or more *variable_reference*s.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.5](expressions.md#12235-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to zero or more *variable_reference*s.
 
 Each of the alternatives takes the same general form of `l <op> r`, where `<op>` is an ***assignment operator***.
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
