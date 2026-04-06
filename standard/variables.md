@@ -1368,6 +1368,31 @@ For a parameter `p`:
 
 When a parameter is annotated with `[UnscopedRef]` ([§UnscopedRefAttribute](attributes.md#unscopedrefattribute-the-unscopedref-attribute)), its ref-safe-context is widened by one level from its default: function-member becomes return-only, and return-only becomes caller-context.
 
+> *Example*: The following illustrates how the implicit `this` parameter of a struct instance method is `scoped ref` (ref-safe-context of *function-member*), and how `[UnscopedRef]` widens it to *return-only*, enabling ref returns of fields:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ParameterRefSafeContext", expectedErrors:["CS8170"]} -->
+> ```csharp
+> using System.Diagnostics.CodeAnalysis;
+>
+> struct S
+> {
+>     private int _field;
+>
+>     // Error: ref-safe-context of `this` is function-member,
+>     // so ref-safe-context of `_field` is also function-member,
+>     // which does not satisfy the return-only requirement.
+>     public ref int Bad() => ref _field;
+>
+>     // OK: [UnscopedRef] widens `this` from function-member to
+>     // return-only, so `_field` also has ref-safe-context of
+>     // return-only, satisfying the ref return requirement.
+>     [UnscopedRef]
+>     public ref int Good() => ref _field;
+> }
+> ```
+>
+> *end example*
+
 #### 9.7.2.4 Field ref safe context
 
 For a variable designating a reference to a field, `e.F`:
@@ -1485,3 +1510,29 @@ Any other difference with respect to `scoped` or `[UnscopedRef]` between the bas
 The `scoped` modifier and `[UnscopedRef]` attribute do not affect hiding.
 
 Overloads shall not differ only on `scoped` or `[UnscopedRef]`.
+
+> *Example*: The following illustrates valid and invalid scope variance in overrides:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ParameterScopeVariance", expectedErrors:["CS0111"]} -->
+> ```csharp
+> using System;
+>
+> class Base
+> {
+>     public virtual void M(ref Span<int> x) { }
+> }
+>
+> class Derived : Base
+> {
+>     // OK: adds scoped to a ref parameter
+>     public override void M(scoped ref Span<int> x) { }
+> }
+>
+> class C
+> {
+>     void N(Span<int> x) { }
+>     void N(scoped Span<int> x) { }  // Error: overloads differ only on scoped
+> }
+> ```
+>
+> *end example*
