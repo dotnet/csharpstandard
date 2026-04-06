@@ -709,6 +709,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit inline array conversions (§ImplicitInlineArrayConversions)
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
