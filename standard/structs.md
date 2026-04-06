@@ -1026,6 +1026,37 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public ref int RefField;
+>     public RS(ref int i) { RefField = ref i; }
+> }
+>
+> class C
+> {
+>     static RS CreateAndCapture(ref int value)
+>     {
+>         // OK: ref-safe-context of `ref value` is caller-context,
+>         // safe-context contributed is caller-context.
+>         return new RS(ref value);
+>     }
+>
+>     static RS CreateWithoutCapture(scoped ref int value)
+>     {
+>         // Error: `value` is scoped ref so it does not contribute
+>         // ref-safe-context. The constructor needs ref-safe-context
+>         // of caller-context but `value` only has function-member.
+>         return new RS(ref value);
+>     }
+> }
+> ```
+>
+> *end example*
+
 #### §method-arguments-must-match Method arguments must match
 
 For any method invocation `e.M(a1, a2, ... aN)`:
@@ -1048,6 +1079,29 @@ For any method invocation `e.M(a1, a2, ... aN)`:
 
 The presence of `scoped` allows developers to reduce the friction this rule creates by marking parameters which are not returned as `scoped`. This removes their arguments from (1) in both cases above and provides greater flexibility to callers.
 
+> *Example*: The following illustrates how the method-arguments-must-match rule prevents a value with a narrower safe-context from being stored into a `ref` argument with a wider safe-context:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350"]} -->
+> ```csharp
+> ref struct R { }
+>
+> class C
+> {
+>     static void F0(ref R a, scoped ref R b) { }
+>
+>     static void F1(ref R x, scoped R y)
+>     {
+>         // Error: The narrowest safe-context is function-member (from `y`)
+>         // but `x` is a ref argument of a ref struct type whose
+>         // safe-context is caller-context. It must be assignable by
+>         // a value with that narrowest safe-context, which fails.
+>         F0(ref x, ref y);
+>     }
+> }
+> ```
+>
+> *end example*
+
 #### §declaration-expression-safe-context Infer safe-context of declaration expressions
 
 The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
@@ -1057,6 +1111,36 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 - If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
+
+> *Example*: The following illustrates how the safe-context of an `out` declaration variable is inferred from the other arguments to the invocation:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeclarationExprSafeContext", expectedErrors:["CS8352"], ignoredWarnings:["CS0168"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public RS(ref int x) { }
+>
+>     static void M0(RS input, out RS output) => output = input;
+>
+>     static RS M1()
+>     {
+>         var i = 0;
+>         var rs1 = new RS(ref i);  // safe-context of rs1 is function-member
+>         M0(rs1, out var rs2);     // safe-context of rs2 is function-member
+>         return rs2;               // Error: rs2 cannot escape function-member
+>     }
+>
+>     static void M2(RS rs1)
+>     {
+>         M0(rs1, out scoped var rs2); // scoped forces safe-context to
+>                                      // declaration-block
+>     }
+> }
+> ```
+>
+> In `M1`, the safe-context of `rs2` is the narrowest of *caller-context* and the safe-context of `rs1` (*function-member*), which is *function-member*. Therefore `rs2` cannot be returned. In `M2`, the `scoped` modifier forces the safe-context of `rs2` to *declaration-block*.
+>
+> *end example*
 
 #### §object-initializer-safe-context Object initializer safe context
 
