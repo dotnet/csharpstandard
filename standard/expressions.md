@@ -583,9 +583,9 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
-- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `out` optionally followed by `scoped`, optionally followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see §scoped-modifier.
+- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `out` optionally followed by `scoped`, optionally followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
@@ -1597,7 +1597,7 @@ but this is an implementation detail and therefore not part of this specificatio
 An *interpolated_string_expression* is classified as a value, which is evaluated in one of the following ways depending on the context in which it appears:
 
 1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
-1. If the target of an assignment or method-call argument has a custom interpolated string handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) type, then
+1. If the target of an assignment or method-call argument has a custom interpolated string handler ([§23.5.10.1](attributes.md#235101-custom-interpolated-string-expression-handlers)) type, then
 
 - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
 - Otherwise, the expression is processed by the custom interpolated string handler and the result has that custom interpolated string handler’s type.
@@ -1617,7 +1617,7 @@ SomeInterpolatedStringHandler str2 = $"{val}";   // custom handler used
 M(s2);                  // invokes M(SomeInterpolatedStringHandler)
 ```
 
-The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers).
+The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in [§23.5.10.1](attributes.md#235101-custom-interpolated-string-expression-handlers).
 
 The meaning of an interpolation (*regular_interpolation*, *verbatim_interpolation*, and *raw_interpolation*) is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
@@ -2636,7 +2636,7 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a class, it is classified as a value. The type of the value is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the class within which the usage occurs, and the value is a reference to the object for which the method or accessor was invoked.
 - When `this` is used in a *primary_expression* within an instance constructor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs, and the variable represents the struct being constructed.
   - If the constructor declaration has no constructor initializer, the `this` variable behaves similarly to an output parameter of the struct type, except that it is not an error when the definite assignment requirements ([§9.4.1](variables.md#941-general)) are not met. Instead, the following occurs:
-    - When the `this` variable itself does not meet the requirements, then all unassigned instance variables within `this` at all points where requirements are violated are implicitly initialized to the default value ([§9.3]( variables.md#93-default-values)) in an *initialization* phase before any other code in the constructor runs.
+    - When the `this` variable itself does not meet the requirements, then all unassigned instance variables within `this` at all points where requirements are violated are implicitly initialized to the default value ([§9.3](variables.md#93-default-values)) in an *initialization* phase before any other code in the constructor runs.
     - When an instance variable *v* within `this` does not meet the requirements, or any instance variable at any level of nesting within *v* does not meet the requirements, then *v* is implicitly initialized to the default value in an *initialization* phase before any other code in the constructor runs.
   - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs.
@@ -3619,7 +3619,7 @@ A reference variable field `rv` of type `T` shall not have an explicit initializ
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.5.15.7](structs.md#165157-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.5.15.10](structs.md#1651510-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -4453,7 +4453,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   string operator +(object x, string y);
   ```
 
-  These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3]( structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
+  These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3](structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
   
   > *Example*:
   >
@@ -5671,7 +5671,7 @@ anonymous_function_body
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope.
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing static anonymous function.
 
@@ -7336,7 +7336,7 @@ The `= ref` operator is known as the *ref assignment* operator.
 
 The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, or an input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
-The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand (§9.7.2).
+The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 > *Note*: This requirement exists because the lifetime of the value pointed to by a ref location is invariant. The indirection prevents one from allowing any kind of variance here, even to narrower lifetimes. *end note*
 

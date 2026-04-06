@@ -366,7 +366,7 @@ implicitly_typed_local_variable_declarator
 
 An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 > *Example*:
 >
@@ -454,7 +454,7 @@ An *explicitly_typed_local_variable_declaration* introduces one or more local va
 
 If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 #### 13.6.2.4 Explicitly typed ref local variable declarations
 
@@ -480,7 +480,7 @@ If *ref_kind* is `ref readonly`, the *identifier*s being declared are references
 
 It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 ### 13.6.3 Local constant declarations
 
@@ -1158,7 +1158,7 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
@@ -1421,7 +1421,7 @@ finally
 }
 ```
 
-In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
+In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.9](attributes.md#2359-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
 The body of the `finally` block is constructed according to the following steps:
 

@@ -575,7 +575,7 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 >
 > *end example*
 
-### §list-pattern-new-clause List pattern
+### 11.2.11 List pattern
 
 A *list_pattern* matches a sequence of elements in a list or an array.
 
@@ -630,7 +630,7 @@ The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any s
 >
 > *end example*
 
-### §slice-pattern-new-clause Slice pattern
+### 11.2.12 Slice pattern
 
 A *slice_pattern* discards zero or more elements. It shall only be used directly in a *list_pattern_clause*, and then only once at most in that clause.
 

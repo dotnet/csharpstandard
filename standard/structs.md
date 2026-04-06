@@ -164,9 +164,9 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields (§Ref-Fields). *end note*
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields ([§16.5.8.2](structs.md#16582-ref-fields)). *end note*
 
-Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
+Fields in structs support capabilities not supported in classes. See [§16.5.8.2](structs.md#16582-ref-fields) for details.
 
 Except for the differences noted in [§16.5](structs.md#165-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
@@ -742,7 +742,7 @@ When a struct instance constructor has a `this()` constructor initializer that r
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
-#### §Ref-Fields Ref fields
+#### 16.5.8.2 Ref fields
 
 ```ANTLR
 struct_field_declaration
@@ -1058,7 +1058,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 >
 > *end example*
 
-#### §method-arguments-must-match Method arguments must match
+#### 16.5.15.7 Method arguments must match
 
 For any method invocation `e.M(a1, a2, ... aN)`:
 
@@ -1103,7 +1103,7 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 >
 > *end example*
 
-#### §declaration-expression-safe-context Infer safe-context of declaration expressions
+#### 16.5.15.8 Infer safe-context of declaration expressions
 
 The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
 
@@ -1143,7 +1143,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 >
 > *end example*
 
-#### §object-initializer-safe-context Object initializer safe context
+#### 16.5.15.9 Object initializer safe context
 
 The safe-context of an object initializer expression is the narrowest of:
 
@@ -1184,12 +1184,12 @@ The safe-context of an object initializer expression is the narrowest of:
 >
 > *end example*
 
-#### 16.5.15.7 stackalloc
+#### 16.5.15.10 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
 
-#### 16.5.15.8 Constructor invocations
+#### 16.5.15.11 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See [§16.5.15.9](structs.md#165159-object-initializer-safe-context) for details.

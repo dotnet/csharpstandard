@@ -206,6 +206,8 @@
       - [§9.7.2.7](variables.md#9727-values)  Values
       - [§9.7.2.8](variables.md#9728-constructor-invocations)  Constructor invocations
       - [§9.7.2.9](variables.md#9729-limitations-on-reference-variables)  Limitations on reference variables
+    - [§9.7.3](variables.md#973-the-scoped-modifier)  The scoped modifier
+    - [§9.7.4](variables.md#974-parameter-scope-variance)  Parameter scope variance
 - [§10](conversions.md#10-conversions)  Conversions
   - [§10.1](conversions.md#101-general)  General
   - [§10.2](conversions.md#102-implicit-conversions)  Implicit conversions
@@ -271,6 +273,8 @@
     - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
     - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
     - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
+    - [§11.2.11](patterns.md#11211-list-pattern)  List pattern
+    - [§11.2.12](patterns.md#11212-slice-pattern)  Slice pattern
   - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
   - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
@@ -702,7 +706,9 @@
     - [§16.5.5](structs.md#1655-default-values)  Default values
     - [§16.5.6](structs.md#1656-boxing-and-unboxing)  Boxing and unboxing
     - [§16.5.7](structs.md#1657-meaning-of-this)  Meaning of this
-    - [§16.5.8](structs.md#1658-field-initializers)  Field initializers
+    - [§16.5.8](structs.md#1658-fields)  Fields
+      - [§16.5.8.1](structs.md#16581-field-initializers)  Field initializers
+      - [§16.5.8.2](structs.md#16582-ref-fields)  Ref fields
     - [§16.5.9](structs.md#1659-constructors)  Constructors
     - [§16.5.10](structs.md#16510-static-constructors)  Static constructors
     - [§16.5.11](structs.md#16511-properties)  Properties
@@ -716,8 +722,11 @@
       - [§16.5.15.4](structs.md#165154-field-safe-context)  Field safe context
       - [§16.5.15.5](structs.md#165155-operators)  Operators
       - [§16.5.15.6](structs.md#165156-method-and-property-invocation)  Method and property invocation
-      - [§16.5.15.7](structs.md#165157-stackalloc)  stackalloc
-      - [§16.5.15.8](structs.md#165158-constructor-invocations)  Constructor invocations
+      - [§16.5.15.7](structs.md#165157-method-arguments-must-match)  Method arguments must match
+      - [§16.5.15.8](structs.md#165158-infer-safe-context-of-declaration-expressions)  Infer safe-context of declaration expressions
+      - [§16.5.15.9](structs.md#165159-object-initializer-safe-context)  Object initializer safe context
+      - [§16.5.15.10](structs.md#1651510-stackalloc)  stackalloc
+      - [§16.5.15.11](structs.md#1651511-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types
@@ -831,12 +840,16 @@
       - [§23.5.7.10](attributes.md#235710-the-notnull-attribute)  The NotNull attribute
       - [§23.5.7.11](attributes.md#235711-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
       - [§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute)  The NotNullWhen attribute
-    - [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
-    - [§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)  The ModuleInitializer attribute
-      - [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)  Custom interpolated string expression handlers
-        - [§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)  Declaring a custom handler
-        - [§23.5.9.1.2](attributes.md#235912-inhibiting-a-custom-handler)  Inhibiting a custom handler
-        - [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler)  Passing information to/from a custom handler
+    - [§23.5.8](attributes.md#2358-the-unscopedref-attribute)  The UnscopedRef attribute
+    - [§23.5.9](attributes.md#2359-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
+    - [§23.5.10](attributes.md#23510-the-moduleinitializer-attribute)  The ModuleInitializer attribute
+      - [§23.5.10.1](attributes.md#235101-custom-interpolated-string-expression-handlers)  Custom interpolated string expression handlers
+        - [§23.5.10.1.1](attributes.md#2351011-declaring-a-custom-handler)  Declaring a custom handler
+        - [§23.5.10.1.2](attributes.md#2351012-inhibiting-a-custom-handler)  Inhibiting a custom handler
+        - [§23.5.10.1.3](attributes.md#2351013-passing-information-tofrom-a-custom-handler)  Passing information to/from a custom handler
+    - [§23.5.11](attributes.md#23511-required-member-attributes)  Required member attributes
+      - [§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)  The SetsRequiredMembers attribute
+      - [§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)  The RequiredMember attribute
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
   - [§24.1](unsafe-code.md#241-general)  General

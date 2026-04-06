@@ -1108,7 +1108,7 @@ A *String_Literal* that contains a *Utf8_Suffix* is a ***UTF-8 string literal***
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As `ReadOnlySpan<byte>` is a ref struct type, a UTF-8 string literal cannot be converted to `object` or used as a type parameter ([§16.2.3]( structs.md#1623-ref-modifier)). *end note*
+> *Note*: As `ReadOnlySpan<byte>` is a ref struct type, a UTF-8 string literal cannot be converted to `object` or used as a type parameter ([§16.2.3](structs.md#1623-ref-modifier)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->

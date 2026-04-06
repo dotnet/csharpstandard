@@ -1344,7 +1344,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
-A reference variable that is a local variable or parameter can be scoped explicitly; see §scoped-modifier.
+A reference variable that is a local variable or parameter can be scoped explicitly; see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 #### 9.7.2.2 Local variable ref safe context
 
@@ -1362,7 +1362,7 @@ For a parameter `p`:
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is function-member. The `this` parameter of a struct instance method is implicitly `scoped ref`.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
-When a parameter is annotated with `[UnscopedRef]` ([§UnscopedRefAttribute](attributes.md#unscopedrefattribute-the-unscopedref-attribute)), its ref-safe-context is widened by one level from its default: function-member becomes return-only, and return-only becomes caller-context.
+When a parameter is annotated with `[UnscopedRef]` ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), its ref-safe-context is widened by one level from its default: function-member becomes return-only, and return-only becomes caller-context.
 
 > *Example*: The following illustrates how the implicit `this` parameter of a struct instance method is `scoped ref` (ref-safe-context of *function-member*), and how `[UnscopedRef]` widens it to *return-only*, enabling ref returns of fields:
 >
@@ -1475,7 +1475,7 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be at least return-only.
 
-### §scoped-modifier The scoped modifier
+### 9.7.3 The scoped modifier
 
 The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
 
@@ -1492,9 +1492,9 @@ Consider the following declarations and their safe contexts:
 
 In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
 
-### §parameter-scope-variance Parameter scope variance
+### 9.7.4 Parameter scope variance
 
-The `scoped` modifier (§scoped-modifier) and `[UnscopedRef]` attribute (§UnscopedRefAttribute) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
+The `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) and `[UnscopedRef]` attribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
 
 - Add `scoped` to a `ref` or `in` parameter.
 - Add `scoped` to a parameter of a `ref struct` type.
