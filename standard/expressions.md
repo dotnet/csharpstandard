@@ -2415,7 +2415,7 @@ The *primary_expression* of an *element_access* shall not be an *array_creation_
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
 - The *primary_expression* has compile-time type `dynamic`.
-- At least one expression of the *argument_list* has compile-time type `dynamic`.
+- At least one expression of the *argument_list* has compile-time type `dynamic`, and the *primary_no_array_creation_expression* does not have an inline array type (§InlineArray) or there is more than one *argument* in the *argument_list*.
 
 In this case the compile-time type of the *element_access* depends on the compile-time type of its *primary_expression*: if it has an array type then the compile-time type is the element type of that array type; otherwise the compile-time type is `dynamic` and the *element_access* is classified as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
@@ -2431,13 +2431,15 @@ In this case the compile-time type of the *element_access* depends on the compil
 >
 > *end example*
 
-If the *primary_expression* of an *element_access* is:
+If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.11.2](expressions.md#128112-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access (§InlineArrayElementAccess). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)).
 
 - a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
 - a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
 - otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
 
 #### 12.8.12.2 Array access
+
+For access to elements in an inline array (§InlineArray) see §InlineArrayElementAccess.
 
 For an array access the *argument_list* shall not contain named arguments or by-reference arguments ([§15.6.2.3](classes.md#15623-by-reference-parameters)).
 
@@ -2471,6 +2473,157 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
   - The result of evaluating the array access is a variable reference ([§9.5](variables.md#95-variable-references)) of the element type of the array.
   - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
   - The variable reference of the array element given by the index expressions is computed, and this becomes the result of the array access.
+
+#### §InlineArrayElementAccess  Inline array element access
+
+For access to an element in an inline array (§InlineArray), the *primary_no_array_creation_expression* of the *element_access* shall designate an inline array. Furthermore, the *argument_list* shall contain a single *argument*, which is not a named argument ([§12.6.2.1](expressions.md#12621-general)). That *argument* shall be of type `int`, or be implicitly convertible to type `int`, `System.Index`, or `System.Range`.
+
+It is a compile-time error if *argument* is a constant expression whose value results in an index outside the bounds of the inline array. If at runtime the value of *argument* results in an index outside the bounds of the inline array, a `System.IndexOutOfRangeException` is thrown.
+
+**When *argument*’s type is `int`**
+
+If *primary_no_array_creation_expression* is a writable variable, the result of evaluating an inline array element access is a writable variable equivalent to invoking the indexer
+
+```csharp
+public ref T this[int index] { get; }
+```
+
+with *argument* as the index, on an instance of `System.Span<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context ([§9.7.2.1]variables.md#9721-general)) of the access is equivalent to that for an invocation of a method with the signature
+
+```csharp
+static ref T GetItem(ref «InlineArrayType» array)
+```
+
+The resulting variable is considered movable if and only if *primary_no_array_creation_expression* is movable.
+
+If *primary_no_array_creation_expression* is a readonly variable, the result of evaluating an inline array element access is a readonly variable equivalent to invoking the indexer
+
+```csharp
+public ref readonly T this[int index] { get; }
+```
+
+with *argument* as the index, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature 
+
+```csharp
+static ref readonly T GetItem(in «InlineArrayType» array)
+```
+
+The resulting variable is considered movable if and only if *primary_no_array_creation_expression* is movable.
+
+If *primary_no_array_creation_expression* is a value, the result of evaluating an inline array element access is a value equivalent to invoking the indexer
+
+```csharp
+public ref readonly T this[int index] { get; }
+```
+
+with *argument* as the index, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis the safe-context of the access are equivalent to that for an invocation of a method with the signature
+
+```csharp
+static T GetItem(«InlineArrayType» array)
+``` 
+
+> *Example*:
+> <!-- Example: {template:"standalone-lib-without-using", name:"InlineArays1", expectedErrors:["CS8329","CS8156","CS1510"]} -->
+>
+> ```csharp
+> [System.Runtime.CompilerServices.InlineArray(10)]
+> public struct Buffer10<T>
+> {
+>     private T _element0;
+> }
+> public class Program
+> {
+>     void M1(Buffer10<int> x)
+>     {
+>         ref int a = ref x[0];               // OK
+>     }
+>     void M2(in Buffer10<int> x)
+>     {
+>         ref readonly int a = ref x[0];      // OK
+>         ref int b = ref x[0];               // Error; x is readonly
+>     }
+>     Buffer10<int> GetBuffer() => default;
+>     void M3()
+>     {
+>         int a = GetBuffer()[0];                 // OK 
+>         ref readonly int b = ref GetBuffer()[0];// Error, rhs is a value
+>         ref int c = ref GetBuffer()[0];         // Error; rhs is a value
+>     }
+> }
+> ```
+>
+> *end example*
+
+**When *argument*’s type is implicitly convertible to `int`**
+
+The value of *argument* is converted to `int` and the element access is interpreted as described when *argument*’s type is `int`
+
+**When *argument*’s type is implicitly convertible to `System.Index`**
+
+*argument* is converted to `System.Index` and then to an `int`-based index value indicating the element position relative to the start of the inline array. Then, the element access is interpreted as described when *argument*’s type is `int`.
+
+Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See §InlineArray for more information .] 
+
+**When *argument*’s type is implicitly convertible to `System.Range`**
+
+If *primary_no_array_creation_expression* is a writable variable, the result of evaluating an inline array element access is a variable equivalent to invoking the method
+
+```csharp
+public Span<T> Slice (int start, int length)
+```
+
+passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.Span<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context ([§9.7.2.1]variables.md#9721-general)) of the access is equivalent to that for an invocation of a method with the signature
+
+```csharp
+static System.Span<T> GetSlice(ref «InlineArrayType» array)
+```
+
+If *primary_no_array_creation_expression* is a readonly variable, the result of evaluating an inline array element access is a value equivalent to invoking the method
+
+```csharp
+public ReadOnlySpan<T> Slice (int start, int length)
+```
+
+passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature 
+
+```csharp
+static System.ReadOnlySpan<T> GetSlice(in «InlineArrayType» array)
+```
+
+Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See §InlineArray for more information .] 
+
+If *primary_no_array_creation_expression* is a value, an error is reported. 
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InlineArays2", expectedErrors:["CS0029","CS8156"]} -->
+>
+> ```csharp
+> [System.Runtime.CompilerServices.InlineArray(10)]
+> public struct Buffer10<T>
+> {
+>     private T _element0;
+> }
+> public class Program
+> {
+>     void M1(Buffer10<int> x)
+>     {
+>         System.Span<int> a = x[..]; // OK
+>     }
+>     void M2(in Buffer10<int> x)
+>     {
+>         System.ReadOnlySpan<int> a = x[..]; // OK
+>         System.Span<int> b = x[..]; // Error; no implicit conversion
+>     }
+>     Buffer10<int> GetBuffer() => default;
+>     void M3()
+>     {
+>         _ = GetBuffer()[..]; // Error; rhs is a value
+>     }
+> }
+> ```
+>
+> *end example*
 
 #### 12.8.12.3 String access
 
