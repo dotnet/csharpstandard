@@ -463,6 +463,95 @@ constructor declaration. The body of the method assigns each parameter of the De
 If the instance members accessed in the body do not include a property with a non-`readonly` `get` accessor, then the synthesized `Deconstruct` method is `readonly`.
 The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
+##  §InlineArray Inline arrays
+
+A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute) is an ***inline array type***, which is a managed type. An instance of that type is an ***inline array***, a structure that contains a contiguous block of a given number of elements of the same type, and nothing else. It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
+
+With some limitations (see later below), an inline array can be used like an array ([§17](arrays.md#17-arrays)).
+
+Consider the following:
+
+<!-- Example: {template:"standalone-console-without-using", name:"InlineArays3", inferOutput:true} -->
+```csharp
+var buffer = new Buffer();
+
+for (int i = 0; i < 5; ++i)
+{
+    buffer[i] = i;
+}
+
+foreach (var i in buffer)
+{
+    Console.WriteLine(i);
+}
+
+Console.WriteLine($"buffer[^2]        = >{buffer[^2]}<");
+Console.WriteLine($"buffer[1..^0][0]  = >{buffer[1..^0][0]}<");
+
+[System.Runtime.CompilerServices.InlineArray(5)]
+public struct Buffer
+{
+    private int _element0;
+    // other, optional, non-instance-field members 
+}
+```
+
+which produces this output:
+
+```console
+0
+1
+2
+3
+4
+buffer[^2]        = >3<
+buffer[1..^0][0]  = >1<
+```
+
+The attribute constructor requires a positive-valued `int` argument that indicates the number of elements in each inline array created from this type, in this case, five. The struct type shall declare exactly one instance field, whose type becomes that of the inline array’s elements. The accessibility of the instance field has no impact on the program’s ability to access the inline array via its struct-instance name, in this case, `buffer`.
+
+There are a number of restrictions on the instance field’s declaration:
+
+- It shall not contain the *field_modifier*s `readonly`, `ref`, `required`, or `volatile`.
+- It shall not be declared as a *fixed_size_buffer_declaration* ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
+- *type* shall be a type valid as a type argument.
+
+`buffer` is an instance of `Buffer`, and contains an array of five `int` with element `buffer[0]` occupying the same memory as `buffer._element0`. However, unlike an array type, which has a public `Length` property, `buffer` is not derived from `System.Array`, and has no such member.
+
+> *Note*: One could add a public `Length` property to `Buffer` (which returns `sizeof(Buffer)/sizeof(int)`, but that property would have to be an unsafe member. Alternatively, one could perform an implicit conversion to `System.Span<int>` or `System.ReadOnlySpan<int>` and use their `Length` property. *end note*
+
+An inline array is a collection; as such, it can be iterated over by a `foreach` statement, as shown.
+
+The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
+
+A list pattern (11.2.x[rcj1.1]) shall not be used in the context of an inline array.
+
+An inline array type is a valid constructible collection target type for a collection literal.
+
+Any indexers or `Slice` methods declared for an inline array type that have signatures matching those defined for non-inline array processing, shall not be used during inline array element access.
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"InlineArays4", replaceEllipsis:true, customEllipsisReplacements: ["Console.WriteLine(\"in indexer [int]\");","return 0;"]} -->
+```csharp
+> var buffer = new Buffer();
+> int x = buffer[2];      // element access
+>
+> [System.Runtime.CompilerServices.InlineArray(5)]
+> public struct Buffer
+> {
+>     private int _element0;
+>     public int this[int index] // NOT USED for element access 
+>     {
+>         get
+>         {
+>             …
+>         }
+>     }
+> }
+> ```
+>
+> Even though the struct declares an indexer taking an `int` argument, that indexer is not used by element access `buffer[2]`. *end example*
+
 ## 16.5 Class and struct differences
 
 ### 16.5.1 General
