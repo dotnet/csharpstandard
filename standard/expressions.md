@@ -2431,7 +2431,7 @@ In this case the compile-time type of the *element_access* depends on the compil
 >
 > *end example*
 
-If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.11.2](expressions.md#128112-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access (§InlineArrayElementAccess). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)).
+If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access (§InlineArrayElementAccess). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
 
 - a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
 - a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
