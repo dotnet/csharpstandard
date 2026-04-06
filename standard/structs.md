@@ -463,7 +463,7 @@ constructor declaration. The body of the method assigns each parameter of the De
 If the instance members accessed in the body do not include a property with a non-`readonly` `get` accessor, then the synthesized `Deconstruct` method is `readonly`.
 The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
-##  §InlineArray Inline arrays
+## §InlineArray Inline arrays
 
 A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute) is an ***inline array type***, which is a managed type. An instance of that type is an ***inline array***, a structure that contains a contiguous block of a given number of elements of the same type, and nothing else. It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
 
@@ -524,7 +524,7 @@ An inline array is a collection; as such, it can be iterated over by a `foreach`
 
 The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
 
-A list pattern (11.2.x[rcj1.1]) shall not be used in the context of an inline array.
+A list pattern ([§11.2.11](patterns.md#11211-list-pattern)) shall not be used in the context of an inline array.
 
 An inline array type is a valid constructible collection target type for a collection literal.
 
@@ -1243,7 +1243,9 @@ The safe-context of an object initializer expression is the narrowest of:
 3. The safe-context of the RHS of assignments in member initializers to non-readonly setters, or the ref-safe-context in the case of ref assignment.
 
 > *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following illustrates how an object initializer narrows the safe-context of the resulting value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ObjectInitializerSafeContext", expectedErrors:["CS8352"]} -->
