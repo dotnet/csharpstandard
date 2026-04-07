@@ -2502,7 +2502,7 @@ If *primary_no_array_creation_expression* is a readonly variable, the result of 
 public ref readonly T this[int index] { get; }
 ```
 
-with *argument* as the index, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature 
+with *argument* as the index, on an instance of `System.ReadOnlySpan<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context of the access is equivalent to that for an invocation of a method with the signature
 
 ```csharp
 static ref readonly T GetItem(in «InlineArrayType» array)
