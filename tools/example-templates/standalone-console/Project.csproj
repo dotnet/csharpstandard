@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
     <AssemblyName>$example-name</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>annotations</Nullable>
