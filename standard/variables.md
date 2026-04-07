@@ -199,7 +199,9 @@ The default value of a variable depends on the type of the variable and is deter
 - For a variable of a *reference_type* or a reference variable, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`. One cannot test a ref variable to see if it has been assigned a referent by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
 
 ## 9.4 Definite assignment
