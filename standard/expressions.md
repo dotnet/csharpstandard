@@ -2572,7 +2572,7 @@ If *primary_no_array_creation_expression* is a writable variable, the result of 
 public Span<T> Slice (int start, int length)
 ```
 
-passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.Span<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context ([§9.7.2.1]variables.md#9721-general)) of the access is equivalent to that for an invocation of a method with the signature
+passing the `int` equivalents of the Range’s start and end Indexes, respectively, on an instance of `System.Span<T>` that was created from the inline array designated by *primary_no_array_creation_expression*. For the purpose of ref-safety analysis, the safe-context ([§9.7.2.1](variables.md#9721-general)) of the access is equivalent to that for an invocation of a method with the signature
 
 ```csharp
 static System.Span<T> GetSlice(ref «InlineArrayType» array)
