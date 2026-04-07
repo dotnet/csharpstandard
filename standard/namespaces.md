@@ -550,6 +550,7 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: Allowing the creation of an alias to a *type* rather than just to a *type_name* (as was previously the restriction in earlier editions of this specification) allows both named and unnamed types to be aliased. *end note*
+
 The presence of `unsafe` permits pointer types ([§23.3](unsafe-code.md#233-pointer-types)) to be aliased. It causes the entire textual extent of the *type* (but not the *namespace_name*) to become an unsafe context.
 
 > *Example*:
