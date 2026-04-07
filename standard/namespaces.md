@@ -352,7 +352,7 @@ A *using_alias_directive* introduces an identifier that serves as an alias for a
 
 ```ANTLR
 using_alias_directive
-    : 'using' identifier '=' namespace_or_type_name ';'
+    : 'using' 'unsafe'? identifier '=' (namespace_name | type) ';'
     ;
 ```
 
@@ -524,7 +524,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 >
 > *end example*
 
-The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s but has the correct set of *extern_alias_directive*s.
+The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the `(namespace_name | type)` referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the `(namespace_name | type)` of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s but has the correct set of *extern_alias_directive*s.
 
 > *Example*: In the following code
 >
@@ -544,6 +544,44 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 > ```
 >
 > the last *using_alias_directive* results in a compile-time error because it is not affected by the previous *using_alias_directive*. The first *using_alias_directive* does not result in an error since the scope of the extern alias X includes the *using_alias_directive*.
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Allowing the creation of an alias to a *type* rather than just to a *type_name* (as was previously the restriction in earlier editions of this specification) allows both named and unnamed types to be aliased. *end note*
+The presence of `unsafe` permits pointer types ([§23.3](unsafe-code.md#233-pointer-types)) to be aliased. It causes the entire textual extent of the *type* (but not the *namespace_name*) to become an unsafe context.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives14"} -->
+> ```csharp
+> namespace N
+> {
+>     using A1 = (int, string);
+>     using A2 = int[];
+>     using unsafe A3 = int*;
+>     using unsafe A4 = delegate*<void>*;
+> }
+> ```
+>
+> *end example*
+
+When making an alias to a *type*, *type* shall not be a *nullable_reference_type*.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives15", expectedErrors:["CS9132"]} -->
+> ```csharp
+> namespace N
+> {
+>     using A1 = string?;       // Error; nullable reference type not permitted
+>     using A2 = List<string?>; // OK; List is a non-nullable reference type
+>                               // even though string? is not
+>     using A3 = int?;          // OK; int? is a nullable value type
+>     using A4 = (string?, string?)?; // OK; tuple is a nullable value type
+> }
+> ```
 >
 > *end example*
 
@@ -789,7 +827,7 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 
 Like a *using_alias_directive*, a *using_namespace_directive* does not contribute any new members to the underlying declaration space of the compilation unit or namespace, but, rather, affects only the compilation unit or namespace body in which it appears.
 
-The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
+The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the `(namespace_name | type)` referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
 
 ### 14.6.4 Using static directives
 
@@ -797,7 +835,7 @@ A *using_static_directive* imports the nested types and static members contained
 
 ```ANTLR
 using_static_directive
-    : 'using' 'static' type_name ';'
+    : 'using' 'static' 'unsafe'? type_name ';'
     ;
 ```
 
@@ -907,6 +945,8 @@ A *using_static_directive* only imports members and types declared directly in t
 > *end example*
 
 Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.6.3](namespaces.md#1463-using-namespace-directives).
+
+The presence of `unsafe` permits pointer types ([§24.3](unsafe-code.md#243-pointer-types)) to be aliased. It causes the entire textual extent of the *type_name* to become an unsafe context.
 
 ## 14.7 Namespace member declarations
 
