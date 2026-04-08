@@ -700,7 +700,7 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 - For an invocation expression, the definite assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
 - For an invocation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
 - For an object creation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
-- For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `in`, `out`, or `ref` modifiers.
+- For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any *parameter_mode_modifier*s.
 - For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
 - For array initializers ([§12.8.17.5](expressions.md#128175-array-creation-expressions)), object initializers ([§12.8.17.3](expressions.md#128173-object-initializers)), collection initializers ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) and anonymous object initializers ([§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
@@ -1428,7 +1428,7 @@ For a variable `c` resulting from a ref-returning function invocation, `ref e1.M
 
 - The caller-context.
 - The safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
-- The ref-safe-context contributed by all `ref` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+- The ref-safe-context contributed by all `ref` and `ref readonly` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
 
 If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
 
