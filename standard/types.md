@@ -403,7 +403,7 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### 8.3.11 Tuple types
 
-#### §tuple-types-general General
+#### 8.3.11.1 General
 
 A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element name***s.
 
@@ -413,11 +413,11 @@ Element names within a tuple type shall be distinct. A tuple element name of the
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note* The optional element names are not represented in the runtime representation (§tuple-runtime-representation) of a tuple value.
+> *Note* The optional element names are not represented in the runtime representation ([§8.3.11.3](types.md#83113-runtime-representation)) of a tuple value.
 
 Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples of the same arity with identity-convertible sequences of element types.
 
-Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation (§tuple-runtime-representation) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
+Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation ([§8.3.11.3](types.md#83113-runtime-representation)) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
 
 Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` is the tuple arity and the numbers have no leading zeros, and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
@@ -440,11 +440,11 @@ Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` i
 >The last line shows that tuple elements can be accessed by the `Item` name corresponding to their position, as well as by the corresponding tuple element name, if present in the type.
 > *end example*
 
-#### §eliding-tuples Eliding intermediate tuple creation
+#### 8.3.11.2 Eliding intermediate tuple creation
 
-If the result of constructing a tuple (§12.8.6) is not required outside of the context in which it is constructed then implementations are explicitly allowed to elide the construction as an optimisation provided all other semantic requirements are met.
+If the result of constructing a tuple ([§12.8.6](expressions.md#1286-tuple-literals)) is not required outside of the context in which it is constructed then implementations are explicitly allowed to elide the construction as an optimisation provided all other semantic requirements are met.
 
-> *Example*: Such a situation may commonly arise from deconstructing assignments ($deconstructing-assignment), and switch statements (§13.8.3). Consider the deconstructing assignment:
+> *Example*: Such a situation may commonly arise from deconstructing assignments ($deconstructing-assignment), and switch statements ([§13.8.3](statements.md#1383-the-switch-statement)). Consider the deconstructing assignment:
 >
 > ```csharp
 > (a, b) = (b, a);
@@ -462,7 +462,7 @@ If the result of constructing a tuple (§12.8.6) is not required outside of the 
 <!-- markdownlint-enable MD028 -->
 > *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, and the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
 
-#### §tuple-runtime-representation Runtime representation
+#### 8.3.11.3 Runtime representation
 
 > *Note*: Unlike other types such as arrays, the runtime representation of tuple types is specified in terms of a set of generic value types, and a tuple may be directly referenced in terms of this representation. However the runtime representation of these generic value types remains implementation defined. *end note*
 
@@ -534,7 +534,7 @@ Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not me
 >
 > *end example*
 
-Though tuple and `System.ValueTuple<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueTuple<...>` types – only the former support tuple element names (§tuple-types-general).
+Though tuple and `System.ValueTuple<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueTuple<...>` types – only the former support tuple element names ([§8.3.11.1](types.md#83111-general)).
 
 > *Example*: Only tuple type syntax supports element names. However as the names are part of the compile-time type and not the value, treating a value of type `ValueTuple<...>` as a tuple can “attach” element names:
 >
