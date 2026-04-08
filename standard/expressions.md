@@ -24,7 +24,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 - A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
-- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.23.5](expressions.md#12235-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
+- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.23.6](expressions.md#12236-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
 - A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.23.2](expressions.md#12232-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
@@ -38,7 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the get accessor of the property. If the property has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the get accessor of the indexer. If the indexer has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
-- The value of a tuple literal with a type is obtained by evaluating each of its element expressions in order from left to right (§12.8.6). It is an error to obtain the value of a tuple literal that does not have a type.
+- The value of a tuple literal with a type is obtained by evaluating each of its element expressions in order from left to right ([§12.8.6](expressions.md#1286-tuple-literals)). It is an error to obtain the value of a tuple literal that does not have a type.
 
 ## 12.3 Static and Dynamic Binding
 
@@ -1261,7 +1261,7 @@ In these situations, the boxed instance is considered to contain a variable of t
 
 ## 12.7 Deconstruction
 
-Deconstruction is a compile-time transformation whereby an expression is replaced by a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment (§deconstructing-assignment).
+Deconstruction is a compile-time transformation whereby an expression is replaced by a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
 
 An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed*** to a *tuple-literal* if one of the following hold:
 
@@ -1283,7 +1283,7 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
-> *Note*: When deconstruction is used in a context where only individual elements of the *tuple-literal* are used (such as part of a deconstructing assignment) then an implementation is explicitly allowed to elide creating a tuple value from the *tuple-literal* provided the observable semantics remain the same, as specified in *Eliding tuples* (§eliding-tuples). *end note*
+> *Note*: When deconstruction is used in a context where only individual elements of the *tuple-literal* are used (such as part of a deconstructing assignment) then an implementation is explicitly allowed to elide creating a tuple value from the *tuple-literal* provided the observable semantics remain the same, as specified in *Eliding tuples* ([§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation)). *end note*
 
 ## 12.8 Primary expressions
 
@@ -1616,7 +1616,7 @@ A tuple literal has a type if and only if each of its element expressions `Eᵢ`
 A tuple value can be obtained from a tuple literal when:
 
 - it is the subject of a conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)), the conversion replaces any type it may inherently have;
-- it is the target of a deconstructing assignment (§deconstructing-assignment); or
+- it is the target of a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)); or
 - it is reclassified as a value ([§12.2.2](expressions.md#1222-values-of-expressions))).
 
 > *Example*:
@@ -1626,7 +1626,7 @@ A tuple value can be obtained from a tuple literal when:
 > var y = (1, 2L);           // y has type (int, long)
 >```
 >
-> These two examples demonstrate the purpose of the qualification on the first case above – it allows implicit constant conversions (§10.2.11). The type of the tuple literal is `(int, long)`. There is no implicit conversion from `int` to `short`, but there is one from the constant `1` to short. The first example involves an implicit conversion replacing the tuple literal’s inherent type. In the second example, which does not involve an implicit conversion, the tuple literal is reclassified as a value based on its inherent type.
+> These two examples demonstrate the purpose of the qualification on the first case above – it allows implicit constant conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)). The type of the tuple literal is `(int, long)`. There is no implicit conversion from `int` to `short`, but there is one from the constant `1` to short. The first example involves an implicit conversion replacing the tuple literal’s inherent type. In the second example, which does not involve an implicit conversion, the tuple literal is reclassified as a value based on its inherent type.
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"TupleExpressions1", expectedErrors:["CS0815"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
@@ -5112,7 +5112,7 @@ A declaration expression only occurs in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
 - As a simple discard `_` comprising the left side of a simple assignment ([§12.23.2](expressions.md#12232-simple-assignment)).
-- As a *deconstructor_element* (§deconstructing-assignment), or in shorthand as an *abridged_deconstructor_element* (§deconstructing-assignment).
+- As a *deconstructor_element* ([§12.23.3](expressions.md#12233-deconstructing-assignment)), or in shorthand as an *abridged_deconstructor_element* ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
 
 > *Note*: This means that a declaration expression cannot be parenthesized. *end note*
 
@@ -5124,7 +5124,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 - In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
 - As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
-- In a *deconstructor* (§deconstructing-assignment) the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- In a *deconstructor* ([§12.23.3](expressions.md#12233-deconstructing-assignment)) the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
@@ -6711,7 +6711,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.5](expressions.md#12235-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to zero or more *variable_reference*s.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to zero or more *variable_reference*s.
 
 Each of the alternatives takes the same general form of `l <op> r`, where `<op>` is an ***assignment operator***.
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
@@ -6720,7 +6720,7 @@ The assignment operators are right-associative, meaning that operations are grou
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As specified in event assignment [§12.23.5](expressions.md#12235-event-assignment) when the left operand of the `+=` and `-=` operators is classified as an event access the *compound_assignment* does not yield a value and so an expression of the form `e1 += e2 += f` where `e1` and `e2` are event accesses is invalid and not right-associative.
+> *Note*: As specified in event assignment [§12.23.6](expressions.md#12236-event-assignment) when the left operand of the `+=` and `-=` operators is classified as an event access the *compound_assignment* does not yield a value and so an expression of the form `e1 += e2 += f` where `e1` and `e2` are event accesses is invalid and not right-associative.
 
 ### 12.23.2 Simple assignment
 
@@ -6856,9 +6856,9 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > *end example*
 
-### §deconstructing-assignment Deconstructing assignment
+### 12.23.3 Deconstructing assignment
 
-#### §deconstructing-assignment-general General
+#### 12.23.3.1 General
 
 ```ANTLR
 deconstructing_assignment
@@ -6878,7 +6878,7 @@ deconstructor_element
     ;
 ```
 
-> *Note*: an *abridged_deconstructor* is a shorthand notation for a *deconstructor* and is described below (§deconstructing-assignment-abridged).
+> *Note*: an *abridged_deconstructor* is a shorthand notation for a *deconstructor* and is described below ([§12.23.3.2](expressions.md#122332-abridged-deconstructors)).
 
 In a deconstructing assignment the `=` operator is called the ***deconstructing assignment operator***.
 
@@ -6893,8 +6893,8 @@ then in each case the former shall be chosen.
 
 For backward compatibility if any *deconstructor_element* is a *discard_token* then:
 
-- If name lookup (§12.8.4) for “`_`” finds an associated declaration then the *discard_token* is reclassified as a *simple_name*, which is syntactically a *variable_reference*.
-- Otherwise the *discard token* is a simple discard (§12.19).
+- If name lookup ([§12.8.4](expressions.md#1284-simple-names)) for “`_`” finds an associated declaration then the *discard_token* is reclassified as a *simple_name*, which is syntactically a *variable_reference*.
+- Otherwise the *discard token* is a simple discard ([§12.19](expressions.md#1219-declaration-expressions)).
 
 It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *deconstructor_element* is not writeable.
 
@@ -6911,13 +6911,13 @@ There are restrictions on which *deconstructor_element*s are valid in a given co
 For these restrictions:
 
 - any *deconstructor*s appearing nested as *deconstructor_element*s in another *deconstructor* are “contained” by the outmost *deconstructor*;
-- any *abridged_deconstructor* (§deconstructing-assignment-abridged) shorthands are treated as their expanded form as collections of *declaration_expression*s;
+- any *abridged_deconstructor* ([§12.23.3.2](expressions.md#122332-abridged-deconstructors)) shorthands are treated as their expanded form as collections of *declaration_expression*s;
 - “at the start of a *statement*” means the *deconstructor* is recognised as part of the derivation *statement* ➜ *embedded_statement* ➜ *expression_statement* ➜ *statement_expression* ➜ *assignment* ➜ *deconstructing_assignment* ➜ *deconstructor* and not in other places where *deconstructing_assignment* can occur; and
 - “a member of a *for_initializer*” means the *deconstructor* is recognised as part of the derivation *for_initializer* ➜ *statement_expression_list* ➜ *statement_expression* ➜ *assignment* ➜ *deconstructing_assignment* ➜ *deconstructor* and not in other places where *deconstructing_assignment* can occur.
 
 The compile-time processing of a deconstructing assignment of the form `d = y`, where `d` is a *deconstructor* of the form `(d₁, ..., dₙ)` with arity `n`, proceeds as follows:
 
-- The right operand of the assignment, `y`, is deconstructed (§12.7) to produce a *tuple_literal* `e` of the form `(e₁, ..., eₘ)`, it is a compile-time error if `m ≠ n`.
+- The right operand of the assignment, `y`, is deconstructed ([§12.7](expressions.md#127-deconstruction)) to produce a *tuple_literal* `e` of the form `(e₁, ..., eₘ)`, it is a compile-time error if `m ≠ n`.
 - The type `T` of the assignment is determined, where `T` is the tuple type `(T₁, ..., Tₙ)` and each `Tᵢ` is calculated as follows based on the corresponding `dᵢ` and `eᵢ`:
   - if `dᵢ` is a discard and `eᵢ` has a type `Eᵢ`, then `Tᵢ` is `Eᵢ`;
   - otherwise if `dᵢ` is a *deconstructor* then `Tᵢ` is the type of `dᵢ = eᵢ` determined by applying this compile-time algorithm recursively.
@@ -6927,7 +6927,7 @@ The compile-time processing of a deconstructing assignment of the form `d = y`, 
 The run-time processing of a deconstructing assignment, now `d = e`, proceeds as follows:
 
 1. In the following steps each and every `dᵢ` and `eᵢ` must be evaluated exactly once in order left to right. For the avoidance any confusion this means all `dᵢ` are evaluated before any `eᵢ`; and if any nested *deconstructor*s or *tuple_literal*s are present the order is depth-first.
-2. The tuple value `t`, of the form `(t₁, ..., tₙ)`, is created by converting `e` to `T` using an implicit tuple conversion (§10.2.13).
+2. The tuple value `t`, of the form `(t₁, ..., tₙ)`, is created by converting `e` to `T` using an implicit tuple conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)).
 3. For each non-discard `dᵢ` in order from left to right:
    - if `dᵢ` is a variable reference the simple assignment `dᵢ = tᵢ` is performed;
    - otherwise `dᵢ` is a nested *deconstructor* and this step (3) is recursively applied to the elements of `dᵢ` and `tᵢ`.
@@ -6937,9 +6937,9 @@ The run-time processing of a deconstructing assignment, now `d = e`, proceeds as
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: The construction of intermediate tuples produced by this algorithm might be elided by an implementation as specified by §eliding-tuples. *end note*
+> *Note*: The construction of intermediate tuples produced by this algorithm might be elided by an implementation as specified by [§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation). *end note*
 
-#### §deconstructing-assignment-abridged Abridged deconstructors
+#### 12.23.3.2 Abridged deconstructors
 
 An *abridged_deconstructor* is a shorthand syntax for a *deconstructor* containing implicitly typed declaration expressions.
 
@@ -6958,7 +6958,7 @@ abridged_deconstructor_element
     ;
 ```
 
-An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstructor* `(var e1, ..., var en)` and has the same behavior as its standard (unbridged) expansion (§deconstructing-assignment-general). This applies recursively to any nested *abridged_deconstructor_element*s in the *abridged_deconstructor*. Each identifier nested within a *abridged_deconstructor* thus introduces a declaration expression ([§12.19](expressions.md#1219-declaration-expressions)).
+An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstructor* `(var e1, ..., var en)` and has the same behavior as its standard (unbridged) expansion ([§12.23.3.1](expressions.md#122331-general)). This applies recursively to any nested *abridged_deconstructor_element*s in the *abridged_deconstructor*. Each identifier nested within a *abridged_deconstructor* thus introduces a declaration expression ([§12.19](expressions.md#1219-declaration-expressions)).
 
 > *Example*:
 > The following two examples both declare two variables: a and b. The first uses a standard *deconstructor* introducing explicitly typed variables, second an *abridged_deconstructor* declaring the same variables but implicitly type – in this case the second constant requires to the `L` suffix so that `b` is `long`.
@@ -6995,7 +6995,7 @@ An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstruc
 >
 > *end example*
 
-### 12.23.3 Ref assignment
+### 12.23.4 Ref assignment
 
 ```ANTLR
 ref_assignment
@@ -7052,7 +7052,7 @@ The ref assignment operator shall not read the storage location referenced by th
 <!-- markdownlint-enable MD028 -->
 > *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it is important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
 
-### 12.23.4 Compound assignment
+### 12.23.5 Compound assignment
 
 ```ANTLR
 compound_assignment
@@ -7067,7 +7067,7 @@ compound_assignment_operator
 
 The operators in *compound_assignment_operator* are called the ***compound assignment operator***s.
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.5](expressions.md#12235-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.6](expressions.md#12236-event-assignment).
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Eᵢ]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Eᵢ]` where at least one element of `Eᵢ` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
@@ -7114,7 +7114,7 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 <!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
 
-### 12.23.5 Event assignment
+### 12.23.6 Event assignment
 
 An event assignment is a subset of *compound_assignment* where the left operand of a `+=` or `-=` operator is classified as an event access. An event assignment is evaluated as follows:
 

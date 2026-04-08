@@ -819,6 +819,7 @@ argument_value
     : expression
     | 'in' variable_reference
     | 'ref' variable_reference
+    | 'out' declaration_expression
     | 'out' variable_reference
     ;
 
@@ -974,27 +975,13 @@ parenthesized_expression
     : '(' expression ')'
     ;
 
-// Source: §12.8.6 Tuple expressions
+// Source: §12.8.6 Tuple literals
 tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
-    | abridged_deconstructor
     ;
     
 tuple_element
     : (identifier ':')? expression
-    ;
-    
-abridged_deconstructor
-    : 'var' abridged_elements
-    ;
-    
-abridged_elements
-    : '(' abridged_element (',' abridged_element)+ ')'
-    ;
-
-abridged_element
-    : abridged_elements
-    | identifier
     ;
 
 // Source: §12.8.7.1 General
@@ -1541,12 +1528,60 @@ query_continuation
 
 // Source: §12.23.1 General
 assignment
-    : unary_expression assignment_operator expression
+    : deconstructing_assignment
+    | simple_assignment
+    | compound_assignment
+    | ref_assignment
     ;
 
-assignment_operator
-    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' |
-      '<<=' | '??='
+// Source: §12.23.2 Simple assignment
+simple_assignment
+    : unary_expression '=' expression
+    ;
+
+// Source: §12.23.3.1 General
+deconstructing_assignment
+    : deconstructor '=' expression
+    ;
+
+deconstructor
+    : '(' deconstructor_element (',' deconstructor_element)+ ')'
+    | abridged_deconstructor
+    ;
+
+deconstructor_element
+    : deconstructor
+    | declaration_expression
+    | discard_token
+    | variable_reference
+    ;
+
+// Source: §12.23.3.2 Abridged deconstructors
+abridged_deconstructor
+    : 'var' abridged_deconstructor_elements
+    ;
+
+abridged_deconstructor_elements
+    : '(' abridged_deconstructor_element (',' abridged_deconstructor_element)+ ')'
+    ;
+
+abridged_deconstructor_element
+    : identifier
+    | abridged_deconstructor_elements
+    ;
+
+// Source: §12.23.4 Ref assignment
+ref_assignment
+    : unary_expression '=' 'ref' expression
+    ;
+
+// Source: §12.23.5 Compound assignment
+compound_assignment
+    : unary_expression compound_assignment_operator expression
+    ;
+
+compound_assignment_operator
+    : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
     ;
 
@@ -1557,8 +1592,7 @@ expression
     ;
 
 non_assignment_expression
-    : declaration_expression
-    | conditional_expression
+    : conditional_expression
     | lambda_expression
     | query_expression
     ;
