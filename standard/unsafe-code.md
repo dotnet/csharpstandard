@@ -121,7 +121,12 @@ A *pointer_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanage
 
 ```ANTLR
 pointer_type
-    : unmanaged_type ('*')+
+A *pointer_type* is written as a *value_type* that is an unmanaged type ([§8.8](types.md#88-unmanaged-types)) or the keyword `void`, followed by a `*` token:
+
+```ANTLR
+pointer_type
+    : value_type ('*')+
+    | pointer_type('*')
     | 'void' ('*')+
     ;
 ```
