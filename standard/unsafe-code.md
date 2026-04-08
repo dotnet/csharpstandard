@@ -126,7 +126,6 @@ A *pointer_type* is written as a *value_type* that is an unmanaged type ([§8.8]
 ```ANTLR
 pointer_type
     : value_type ('*')+
-    | pointer_type('*')
     | 'void' ('*')+
     ;
 ```
