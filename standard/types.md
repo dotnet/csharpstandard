@@ -475,12 +475,12 @@ The runtime representation of a tuple `(T1, ..., Tn)` is constructed from `Syste
 >
 > *end example*
 
-The runtime representation of tuples is directly accessible, and tuple & `System.ValueType<...>` types may be used interchangeably subject to the following:
+The runtime representation of tuples is directly accessible, and tuple & `System.ValueTuple<...>` types may be used interchangeably subject to the following:
 
-- Any value of type `(T1, ..., Tn)` may be treated as the equivalent `System.ValueType<...>` value.
-- Any value of type `System.ValueType<T1, T2>` through `System.ValueType<T1, T2, T3, T4, T5, T6, T7>` may be treated as the equivalent `(T1, T2)` through `(T1, T2, T3, T4, T5, T6, T7)` tuple value.
-- A value of type `System.ValueTuple<T1, ..., T7, TRest>` may only be treated as a tuple if `TRest` is a tuple or any `System.ValueTuple<...>` type, the latter including `System.ValueType<T1>`.
-- Any other value of type `System.ValueType<T1>` may not be treated as a tuple.
+- Any value of type `(T1, ..., Tn)` may be treated as the equivalent `System.ValueTuple<...>` value.
+- Any value of type `System.ValueTuple<T1, T2>` through `System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>` may be treated as the equivalent `(T1, T2)` through `(T1, T2, T3, T4, T5, T6, T7)` tuple value.
+- A value of type `System.ValueTuple<T1, ..., T7, TRest>` may only be treated as a tuple if `TRest` is a tuple or any `System.ValueTuple<...>` type, the latter including `System.ValueTuple<T1>`.
+- Any other value of type `System.ValueTuple<T1>` may not be treated as a tuple.
 
 Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not meet the above requirements is a compile-time error.
 
@@ -534,7 +534,7 @@ Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not me
 >
 > *end example*
 
-Though tuple and `System.ValueType<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueType<...>` types – only the former support tuple element names (§tuple-types-general).
+Though tuple and `System.ValueTuple<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueTuple<...>` types – only the former support tuple element names (§tuple-types-general).
 
 > *Example*: Only tuple type syntax supports element names. However as the names are part of the compile-time type and not the value, treating a value of type `ValueTuple<...>` as a tuple can “attach” element names:
 >
