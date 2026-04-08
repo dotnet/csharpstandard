@@ -175,7 +175,7 @@
       - [§9.4.4.22](variables.md#94422-general-rules-for-simple-expressions)  General rules for simple expressions
       - [§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)  General rules for expressions with embedded expressions
       - [§9.4.4.24](variables.md#94424-invocation-expressions-and-object-creation-expressions)  Invocation expressions and object creation expressions
-      - [§9.4.4.25](variables.md#94425-simple-assignment-expressions)  Simple assignment expressions
+      - [§9.4.4.25](variables.md#94425-simple-and-deconstructing-assignment-expressions)  Simple assignment expressions
       - [§9.4.4.26](variables.md#94426--expressions)  && expressions
       - [§9.4.4.27](variables.md#94427--expressions)  || expressions
       - [§9.4.4.28](variables.md#94428--expressions)  ! expressions
