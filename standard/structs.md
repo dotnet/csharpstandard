@@ -73,7 +73,7 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - As the type of a tuple element.
 - In an async method.
 - In an iterator.
-- As the receiver type for a method group conversion to a delegate type.
+- As the receiver type for a method group conversion from an instance method to a delegate type.
 - As a captured variable in a lambda expression or a local function.
 
 In addition, the following restrictions apply to a `ref struct` type:
