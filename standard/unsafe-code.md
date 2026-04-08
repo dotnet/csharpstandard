@@ -120,7 +120,6 @@ In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_
 A *pointer_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
-pointer_type
 A *pointer_type* is written as a *value_type* that is an unmanaged type ([§8.8](types.md#88-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
