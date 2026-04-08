@@ -6707,7 +6707,7 @@ assignment
     ;
 ```
 
-If the input can be syntactically recognised as both a *deconstructing_assignment* and any of the other alternatives then the *deconnstructing_assignment* shall be chosen.
+If the input can be syntactically recognised as both a *deconstructing_assignment* and any of the other alternatives then the *deconstructing_assignment* shall be chosen.
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
