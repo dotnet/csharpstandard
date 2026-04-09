@@ -53,6 +53,47 @@ public class GeneratedExample
             using var workspace = MSBuildWorkspace.Create(properties);
 
             var project = await workspace.OpenProjectAsync(projectFile);
+
+            // MSBuildWorkspace doesn't automatically add framework references for projects with EnableDefaultItems=false
+            // or projects with ProjectReferences. We need to add them manually based on the TargetFramework.
+            // We need to do this for ALL projects in the graph, not just the main project.
+            var frameworkReferences = Basic.Reference.Assemblies.Net60.References.All;
+
+            // Process all projects in the solution, including project references
+            var solution = workspace.CurrentSolution;
+            var allProjects = new HashSet<ProjectId>();
+            var projectsToProcess = new Queue<ProjectId>();
+            projectsToProcess.Enqueue(project.Id);
+
+            while (projectsToProcess.Count > 0)
+            {
+                var currentProjectId = projectsToProcess.Dequeue();
+                if (!allProjects.Add(currentProjectId))
+                    continue;
+
+                var currentProject = solution.GetProject(currentProjectId);
+                if (currentProject == null)
+                    continue;
+
+                // Add framework references if missing
+                var hasFrameworkReferences = currentProject.MetadataReferences
+                    .Any(r => r.Display?.Contains("System.Runtime") == true);
+
+                if (!hasFrameworkReferences)
+                {
+                    solution = currentProject.AddMetadataReferences(frameworkReferences).Solution;
+                }
+
+                // Queue referenced projects for processing
+                foreach (var projectRef in currentProject.ProjectReferences)
+                {
+                    projectsToProcess.Enqueue(projectRef.ProjectId);
+                }
+            }
+
+            // Get the updated project from the new solution
+            project = solution.GetProject(project.Id) ?? project;
+
             compilation = await project.GetCompilationAsync()
                 ?? throw new InvalidOperationException("Project has no Compilation");
         }
