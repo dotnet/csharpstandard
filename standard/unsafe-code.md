@@ -189,7 +189,7 @@ dataptr_type
     ;
 ```
 
-A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)), *funcptr_type*, or *voidptr_type*, followed by one or more `*` tokens.
+A *dataptr_type* is written as an *value_type* that is an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)), *funcptr_type*, or *voidptr_type*, followed by one or more `*` tokens.
 
 > *Example*: Some examples of data pointer types are given in the table below:
 >

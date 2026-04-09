@@ -724,7 +724,7 @@ switch_statement
 
 selector_expression
     : '(' expression ')'
-    | tuple_expression
+    | tuple_literal
     ;
 
 switch_block
@@ -745,9 +745,9 @@ case_guard
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a *tuple_expression* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
+A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_expression*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
+> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
 The ***governing type*** of a `switch` statement is established by the switch’s *selector_expression*.
 
@@ -1953,7 +1953,7 @@ non_ref_local_variable_declaration
 
 A ***resource type*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
+If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 

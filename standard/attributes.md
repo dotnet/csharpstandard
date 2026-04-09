@@ -1118,7 +1118,7 @@ It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellation` a
 
 - The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
-- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)).
+- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
 The iterator will not have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 
