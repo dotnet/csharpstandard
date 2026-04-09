@@ -285,10 +285,11 @@ declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
+    | using_declaration
     ;
 ```
 
-A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)).
+A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)). A using declaration is declared using a *using_declaration* (§13.14.2).
 
 The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
