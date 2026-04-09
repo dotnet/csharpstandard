@@ -102,6 +102,9 @@
     - [§8.3.9](types.md#839-the-bool-type)  The Bool type
     - [§8.3.10](types.md#8310-enumeration-types)  Enumeration types
     - [§8.3.11](types.md#8311-tuple-types)  Tuple types
+      - [§8.3.11.1](types.md#83111-general)  General
+      - [§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation)  Eliding intermediate tuple creation
+      - [§8.3.11.3](types.md#83113-runtime-representation)  Runtime representation
     - [§8.3.12](types.md#8312-nullable-value-types)  Nullable value types
     - [§8.3.13](types.md#8313-boxing-and-unboxing)  Boxing and unboxing
   - [§8.4](types.md#84-constructed-types)  Constructed types
@@ -175,7 +178,7 @@
       - [§9.4.4.22](variables.md#94422-general-rules-for-simple-expressions)  General rules for simple expressions
       - [§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)  General rules for expressions with embedded expressions
       - [§9.4.4.24](variables.md#94424-invocation-expressions-and-object-creation-expressions)  Invocation expressions and object creation expressions
-      - [§9.4.4.25](variables.md#94425-simple-assignment-expressions)  Simple assignment expressions
+      - [§9.4.4.25](variables.md#94425-simple-and-deconstructing-assignment-expressions)  Simple and deconstructing assignment expressions
       - [§9.4.4.26](variables.md#94426--expressions)  && expressions
       - [§9.4.4.27](variables.md#94427--expressions)  || expressions
       - [§9.4.4.28](variables.md#94428--expressions)  ! expressions
@@ -328,7 +331,7 @@
     - [§12.8.3](expressions.md#1283-interpolated-string-expressions)  Interpolated string expressions
     - [§12.8.4](expressions.md#1284-simple-names)  Simple names
     - [§12.8.5](expressions.md#1285-parenthesized-expressions)  Parenthesized expressions
-    - [§12.8.6](expressions.md#1286-tuple-expressions)  Tuple expressions
+    - [§12.8.6](expressions.md#1286-tuple-literals)  Tuple literals
     - [§12.8.7](expressions.md#1287-member-access)  Member access
       - [§12.8.7.1](expressions.md#12871-general)  General
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names
@@ -450,9 +453,12 @@
   - [§12.23](expressions.md#1223-assignment-operators)  Assignment operators
     - [§12.23.1](expressions.md#12231-general)  General
     - [§12.23.2](expressions.md#12232-simple-assignment)  Simple assignment
-    - [§12.23.3](expressions.md#12233-ref-assignment)  Ref assignment
-    - [§12.23.4](expressions.md#12234-compound-assignment)  Compound assignment
-    - [§12.23.5](expressions.md#12235-event-assignment)  Event assignment
+    - [§12.23.3](expressions.md#12233-deconstructing-assignment)  Deconstructing assignment
+      - [§12.23.3.1](expressions.md#122331-general)  General
+      - [§12.23.3.2](expressions.md#122332-abridged-deconstructors)  Abridged deconstructors
+    - [§12.23.4](expressions.md#12234-ref-assignment)  Ref assignment
+    - [§12.23.5](expressions.md#12235-compound-assignment)  Compound assignment
+    - [§12.23.6](expressions.md#12236-event-assignment)  Event assignment
   - [§12.24](expressions.md#1224-expression)  Expression
   - [§12.25](expressions.md#1225-constant-expressions)  Constant expressions
   - [§12.26](expressions.md#1226-boolean-expressions)  Boolean expressions

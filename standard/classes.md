@@ -3851,7 +3851,7 @@ Once a particular non-ref-valued property or non-ref-valued indexer has been sel
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
 - If the usage is as the target of a simple assignment ([§12.23.2](expressions.md#12232-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§12.23.4](expressions.md#12234-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.23.5](expressions.md#12235-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -4101,7 +4101,7 @@ An event can be used as the left operand of the `+=` and `-=` operators. These 
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.23.5](expressions.md#12235-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.23.6](expressions.md#12236-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >

@@ -282,7 +282,7 @@ Depending on the context in which a member declaration takes place, only certain
     > *Note*: A type declared as a member of a class can have any of the permitted kinds of declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
 - Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.
     > *Note*: A type declared as a member of a struct can have `public`, `internal`, or `private` declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
-- Interface members implicitly have `public` declared accessibility. No access modifiers are allowed on interface member declarations.
+- Interface members implicitly have `public` declared accessibility.
 - Enumeration members implicitly have `public` declared accessibility. No access modifiers are allowed on enumeration member declarations.
 
 ### 7.5.3 Accessibility domains

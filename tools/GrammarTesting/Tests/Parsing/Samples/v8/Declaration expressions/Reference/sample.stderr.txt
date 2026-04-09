@@ -1,0 +1,8 @@
+(20:21) Error, variable_reference not allowed here: E
+(32:40) Error, declaration_expression not allowed here: A < B, C > q
+(35:40) Semantic error, expression is not a variable reference: (A) < B
+(35:49) Semantic error, expression is not a variable reference: C > q
+(38:26) Error, declaration_expression not allowed here: A < B, C > q
+(47:15) Error, abridged_deconstructor not allowed here: var (r, s)
+(48:7) Error, variable_reference not allowed here: p
+(54:16) Error, declaration_expression not allowed here: int k

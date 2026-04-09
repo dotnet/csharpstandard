@@ -100,7 +100,7 @@ A type T is ***output-unsafe*** if one of the following holds:
 
 - `T` is a contravariant type parameter
 - `T` is an array type with an output-unsafe element type
-- `T` is an interface or delegate type `Sᵢ,... Aₑ` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
+- `T` is an interface or delegate type `S<Aᵢ,... Aₑ>` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
   - `Xᵢ` is covariant or invariant and `Aᵢ` is output-unsafe.
   - `Xᵢ` is contravariant or invariant and `Aᵢ` is input-unsafe.
 
@@ -440,7 +440,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
-- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An interface property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
 - An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 19.4.5 Interface events
@@ -451,9 +451,9 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 
 - *event_modifier* shall not include `override`.
 - A derived interface may implement an abstract interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
-- It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
-- An instance event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
-- An instance event with the `abstract` modifier must not declare accessors.
+- It is a compile-time error for *variable_declarators* in an interface *event_declaration* to contain any *variable_initializer*s.
+- An interface event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An interface event with the `abstract` modifier must not declare accessors.
 - The type of an interface event shall be input-safe.
 
 ### 19.4.6 Interface indexers
@@ -1463,7 +1463,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 19.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >
