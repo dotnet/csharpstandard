@@ -447,7 +447,7 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.24.3](expressions.md#12243-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.24.3](expressions.md#12243-deconstructing-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
@@ -1231,7 +1231,7 @@ is then equivalent to:
 }
 ```
 
-The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.24.3](expressions.md#12243-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.24.3](expressions.md#12243-deconstructing-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 

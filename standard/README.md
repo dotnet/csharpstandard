@@ -462,9 +462,12 @@
   - [§12.24](expressions.md#1224-assignment-operators)  Assignment operators
     - [§12.24.1](expressions.md#12241-general)  General
     - [§12.24.2](expressions.md#12242-simple-assignment)  Simple assignment
-    - [§12.24.3](expressions.md#12243-ref-assignment)  Ref assignment
-    - [§12.24.4](expressions.md#12244-compound-assignment)  Compound assignment
-    - [§12.24.5](expressions.md#12245-event-assignment)  Event assignment
+    - [§12.24.3](expressions.md#12243-deconstructing-assignment)  Deconstructing assignment
+      - [§12.24.3.1](expressions.md#122431-general)  General
+      - [§12.24.3.2](expressions.md#122432-abridged-deconstructors)  Abridged deconstructors
+    - [§12.24.4](expressions.md#12244-ref-assignment)  Ref assignment
+    - [§12.24.5](expressions.md#12245-compound-assignment)  Compound assignment
+    - [§12.24.6](expressions.md#12246-event-assignment)  Event assignment
   - [§12.25](expressions.md#1225-expression)  Expression
   - [§12.26](expressions.md#1226-constant-expressions)  Constant expressions
   - [§12.27](expressions.md#1227-boolean-expressions)  Boolean expressions

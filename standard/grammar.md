@@ -1592,12 +1592,12 @@ assignment
     | ref_assignment
     ;
 
-// Source: §12.23.2 Simple assignment
+// Source: §12.24.2 Simple assignment
 simple_assignment
     : unary_expression '=' expression
     ;
 
-// Source: §12.23.3.1 General
+// Source: §12.24.3.1 General
 deconstructing_assignment
     : deconstructor '=' expression
     ;
@@ -1614,7 +1614,7 @@ deconstructor_element
     | variable_reference
     ;
 
-// Source: §12.23.3.2 Abridged deconstructors
+// Source: §12.24.3.2 Abridged deconstructors
 abridged_deconstructor
     : 'var' abridged_deconstructor_elements
     ;
@@ -1628,12 +1628,12 @@ abridged_deconstructor_element
     | abridged_deconstructor_elements
     ;
 
-// Source: §12.23.4 Ref assignment
+// Source: §12.24.4 Ref assignment
 ref_assignment
     : unary_expression '=' 'ref' expression
     ;
 
-// Source: §12.23.5 Compound assignment
+// Source: §12.24.5 Compound assignment
 compound_assignment
     : unary_expression compound_assignment_operator expression
     ;

@@ -24,7 +24,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 - A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
-- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.24.5](expressions.md#12245-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
+- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
 - A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.24.2](expressions.md#12242-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
@@ -1303,7 +1303,7 @@ In these situations, the boxed instance is considered to contain a variable of t
 
 ## 12.7 Deconstruction
 
-Deconstruction is a compile-time transformation whereby an expression is replaced by a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
+Deconstruction is a compile-time transformation whereby an expression is replaced by a *tuple-literal* of individual expressions. Deconstruction is used in deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)).
 
 An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed*** to a *tuple-literal* if one of the following hold:
 
@@ -5240,7 +5240,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 - In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
 - As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
-- In a *deconstructor* ([§12.23.3](expressions.md#12233-deconstructing-assignment)) the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- In a *deconstructor* ([§12.24.3](expressions.md#12243-deconstructing-assignment)) the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
@@ -6844,14 +6844,14 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.24.2](expressions.md#12242-simple-assignment).
 
-The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which shall be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.24.3](expressions.md#12243-ref-assignment).
+The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which shall be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.24.3](expressions.md#12243-deconstructing-assignment).
 
 The assignment operators other than the `=` and `= ref` operator are called the ***compound assignment operator***s. These operators are processed as follows:
 
 - For the `??=` operator, only if the value of the left-operand is `null`, is the right-operand evaluated and the result assigned to the variable, property, or indexer element given by the left operand.
-- Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.24.4](expressions.md#12244-compound-assignment).
+- Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.24.4](expressions.md#12244-ref-assignment).
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.24.5](expressions.md#12245-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.24.5](expressions.md#12245-compound-assignment).
 
 Each of the alternatives takes the same general form of `l <op> r`, where `<op>` is an ***assignment operator***.
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
@@ -6860,7 +6860,7 @@ The assignment operators are right-associative, meaning that operations are grou
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As specified in event assignment [§12.23.6](expressions.md#12236-event-assignment) when the left operand of the `+=` and `-=` operators is classified as an event access the *compound_assignment* does not yield a value and so an expression of the form `e1 += e2 += f` where `e1` and `e2` are event accesses is invalid and not right-associative.
+> *Note*: As specified in event assignment [§12.24.6](expressions.md#12246-event-assignment) when the left operand of the `+=` and `-=` operators is classified as an event access the *compound_assignment* does not yield a value and so an expression of the form `e1 += e2 += f` where `e1` and `e2` are event accesses is invalid and not right-associative.
 
 ### 12.24.2 Simple assignment
 
@@ -7002,9 +7002,9 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > *end example*
 
-### 12.23.3 Deconstructing assignment
+### 12.24.3 Deconstructing assignment
 
-#### 12.23.3.1 General
+#### 12.24.3.1 General
 
 ```ANTLR
 deconstructing_assignment
@@ -7024,7 +7024,7 @@ deconstructor_element
     ;
 ```
 
-> *Note*: an *abridged_deconstructor* is a shorthand notation for a *deconstructor* and is described below ([§12.23.3.2](expressions.md#122332-abridged-deconstructors)).
+> *Note*: an *abridged_deconstructor* is a shorthand notation for a *deconstructor* and is described below ([§12.24.3.2](expressions.md#122432-abridged-deconstructors)).
 
 In a deconstructing assignment the `=` operator is called the ***deconstructing assignment operator***.
 
@@ -7040,7 +7040,7 @@ then in each case the former shall be chosen.
 For backward compatibility if any *deconstructor_element* is a *discard_token* then:
 
 - If name lookup ([§12.8.4](expressions.md#1284-simple-names)) for “`_`” finds an associated declaration then the *discard_token* is reclassified as a *simple_name*, which is syntactically a *variable_reference*.
-- Otherwise the *discard token* is a simple discard ([§12.19](expressions.md#1219-declaration-expressions)).
+- Otherwise the *discard token* is a simple discard ([§12.19](expressions.md#1219-the-throw-expression-operator)).
 
 It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *deconstructor_element* is not writeable.
 
@@ -7057,7 +7057,7 @@ There are restrictions on which *deconstructor_element*s are valid in a given co
 For these restrictions:
 
 - any *deconstructor*s appearing nested as *deconstructor_element*s in another *deconstructor* are “contained” by the outmost *deconstructor*;
-- any *abridged_deconstructor* ([§12.23.3.2](expressions.md#122332-abridged-deconstructors)) shorthands are treated as their expanded form as collections of *declaration_expression*s;
+- any *abridged_deconstructor* ([§12.24.3.2](expressions.md#122432-abridged-deconstructors)) shorthands are treated as their expanded form as collections of *declaration_expression*s;
 - “at the start of a *statement*” means the *deconstructor* is recognised as part of the derivation *statement* ➜ *embedded_statement* ➜ *expression_statement* ➜ *statement_expression* ➜ *assignment* ➜ *deconstructing_assignment* ➜ *deconstructor* and not in other places where *deconstructing_assignment* can occur; and
 - “a member of a *for_initializer*” means the *deconstructor* is recognised as part of the derivation *for_initializer* ➜ *statement_expression_list* ➜ *statement_expression* ➜ *assignment* ➜ *deconstructing_assignment* ➜ *deconstructor* and not in other places where *deconstructing_assignment* can occur.
 
@@ -7085,7 +7085,7 @@ The run-time processing of a deconstructing assignment, now `d = e`, proceeds as
 <!-- markdownlint-enable MD028 -->
 > *Note*: The construction of intermediate tuples produced by this algorithm might be elided by an implementation as specified by [§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation). *end note*
 
-#### 12.23.3.2 Abridged deconstructors
+#### 12.24.3.2 Abridged deconstructors
 
 An *abridged_deconstructor* is a shorthand syntax for a *deconstructor* containing implicitly typed declaration expressions.
 
@@ -7104,7 +7104,7 @@ abridged_deconstructor_element
     ;
 ```
 
-An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstructor* `(var e1, ..., var en)` and has the same behavior as its standard (unbridged) expansion ([§12.23.3.1](expressions.md#122331-general)). This applies recursively to any nested *abridged_deconstructor_element*s in the *abridged_deconstructor*. Each identifier nested within a *abridged_deconstructor* thus introduces a declaration expression ([§12.19](expressions.md#1219-declaration-expressions)).
+An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstructor* `(var e1, ..., var en)` and has the same behavior as its standard (unbridged) expansion ([§12.24.3.1](expressions.md#122431-general)). This applies recursively to any nested *abridged_deconstructor_element*s in the *abridged_deconstructor*. Each identifier nested within a *abridged_deconstructor* thus introduces a declaration expression ([§12.19](expressions.md#1219-the-throw-expression-operator)).
 
 > *Example*:
 > The following two examples both declare two variables: a and b. The first uses a standard *deconstructor* introducing explicitly typed variables, second an *abridged_deconstructor* declaring the same variables but implicitly type – in this case the second constant requires to the `L` suffix so that `b` is `long`.
@@ -7141,7 +7141,7 @@ An *abridged_deconstructor* `var (e1, ..., en)` is shorthand for the *deconstruc
 >
 > *end example*
 
-### 12.23.4 Ref assignment
+### 12.24.4 Ref assignment
 
 ```ANTLR
 ref_assignment
@@ -7198,7 +7198,7 @@ The ref assignment operator shall not read the storage location referenced by th
 <!-- markdownlint-enable MD028 -->
 > *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it is important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
 
-### 12.24.4 Compound assignment
+### 12.24.5 Compound assignment
 
 ```ANTLR
 compound_assignment
@@ -7213,13 +7213,13 @@ compound_assignment_operator
 
 The operators in *compound_assignment_operator* are called the ***compound assignment operator***s.
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.6](expressions.md#12236-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.24.6](expressions.md#12246-event-assignment).
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Eᵢ]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Eᵢ]` where at least one element of `Eᵢ` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
 The expression `a ??= b` is equivalent to `(T) (a ?? (a = b))`, except that `a` is evaluated only once, where `T` is the type of `a` when the type of `b` is dynamic and otherwise `T` is the type of `a ?? b`.
 
-> *Note*: From the definition of `??` ([§12.17](expressions.md#1217-the-null-coalescing-operator)) `b` is only evaluated if the value of `a` is `null`.
+> *Note*: From the definition of `??` ([§12.17](expressions.md#1217-conditional-logical-operators)) `b` is only evaluated if the value of `a` is `null`.
 
 Otherwise, an operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then
 
@@ -7260,7 +7260,7 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 <!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
 
-### 12.24.5 Event assignment
+### 12.24.6 Event assignment
 
 An event assignment is a subset of *compound_assignment* where the left operand of a `+=` or `-=` operator is classified as an event access. An event assignment is evaluated as follows:
 
