@@ -91,7 +91,7 @@ public class SourceLocation
             }
             else
             {
-                maybeRange = GetRange(Paragraph!) ?? GetRange(Section!.Loc.Paragraph!);
+                maybeRange = GetRange(Paragraph!) ?? (Section?.Loc != null ? GetRange(Section.Loc.Paragraph!) : null);
                 if (maybeRange == null)
                 {
                     // We don't have any line or column information. Just report the filename.
