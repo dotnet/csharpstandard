@@ -96,7 +96,7 @@ For example, this order worked best for V9:
    - Small - 2 files, 3 potential conflict opportunities
      - attributes.md: 2
      - statements.md: 1
-1. *More better nullable*
+1. *More better nullable*. **Already merged**
    - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1221.patch
    - Small - 2 files, 3 potential conflict opportunities
      - attributes.md: 3
