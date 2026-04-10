@@ -3269,7 +3269,7 @@ If an optional partial method has no implementation, any expression statement in
 
 If a defining declaration but not an implementing declaration is given for an optional partial method `M`, the following restrictions apply:
 
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
+- It is a compile-time error to create a delegate from `M` ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).

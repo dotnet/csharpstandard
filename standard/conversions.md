@@ -325,7 +325,7 @@ An implicit constant expression conversion permits the following conversions:
 - A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
-The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-constant-expressions)).
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.26](expressions.md#1226-constant-expressions)).
 
 > *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
