@@ -681,7 +681,7 @@ For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *e
 
 #### 9.4.4.24 Invocation expressions and object creation expressions
 
-If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§23.5.3.2](attributes.md#23532-conditional-methods)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
+If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method or conditional local function for which the call is omitted ([§23.5.3.2](attributes.md#23532-conditional-methods), §conditional-local-function), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
 
 For an invocation expression *expr* of the form:
 
