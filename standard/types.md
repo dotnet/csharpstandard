@@ -217,6 +217,8 @@ nullable_value_type
     ;
 ```
 
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
 Assignment to a variable of a value type creates a *copy* of the value being assigned. This differs from assignment to a variable of a reference type, which copies the reference but not the object identified by the reference.
@@ -295,7 +297,7 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
 
 Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
 
-> *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
+> *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes"} -->
 > ```csharp
@@ -317,56 +319,13 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
+<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
 
-While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
+The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
 
-<!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
-```csharp
-M((nint)1);
-
-static void M(dynamic d)
-{
-    var v = d >> 2; // RuntimeBinderException: '>>' cannot be applied to operands
-                    // of type System.IntPtr/System.UIntPtr and int
-}
-```
-
-The only constructor for `nint` or `nuint` is the parameter-less constructor.
-
-The following members of `System.IntPtr` and `System.UIntPtr` are explicitly excluded from `nint` or `nuint`:
-
-```csharp
-// constructors
-// arithmetic operators
-// implicit and explicit conversions
-public static readonly IntPtr Zero; // use 0 instead
-public static int Size { get; }     // use sizeof() instead
-public static IntPtr Add(IntPtr pointer, int offset);
-public static IntPtr Subtract(IntPtr pointer, int offset);
-public int ToInt32();
-public long ToInt64();
-public void* ToPointer();
-```
-
-The remaining members of `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`. These are:
-
-```csharp
-public override bool Equals(object obj);
-public override int GetHashCode();
-public override string ToString();
-public string ToString(string format);
-```
-
-Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
-
-`nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
-
-Overloads cannot differ by `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
-
-Methods hide other methods that differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
-
-`typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
+- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
 ### 8.3.6 Integral types
 
@@ -380,7 +339,6 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
 - The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
-  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. *end note*
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
@@ -388,7 +346,9 @@ C# supports the following integral types, with the sizes and value ranges, as sh
   
 All signed integral types are represented using two’s complement format.
 
-The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, unsigned 64-bit precision, native signed precision, or native unsigned precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+
+> *Note*: Native precision means 32-bit on 32-bit platforms and 64-bit on 64-bit platforms. Operators on `nint` and `nuint` use native precision rather than being promoted to a larger type. *end note*
 
 The `char` type is classified as an integral type, but it differs from the other integral types in two ways:
 

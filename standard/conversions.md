@@ -83,6 +83,7 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+- Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
@@ -117,7 +118,6 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
 
 ### 10.2.3 Implicit numeric conversions
 
@@ -128,7 +128,7 @@ The implicit numeric conversions are:
 - From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
 - From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `nuint`, `ulong`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `nint` to `long`, `float`, `double`, or `decimal`.
 - From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
@@ -321,8 +321,12 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
+
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-constant-expressions)).
+
+> *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
 ### 10.2.12 Implicit conversions involving type parameters
 
@@ -446,8 +450,8 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `ushort` to `sbyte`, `byte`, `short`, or `char`.
 - From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
 - From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `nint`, or `char`.
-- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `long`, `ulong`, or `char`.
-- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, or `char`.
+- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `ulong`, or `char`.
+- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `long`, or `char`.
 - From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `ulong`, or `char`.
 - From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `char`.
 - From `char` to `sbyte`, `byte`, or `short`.
@@ -858,23 +862,6 @@ Evaluation of a nullable conversion based on an underlying conversion from `S` 
   - Otherwise, the conversion is evaluated as an unwrapping from `S?` to `S`, followed by the underlying conversion from `S` to `T`, followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S` to `T?`, the conversion is evaluated as the underlying conversion from `S` to `T` followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S?` to `T`, the conversion is evaluated as an unwrapping from `S?` to `S` followed by the underlying conversion from `S` to `T`.
-
-Conversion from `A` to `Nullable<B>` is:
-
-- an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
-- an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `B` is:
-
-- an explicit nullable conversion if there is an identity conversion or implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `Nullable<B>` is:
-
-- an identity conversion if there is an identity conversion from `A` to `B`;
-- an explicit nullable conversion if there is an implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
 
 ### 10.6.2 Lifted conversions
 

@@ -291,7 +291,6 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 > *Example*: For the operation `b * s`, where `b` is a `byte` and `s` is a `short`, overload resolution selects `operator *(int, int)` as the best operator. Thus, the effect is that `b` and `s` are converted to `int`, and the type of the result is `int`. Likewise, for the operation `i * d`, where `i` is an `int` and `d` is a `double`, `overload` resolution selects `operator *(double, double)` as the best operator. *end example*
 
-There are no predefined operators for dealing with native integer ([§8.3.6](types.md#836-integral-types)). Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, and the resulting corresponding predefined operators used instead.
 
 **End of informative text.**
 
@@ -299,7 +298,7 @@ There are no predefined operators for dealing with native integer ([§8.3.6](typ
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `–`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary `-` operator, unary numeric promotion converts operands of type `uint` to type `long`.
 
 **End of informative text.**
 
@@ -315,7 +314,7 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`
 - Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
-- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `nint`, or `int`, both operands are converted to type `long`.
+- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `int`, or `nint`, both operands are converted to type `long`.
 - Otherwise, if either operand is of type `uint`, the other operand is converted to type `uint`.
 - Otherwise, if either operand is of type `nint`, the other operand is converted to type `nint`.
 - Otherwise, both operands are converted to type `int`.
@@ -1179,10 +1178,11 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
-  - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
-  - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
-  - `S₁` is `int` and `S₂` is `uint`, or `ulong`
-  - `S₁` is `long` and `S₂` is `ulong`
+  - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, `nuint`, or `ulong`
+  - `S₁` is `short` and `S₂` is `ushort`, `uint`, `nuint`, or `ulong`
+  - `S₁` is `int` and `S₂` is `uint`, `nuint`, or `ulong`
+  - `S₁` is `nint` and `S₂` is `nuint` or `ulong`
+  - `S₁` is `long` and `S₂` is `nuint` or `ulong`
 
 #### 12.6.4.8 Overloading in generic classes
 
@@ -2308,6 +2308,10 @@ In this case the compile-time type of the *element_access* depends on the compil
 
 If the *primary_expression* of an *element_access* is:
 
+- a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
+- a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
+- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
+
 #### 12.8.12.2 Array access
 
 For an array access the *argument_list* shall not contain named arguments or by-reference arguments ([§15.6.2.3](classes.md#15623-by-reference-parameters)).
@@ -2316,7 +2320,7 @@ The number of expressions in the *argument_list* shall be the same as the rank o
 
 - of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`; or
 - for single rank array access only, of type `Index` or `Range`; or
-- be implicitly convertible to one or more of the above types.
+- implicitly convertible to one or more of the above types.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
@@ -2529,7 +2533,7 @@ If the *primary_expression* has the compile-time type `dynamic` then the operato
 
 If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set or init accessor. If this is not the case, a binding-time error occurs.
 
-Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
+Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
 There shall be an implicit conversion from the return type of the selected unary operator to the type of the *primary_expression*, otherwise a compile-time error occurs.
 
@@ -2629,8 +2633,6 @@ The run-time processing of an *object_creation_expression* of the form `new T(A)
 - If `T` is a *struct_type*:
   - An instance of type `T` is created by allocating a temporary local variable. Since an instance constructor of a *struct_type* is required to definitely assign a value to each field of the instance being created, no initialization of the temporary variable is necessary.
   - The instance constructor is invoked according to the rules of function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)). A reference to the newly allocated instance is automatically passed to the instance constructor and the instance can be accessed from within that constructor as this.
-
-`new nint()` is equivalent to `(nint)0`, and `new nuint()` is equivalent to `(nuint)0`.
 
 #### 12.8.17.3 Object initializers
 
@@ -3652,6 +3654,8 @@ For an operation of the form `+x`, unary operator overload resolution ([§12.4.
 ```csharp
 int operator +(int x);
 uint operator +(uint x);
+nint operator +(nint x);
+nuint operator +(nuint x);
 long operator +(long x);
 ulong operator +(ulong x);
 float operator +(float x);
@@ -3665,16 +3669,17 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 ### 12.9.3 Unary minus operator
 
-For an operation of the form `–x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined unary minus operators are:
+For an operation of the form `-x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined unary minus operators are:
 
 - Integer negation:
 
   ```csharp
-  int operator –(int x);
-  long operator –(long x);
+  int operator -(int x);
+  nint operator -(nint x);
+  long operator -(long x);
   ```  
 
-  The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int` or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
+  The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
   
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
 
@@ -3684,15 +3689,15 @@ For an operation of the form `–x`, unary operator overload resolution ([§12.
 - Floating-point negation:
 
   ```csharp
-  float operator –(float x);
-  double operator –(double x);
+  float operator -(float x);
+  double operator -(double x);
   ```
   
   The result is the value of `X` with its sign inverted. If `x` is `NaN`, the result is also `NaN`.
 - Decimal negation:
 
   ```csharp
-  decimal operator –(decimal x);
+  decimal operator -(decimal x);
   ```
   
   The result is computed by subtracting `X` from zero. Decimal negation is equivalent to using the unary minus operator of type `System.Decimal`.
@@ -3720,11 +3725,13 @@ For an operation of the form `~x`, unary operator overload resolution ([§12.4.4
 ```csharp
 int operator ~(int x);
 uint operator ~(uint x);
+nint operator ~(nint x);
+nuint operator ~(nuint x);
 long operator ~(long x);
 ulong operator ~(ulong x);
 ```
 
-For each of these operators, the result of the operation is the bitwise complement of `x`.
+For each of these operators, the result of the operation is the bitwise complement of `x`.
 
 Every enumeration type `E` implicitly provides the following bitwise complement operator:
 
@@ -3770,7 +3777,7 @@ The operand of a prefix increment or decrement operation shall be an expression 
 
 If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set or init accessor. If this is not the case, a binding-time error occurs.
 
-Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
+Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
 There shall be an implicit conversion from the return type of the selected unary operator to the type of the *unary_expression*, otherwise a compile-time error occurs.
 
@@ -4065,6 +4072,8 @@ The predefined multiplication operators are listed below. The operators all comp
   ```csharp
   int operator *(int x, int y);
   uint operator *(uint x, uint y);
+  nint operator *(nint x, nint y);
+  nuint operator *(nuint x, nuint y);
   long operator *(long x, long y);
   ulong operator *(ulong x, ulong y);
   ```
@@ -4112,6 +4121,8 @@ The predefined division operators are listed below. The operators all compute th
   ```csharp
   int operator /(int x, int y);
   uint operator /(uint x, uint y);
+  nint operator /(nint x, nint y);
+  nuint operator /(nuint x, nuint y);
   long operator /(long x, long y);
   ulong operator /(ulong x, ulong y);
   ```
@@ -4163,6 +4174,8 @@ The predefined remainder operators are listed below. The operators all compute t
   ```csharp
   int operator %(int x, int y);
   uint operator %(uint x, uint y);
+  nint operator %(nint x, nint y);
+  nuint operator %(nuint x, nuint y);
   long operator %(long x, long y);
   ulong operator %(ulong x, ulong y);
   ```
@@ -4213,6 +4226,8 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```csharp
   int operator +(int x, int y);
   uint operator +(uint x, uint y);
+  nint operator +(nint x, nint y);
+  nuint operator +(nuint x, nuint y);
   long operator +(long x, long y);
   ulong operator +(ulong x, ulong y);
   ```
@@ -4313,18 +4328,20 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Integer subtraction:
 
   ```csharp
-  int operator –(int x, int y);
-  uint operator –(uint x, uint y);
-  long operator –(long x, long y);
-  ulong operator –(ulong x, ulong y
+  int operator -(int x, int y);
+  uint operator -(uint x, uint y);
+  nint operator -(nint x, nint y);
+  nuint operator -(nuint x, nuint y);
+  long operator -(long x, long y);
+  ulong operator -(ulong x, ulong y);
   ```
 
   In a `checked` context, if the difference is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
 - Floating-point subtraction:
 
   ```csharp
-  float operator –(float x, float y);
-  double operator –(double x, double y);
+  float operator -(float x, float y);
+  double operator -(double x, double y);
   ```
 
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
@@ -4342,7 +4359,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Decimal subtraction:
 
   ```csharp
-  decimal operator –(decimal x, decimal y);
+  decimal operator -(decimal x, decimal y);
   ```
 
   If the magnitude of the resulting value is too large to represent in the decimal format, a `System.OverflowException` is thrown. The scale of the result, before any rounding, is the larger of the scales of the two operands.
@@ -4352,13 +4369,13 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Enumeration subtraction. Every enumeration type implicitly provides the following predefined operator, where `E` is the enum type, and `U` is the underlying type of `E`:
 
   ```csharp
-  U operator –(E x, E y);
+  U operator -(E x, E y);
   ```
 
   This operator is evaluated exactly as `(U)((U)x – (U)y)`. In other words, the operator computes the difference between the ordinal values of `x` and `y`, and the type of the result is the underlying type of the enumeration.
 
   ```csharp
-  E operator –(E x, U y);
+  E operator -(E x, U y);
   ```
 
   This operator is evaluated exactly as `(E)((U)x – y)`. In other words, the operator subtracts a value from the underlying type of the enumeration, yielding a value of the enumeration.
@@ -4366,7 +4383,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Delegate removal. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
 
   ```csharp
-  D operator –(D x, D y);
+  D operator -(D x, D y);
   ```
 
   The semantics are as follows:
@@ -4440,6 +4457,8 @@ The predefined shift operators are listed below.
   ```csharp
   int operator <<(int x, int count);
   uint operator <<(uint x, int count);
+  nint operator <<(nint x, int count);
+  nuint operator <<(nuint x, int count);
   long operator <<(long x, int count);
   ulong operator <<(ulong x, int count);
   ```
@@ -4452,6 +4471,8 @@ The predefined shift operators are listed below.
   ```csharp
   int operator >>(int x, int count);
   uint operator >>(uint x, int count);
+  nint operator >>(nint x, int count);
+  nuint operator >>(nuint x, int count);
   long operator >>(long x, int count);
   ulong operator >>(ulong x, int count);
   ```
@@ -4537,31 +4558,43 @@ The predefined integer comparison operators are:
 ```csharp
 bool operator ==(int x, int y);
 bool operator ==(uint x, uint y);
+bool operator ==(nint x, nint y);
+bool operator ==(nuint x, nuint y);
 bool operator ==(long x, long y);
 bool operator ==(ulong x, ulong y);
 
 bool operator !=(int x, int y);
 bool operator !=(uint x, uint y);
+bool operator !=(nint x, nint y);
+bool operator !=(nuint x, nuint y);
 bool operator !=(long x, long y);
 bool operator !=(ulong x, ulong y);
 
 bool operator <(int x, int y);
 bool operator <(uint x, uint y);
+bool operator <(nint x, nint y);
+bool operator <(nuint x, nuint y);
 bool operator <(long x, long y);
 bool operator <(ulong x, ulong y);
 
 bool operator >(int x, int y);
 bool operator >(uint x, uint y);
+bool operator >(nint x, nint y);
+bool operator >(nuint x, nuint y);
 bool operator >(long x, long y);
 bool operator >(ulong x, ulong y);
 
 bool operator <=(int x, int y);
 bool operator <=(uint x, uint y);
+bool operator <=(nint x, nint y);
+bool operator <=(nuint x, nuint y);
 bool operator <=(long x, long y);
 bool operator <=(ulong x, ulong y);
 
 bool operator >=(int x, int y);
 bool operator >=(uint x, uint y);
+bool operator >=(nint x, nint y);
+bool operator >=(nuint x, nuint y);
 bool operator >=(long x, long y);
 bool operator >=(ulong x, ulong y);
 ```
@@ -4603,7 +4636,7 @@ If either operand is NaN, the result is `false` for all operators except `!=`, 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
 
 ```csharp
-–∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
+-∞ < -max < ... < -min < -0.0 == +0.0 < +min < ... < +max < +∞
 ```
 
 where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
@@ -5016,21 +5049,27 @@ The predefined integer logical operators are:
 ```csharp
 int operator &(int x, int y);
 uint operator &(uint x, uint y);
+nint operator &(nint x, nint y);
+nuint operator &(nuint x, nuint y);
 long operator &(long x, long y);
 ulong operator &(ulong x, ulong y);
 
 int operator |(int x, int y);
 uint operator |(uint x, uint y);
+nint operator |(nint x, nint y);
+nuint operator |(nuint x, nuint y);
 long operator |(long x, long y);
 ulong operator |(ulong x, ulong y);
 
 int operator ^(int x, int y);
 uint operator ^(uint x, uint y);
+nint operator ^(nint x, nint y);
+nuint operator ^(nuint x, nuint y);
 long operator ^(long x, long y);
 ulong operator ^(ulong x, ulong y);
 ```
 
-The `&` operator computes the bitwise logical AND of the two operands, the `|` operator computes the bitwise logical OR of the two operands, and the `^` operator computes the bitwise logical exclusive OR of the two operands. No overflows are possible from these operations.
+The `&` operator computes the bitwise logical AND of the two operands, the `|` operator computes the bitwise logical OR of the two operands, and the `^` operator computes the bitwise logical exclusive OR of the two operands. No overflows are possible from these operations.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined integer logical operators defined above are also predefined.
 
@@ -7297,13 +7336,12 @@ constant_expression
     ;
 ```
 
-A constant expression shall either have the value `null` or one of the following types:
+A constant expression shall have the value `null`, or be of a value type or a reference type. If a constant expression has a value type, that type shall be one of the following: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, the expression shall:
 
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
-- an enumeration type; or
-- a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) for a reference type.
+- have a value of type `string`; or
+- be a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) of reference type.
 
-A *constant_expression* of type `nint` shall have a value in the range \[`int.MinValue`,`int.MaxValue`\]. A *constant_expression* of type `nuint` shall have a value in the range \[`uint.MinValue`,`uint.MaxValue`\].
+A *constant_expression* of type `nint` shall have a value in the range \[-2147483648, 2147483647\]. A *constant_expression* of type `nuint` shall have a value in the range \[0, 4294967295\].
 
 Only the following constructs are permitted in constant expressions:
 
@@ -7353,7 +7391,25 @@ Whenever an expression fulfills the requirements listed above, the expression is
 
 The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
 
-Due to the implementation-defined nature of native integers ([§8.3.6](types.md#836-integral-types)), constant folding operations on `nint` and `nuint` operands shall be evaluated as if they had type `System.Int32` and `System.UInt32`, respectively. If the operation results in a constant value representable in 32 bits, constant folding may be performed at compile-time. Otherwise, the operation is executed at runtime and is not considered to be a constant.
+The compile-time evaluation of a *constant_expression* shall:
+
+- treat all values of type `nint` as `System.Int32`;
+- treat all values of type `nuint` as `System.UInt32`;
+- and otherwise use the same evaluation rules as for run-time non-constant expressions.
+
+If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the run-time evaluation of the whole expression would throw an exception, then a compile-time error shall be produced.
+
+> *Example*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConstantOverflow", expectedErrors:["CS0220"]} -->
+> ```csharp
+> public class C
+> {
+>     private const nint hugeNumber = int.MaxValue + 1;
+> }
+> ```
+>
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
