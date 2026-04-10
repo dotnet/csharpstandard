@@ -118,6 +118,7 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
+For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
 
 ### 10.2.3 Implicit numeric conversions
 
@@ -862,6 +863,23 @@ Evaluation of a nullable conversion based on an underlying conversion from `S` 
   - Otherwise, the conversion is evaluated as an unwrapping from `S?` to `S`, followed by the underlying conversion from `S` to `T`, followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S` to `T?`, the conversion is evaluated as the underlying conversion from `S` to `T` followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S?` to `T`, the conversion is evaluated as an unwrapping from `S?` to `S` followed by the underlying conversion from `S` to `T`.
+
+Conversion from `A` to `Nullable<B>` is:
+
+- an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
+- an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
+- otherwise, invalid.
+
+Conversion from `Nullable<A>` to `B` is:
+
+- an explicit nullable conversion if there is an identity conversion or implicit or explicit numeric conversion from `A` to `B`;
+- otherwise, invalid.
+
+Conversion from `Nullable<A>` to `Nullable<B>` is:
+
+- an identity conversion if there is an identity conversion from `A` to `B`;
+- an explicit nullable conversion if there is an implicit or explicit numeric conversion from `A` to `B`;
+- otherwise, invalid.
 
 ### 10.6.2 Lifted conversions
 

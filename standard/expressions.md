@@ -2320,7 +2320,7 @@ The number of expressions in the *argument_list* shall be the same as the rank o
 
 - of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`; or
 - for single rank array access only, of type `Index` or `Range`; or
-- implicitly convertible to one or more of the above types.
+- be implicitly convertible to one or more of the above types.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
