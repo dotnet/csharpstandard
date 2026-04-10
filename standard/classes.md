@@ -472,11 +472,9 @@ The nullability of the type argument need not match the nullability of the type 
 
 > *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
-<!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
-The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
+Unless a type parameter is explicitly constrained to value types, the nullable type annotation `?` can only be applied to a type parameter within a `#nullable enable` context.
 
-<!-- Add in C# 9, when `?` is allowed on nullable reference type parameters. -->
-<!-- For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`. -->
+For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
@@ -2209,7 +2207,7 @@ The *ref_return_type* of a returns-by-ref method declaration specifies the type 
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
-A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class` and `struct`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
+A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class`, `struct`, and `default`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
@@ -2806,11 +2804,12 @@ A compile-time error occurs unless all of the following are true for an override
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of the overridden base method.
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
 - The override declaration and the overridden base method have the same declared accessibility.
-- The override method's return type is at least as accessible as the override method.
+- The override method’s return type is at least as accessible as the override method.
   > *Note*: This constraint permits an override method in a `private` class to have a `private` return type.  However, it requires a `public` override method in a `public` type to have a `public` return type. *end note* In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- A *type_parameter_constraints_clause* may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
-  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-  - If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
+- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
+  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
+  - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
+  - If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
@@ -2860,6 +2859,28 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the `default` constraint works when overriding a method with an unconstrained type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods6"} -->
+> ```csharp
+> #nullable enable
+> class A2
+> {
+>     public virtual void F2<T>(T? t) where T : struct { }
+>     public virtual void F2<T>(T? t) { }
+> }
+>
+> class B2 : A2
+> {
+>     public override void F2<T>(T? t) /*where T : struct*/ { }
+>     public override void F2<T>(T? t) where T : default { }
+> }
+> ```
+>
+> The `default` constraint on `B2.F2` is required to override the unconstrained `A2.F2` with a `T?` parameter. Without it, `T?` would be interpreted as a nullable value type. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
