@@ -4008,10 +4008,10 @@ If a switch expression is not subject to a *switch expression conversion*, then
 - The type of the *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and each *switch_expression_arm_expression* can be implicitly converted to that type.
 - It is an error if no such type exists.
 
-It is an error if some *switch_expression_arm*’s pattern cannot affect the result because some previous pattern and guard will always match.
+It is an error if some *switch_expression_arm*’s pattern is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of preceding *switch_expression_arm*s of the switch expression that do not have a *case_guard* or whose *case_guard* is a constant expression with the value `true`.
 
-A switch expression is said to be *exhaustive* if every value of its input is handled by at least one arm of the switch expression.  The compiler shall produce a warning if a switch expression is not exhaustive.
-At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.InvalidOperationException` (or a class derived from that).
+A switch expression is said to be *exhaustive* if the set of patterns of its *switch_expression_arm*s is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the switch expression's input. The compiler shall produce a warning if a switch expression is not exhaustive.
+At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
 
 > *Example*: The following converts values of an enum representing visual directions on an online map to the corresponding cardinal directions:
 >

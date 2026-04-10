@@ -11,7 +11,7 @@ A pattern is tested against a value in a number of contexts:
 - In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression’s left-hand-side.  
 - In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.  
 
-The value against which a pattern is tested is called the ***pattern input value***. Patterns may be combined using Boolean logic.
+The value against which a pattern is tested is called the ***pattern input value***.
 
 ## 11.2 Pattern forms
 
@@ -21,7 +21,11 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : '(' pattern ')'
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
     | declaration_pattern
     | constant_pattern
     | var_pattern
@@ -30,9 +34,14 @@ pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 ```
+
+The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
 
 Some *pattern*s can result in the declaration of a local variable.
 
@@ -421,6 +430,8 @@ type_pattern
     ;
 ```
 
+A type pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T` (§11.2.2).
+
 The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.15.12.1](expressions.md#1215121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
 
 ### 11.2.9 Relational pattern
@@ -429,18 +440,22 @@ A *relational_pattern* is used to relationally test the pattern input value ([§
 
 ```ANTLR
 relational_pattern
-    : '<'  constant_expression
-    | '<=' constant_expression
-    | '>'  constant_expression
-    | '>=' constant_expression
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
     ;
 ```
 
+The *relational_expression* in a *relational_pattern* is required to evaluate to a constant value.
+
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
 
-It is a compile-time error if `constant_expression`is `double.NaN`, `float.NaN`, or `null_literal`.
+A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
 
-When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of `constant_expression` using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the `constant_expression`.
+It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
+
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of the constant expression using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the constant expression.
 
 > *Example*:
 >
@@ -471,7 +486,7 @@ When the input value has a type for which a suitable built-in binary relational 
 
 ### 11.2.10 Logical pattern
 
-A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
+A *logical_pattern* is used to negate the result of a pattern match, or to combine the results of multiple pattern matches using conjunction (`and`) or disjunction (`or`).
 
 ```ANTLR
 logical_pattern
@@ -490,7 +505,7 @@ conjunctive_pattern
 
 negated_pattern
     : 'not' negated_pattern
-    | pattern
+    | primary_pattern
     ;
 ```
 
@@ -498,9 +513,25 @@ negated_pattern
 
 A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
 
+It is a compile-time error for a pattern variable to be declared beneath a `not` or `or` pattern operator.
+
+> *Note*: Because neither `not` nor `or` can produce a definite assignment for a pattern variable, it is an error to declare one in those positions. *end note*
+
+In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
+
+- If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
+- Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
+- Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
+- Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* (§11.2.5), the *narrowed type* is the type `System.ITuple`.
+- Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
+- Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
+- Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
+- Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
+- Otherwise the *narrowed type* of `P` is `P`'s input type.
+
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
 
-When a *pattern* is used with `is`, any pattern operators in that *pattern* have higher precedence than their logical operator counterparts. Otherwise, those pattern operators have lower precedence.
+When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar; as a result, the pattern operators `and`, `or`, and `not` within the pattern bind more tightly than the logical operators `&&`, `||`, and `!` outside the pattern.
 
 > *Example*:
 >
@@ -561,31 +592,100 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
+> ```csharp
+> object msg = "msg";
+> object obj = 5;
+> bool flag = true;
+> 
+> // This is parsed as: (msg is (not int) or string)
+> result = msg is not int or string;
+> Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
+>
+> // This is parsed as: (obj is (int or string)) && flag
+> bool result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
+> 
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}");
+> 
+> flag = false;
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}");
+> 
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}");
+> ```
+>
+> The output produced is
+>
+> ```console
+> msg ("msg"): msg is not int or string: True
+> obj (5), flag (true): obj is int or string && flag: True
+> obj (5), flag (true): obj is int || obj is string && flag: True
+> obj (5), flag (false): obj is int or string && flag: False
+> obj (5), flag (false): obj is int || obj is string && flag: True
+> ```
+>
+>
+> *end example*
 
 ## 11.3 Pattern subsumption
 
-In a switch statement, it is an error if a case’s pattern is *subsumed* by the preceding set of unguarded cases ([§13.8.3](statements.md#1383-the-switch-statement)).
-Informally, this means that any input value would have been matched by one of the previous cases.
-The following rules define when a set of patterns subsumes a given pattern:
+In a switch statement, it is an error if a case’s pattern is *subsumed* by the preceding set of unguarded cases ([§13.8.3](statements.md#1383-the-switch-statement)). Informally, this means that any input value would have been matched by one of the previous cases. The following rules define when a set of patterns subsumes a given pattern:
 
-A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
+A pattern `P` *would match* a constant `K` if any of the following conditions hold:
+
+- the specification for that pattern's runtime behavior is that `P` matches `K`.
+- `P` is a *type_pattern* for type `T` and `K` is not `null` and the runtime type of `K` is `T` or a type derived from `T` or a type that implements `T`.
+- `P` is a *relational_pattern* with operator «op» and constant `v`, and the expression `K` «op» `v` would evaluate to `true`.
+- `P` is a *negated_pattern* `not P₁` and `P₁` would not match `K`.
+- `P` is a *conjunctive_pattern* `P₁ and P₂` and both `P₁` would match `K` and `P₂` would match `K`.
+- `P` is a *disjunctive_pattern* `P₁ or P₂` and either `P₁` would match `K` or `P₂` would match `K`.
+- `P` is a *discard_pattern*.
 
 A set of patterns `Q` *subsumes* a pattern `P` if any of the following conditions hold:
 
-- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`’s *converted value*
+- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`'s *converted value*
 - `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
+- `P` is a *type_pattern* for type `T` and the set of patterns `Q` is *exhaustive* for the type `T`.
+- `P` is a *relational_pattern* with operator «op» and constant value `v`, and for every value of the input type satisfying the relation «op» `v`, some pattern in the set `Q` would match that value.
+- `P` is a *disjunctive_pattern* `P₁ or P₂` and the set of patterns `Q` subsumes `P₁` and `Q` subsumes `P₂`.
+- `P` is a *conjunctive_pattern* `P₁ and P₂` and at least one of the following holds: `Q` subsumes `P₁`, or `Q` subsumes `P₂`.
+- `P` is a *negated_pattern* `not P₁` and `Q` is *exhaustive* for the input type considering only the values not matched by `P₁`.
+- `P` is a *discard_pattern* and the set of patterns `Q` is *exhaustive* for the type of the pattern input value, and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
+- Some pattern in `Q` is a *disjunctive_pattern* `Q₁ or Q₂` and replacing that pattern with `Q₁` in `Q` would yield a set that subsumes `P`, or replacing it with `Q₂` would yield a set that subsumes `P`.
+- Some pattern in `Q` is a *negated_pattern* `not Q₁` and `P` would not match any value that `Q₁` would match.
 
 ## 11.4 Pattern exhaustiveness
 
-Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable.
-The following rules define when a set of patterns is *exhaustive* for a type:
+Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable. The following rules define when a set of patterns is *exhaustive* for a type:
 
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
 
 1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
-2. Some pattern in `Q` is a *var pattern*; or
-3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
+1. Some pattern in `Q` is a *var pattern*; or
+1. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`; or
+1. Some pattern in `Q` is a *type_pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`; or
+1. Some pattern in `Q` is a *discard_pattern*; or
+1. The patterns in `Q` include a combination of *relational_pattern*s and *constant_pattern*s whose ranges collectively cover every possible value of `T`'s non-nullable underlying type. For `float` and `double` types, this includes `System.Double.NaN` or `System.Single.NaN` respectively, since `NaN` is not matched by any relational pattern; or
+1. Some pattern in `Q` is a *disjunctive_pattern* `P₁ or P₂`, and replacing that pattern with both `P₁` and `P₂` in `Q` yields a set that is *exhaustive* for `T`; or
+1. Some pattern in `Q` is a *negated_pattern* `not P₁`, and the patterns in `Q` together with the values not matched by `P₁` cover every possible value of `T`. A *negated_pattern* `not P₁` is exhaustive by itself when `P₁` matches no possible value of `T`; or
+1. Some pattern in `Q` is a *conjunctive_pattern* `P₁ and P₂`, and the set containing only `P₁` is *exhaustive* for `T` and the set containing only `P₂` is *exhaustive* for `T`.
+
+> *Note*: When a type pattern includes nullable types, the pattern may be exhaustive for the type but still generate a warning because the type pattern won't match a `null` value. *end note*
+<!-- markdownlint-disable MD028 -->
+
+> *Note*: For floating-point types, the combination of patterns `< 0` and `>= 0` is *not* exhaustive because neither relational pattern matches `NaN`. A correct exhaustive set would be `< 0`, `>= 0`, and `double.NaN` (or `float.NaN`). *end note*
 
 > *Example*:
 >
@@ -605,3 +705,4 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 > ```
 >
 > *end example*
+<!-- markdownlint-enable MD028 -->
