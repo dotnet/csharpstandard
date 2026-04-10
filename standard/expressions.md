@@ -5452,15 +5452,18 @@ anonymous_function_body
     ;
 ```
 
-If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope.
+If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. A `static` anonymous function may reference `static` members, type parameters, and constant definitions from the enclosing scope.
 
-A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing static anonymous function.
+A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing `static` anonymous function.
 
-Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program.
+<!-- markdownlint-disable MD028 -->
+> *Note*: Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program, other than possibly affecting delegate instance identity (§10.7.2). *end note*
+
+> *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See §10.7.2. *end note*
+<!-- markdownlint-enable MD028 -->
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
-<!-- markdownlint-disable MD028 -->
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -5507,11 +5510,14 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > x => x + 1                             // Implicitly typed, expression body
 > x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
-> static (int x) => { return x + 1; }    // Explicitly typed, block body
+> (int x) => { return x + 1; }           // Explicitly typed, block body
+> static (int x) => x + 1                // static anonymous function, explicitly typed, expression body
+> static (int x) => { return x + 1; }    // static anonymous function, explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
-> static delegate (int x) { return x + 1; } // Anonymous method expression
+> delegate (int x) { return x + 1; } // Anonymous method expression
+> static delegate (int x) { return x + 1; } // static anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
 > ```
 >
@@ -5543,12 +5549,13 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
 - Except for by-reference parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a by-reference parameter.
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
-- If the modifier `static` is present, it is a compile-time error for the body to access `this` or `base`.
-- If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
+- If the modifier `static` is present, it is a compile-time error for the body to reference `this`, `base`, or any outer variable, except as an operand of a `nameof` expression.
+- If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 - If the modifier `static` is absent, the body has access to the outer variables ([§12.22.6](expressions.md#12226-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.22.7](expressions.md#12227-evaluation-of-anonymous-function-expressions)).
-- If the modifier `static` is present, the body may use outer variable names as operands to `nameof`.
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
+
+> *Note*: The `static` modifier on an anonymous function does not change accessibility rules. Private members of the enclosing scope remain accessible. *end note*
 
 It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, a compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
@@ -5629,9 +5636,9 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 
 #### 12.22.6.1 General
 
-Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the this value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
+Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
-That said, if the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
+If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 
 #### 12.22.6.2 Captured outer variables
 
