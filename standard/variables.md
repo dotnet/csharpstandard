@@ -159,7 +159,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### 9.2.9.2 Discards
 
-A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
+A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   
@@ -211,8 +211,11 @@ At a given location in the executable code of a function member or an anonymous 
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
 >   - A simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) in which the variable is the left operand.
+>   - A deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) in which the variable occurs as a *deconstructor_element* in the *deconstructor*, including in any nested *deconstructor*s.
 >   - An invocation expression ([§12.8.10](expressions.md#12810-invocation-expressions)) or object creation expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) that passes the variable as an output parameter.
->   - For a local variable, a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer.
+>   - For a local variable:
+>     - a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer; or
+>     - a deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) which declares the variable in its *destructor*.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
 >
@@ -228,8 +231,9 @@ Definite assignment is a requirement in the following contexts:
 - A variable shall be definitely assigned at each location where its value is obtained.
   > *Note*: This ensures that undefined values never occur. *end note*
 
-  The occurrence of a variable in an expression is considered to obtain the value of the variable, except when
+  The occurrence of a variable in an expression is considered to obtain the value of the variable, except when:
   - the variable is the left operand of a simple assignment,
+  - the variable is part of the left operand of a deconstructing assignment,
   - the variable is passed as an output parameter, or
   - the variable is a *struct_type* variable and occurs as the left operand of a member access.
 - A variable shall be definitely assigned at each location where it is passed as a reference parameter.
@@ -663,7 +667,7 @@ The following rule applies to these kinds of expressions: literals ([§12.8.2](e
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.4](expressions.md#12244-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -677,7 +681,7 @@ For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *e
 
 #### 9.4.4.24 Invocation expressions and object creation expressions
 
-If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§23.5.3.2](attributes.md#23532-conditional-methods)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
+If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method or conditional local function for which the call is omitted ([§23.5.3.2](attributes.md#23532-conditional-methods), §conditional-local-function), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
 
 For an invocation expression *expr* of the form:
 
@@ -699,11 +703,11 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
 - For array initializers ([§12.8.17.5](expressions.md#128175-array-creation-expressions)), object initializers ([§12.8.17.3](expressions.md#128173-object-initializers)), collection initializers ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) and anonymous object initializers ([§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
-#### 9.4.4.25 Simple assignment expressions
+#### 9.4.4.25 Simple and deconstructing assignment expressions
 
 Let the set of *assignment targets* in an expression *e* be defined as follows:
 
-- If *e* is a tuple expression, then the assignment targets in *e* are the union of the assignment targets of the elements of *e*.
+- If *e* is a *deconstructor*, then the assignment targets in *e* are the union of the assignment targets of the elements of *e*.
 - Otherwise, the assignment targets in *e* are *e*.
 
 For an expression *expr* of the form:

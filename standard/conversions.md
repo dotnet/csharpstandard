@@ -83,6 +83,7 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+- Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
@@ -128,7 +129,7 @@ The implicit numeric conversions are:
 - From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
 - From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `nuint`, `ulong`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `nint` to `long`, `float`, `double`, or `decimal`.
 - From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
@@ -321,8 +322,12 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
+
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.26](expressions.md#1226-constant-expressions)).
+
+> *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
 ### 10.2.12 Implicit conversions involving type parameters
 
@@ -351,10 +356,16 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### 10.2.13 Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
+An implicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an implicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
 
-If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
 
+An implicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an implicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple `t` with value `(t₁, ..., tₙ)` and of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"ImplicitTupleConversions", ignoredWarnings:["CS0219","CS8123"], expectedErrors:["CS0037"]} -->
@@ -366,7 +377,7 @@ If an element name in the tuple expression does not match a corresponding elemen
 > (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
 > ```
 >
-> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since in each case implicit conversions exist from the tuple literal elements to the corresponding target variable element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple literal differs from those in the tuple type.
 >
 > *end example*
 
@@ -417,7 +428,7 @@ The following conversions are classified as explicit conversions:
 - Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
 - Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
 - Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
-- Explicit interface conversions
+- Explicit interface conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
 - Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
 - User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
@@ -440,8 +451,8 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `ushort` to `sbyte`, `byte`, `short`, or `char`.
 - From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
 - From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `nint`, or `char`.
-- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `long`, `ulong`, or `char`.
-- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, or `char`.
+- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `ulong`, or `char`.
+- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `long`, or `char`.
 - From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `ulong`, or `char`.
 - From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `char`.
 - From `char` to `sbyte`, `byte`, or `short`.
@@ -525,7 +536,13 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### 10.3.6 Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
+An explicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an explicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
+
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+An explicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an explicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple value `(t₁, ..., tₙ)` of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
 
 ### 10.3.7 Unboxing conversions
 

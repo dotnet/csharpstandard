@@ -472,11 +472,9 @@ The nullability of the type argument need not match the nullability of the type 
 
 > *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
-<!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
-The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
+Unless a type parameter is explicitly constrained to value types, the nullable type annotation `?` can only be applied to a type parameter within a `#nullable enable` context.
 
-<!-- Add in C# 9, when `?` is allowed on nullable reference type parameters. -->
-<!-- For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`. -->
+For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
@@ -2195,7 +2193,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
-- If the declaration is for a restricted partial method ([§15.6.9](classes.md#1569-partial-methods)), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
+- If the declaration is for an optional partial method (§optional-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2203,13 +2201,13 @@ Methods are classified according to what, if anything, they return:
 - Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
 - Otherwise, the method is ***returns-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* for a restricted partial method shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
 
 The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
-A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class` and `struct`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
+A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class`, `struct`, and `default`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
@@ -2227,7 +2225,7 @@ If the *method_body* consists of a semicolon, the declaration shall not include 
 
 The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
-For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
+For abstract and extern methods, the *ref_method_body* consists simply of a semicolon. For partial methods the *ref_method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *ref_method_body* is either a block body or an expression body.
 
 The name, the number of type parameters, and the parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its parameters. The return type is not part of a method’s signature, nor are the names of the parameters, the names of the type parameters, or the constraints. When a parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
@@ -2436,7 +2434,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as a restricted partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
+A method declared as an optional partial method (§optional-partial-methods) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -2804,13 +2802,14 @@ A compile-time error occurs unless all of the following are true for an override
 - The overridden base method is a virtual, abstract, or override method. In other words, the overridden base method cannot be static or non-virtual.
 - The overridden base method is not a sealed method.
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of the overridden base method.
-- The override method has a return type that is convertible by an identity conversion or (if the method has a value return a) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
+- The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
 - The override declaration and the overridden base method have the same declared accessibility.
-- The override method's return type is at least as accessible as the override method.
+- The override method’s return type is at least as accessible as the override method.
   > *Note*: This constraint permits an override method in a `private` class to have a `private` return type.  However, it requires a `public` override method in a `public` type to have a `public` return type. *end note* In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- A *type_parameter_constraints_clause* may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
-  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-  - If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
+- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
+  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
+  - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
+  - If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
@@ -2860,6 +2859,28 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the `default` constraint works when overriding a method with an unconstrained type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods6"} -->
+> ```csharp
+> #nullable enable
+> class A2
+> {
+>     public virtual void F2<T>(T? t) where T : struct { }
+>     public virtual void F2<T>(T? t) { }
+> }
+>
+> class B2 : A2
+> {
+>     public override void F2<T>(T? t) /*where T : struct*/ { }
+>     public override void F2<T>(T? t) where T : default { }
+> }
+> ```
+>
+> The `default` constraint on `B2.F2` is required to override the unconstrained `A2.F2` with a `T?` parameter. Without it, `T?` would be interpreted as a nullable value type. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
@@ -3077,24 +3098,27 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+#### §partial-methods-general General
 
-Partial methods may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
-
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. Otherwise, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
-
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there shall be only one defining partial method declaration with a given signature, and there shall be at most only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
-
-- The declarations shall have the same method name, number of type parameters, and number of parameters.
-- The declarations shall have the same modifiers (although not necessarily in the same order), with the exception of the `async` modifier which shall not appear on a defining part. In the case of private accessibility, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
-- Corresponding type parameters in the declarations shall have the same constraints (modulo differences in type parameter names).
-
-Over time, the specification for partial methods has evolved, resulting in restricted and unrestricted versions. A ***restricted partial method*** has no explicit access modifiers (and is implicitly private), has a `void` return type, and has no out parameters. An ***unrestricted partial method*** is a partial method that has explicit access modifiers, a non-`void` return type, or any out parameters.
-
-For a restricted partial method, the implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. For an unrestricted partial method both the definition and implementation shall exist.
+When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)). Partial methods may be defined in one part of a type declaration and implemented in another.
 
 In *method_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the *return_type*. A partial method cannot explicitly implement interface methods.
+
+Partial method declarations are classified as follows:
+
+- A method with an *expression-body* or a *block-body* or is declared with the `extern` modifier is said to be an ***implementing partial method declaration***.
+- Otherwise, a method declaration where the body of the method declaration is a semicolon is said to be a ***defining partial method declaration***.
+
+Across the parts of a type declaration, there shall be exactly one defining partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+
+- The declarations shall have the same method name, number of type parameters, and number of parameters.
+- The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
+- Corresponding type parameters in the declarations shall have the same constraints. An implementation may choose to issue a warning if the type parameter names are different in the defining and implementing declarations.
+
+There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
+
+For a required partial method both the definition and implementation shall exist.
 
 > *Example*:
 >
@@ -3103,10 +3127,10 @@ In *method_declaration*, the identifier `partial` is recognized as a contextual 
 > // part containing defining partial method declarations
 > partial class C
 > {
->     partial void M1();                  // restricted, impl. optional
->     private partial void M2();          // unrestricted, impl. required
->     protected partial bool M3();        // unrestricted, impl. required
->     public partial void M4(out int i);  // unrestricted, impl. required
+>     partial void M1();                  // implementation optional
+>     private partial void M2();          // required, impl. required
+>     protected partial bool M3();        // required, impl. required
+>     public partial void M4(out int i);  // required, impl. required
 > }
 > 
 > // part containing implementing partial method declarations
@@ -3120,12 +3144,8 @@ In *method_declaration*, the identifier `partial` is recognized as a contextual 
 >
 > *end example*
 
-Only a defining partial method participates in overload resolution. As such, in the case of a restricted partial method, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
+Only a defining partial method participates in overload resolution.
 
-> *Note*: Because a restricted partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a restricted partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§12.6.2.1](expressions.md#12621-general)) are used. For example, given the defining partial method declaration for `M` in one file, and the implementing partial method declaration in another file:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods1", "expectedErrors":["CS1739"], "expectedWarnings":["CS8826"]} -->
@@ -3148,25 +3168,12 @@ Only a defining partial method participates in overload resolution. As such, in 
 >
 > *end note*
 
-If a restricted partial method has no implementation, any expression statement invoking it is simply removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
-
 If an implementing declaration exists for a given partial method, the invocations of the partial methods are retained. The partial method gives rise to a method declaration similar to the implementing partial method declaration except for the following:
 
-- The `partial` modifier is not included.
-
+- The `partial` modifier is not included in the combined method declaration.
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
-
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
-
-If a defining declaration but not an implementing declaration is given for a restricted partial method `M`, the following restrictions apply:
-
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
-
-- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
-
-- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
-
-- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
+- Any default arguments (§15.6.2) in the implementing declaration are removed.
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
@@ -3249,6 +3256,31 @@ class Customer
         Console.WriteLine($"Changed to {name}");
 }
 ```
+
+#### §optional-partial-methods Optional partial methods
+
+An optional partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
+
+The implementing member for an optional partial method shall not be an external method (§15.6.8).
+
+> *Note*: Because an optional partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because an optional partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
+
+If an optional partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
+
+If a defining declaration but not an implementing declaration is given for an optional partial method `M`, the following restrictions apply:
+
+- It is a compile-time error to create a delegate from `M` ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
+- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
+- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
+- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
+
+#### §required-partial-methods Required partial methods
+
+A required partial method declaration includes an explicit access modifier. There shall be exactly one implementing partial method declaration.
+
+The implementing declaration for a required partial method may be an external method (§15.6.8). The `extern` modifier is allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
+
+> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private required partial method. *end note*
 
 ### 15.6.10 Extension methods
 
@@ -3570,7 +3602,7 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.22](expressions.md#1222-anonymous-function-expressions)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
@@ -3861,6 +3893,7 @@ An instance property containing an *init_accessor_declaration* is considered set
 
 - During execution of an *object_initializer* ([§12.8.17.3](expressions.md#128173-object-initializers))
 - During evaluation of a *with_expression*’s *member_initializer_list*  ([§12.10](expressions.md#1210-with-expressions))
+
 - Inside an instance constructor of the containing or derived type, on `this` or `base`
 - Inside the *init_accessor_declaration* of any property, on `this` or `base`
 - Inside attribute usages with named parameters ([§23.2.3](attributes.md#2323-positional-and-named-parameters))
@@ -4160,8 +4193,8 @@ The presence of an *accessor_modifier* never affects member lookup ([§12.5](exp
 Once a particular non-ref-valued property or non-ref-valued indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)), either the set or init accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§12.24.4](expressions.md#12244-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and either the set or init accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)), the set or init accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.24.5](expressions.md#12245-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), both the get accessors and the set or init accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -4250,11 +4283,15 @@ An abstract property declaration specifies that the accessors of the property ar
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
-Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.4](interfaces.md#1944-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§19.4.4](interfaces.md#1944-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class or interface by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property's type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, ninit-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, ninit-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property.
+For an override property `P` declared in an interface `I`, the overridden base property is determined by examining each direct or indirect base interface of `I`, collecting the set of interfaces declaring an accessible property which has the same name as `P`. If this set of interfaces has a *most derived type*, to which there is an identity or implicit reference conversion from every type in this set, and that type contains a unique such property declaration, then that is the overridden base property.
 
-An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class from further overriding the property. The accessors of a sealed property are also sealed.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property's type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
+
+> *Note*: The accessibility constraint on the overriding property's type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
+
+An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class or interface from further overriding the property. The accessors of a sealed property are also sealed.
 
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form:
 
@@ -4437,7 +4474,7 @@ An event can be used as the left operand of the `+=` and `-=` operators. These 
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.24.5](expressions.md#12245-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.24.6](expressions.md#12246-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >

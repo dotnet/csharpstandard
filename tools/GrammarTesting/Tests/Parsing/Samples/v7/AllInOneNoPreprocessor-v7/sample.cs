@@ -142,6 +142,13 @@ class CSharp72
         DoSomething(true, personAge:age, personName:name); // already legal
     }
 
+    public void RefAssignment()
+    {
+        int a = 1, b = 2;
+        ref var r = ref a;
+        r = ref b;
+    }
+
     public void ConditionalRef()
     {
         ref var r = ref (arr != null ? ref arr[0]: ref otherArr[0]);
