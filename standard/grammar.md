@@ -738,7 +738,11 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : '(' pattern ')'
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
     | declaration_pattern
     | constant_pattern
     | var_pattern
@@ -747,7 +751,10 @@ pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Declaration pattern
@@ -818,10 +825,10 @@ type_pattern
 
 // Source: §11.2.9 Relational pattern
 relational_pattern
-    : '<'  constant_expression
-    | '<=' constant_expression
-    | '>'  constant_expression
-    | '>=' constant_expression
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
     ;
 
 // Source: §11.2.10 Logical pattern
@@ -841,7 +848,7 @@ conjunctive_pattern
 
 negated_pattern
     : 'not' negated_pattern
-    | pattern
+    | primary_pattern
     ;
 
 // Source: §12.6.2.1 General

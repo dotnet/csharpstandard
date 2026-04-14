@@ -606,6 +606,9 @@
     - [§15.6.7](classes.md#1567-abstract-methods)  Abstract methods
     - [§15.6.8](classes.md#1568-external-methods)  External methods
     - [§15.6.9](classes.md#1569-partial-methods)  Partial methods
+      - [§15.6.9.1](classes.md#15691-general)  General
+      - [§15.6.9.2](classes.md#15692-optional-partial-methods)  Optional partial methods
+      - [§15.6.9.3](classes.md#15693-required-partial-methods)  Required partial methods
     - [§15.6.10](classes.md#15610-extension-methods)  Extension methods
     - [§15.6.11](classes.md#15611-method-body)  Method body
   - [§15.7](classes.md#157-properties)  Properties

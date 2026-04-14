@@ -2193,7 +2193,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
-- If the declaration is for an optional partial method (§optional-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
+- If the declaration is for an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2434,7 +2434,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as an optional partial method (§optional-partial-methods) shall not have output parameters.
+A method declared as an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3098,7 +3098,7 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-#### §partial-methods-general General
+#### 15.6.9.1 General
 
 When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)). Partial methods may be defined in one part of a type declaration and implemented in another.
 
@@ -3113,10 +3113,10 @@ Across the parts of a type declaration, there shall be exactly one defining part
 
 - The declarations shall have the same method name, number of type parameters, and number of parameters.
 - The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types ([§8.3.11](types.md#8311-tuple-types)) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
 - Corresponding type parameters in the declarations shall have the same constraints. An implementation may choose to issue a warning if the type parameter names are different in the defining and implementing declarations.
 
-There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
+There are two variations of partial methods: required and optional. A ***required partial method*** ([§15.6.9.3](classes.md#15693-required-partial-methods)) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** ([§15.6.9.2](classes.md#15692-optional-partial-methods)) has no explicit access modifiers, and is implicitly private.
 
 For a required partial method both the definition and implementation shall exist.
 
@@ -3173,7 +3173,7 @@ If an implementing declaration exists for a given partial method, the invocation
 - The `partial` modifier is not included in the combined method declaration.
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
-- Any default arguments (§15.6.2) in the implementing declaration are removed.
+- Any default arguments ([§15.6.2](classes.md#1562-method-parameters)) in the implementing declaration are removed.
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
@@ -3257,11 +3257,11 @@ class Customer
 }
 ```
 
-#### §optional-partial-methods Optional partial methods
+#### 15.6.9.2 Optional partial methods
 
 An optional partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
 
-The implementing member for an optional partial method shall not be an external method (§15.6.8).
+The implementing member for an optional partial method shall not be an external method ([§15.6.8](classes.md#1568-external-methods)).
 
 > *Note*: Because an optional partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because an optional partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
 
@@ -3274,11 +3274,11 @@ If a defining declaration but not an implementing declaration is given for an op
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
 
-#### §required-partial-methods Required partial methods
+#### 15.6.9.3 Required partial methods
 
 A required partial method declaration includes an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
-The implementing declaration for a required partial method may be an external method (§15.6.8). The `extern` modifier is allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
+The implementing declaration for a required partial method may be an external method ([§15.6.8](classes.md#1568-external-methods)). The `extern` modifier is allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
 
 > *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private required partial method. *end note*
 
