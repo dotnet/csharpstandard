@@ -20,8 +20,8 @@ class_declaration
     ;
 
 class_tag
-    : 'record'? 'class'
-    | 'record'
+    : 'class'
+    | 'record' 'class'?
     ;
 ```
 
@@ -31,7 +31,7 @@ A class declaration shall not supply *type_parameter_constraints_clause*s unless
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***.
+If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***. `record` and `record class` are equivalent.
 
 The *class_tag*s `record` and `record class` are equivalent.
 
