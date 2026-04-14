@@ -12,7 +12,7 @@ A *compilation_unit* consists of zero or more *extern_alias_directive*s followed
 
 ```ANTLR
 compilation_unit
-: extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
@@ -56,6 +56,11 @@ A *namespace_declaration* consists of the keyword namespace, followed by a names
 ```ANTLR
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -161,6 +166,40 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 > the two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `N1.N2.A` and `N1.N2.B`. Because the two declarations contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name.
 >
 > *end example*
+
+A *file_scoped_namespace_declaration* permits a namespace declaration to be written without an accompanying `{ … }` block.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
+> ```csharp
+> namespace Name;
+> using System;
+> class C
+> {
+> }
+> ```
+>
+> is semantically equivalent to
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
+> ```csharp
+> namespace Name
+> {
+>     using System;
+>     class C
+>     {
+>     }
+> }
+> ```
+>
+> *end example*
+
+A *file_scoped_namespace_declaration* is treated the same as a *namespace_declaration* at the same location in the *compilation_unit* with the same *qualified_identifier*.  The *extern_alias_directive*s, *using_directive*s and *type_declaration*s of that *file_scoped_namespace_declaration* act as if they were declared in the same order inside the *namespace_body* of that *namespace_declaration*.
+
+> *Note*: As determined by the grammar, a compilation unit cannot contain both a *file_scoped_namespace_declaration* and a *namespace_declaration*. It cannot contain multiple *file_scoped_namespace_declaration*s. It cannot contain both a *file_scoped_namespace_declaration* and any top level *statement*s. *type_declaration*s cannot precede a *file_scoped_namespace_declaration*. *end note*
+
+Different compilation units may contribute to the same namespace using either or both of the *namespace_member_declaration* or *file_scoped_namespace_declaration* syntax.
 
 ## 14.4 Extern alias directives
 
