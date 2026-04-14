@@ -683,7 +683,9 @@ The type of a *boolean_literal* is `bool`.
 
 #### 6.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. (There is no way to write values of type `nint` and `nuint`. Instead, implicit or explicit casts of other integral constant values may be used.) Integer literals have three possible forms: decimal, hexadecimal, and binary.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal, hexadecimal, and binary.
+
+> *Note:* There is no way to write literal values of type `nint` and `nuint`. Instead, implicit or explicit casts of other integral constant values may be used. *end note*
 
 ```ANTLR
 Integer_Literal

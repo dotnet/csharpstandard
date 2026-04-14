@@ -156,7 +156,7 @@ The types of positional and named parameters for an attribute class are limited 
 
 ## 23.3 Attribute specification
 
-Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
+Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), *local_function_declaration*s ([§13.6.4](statements.md#1364-local-function-declarations)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), and elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)).
 
 Attributes are specified in ***attribute section***s. An attribute section consists of a pair of square brackets, which surround a comma-separated list of one or more attributes. The order in which attributes are specified in such a list, and the order in which sections attached to the same program entity are arranged, is not significant. For instance, the attribute specifications `[A][B]`, `[B][A]`, `[A, B]`, and `[B, A]` are equivalent.
 
@@ -252,10 +252,10 @@ The standardized *attribute_target* names are `event`, `field`, `method`, `param
 
 - `event` — an event.
 - `field` — a field. A field-like event (i.e., one without accessors) ([§15.8.2](classes.md#1582-field-like-events)) and an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)) can also have an attribute with this target.
-- `method` — a constructor; finalizer; method; operator; property get, set, and init accessors; indexer get, set, and init accessors; and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
-- `param` — property set and init accessors, indexer set and init accessors, event add and remove accessors, and a parameter in a constructor, method, and operator.
+- `method` — a constructor, finalizer, method, local function, operator, property get, set, and init accessors, indexer get, set, and init accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `param` — property set and init accessors, indexer set and init accessors, event add and remove accessors, and a parameter in a constructor, method, local function, and operator.
 - `property` — a property and an indexer.
-- `return` — a delegate, method, operator, property get accessor, and indexer get accessor.
+- `return` — a delegate, method, local function, operator, property get accessor, and indexer get accessor.
 - `type` — a delegate, class, struct, enum, and interface.
 - `typevar` — a type parameter.
 
@@ -266,6 +266,9 @@ Certain contexts permit the specification of an attribute on more than one targe
   - `return` — the target is the return value
 - For an attribute on a method declaration the default target is the method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the method
+  - `return` — the target is the return value
+- For an attribute on a local function declaration the default target is the local function. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the local function
   - `return` — the target is the return value
 - For an attribute on an operator declaration the default target is the operator. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the operator
@@ -671,9 +674,9 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 #### 23.5.3.3 Conditional local functions
 
-A local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
+A static local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
 
-A conditional local function shall have the modifier `static`.
+A compile time error occurs if a non-static local function is made conditional.
 
 #### 23.5.3.4 Conditional attribute classes
 
@@ -844,7 +847,40 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
-For an invocation that occurs within a local function, the name of the method that calls that local function is used. Consider the following: if method `M` calls local function `F1`, which in turn calls local function `F2`, and `F2` has a parameter marked with this attribute, the method name passed to `F2` is `M`, because a local function is *not* a function member!
+For an invocation that occurs within a local function or an anonymous function, the name of the member method that calls that function is used.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"CallerMemberName1", inferOutput:true} -->
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         F1();
+>
+>         void F1([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F1 MemberName: |{name}|");
+>             F2();
+>         }
+>
+>         static void F2([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F2 MemberName: |{name}|");
+>         }
+>     }
+> }
+> ```
+>
+> which produces the output
+>
+> ```console
+> F1 MemberName: |Main|
+> F2 MemberName: |Main|
+> ```
+>
+> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
 
 #### 23.5.6.5 The CallerArgumentExpression attribute
 
@@ -1192,7 +1228,7 @@ It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellation` a
 
 - The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
 - or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
-- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)).
+- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
 The iterator will not have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 

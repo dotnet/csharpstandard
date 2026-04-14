@@ -1,0 +1,2 @@
+(78:46) Semantic error, expression is not a variable reference: null
+(87:42) Semantic error, expression is not a variable reference: default(Vector3)

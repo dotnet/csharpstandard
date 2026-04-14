@@ -88,3 +88,28 @@ For example, this order worked best for V9:
    - https://github.com/dotnet/csharpstandard/pull/1551.patch
    - small - 1 files
      - patterns.md
+1. *Attributes and extern on local functions*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1466.patch
+   - Small - 2 files, 3 potential conflict opportunities
+     - attributes.md: 2
+     - statements.md: 1
+1. *More better nullable*. **Already merged**
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1221.patch
+   - Small - 2 files, 3 potential conflict opportunities
+     - attributes.md: 3
+     - standard-library
+1. *Lambda discard parameters*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1464.patch
+   - Small - expressions.md: 6
+1. *New features for partial members*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1468.patch
+   - Small - classes.md: 3
+1. *Unconstrained type parameter annotations*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1470.patch
+   - Small - classes.md: 4
+1. *Variance safety for static interface members*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1471.patch
+   - Small - interfaces.md: 2
+1. *Extension GetEnumerator in foreach*
+   - https://patch-diff.githubusercontent.com/raw/dotnet/csharpstandard/pull/1472.patch
+   - Small - statements.md: 1
