@@ -4,7 +4,7 @@
 
 C# programs are organized using namespaces. Namespaces are used both as an “internal” organization system for a program, and as an “external” organization system—a way of presenting program elements that are exposed to other programs.
 
-Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to facilitate the use of namespaces.
+Using directives (§14.5) and global using directives (§global-using-directives) are provided to facilitate the use of namespaces.
 
 ## 14.2 Compilation units
 
@@ -23,9 +23,11 @@ compilation_unit_body
 
 A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
+The *extern_alias_directive*s of a compilation unit affect the *global_using_directive*s, *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
 The *using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
+
+The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
@@ -199,7 +201,9 @@ An error occurs if a program declares an extern alias for which no external defi
 > The program declares the existence of the extern aliases `X` and `Y`, but the actual definitions of the aliases are external to the program. The identically named `N.B` classes can now be referenced as `X.N.B` and `Y.N.B`, or, using the namespace alias qualifier, `X::N.B` and `Y::N.B`.
 > *end example*
 
-### 14.4.1 General
+## §global-using-directives Global using directives
+
+### §global-using-directives-general General
 
 A ***global using directive*** is a using directive ([§14.5](namespaces.md#145-using-directives)) at the top level of a compilation unit.
 
@@ -479,7 +483,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 >
 > *end example*
 
-The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s** but has the correct set of *extern_alias_directive*s.
+The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s but has the correct set of *extern_alias_directive*s.
 
 > *Example*: In the following code
 >
