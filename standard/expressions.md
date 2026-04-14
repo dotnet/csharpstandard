@@ -917,7 +917,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
-- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ` where function types are ignored in lower bounds if there are any types that are not function types.
+- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ` where anonymous function types are ignored in lower bounds if there are any types that are not anonymous function types.
 - Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
 - If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
 - Otherwise, type inference fails.
@@ -1007,7 +1007,7 @@ The ***inferred return type*** is determined as follows:
 
 An *explicit return type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
-- If `E` is an anonymous function with explicit return type `Uᵣ`, and `T` is a delegate type or expression tree type with return type `Vᵣ`, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences) is made *from* `Uᵣ` *to* `Vᵣ`.
+- If `E` is an anonymous function with explicit return type `Uᵣ`, and `T` is a delegate type or expression tree type with return type `Vᵣ`, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `Uᵣ` *to* `Vᵣ`.
 
 #### 12.6.3.16 Type inference for conversion of method groups
 
@@ -1027,8 +1027,6 @@ Instead, all `Xᵢ` are considered *unfixed*, and a *lower-bound inference* is 
 
 #### 12.6.3.17 Finding the best common type of a set of expressions
 
-**TBD**
-
 In some cases, a common type needs to be inferred for a set of expressions. In particular, the element types of implicitly typed arrays and the return types of anonymous functions with *block* bodies are found in this way.
 
 The best common type for a set of expressions `E₁...Eᵥ` is determined as follows:
@@ -1036,7 +1034,7 @@ The best common type for a set of expressions `E₁...Eᵥ` is determined as fol
 - A new *unfixed* type variable `X` is introduced.
 - For each expression `Eᵢ` an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is performed from it to `X`.
 - `X` is *fixed* ([§12.6.3.13](expressions.md#126313-fixing)), if possible, and the resulting type is the best common type.
-- Otherwise; inference fails.
+- Otherwise, inference fails.
 
 > *Note*: Intuitively this inference is equivalent to calling a method `void M<X>(X x₁ ... X xᵥ)` with the `Eᵢ` as arguments and inferring `X`. *end note*
 
@@ -1128,10 +1126,10 @@ Parameter lists for each of the candidate function members are constructed in th
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
-- for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not a *function_type_conversion*, and
+- for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not an anonymous function type conversion, and
 
-  - `Mᵥ` is a non-generic method or `Mₓ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than a *function_type*, and
-  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is a *function_type_conversion*, or `Mᵥ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from a *function_type*, or
+  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
+  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
 
 - for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
@@ -1169,12 +1167,13 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if:
 
-- `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+- `C₁` is not an anonymous function type conversion and `C₂` is an anonymous function type conversion, or
+- `E` does not exactly match `T₂` and at least one of the following holds:
+  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
   - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
     > *Note*: This is only applicable in unsafe code. *end note*
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
@@ -5601,6 +5600,8 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 
+The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
+
 ### 12.22.2 Anonymous function signatures
 
 If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
@@ -6035,7 +6036,7 @@ The delegate type for the anonymous function or method group with parameter type
 - If `R` is `void`, then the delegate type is `System.Action<P1, ..., Pn>`;
 - Otherwise, the delegate type is `System.Func<P1, ..., Pn, R>`.
 
-> *Note*: A future eversion of this specification might allow more signatures to bind to `System.Action<>` and `System.Func<>` types (e.g., if `ref struct` types are allowed type arguments).*end note*
+> *Note*: A future version of this specification might allow more signatures to bind to `System.Action<>` and `System.Func<>` types (e.g., if `ref struct` types are allowed type arguments). *end note*
 
 If two anonymous functions or method groups in the same compilation require synthesized delegate types with the same parameter types and modifiers, and the same return type and modifiers, the compiler shall use the same synthesized delegate type.
 
