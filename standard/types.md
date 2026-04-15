@@ -217,6 +217,8 @@ nullable_value_type
     ;
 ```
 
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
 Assignment to a variable of a value type creates a *copy* of the value being assigned. This differs from assignment to a variable of a reference type, which copies the reference but not the object identified by the reference.
@@ -229,7 +231,7 @@ Note that `System.ValueType` is not itself a *value_type*. Rather, it is a *clas
 
 ### 8.3.3 Default constructors
 
-All value types implicitly declare a public parameterless instance constructor called the ***default constructor***. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
+All value types have a public parameterless instance constructor called the ***default constructor***. For struct types that do not explicitly declare a parameterless instance constructor, the default constructor is synthesized by the compiler. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
 
 - For all *simple_type*s, the default value is the value produced by a bit pattern of all zeros:
   - For `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, and `ulong`, the default value is `0`.
@@ -244,7 +246,7 @@ All value types implicitly declare a public parameterless instance constructor c
 
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. *end note*
+> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types that do not have an explicitly declared parameterless instance constructor, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. For struct types that declare an explicit parameterless instance constructor, `default` produces the zero-initialized default value, while `new S()` invokes the declared constructor, and the results may differ. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -265,7 +267,7 @@ Like any other instance constructor, the default constructor of a value type is 
 >
 > *end example*
 
-Because every value type implicitly has a public parameterless instance constructor, it is not possible for a struct type to contain an explicit declaration of a parameterless constructor. A struct type is however permitted to declare parameterized instance constructors ([§16.5.9](structs.md#1659-constructors)).
+A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.5.9](structs.md#1659-constructors)).
 
 ### 8.3.4 Struct types
 
@@ -295,7 +297,7 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
 
 Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
 
-> *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
+> *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes"} -->
 > ```csharp
@@ -317,56 +319,13 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
+<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
 
-While the implementation provides operations and conversions for `nint` and `nuint` that are appropriate for integer types, those operations and conversions are not available on the `System` type counterparts. For example,
+The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
 
-<!-- Example: {template:"code-in-main-without-using", name:"SimpleTypes3", expectedException:"RuntimeBinderException"} -->
-```csharp
-M((nint)1);
-
-static void M(dynamic d)
-{
-    var v = d >> 2; // RuntimeBinderException: '>>' cannot be applied to operands
-                    // of type System.IntPtr/System.UIntPtr and int
-}
-```
-
-The only constructor for `nint` or `nuint` is the parameter-less constructor.
-
-The following members of `System.IntPtr` and `System.UIntPtr` are explicitly excluded from `nint` or `nuint`:
-
-```csharp
-// constructors
-// arithmetic operators
-// implicit and explicit conversions
-public static readonly IntPtr Zero; // use 0 instead
-public static int Size { get; }     // use sizeof() instead
-public static IntPtr Add(IntPtr pointer, int offset);
-public static IntPtr Subtract(IntPtr pointer, int offset);
-public int ToInt32();
-public long ToInt64();
-public void* ToPointer();
-```
-
-The remaining members of `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`. These are:
-
-```csharp
-public override bool Equals(object obj);
-public override int GetHashCode();
-public override string ToString();
-public string ToString(string format);
-```
-
-Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
-
-`nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
-
-Overloads cannot differ by `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, alone. However, overrides and implementations may differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
-
-Methods hide other methods that differ by `nint` and `System.IntPtr`, or `nuint` and `System.UIntPtr`, alone.
-
-`typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
+- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
 ### 8.3.6 Integral types
 
@@ -380,7 +339,6 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
 - The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
-  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. *end note*
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
@@ -388,7 +346,9 @@ C# supports the following integral types, with the sizes and value ranges, as sh
   
 All signed integral types are represented using two’s complement format.
 
-The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, unsigned 64-bit precision, native signed precision, or native unsigned precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+
+> *Note*: Native precision means 32-bit on 32-bit platforms and 64-bit on 64-bit platforms. Operators on `nint` and `nuint` use native precision rather than being promoted to a larger type. *end note*
 
 The `char` type is classified as an integral type, but it differs from the other integral types in two ways:
 
@@ -439,7 +399,7 @@ The finite set of values of type `decimal` are of the form (–1)ᵛ × *c* × 1
 
 A `decimal` is represented as an integer scaled by a power of ten. For `decimal`s with an absolute value less than `1.0m`, the value is exact to at least the 28th decimal place. For `decimal`s with an absolute value greater than or equal to `1.0m`, the value is exact to at least 28 digits. Contrary to the `float` and `double` data types, decimal fractional numbers such as `0.1` can be represented exactly in the decimal representation. In the `float` and `double` representations, such numbers often have non-terminating binary expansions, making those representations more prone to round-off errors.
 
-If either operand of a binary operator is of `decimal` type then standard numeric promotions are applied, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions), and the operation is performed with `double` precision.
+If either operand of a binary operator is of `decimal` type then standard numeric promotions are applied, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions), and the operation is performed with `decimal` precision.
 
 The result of an operation on values of type `decimal` is that which would result from calculating an exact result (preserving scale, as defined for each operator) and then rounding to fit the representation. Results are rounded to the nearest representable value, and, when a result is equally close to two representable values, to the value that has an even number in the least significant digit position (this is known as “banker’s rounding”). That is, results are exact to at least the 28th decimal place. Note that rounding may produce a zero value from a non-zero value.
 
@@ -461,22 +421,24 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### 8.3.11 Tuple types
 
+#### 8.3.11.1 General
+
 A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element name***s.
 
-This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of directly expressing tuple types of any arity between two and seven inclusive.
-There does not need to exist a `System.ValueTuple<...>` declaration that directly matches the arity of any tuple type with a corresponding number of type parameters. Instead, tuples with an arity greater than seven are represented with a generic struct type `System.ValueTuple<T1, ..., T7, TRest>` that in addition to tuple elements has a `Rest` field containing a nested value of the remaining elements, using another `System.ValueTuple<...>` type. Such nesting may be observable in various ways, e.g. via the presence of a `Rest` field. Where only a single additional field is required, the generic struct type `System.ValueTuple<T1>` is used; this type is not considered a tuple type in itself. Where more than seven additional fields are required, `System.ValueTuple<T1, ..., T7, TRest>` is used recursively.
+Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of decimal digits with no leading zeros, is only permitted at the position denoted by `X`.
 
-Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
-
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
-
-The `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
-
-Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
-
-> *Note*: Even when large tuples are represented with nested `System.ValueTuple<...>` values, each tuple element can still be accessed directly with the `Item...` name corresponding to its position. *end note*
+> *Note* This restriction on element names avoids any confusion between them and tuple field names, e.g. where element name `ItemX` is associated with field `ItemY` where `X ≠ Y`. *end note*
 <!-- markdownlint-disable MD028 -->
+
 <!-- markdownlint-enable MD028 -->
+> *Note* The optional element names are not represented in the runtime representation ([§8.3.11.3](types.md#83113-runtime-representation)) of a tuple value.
+
+Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples of the same arity with identity-convertible sequences of element types.
+
+Tuple values can be created from tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), or by creating a value using the underlying runtime representation ([§8.3.11.3](types.md#83113-runtime-representation)) directly. The tuple type syntax `(T1, ..., Tn)` cannot be used with the `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions).
+
+Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` is the tuple arity and the numbers have no leading zeros, and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+
 > *Example*: Given the following examples:
 >
 > <!-- Example: {template:"standalone-console", name:"TupleTypes1", ignoredWarnings:["CS0219"], expectedErrors:["CS8125","CS8125"]} -->
@@ -485,10 +447,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 > (int, string word) pair2 = (2, "Two");
 > (int number, string word) pair3 = (3, "Three");
 > (int Item1, string Item2) pair4 = (4, "Four");
-> // Error: "Item" names do not match their position
-> (int Item2, string Item123) pair5 = (5, "Five");
-> (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
-> ValueTuple<int, string> pair7 = (7, "Seven");
+> (int Item2, string Item123) pair5 = (5, "Five"); // Error: “Item” names do not match position
 > Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
 > ```
 >
@@ -496,10 +455,117 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 >
 > The tuple type for `pair4` is valid because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
 >
-> The declarations for `pair6` and `pair7` demonstrate that tuple types are interchangeable with constructed types of the form `ValueTuple<...>`, and that the `new` operator is allowed with the latter syntax.
->
 >The last line shows that tuple elements can be accessed by the `Item` name corresponding to their position, as well as by the corresponding tuple element name, if present in the type.
 > *end example*
+
+#### 8.3.11.2 Eliding intermediate tuple creation
+
+If the result of constructing a tuple ([§12.8.6](expressions.md#1286-tuple-literals)) is not required outside of the context in which it is constructed then implementations are explicitly allowed to elide the construction as an optimisation provided all other semantic requirements are met.
+
+> *Example*: Such a situation may commonly arise from deconstructing assignments ($deconstructing-assignment), and switch statements ([§13.8.3](statements.md#1383-the-switch-statement)). Consider the deconstructing assignment:
+>
+> ```csharp
+> (a, b) = (b, a);
+> ```
+>
+> The right hand side `(b, a)` constructs a tuple containing the values of `b` & `a`. The left hand side deconstructor `(a, b)` then, in order, selects the first item of that tuple and assigns it to `a`, followed by assigning the second item to `b`. The overall result is the the values in `a` & `b` are exchanged, while the tuple created during this process is discarded. The explicit allowance granted here to elide such intermediate tuple construction allows an implementation to exchange the two values in whatever ways it chooses provide it evaluates `b` before `a` to meet the left-to-right evaluation order of tuple literal elements. In the code:
+>
+> ```csharp
+> (a, b, _) = (b, a, thing.ExpensiveMethod(x));
+> ```
+>
+> An implementation can also choose to exchange the two values without constructing the tuple provided the tuple elements are evaluated in order: `b`, `a` and `thing.ExpensiveMethod(x)`; before doing so. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: If an implementation elides an intermediate tuple it may also be able to elide now “redundant” (no effect) expressions. For example if an intermediate tuple is the result of an implicit tuple conversion, those implicit conversions have no side effects, and the intermediate tuple is subject to deconstruction where some elements are discarded, then it may be possible to elide the implicit conversion of those discarded elements. *end note*
+
+#### 8.3.11.3 Runtime representation
+
+> *Note*: Unlike other types such as arrays, the runtime representation of tuple types is specified in terms of a set of generic value types, and a tuple may be directly referenced in terms of this representation. However the runtime representation of these generic value types remains implementation defined. *end note*
+
+The runtime representation of a tuple `(T1, ..., Tn)` is constructed from `System.ValueTuple<...>`  ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) instances which are a set of generic struct types for representing tuple types of aritys two to seven. Tuples with an arity greater than seven are represented with the generic struct type `System.ValueTuple<T1, ..., T7, TRest>` that in addition to tuple elements has a `Rest` field containing a nested `System.ValueTuple` of the remaining elements. Where only a single additional field is required, the generic struct type `System.ValueTuple<T1>` is used; this type is not considered a tuple type in itself. Where more than seven additional fields are required further `System.ValueTuple<T1, ..., T7, TRest>` instances are nested.
+
+> *Example*:
+>
+> `(T1, T2)` is represented by `ValueTuple<T1, T2>`<br>
+> `(T1, ..., T15)` is represented by `ValueTuple<T1, ..., T7, ValueTuple<T8, ..., T14, ValueTuple<T15>>>`
+>
+> *end example*
+
+The runtime representation of tuples is directly accessible, and tuple & `System.ValueTuple<...>` types may be used interchangeably subject to the following:
+
+- Any value of type `(T1, ..., Tn)` may be treated as the equivalent `System.ValueTuple<...>` value.
+- Any value of type `System.ValueTuple<T1, T2>` through `System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>` may be treated as the equivalent `(T1, T2)` through `(T1, T2, T3, T4, T5, T6, T7)` tuple value.
+- A value of type `System.ValueTuple<T1, ..., T7, TRest>` may only be treated as a tuple if `TRest` is a tuple or any `System.ValueTuple<...>` type, the latter including `System.ValueTuple<T1>`.
+- Any other value of type `System.ValueTuple<T1>` may not be treated as a tuple.
+
+Any attempt to use a `System.ValueTuple<...>` value as a tuple which does not meet the above requirements is a compile-time error.
+
+> *Note*: Such a `System.ValueTuple<...>` value can be accessed using the public members it provides, just like any other constructed value, it just cannot be accessed as tuple. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: `ValueTuple`s which may be treated as tuples (`a` & `c`) or not (`b`):
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes2", expectedErrors:["CS1061"]} -->
+> ```csharp
+> var a = new ValueTuple<int, int, int, int, int, int, int>(1, 2, 3, 4, 5, 6, 7);
+> var (a1, a2, a3, a4, a5, a6, a7) = a;   // OK, a can be treated as a tuple
+>
+> var b = new ValueTuple<int, int, int, int, int, int, int, int>
+>             { Item1 = 1, Item2 = 2, Item3 = 3, Item4 = 4,
+>               Item5 = 5, Item6 = 6, Item7 = 7, Rest = 8 };
+> var b8 = b.Item8;   // Error, b cannot be treated as an 8-tuple
+>
+> var c = new ValueTuple<int, int, int, int, int, int, int, ValueTuple<int>>
+>             (1, 2, 3, 4, 5, 6, 7, new ValueTuple<int>(8));
+> var c8 = c.Item8;   // OK, c can be treated as a tuple and so has a field Item8
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Interchangeability of tuple and `ValueTuple`:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes3", ignoredWarnings:["CS0219"]} -->
+> ```csharp
+> (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
+> ValueTuple<int, string> pair7 = (7, "Seven");
+> ```
+>
+> The declarations for `pair6` and `pair7` demonstrate that tuple types and expressions are generally interchangeable with `ValueTuple<...>` types and object creation expressions ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: If the runtime representation of a tuple uses instances of `System.ValueTuple<T1, ..., T7, TRest>` then the `Rest` field is accessible. The use of this provides different ways to reference items in large tuples. Given:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes4", ignoredWarnings:["CS0219"]} -->
+> ```csharp
+> var squares = (1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225);
+> ```
+>
+> Then the 15th square (`225`) can be addressed as `squares.Item15`, `squares.Rest.Item8` and `squares.Rest.Rest.Item1`.
+>
+> *end example*
+
+Though tuple and `System.ValueTuple<...>` values may be treated as equivalent, subject to the above, there is an important semantic difference between tuple and `System.ValueTuple<...>` types – only the former support tuple element names ([§8.3.11.1](types.md#83111-general)).
+
+> *Example*: Only tuple type syntax supports element names. However as the names are part of the compile-time type and not the value, treating a value of type `ValueTuple<...>` as a tuple can “attach” element names:
+>
+> <!-- Example: {template:"standalone-console", name:"TupleTypes5", expectedOutput:["Bert is 42 years old"]} -->
+> ```csharp
+> var a = new ValueTuple<string, int>("Bert", 42);     // Construct a ValueTuple
+> (string name, int age) b = a;                        // Treat as a tuple with named elements
+> Console.WriteLine($"{b.name} is {b.age} years old"); // Access using element names
+> ```
+>
+> *end example*
+
+In the remainder of this Standard the interchangeability of tuple and `ValueTuple<...>` types and values, as defined above, is usually taken as read and not explicitly mentioned.
 
 ### 8.3.12 Nullable value types
 

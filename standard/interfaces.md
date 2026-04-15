@@ -100,7 +100,7 @@ A type `T` is ***output-unsafe*** if one of the following holds:
 
 - `T` is a contravariant type parameter
 - `T` is an array type with an output-unsafe element type
-- `T` is an interface or delegate type `Sᵢ,... Aₑ` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
+- `T` is an interface or delegate type `S<Aᵢ,... Aₑ>` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
   - `Xᵢ` is covariant or invariant and `Aᵢ` is output-unsafe.
   - `Xᵢ` is contravariant or invariant and `Aᵢ` is input-unsafe.
 
@@ -440,7 +440,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
-- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An interface property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
 - An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 19.4.5 Interface events
@@ -451,9 +451,9 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 
 - *event_modifier* shall not include `override`.
 - A derived interface may implement an abstract interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
-- It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
-- An instance event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
-- An instance event with the `abstract` modifier must not declare accessors.
+- It is a compile-time error for *variable_declarators* in an interface *event_declaration* to contain any *variable_initializer*s.
+- An interface event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An interface event with the `abstract` modifier must not declare accessors.
 - The type of an interface event shall be input-safe.
 
 ### 19.4.6 Interface indexers
@@ -892,6 +892,8 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 
 For an explicit interface member implementation to be valid, the class, struct, or interface shall name an interface in its base class or base interface list that contains a member whose qualified interface member name, type, number of type parameters, and parameter types exactly match those of the explicit interface member implementation. If an interface function member has a parameter array, the corresponding parameter of an associated explicit interface member implementation is allowed, but not required, to have the `params` modifier. If the interface function member does not have a parameter array then an associated explicit interface member implementation shall not have a parameter array.
 
+For an explicit interface member implementation of a method, property, or indexer that has a return type, there shall be an identity conversion or (if the member has a value return) an implicit reference conversion from the return type of the explicit interface member implementation to the return type of every override of the interface member that is declared in a (direct or indirect) base interface.
+
 > *Example*: Thus, in the following class
 >
 > <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations3", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], expectedErrors:["CS0540"]} -->
@@ -1099,10 +1101,10 @@ Members of a constructed interface type are considered to have any type paramete
 
 For purposes of interface mapping, a class, interface, or struct member `A` matches an interface member `B` when:
 
-- `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical, and the return type of `A` is convertible to the return type of `B` via an identity of implicit reference conversion to the return type of `B`.
-- `A` and `B` are properties, the name of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly property, an implicit reference conversion.
+- `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical.
+- `A` and `B` are properties, the name and type of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
-- `A` and `B` are indexers, the parameter lists of `A` and `B` are identical, `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation), and the type of `A` is convertible to the return type of `B` via an identity conversion or, if `A` is a readonly indexer, an implicit reference conversion.
+- `A` and `B` are indexers, the type and parameter lists of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 
 Notable implications of the interface-mapping algorithm are:
 
@@ -1463,7 +1465,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 19.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >

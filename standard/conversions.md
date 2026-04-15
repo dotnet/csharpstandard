@@ -63,6 +63,7 @@ The following conversions are classified as implicit conversions:
 - Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
+- Anonymous function type conversions (§anon-func-type-conversion)
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
@@ -83,6 +84,7 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+- Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
@@ -128,7 +130,7 @@ The implicit numeric conversions are:
 - From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
 - From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `nuint`, `ulong`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `nint` to `long`, `float`, `double`, or `decimal`.
 - From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
@@ -146,7 +148,9 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 ### 10.2.5 Implicit interpolated string conversions
 
-For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
+An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
+
+For any type `T` that is an applicable interpolated string handler type (§custInterpStrExpCustHandling), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -320,8 +324,12 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
+
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.26](expressions.md#1226-constant-expressions)).
+
+> *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
 ### 10.2.12 Implicit conversions involving type parameters
 
@@ -350,10 +358,16 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### 10.2.13 Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
+An implicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an implicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
 
-If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
 
+An implicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an implicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple `t` with value `(t₁, ..., tₙ)` and of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"ImplicitTupleConversions", ignoredWarnings:["CS0219","CS8123"], expectedErrors:["CS0037"]} -->
@@ -365,7 +379,7 @@ If an element name in the tuple expression does not match a corresponding elemen
 > (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
 > ```
 >
-> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since in each case implicit conversions exist from the tuple literal elements to the corresponding target variable element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple literal differs from those in the tuple type.
 >
 > *end example*
 
@@ -375,7 +389,7 @@ A user-defined implicit conversion consists of an optional standard implicit con
 
 ### 10.2.15 Anonymous function conversions and method group conversions
 
-Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
+Anonymous functions and method groups do not have types in and of themselves, but they may have a natural type (§anon-func-type). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
 
 ### 10.2.16 Default literal conversions
 
@@ -457,7 +471,7 @@ The following conversions are classified as explicit conversions:
 - Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
 - Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
 - Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
-- Explicit interface conversions
+- Explicit interface conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
 - Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
 - User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
@@ -480,8 +494,8 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `ushort` to `sbyte`, `byte`, `short`, or `char`.
 - From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
 - From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `nint`, or `char`.
-- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `long`, `ulong`, or `char`.
-- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, or `char`.
+- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `ulong`, or `char`.
+- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `long`, or `char`.
 - From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `ulong`, or `char`.
 - From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `char`.
 - From `char` to `sbyte`, `byte`, or `short`.
@@ -565,7 +579,13 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### 10.3.6 Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
+An explicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an explicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
+
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+An explicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an explicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple value `(t₁, ..., tₙ)` of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
 
 ### 10.3.7 Unboxing conversions
 
@@ -920,6 +940,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` is an output parameter.
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no reference or output parameters.
+- If `F` has an explicit return type, an identity conversion shall exist from the return type of `F` to the return type of `D`.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
 - If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
