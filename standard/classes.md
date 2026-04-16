@@ -2551,6 +2551,8 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >         F(arr);
 >         F(10, 20, 30, 40);
 >         F();
+>         F([-5, 3, 9]);
+>         F([]);
 >     }
 > }
 > ```
@@ -2561,6 +2563,8 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 > Array contains 3 elements: 1 2 3
 > Array contains 4 elements: 10 20 30 40
 > Array contains 0 elements:
+> Array contains 3 elements: -5 3 9
+> Array contains 0 elements:
 > ```
 >
 > The first invocation of `F` simply passes the array `arr` as a value parameter. The second invocation of F automatically creates a four-element `int[]` with the given element values and passes that array instance as a value parameter. Likewise, the third invocation of `F` creates a zero-element `int[]` and passes that instance as a value parameter. The second and third invocations are precisely equivalent to writing:
@@ -2570,7 +2574,7 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 > F(new int[] {});
 > ```
 >
-> *end example*
+> The fourth and fifth invocations pass a three-element and an empty collection expression, respectively. *end example*
 
 When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
 
@@ -6751,3 +6755,154 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
+
+## §declaring-a-collection-type Declaring a collection type
+
+### §declaring-a-collection-type-general General
+
+There are a number of contexts in which a collection expression (§collection-expressions) may be converted to a collection type (§imp-collection-expression-conv). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
+
+Here is a simple user-defined collection type and its associated builder type:
+
+<!-- Example: {template:"standalone-lib", name:"CollectionType1"} -->
+```csharp
+[CollectionBuilder(typeof(MyCollectionBuilder), "Create")]
+public class MyCollection<T> : IEnumerable<T>
+{
+    private readonly T[] _storage;
+    public int Count { get; }
+    public T this[int index]
+    {
+        get
+        {
+            return _storage[index];
+        }
+
+        set
+        {
+            _storage[index] = value;
+        }
+    }
+    public MyCollection(ReadOnlySpan<T> elements)
+    {
+        Count = elements.Length;
+        _storage = new T[Count];
+        for (int i = 0; i < Count; i++)
+        {
+            _storage[i] = elements[i];
+        }
+    }
+    public IEnumerator<T> GetEnumerator() =>
+      _storage.AsEnumerable<T>().GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() =>
+      _storage.GetEnumerator();
+}
+internal static class MyCollectionBuilder
+{
+    internal static MyCollection<T> 
+      Create<T>(ReadOnlySpan<T> values) =>
+        new MyCollection<T>(values);
+}
+```
+
+The collection type shall be annotated with a  `CollectionBuilder` attribute (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`). 
+
+The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type. 
+
+First, the set of applicable collection-creation methods `CM` is determined.  It consists of methods that meet the following requirements:
+
+- Be directly declared in the builder type
+- Be static
+- Be accessible at its point of use
+- Its arity shall match that of the collection type
+- It shall have a single parameter of type `System.ReadOnlySpan<E>`, passed by value.
+- There shall be an implicit identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)), an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), or a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) from the method return type to the collection type.
+- It shall return an instance of the collection being built, which contains a copy of the data from the span parameter.
+
+Methods declared on base types or interfaces are ignored and not part of the `CM` set.
+
+If the `CM` set is empty, then the collection type doesn't have an element type, doesn't have a collection-creation method, and none of the following steps apply.
+
+If only one method among those in the `CM` set has an identity conversion from `E` to the element type of the collection type, that is the collection-creation method for the collection type. Otherwise, the collection type doesn't have a collection-creation method.
+
+It is an error if the `CollectionBuilder` attribute does not refer to an invokable method with the expected signature.
+
+For a *collection_expression* with a target type `C<S₀, S₁, …>` where the type declaration `C<T₀, T₁, …>` has an associated collection-creation method `B.M<U₀, U₁, …>()`, the generic type arguments from the target type are applied in order (from outermost containing type to innermost) to the collection-creation method.
+
+The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
+
+The construction of an instance of a collection type is described in §collection-construction.
+
+### §collection-construction Collection construction
+
+The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
+
+A *spread_element* may be iterated before or after the subsequent elements in the *collection_expression* are evaluated.
+
+An unhandled exception thrown from any of the methods used during construction shall go uncaught and shall prevent further steps in the construction.
+
+`Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
+
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
+
+- The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
+- The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
+- The constructor that is applicable with no arguments is invoked.
+- For each *collection_element*, in order:
+
+  - If the *collection_element* is an *expression_element*, the applicable `Add` instance or extension method is invoked with the *element_expression* as the argument. (Unlike classic collection initializer behavior ([§12.8.16.4](expressions.md#128164-collection-initializers)), element evaluation and `Add` calls are not necessarily interleaved.)
+  - If the *collection_element* is a *spread_element* then one of the following steps is used:
+
+    - An applicable `GetEnumerator` instance or extension method is invoked on the *spread_element*’s *expression*, and for each item from the enumerator the applicable `Add` instance or extension method is invoked on the collection instance with the item as the argument. If the enumerator implements `IDisposable`, then `Dispose` shall be called after enumeration, regardless of any exceptions.
+    - An applicable `AddRange` instance or extension method is invoked on the collection instance with the *spread_element*’s *expression* as the argument.
+    - An applicable `CopyTo` instance or extension method is invoked on the *spread_element*’s *expression* with the collection instance and `int` index as arguments.
+
+- During the construction steps above, an applicable `EnsureCapacity` instance or extension method may be invoked one or more times on the collection instance with an `int` capacity argument.
+
+If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collection-creation method, or an interface, the construction steps of the collection instance are, as follows:
+
+- The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
+- The compiler may determine the known length of the collection expression by invoking countable properties (or equivalent properties from well-known interfaces or types) on each *spread_element*’s *expression*.
+
+- An *initialization instance* is created as follows:
+
+  - If the target type is an array and the collection expression has a known length, an array is allocated with the expected length.
+  - If the target type is a `Span` or `ReadOnlySpan`, or a type with a collection-creation method, and the collection has a known length, a `Span` or `ReadOnlySpan` with the expected length is created referring to contiguous storage.
+  - Otherwise, intermediate storage is allocated.
+
+- For each *collection_element*, in order:
+
+  - If the *collection_element*is an *expression_element*, the initialization instance indexer is invoked to add the evaluated expression at the current index.
+  - If the element is a *spread_element* then one of the following is used:
+
+    - A member of a well-known interface or type is invoked to copy items from the spread element expression to the initialization instance.
+    - An applicable `GetEnumerator` instance or extension method is invoked on the *spread_element*’s *expression*, and for each item from the enumerator, the initialization instance indexer is invoked to add the item at the current index. If the enumerator implements `IDisposable`, then `Dispose` shall be called after enumeration, regardless of any exceptions.
+    - An applicable `CopyTo` instance or extension method is invoked on the *spread_element*’s *expression* with the initialization instance and `int` index as arguments.
+
+- If intermediate storage was allocated for the collection, a collection instance is allocated with the actual collection length and the values from the initialization instance are copied to the collection instance, or if a span is required the compiler may use a span of the actual collection length from the intermediate storage. Otherwise, the initialization instance is the collection instance.
+- If the target type has a collection-creation method, that method is invoked with the span instance.
+
+> *Note:* The compiler might delay adding elements to the collection (or delay iterating through *spread_element*s) until after evaluating subsequent elements. (When subsequent *spread_element*s have countable properties that would allow calculating the expected length of the collection before allocating the collection.) Conversely, the compiler might eagerly add elements to the collection (and eagerly iterate through *spread_element*s) when there is no advantage to delaying.
+>
+> Consider the following collection expression:
+>
+> ```csharp
+> int[] x = [a, ..b, ..c, d];
+> ```
+> 
+> If *spread_element*s `b` and `c` are countable, the compiler could delay adding items from `a` and `b` until after `c` is evaluated, to allow allocating the resulting array at the expected length. After that, the compiler could eagerly add items from `c`, before evaluating `d`, as shown below.
+>
+> ```csharp
+> var __tmp1 = a;
+> var __tmp2 = b;
+> var __tmp3 = c;
+> var __result = new int[2 + __tmp2.Length + __tmp3.Length];
+> int __index = 0;
+> __result[__index++] = __tmp1;
+> foreach (var __i in __tmp2) __result[__index++] = __i;
+> foreach (var __i in __tmp3) __result[__index++] = __i;
+> __result[__index++] = d;
+> x = __result;
+> ```
+>
+> *end note*
