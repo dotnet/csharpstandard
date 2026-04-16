@@ -1568,7 +1568,7 @@ This attribute indicates that the current type has one or more required members 
 
 ### §collection-builder-attr The CollectionBuilder attribute
 
-This attribute designates a collection type as having a collection-creation method (§declaring-a-collection-type-general-type).
+This attribute designates a collection type as having a collection-creation method (§declaring-a-collection-type-general).
 
 The constructor takes a builder type and the name of the method to be invoked to construct an instance of the collection type.
 
