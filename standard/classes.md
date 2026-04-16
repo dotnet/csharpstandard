@@ -6843,7 +6843,7 @@ An unhandled exception thrown from any of the methods used during construction s
 
 `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
 
-If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method (§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
 
 - The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
 - The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
