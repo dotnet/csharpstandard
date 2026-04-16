@@ -1185,7 +1185,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 - `E` is a *collection_expression* and one of the following holds:
   - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, and an implicit conversion exists from `E₁` to `E₂`.
   - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_type*, or one of the following interface types implemented by an *array_type*: `System.Collections.Generic.IEnumerable<T>`, `System.Collections.Generic.IReadOnlyCollection<T>`,  `System.Collections.Generic.IReadOnlyList<T>`, `System.Collections.Generic.ICollection<T>`, or `System.Collections.Generic.IList<T>` with element type `E₂`, and an implicit conversion exists from `E₁` to `E₂`.
-  - T₁` and `T₂` are not `System.ReadOnlySpan<T>` or `System.Span<T>`, and an implicit conversion exists from `T₁` to `T₂`.
+  - `T₁` and `T₂` are not `System.ReadOnlySpan<T>` or `System.Span<T>`, and an implicit conversion exists from `T₁` to `T₂`.
 - `E` is not a *collection_expression* and one of the following holds:
 - `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
@@ -3871,7 +3871,7 @@ A *spread_element* causes the set of *collection_element*s designated by *expres
 > Span<ValueType> numbers = [.. counts, .. values];
 > ```
 >
-> `colors2 contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
+> `colors2` contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
 
 If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.  
 
