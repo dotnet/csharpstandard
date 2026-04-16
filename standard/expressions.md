@@ -3880,7 +3880,7 @@ A *spread_element* causes the set of *collection_element*s designated by *expres
 > Span<ValueType> numbers = [.. counts, .. values];
 > ```
 >
-> `colors2 contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
+> `colors2` contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
 
 If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.  
 
