@@ -3835,7 +3835,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.16.4](expressions.md#128164-collection-initializers)) may be a target type for a *collection_expression*. A type designated with the `CollectionBuilder` attribute may also be a target type (§declaring-a-collection-type-general-type).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) may be a target type for a *collection_expression*. A type designated with the `CollectionBuilder` attribute may also be a target type (§declaring-a-collection-type-general).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
