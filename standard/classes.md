@@ -6889,7 +6889,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 > ```csharp
 > int[] x = [a, ..b, ..c, d];
 > ```
-> 
+>
 > If *spread_element*s `b` and `c` are countable, the compiler could delay adding items from `a` and `b` until after `c` is evaluated, to allow allocating the resulting array at the expected length. After that, the compiler could eagerly add items from `c`, before evaluating `d`, as shown below.
 >
 > ```csharp
