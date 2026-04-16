@@ -815,6 +815,16 @@ namespace System.Linq.Expressions
 
 namespace System.Runtime.CompilerServices
 {
+    [System.AttributeUsage(System.AttributeTargets.Class
+      | System.AttributeTargets.Interface
+      | System.AttributeTargets.Struct, Inherited=false)]
+    public sealed class CollectionBuilderAttribute : System.Attribute
+    {
+        public CollectionBuilderAttribute(Type builderType, string methodName);
+        public Type BuilderType { get; }
+        public string MethodName { get; }
+    }
+
     public ref struct DefaultInterpolatedStringHandler
     {
         public DefaultInterpolatedStringHandler(int literalLength,
@@ -1524,6 +1534,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.CollectionBuilderAttribute`
 - `global::System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`
 - `global::System.Runtime.CompilerServices.FormattableStringFactory`
 - `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
