@@ -6805,9 +6805,9 @@ internal static class MyCollectionBuilder
 }
 ```
 
-The collection type shall be annotated with a  `CollectionBuilder` attribute (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`). 
+The collection type shall be annotated with a  `CollectionBuilder` attribute (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
 
-The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type. 
+The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type.
 
 First, the set of applicable collection-creation methods `CM` is determined.  It consists of methods that meet the following requirements:
 
