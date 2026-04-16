@@ -461,7 +461,7 @@ An implicit collection expression conversion exists from a collection expression
 
 - A single-dimensional array type `T[]`, in which case, the element type is `T`.
 - `System.Span<T>` and `System.ReadOnlySpan<T>`, in which cases, the element type is `T`.
-- A type with an appropriate collection-creation method (§declaring-a-collection-type-general-type), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
+- A type with an appropriate collection-creation method (§declaring-a-collection-type-general), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
 - A struct or class type that implements `System.Collections.IEnumerable` where:
 
   - The type has an applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) constructor that can be invoked with no arguments, and the constructor is accessible at the location of the collection expression.
@@ -499,7 +499,7 @@ The following additional implicit conversions exist from a collection expression
 
 - To an interface type `I` where there is a collection-creation method associated with `I` that returns a type `V` and there is an implicit boxing conversion from `V` to `I`. The conversion is a collection expression conversion to `V` followed by an implicit boxing conversion from `V` to `I`.
 
-When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.4.12](structs.md#16412-safe-context-constraint)) shall be met.
+When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.5.15](structs.md#16412-safe-context-constraint)) shall be met.
 
 ## 10.3 Explicit conversions
 
