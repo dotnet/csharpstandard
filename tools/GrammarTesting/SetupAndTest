@@ -1,0 +1,329 @@
+#!/bin/bash
+
+# Setup environment and then do checks, must pass in Standard source directory
+
+# Where are we?
+
+ScriptPath=$(realpath "${BASH_SOURCE[0]}")
+ScriptDir=$(dirname "$ScriptPath")
+
+_usageDescription ()
+{
+   cat <<USAGE
+Usage: SetupAndTest sourceDirectory [options]
+
+Where:
+   sourceDirectory
+      The directory of the Standard source (.md) files
+      from which to extract the grammar.
+
+With no options checks grammar and then performs parsing tests.
+
+Options:
+   -g, --grammar
+      Perform grammar checks
+   -p, --parsing
+      Perform parsing tests
+   -d, --demo-parsing
+      Perform demo parsing tests 
+   -h, -?, --help
+      Displays this help and exits
+   -v, --verbose
+      Be (more) verbose
+   -q, --quiet
+      Reduce messages
+   -wd, --working-directory
+      Directory to store intermediate generated files in: Java source code,
+      Java .class files, etc. Directory path follows option separated by
+      space or an equals sign (e.g. -wd path or -wd=path)
+   -e, --environment-directory
+      Directory containing environment – for requirements see documentation.
+      If omitted the working directory and directory containing this command
+      will be searched.
+   -t, --tests-directory
+      Directory containing tests – for requirements see documentation.
+      If omitted the working directory and directory containing this command
+      will be searched.
+USAGE
+}
+
+# define usage(), we can’t use the version from our common.bash
+# library as its location is not yet known
+
+usage() # [optErrorMsg [optExitCode]]
+{
+   # name the parameters
+   local _optErrorMsg="$1"
+   local _optExitCode="${2:--1}" # default to -1
+   
+   # if optErrorMsg exists send all output to stderr
+   if [ "$_optErrorMsg" != "" ]; then
+      echo "Error: $_optErrorMsg" 1>&2
+      echo 1>&2
+      _usageDescription 1>&2
+      echo 1>&2
+      exit $_optExitCode
+   else
+      echo
+      _usageDescription
+      echo
+   fi
+}
+
+# scan all args
+
+doGrammar=false
+doParsing=false
+argSourceDirectory=
+optWorkingDirectory=
+optEnvPath=
+optTestPath=
+
+declare -a doChecksArgs
+
+requireArgument=
+
+for i in "$@"; do
+   if [[ "$requireArgument" == "" ]]; then
+      case "$i" in
+         -g|--grammar)
+            doChecksArgs+=($i)
+            ;;
+         -p|--parsing)
+            doChecksArgs+=($i)
+            ;;
+         -d|--demo-parsing)
+            doChecksArgs+=($i)
+            ;;
+         -h|--help|-\?)
+            usage
+            exit
+            ;;
+         -v|--verbose)
+            beVerbose=true # so we can take note of this parameter ourselves
+            doChecksArgs+=($i)
+            ;;
+         -q|--quiet)
+            beQuiet=true   # so we can take note of this parameter ourselves
+            doChecksArgs+=($i)
+            ;;
+         -dbg)
+            doChecksArgs+=($i)
+            ;;
+         -wd|--working-directory)
+            if [[ "$optWorkingDirectory" == "" ]]; then
+               requireArgument=$i
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -wd=*|--working-directory=*)
+            if [[ "$optWorkingDirectory" == "" ]]; then
+               optWorkingDirectory="${i#*=}"
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -e|--environment-directory)
+            if [[ "$optEnvPath" == "" ]]; then
+               requireArgument=$i
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -e=*|--environment-directory=*)
+            if [[ "$optEnvPath" == "" ]]; then
+               optEnvPath="${i#*=}"
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -t|--tests-directory)
+            if [[ "$optTestPath" == "" ]]; then
+               requireArgument=$i
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -t=*|--tests-directory=*)
+            if [[ "$optTestPath" == "" ]]; then
+               optTestPath="${i#*=}"
+            else
+               usage "Unexpected option $i"
+            fi
+            ;;
+         -*)
+            usage "Unrecognised option $i"
+            ;;
+         *)
+            if [[ "$argSourceDirectory" == "" ]]; then
+               argSourceDirectory="$i"
+            elif [[ "$i" != "" ]]; then
+               usage "Unexpected argument ‘$i’"
+            fi
+            ;;
+      esac
+   else # looking for argument after option
+      if [[ "$i" == -* ]]; then
+         usage "Option $requireArgument missing argument"
+      else
+         case $requireArgument in
+            -wd|--working-directory)
+               optWorkingDirectory="$i"
+               requireArgument=""
+               ;;
+            -e|--environment-directory)
+               optEnvPath="$i"
+               requireArgument=""
+               ;;
+            -t|--tests-directory)
+               optTestPath="$i"
+               requireArgument=""
+               ;;
+         esac
+         if [[ "$requireArgument" != "" ]]; then
+            errorExit "Internal error, argument expected on none argument option, contact developer"
+         fi
+      fi      
+   fi
+done
+
+# check last command line option isn’t missing an argument
+
+if [[ "$requireArgument" != "" ]]; then
+   usage "Option $requireArgument missing argument"
+fi
+
+if [[ "$argSourceDirectory" == "" ]]; then
+   usage "Missing sourceDirectory"
+fi
+
+##########################################################################################
+
+# Args scanned, now locate environment directory.
+# Try in order:
+# - -e=path argument
+# - Is there an Environment folder in the current WD? 
+# - Is there an Environment folder relative to the script source?
+# If all fail barf
+
+envDirectoryName="Environment"
+libRelativePath="Tools/lib/common.bash"
+envPath=
+
+# first locate the environment
+# check for script library within the folder as the (minimal) test for validity
+if [[ ("$optEnvPath" != "") &&  (-f "${optEnvPath}/${libRelativePath}") ]]; then
+   envPath="${optEnvPath}"
+   envSrc="ARG"
+elif [[ -f "${envDirectoryName}/${libRelativePath}" ]]; then
+   envPath="${envDirectoryName}"
+   envSrc="CWD"
+elif [[ -f "${ScriptDir}/${envDirectoryName}/${libRelativePath}" ]]; then
+   envPath="${ScriptDir}/${envDirectoryName}"
+   envSrc="ADJ"
+else
+   echo "Could not locate “${envDirectoryName}” directory" 1>&2
+   echo "Consult the documentation" 1>&2
+   exit -1
+fi
+
+envPath=$(realpath "$envPath")
+
+# Environment located, can now source our common library from the environment
+source "${envPath}/${libRelativePath}"
+
+# we now have debugEcho…
+debugEcho "envPath = [$envSrc] ${envPath}"
+
+##########################################################################################
+
+# Environment found, common source loaded, now locate the tests directory.
+# this does not validate the structure of the tests folder in any way
+# Try in order:
+# - -t=path argument
+# - Is there a Tests folder in the current WD? 
+# - Is there a Tests folder relative to the script source?
+# If all fail barf
+
+# Much shorter than above as we can now use the common source version
+
+testPath=
+searchForDirectory testPath "$optTestPath" "Tests" "" "" "$ScriptDir" ""
+
+# pass on to DoChecksAndTests below – avoids DoChecksAndTests needing to search (and possibly failing)
+doChecksArgs+=("-t=${testPath}")
+
+##########################################################################################
+
+# Final checks and then source/call others to do the work
+
+# validate source directory and add to args
+validateDirectoryPath sourceDirectory "$argSourceDirectory" "Invalid source directory \"$argSourceDirectory\"" -1
+doChecksArgs+=("$sourceDirectory")
+
+# create working directory if needed and add to command
+if [[ "$optWorkingDirectory" != "" ]]; then
+   validateOrCreateDirectoryPath baseWorkingDirectory "$optWorkingDirectory" "Failed to create/access \"$optWorkingDirectory\""
+   doChecksArgs+=("-wd=$baseWorkingDirectory")
+fi
+
+# sanity precheck the environment
+if [[ ! -f "${envPath}/setup.SourceMe" ]]; then
+   errorEcho "File ”setup.SourceMe” is missing in the environment directory."
+   errorEcho "($envPath)"
+   errorExit "Cannot setup the environment"
+fi
+
+if [[ ${beVerbose} == true ]]; then
+   source "${envPath}/setup.SourceMe"
+else
+   echo "Configuring environment..."
+   source "${envPath}/setup.SourceMe" >/dev/null
+fi
+
+exitStatus=$?
+if [[ $exitStatus != 0 ]]; then # did setup succeed?
+   exit $exitStatus
+fi
+
+# sanity postcheck the environment
+for i in antlr grun BuildGrammar; do
+   which $i >/dev/null
+   if [[ $? != 0 ]]; then
+      errorExit "Command “${i}” not found in environment"
+   fi
+done
+
+for i in f:BG_BASHLIBRARY d:BG_MODIFICATIONSETS f:BG_GRUNTREE_GRAMMAR d:BG_LIB_PARSINGTESTS; do
+   _kind=${i:0:1}
+   _var=${i:2}
+   _target="${!_var}"
+   debugEcho "Checking: ${_kind} | ${_var}=${_target}"
+   if [[ "${_target}" == "" ]]; then
+      errorExit "Variable ${_var} not defined"
+   elif [[ (${_kind} == d) && (! -d "${_target}") ]]; then
+      errorExit "${_var} must reference a directory"
+   elif [[ (${_kind} == f) && (! -f "${_target}") ]]; then
+      errorExit "${_var} must reference a file"
+   fi
+done
+
+# we seem to have what we expect, run the tests…
+
+# use a DoChecksAndTests in testPath
+if [[ -x "${testPath}/DoChecksAndTests" ]]; then
+   "${testPath}/DoChecksAndTests" "${doChecksArgs[@]}"
+   exit $?
+fi
+
+# check for DoChecksAndTests in the PATH
+which DoChecksAndTests >/dev/null
+if [[ $? == 0 ]]; then
+   DoChecksAndTests "${doChecksArgs[@]}"
+   exit $?
+fi
+
+errorEcho "Script ”DoChecksAndTests” not found in the tests directory or PATH."
+errorEcho "Tests directory: $testPath"
+errorExit "Cannot run the tests"
