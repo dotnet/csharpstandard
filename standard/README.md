@@ -528,20 +528,21 @@
   - [§14.2](namespaces.md#142-compilation-units)  Compilation units
   - [§14.3](namespaces.md#143-namespace-declarations)  Namespace declarations
   - [§14.4](namespaces.md#144-extern-alias-directives)  Extern alias directives
-    - [§14.4.1](namespaces.md#1441-general)  General
-    - [§14.4.2](namespaces.md#1442-global-using-alias-directives)  Global using alias directives
-    - [§14.4.3](namespaces.md#1443-global-using-namespace-directives)  Global using namespace directives
-    - [§14.4.4](namespaces.md#1444-global-using-static-directives)  Global using static directives
-  - [§14.5](namespaces.md#145-using-directives)  Using directives
+  - [§14.5](namespaces.md#145-global-using-directives)  Global using directives
     - [§14.5.1](namespaces.md#1451-general)  General
-    - [§14.5.2](namespaces.md#1452-using-alias-directives)  Using alias directives
-    - [§14.5.3](namespaces.md#1453-using-namespace-directives)  Using namespace directives
-    - [§14.5.4](namespaces.md#1454-using-static-directives)  Using static directives
-  - [§14.6](namespaces.md#146-namespace-member-declarations)  Namespace member declarations
-  - [§14.7](namespaces.md#147-type-declarations)  Type declarations
-  - [§14.8](namespaces.md#148-qualified-alias-member)  Qualified alias member
-    - [§14.8.1](namespaces.md#1481-general)  General
-    - [§14.8.2](namespaces.md#1482-uniqueness-of-aliases)  Uniqueness of aliases
+    - [§14.5.2](namespaces.md#1452-global-using-alias-directives)  Global using alias directives
+    - [§14.5.3](namespaces.md#1453-global-using-namespace-directives)  Global using namespace directives
+    - [§14.5.4](namespaces.md#1454-global-using-static-directives)  Global using static directives
+  - [§14.6](namespaces.md#146-using-directives)  Using directives
+    - [§14.6.1](namespaces.md#1461-general)  General
+    - [§14.6.2](namespaces.md#1462-using-alias-directives)  Using alias directives
+    - [§14.6.3](namespaces.md#1463-using-namespace-directives)  Using namespace directives
+    - [§14.6.4](namespaces.md#1464-using-static-directives)  Using static directives
+  - [§14.7](namespaces.md#147-namespace-member-declarations)  Namespace member declarations
+  - [§14.8](namespaces.md#148-type-declarations)  Type declarations
+  - [§14.9](namespaces.md#149-qualified-alias-member)  Qualified alias member
+    - [§14.9.1](namespaces.md#1491-general)  General
+    - [§14.9.2](namespaces.md#1492-uniqueness-of-aliases)  Uniqueness of aliases
 - [§15](classes.md#15-classes)  Classes
   - [§15.1](classes.md#151-general)  General
   - [§15.2](classes.md#152-class-declarations)  Class declarations
@@ -617,6 +618,9 @@
     - [§15.6.7](classes.md#1567-abstract-methods)  Abstract methods
     - [§15.6.8](classes.md#1568-external-methods)  External methods
     - [§15.6.9](classes.md#1569-partial-methods)  Partial methods
+      - [§15.6.9.1](classes.md#15691-general)  General
+      - [§15.6.9.2](classes.md#15692-optional-partial-methods)  Optional partial methods
+      - [§15.6.9.3](classes.md#15693-required-partial-methods)  Required partial methods
     - [§15.6.10](classes.md#15610-extension-methods)  Extension methods
     - [§15.6.11](classes.md#15611-method-body)  Method body
   - [§15.7](classes.md#157-properties)  Properties
@@ -690,7 +694,8 @@
     - [§16.2.5](structs.md#1625-struct-interfaces)  Struct interfaces
     - [§16.2.6](structs.md#1626-struct-body)  Struct body
   - [§16.3](structs.md#163-struct-members)  Struct members
-    - [§16.3.1](structs.md#1631-readonly-members)  Readonly members
+    - [§16.3.1](structs.md#1631-general)  General
+    - [§16.3.2](structs.md#1632-readonly-members)  Readonly members
   - [§16.4](structs.md#164-synthesized-record-struct-members)  Synthesized record struct members
     - [§16.4.1](structs.md#1641-general)  General
     - [§16.4.2](structs.md#1642-equality-members)  Equality members

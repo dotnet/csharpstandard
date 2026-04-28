@@ -769,7 +769,11 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : '(' pattern ')'
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
     | declaration_pattern
     | constant_pattern
     | var_pattern
@@ -778,7 +782,10 @@ pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Declaration pattern
@@ -853,10 +860,10 @@ type_pattern
 
 // Source: §11.2.9 Relational pattern
 relational_pattern
-    : '<'  constant_expression
-    | '<=' constant_expression
-    | '>'  constant_expression
-    | '>=' constant_expression
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
     ;
 
 // Source: §11.2.10 Logical pattern
@@ -876,7 +883,7 @@ conjunctive_pattern
 
 negated_pattern
     : 'not' negated_pattern
-    | pattern
+    | primary_pattern
     ;
 
 // Source: §12.6.2.1 General
@@ -2069,13 +2076,22 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* global_using_directive* using_directive* global_attributes?
-      statement_list* namespace_member_declaration*
+    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    ;
+
+compilation_unit_body
+    : statement_list* namespace_member_declaration*
+    | file_scoped_namespace_declaration
     ;
 
 // Source: §14.3 Namespace declarations
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -2092,57 +2108,57 @@ extern_alias_directive
     : 'extern' 'alias' identifier ';'
     ;
 
-// Source: §14.4.1 General
+// Source: §14.5.1 General
 global_using_directive
     : global_using_alias_directive
     | global_using_namespace_directive
     | global_using_static_directive
     ;
 
-// Source: §14.4.2 Global using alias directives
+// Source: §14.5.2 Global using alias directives
 global_using_alias_directive
     : 'global' using_alias_directive
     ;
 
-// Source: §14.4.3 Global using namespace directives
+// Source: §14.5.3 Global using namespace directives
 global_using_namespace_directive
     : 'global' using_namespace_directive
     ;
 
-// Source: §14.4.4 Global using static directives
+// Source: §14.5.4 Global using static directives
 global_using_static_directive
     : 'global' using_static_directive
     ;
 
-// Source: §14.5.1 General
+// Source: §14.6.1 General
 using_directive
     : using_alias_directive
     | using_namespace_directive
     | using_static_directive    
     ;
 
-// Source: §14.5.2 Using alias directives
+// Source: §14.6.2 Using alias directives
 using_alias_directive
     : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
-// Source: §14.5.3 Using namespace directives
+// Source: §14.6.3 Using namespace directives
 using_namespace_directive
     : 'using' namespace_name ';'
     ;
 
-// Source: §14.5.4 Using static directives
+// Source: §14.6.4 Using static directives
 using_static_directive
     : 'using' 'static' type_name ';'
     ;
 
-// Source: §14.6 Namespace member declarations
+// Source: §14.7 Namespace member declarations
 namespace_member_declaration
     : namespace_declaration
     | type_declaration
     ;
 
-// Source: §14.7 Type declarations
+// Source: §14.8 Type declarations
 type_declaration
     : class_declaration
     | struct_declaration
@@ -2151,7 +2167,7 @@ type_declaration
     | delegate_declaration
     ;
 
-// Source: §14.8.1 General
+// Source: §14.9.1 General
 qualified_alias_member
     : identifier '::' identifier type_argument_list?
     ;
@@ -2726,7 +2742,7 @@ struct_body
     : '{' struct_member_declaration* '}'
     ;
 
-// Source: §16.3 Struct members
+// Source: §16.3.1 General
 struct_member_declaration
     : constant_declaration
     | field_declaration

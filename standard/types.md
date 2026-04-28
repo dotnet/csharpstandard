@@ -217,7 +217,7 @@ nullable_value_type
     ;
 ```
 
-Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution ([§7.8.1](basic-concepts.md#781-general)) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
 
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 

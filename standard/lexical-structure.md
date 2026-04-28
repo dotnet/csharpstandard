@@ -85,7 +85,7 @@ If a sequence of tokens can be parsed, in context, as one of the disambiguated p
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
-> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)). *end note*
+> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -1096,7 +1096,7 @@ The following pre-processing directives are available:
 
 - `#define` and `#undef`, which are used to define and undefine, respectively, conditional compilation symbols ([§6.5.4](lexical-structure.md#654-definition-directives)).
 - `#if`, `#elif`, `#else`, and `#endif`, which are used to skip conditionally sections of source code ([§6.5.5](lexical-structure.md#655-conditional-compilation-directives)).
-- `#line`, which is used to control line numbers and source file mapping emitted for errors and warnings (§6.5.8).
+- `#line`, which is used to control line numbers and source file mapping emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).

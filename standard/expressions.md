@@ -1649,7 +1649,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters (§12.22.2)), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures))), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -1759,7 +1759,7 @@ predefined_type
     ;
 ```
 
-The *qualified_alias_member* production is defined in [§14.8](namespaces.md#148-qualified-alias-member).
+The *qualified_alias_member* production is defined in [§14.9](namespaces.md#149-qualified-alias-member).
 
 A *member_access* is either of the form `E.I` or of the form `E.I<A₁, ..., Aₑ>`, where `E` is a *primary_expression*, *predefined_type* or *qualified_alias_member,* `I` is a single identifier, and `<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
 
@@ -3247,7 +3247,7 @@ The first form of *typeof_expression* consists of a `typeof` keyword followed by
 
 The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
-> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
+> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
 
 When recognising the operand of a *typeof_expression* if both *unbound_type_name* and *type_name* are applicable, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, then *type_name* shall be chosen.
 
@@ -5522,9 +5522,9 @@ If the modifier `static` is present, the anonymous function cannot capture state
 A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing `static` anonymous function.
 
 <!-- markdownlint-disable MD028 -->
-> *Note*: Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program, other than possibly affecting delegate instance identity (§10.7.2). *end note*
+> *Note*: Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program, other than possibly affecting delegate instance identity ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)). *end note*
 
-> *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See §10.7.2. *end note*
+> *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See [§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types). *end note*
 <!-- markdownlint-enable MD028 -->
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
