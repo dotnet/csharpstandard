@@ -6711,7 +6711,9 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to two or more targets, where each target is either a *variable_reference* or a discard. The left operand of a *simple_assignment* or *ref_assignment* may also be a discard. The left operand of a *compound_assignment* shall not be a discard. When the left operand of a *simple_assignment* or *ref_assignment*, or a target of a *deconstructing_assignment*, is a discard, the corresponding right-side expression is evaluated but no value is stored.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to two or more targets.
+
+The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard (§9.2.9.2). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
 Each of the alternatives takes the same general form of `l <op> r`, where `<op>` is an ***assignment operator***.
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
@@ -7066,6 +7068,8 @@ compound_assignment_operator
 ```
 
 The operators in *compound_assignment_operator* are called the ***compound assignment operator***s.
+
+The left operand of a compound assignment operator shall not be a discard (§9.2.9.2).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.6](expressions.md#12236-event-assignment).
 
