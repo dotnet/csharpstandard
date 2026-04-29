@@ -12,7 +12,7 @@ As described in [§8.3.5](types.md#835-simple-types), the simple types provided 
 
 ### 16.2.1 General
 
-A *struct_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new struct:
+A *struct_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-type-declarations)) that declares a new struct:
 
 ```ANTLR
 struct_declaration
@@ -171,7 +171,7 @@ Except for the differences noted in [§16.5](structs.md#165-class-and-struct-dif
 
 It is an error for an instance field of a record struct to have an unsafe type.
 
-### 16.3.1 Readonly members
+### 16.3.2 Readonly members
 
 An instance member definition or accessor of an instance property, indexer, or event that includes the `readonly` modifier has the following restrictions:
 
@@ -573,7 +573,7 @@ As described in [§9.3](variables.md#93-default-values), several kinds of variab
 >
 > *end example*
 
-The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). When a struct does not declare an explicit parameterless instance constructor, the default constructor is synthesized and always returns the value that results from setting all fields to their default values. The `default` expression always produces the zero-initialized default value, even when a struct declares an explicit parameterless instance constructor ([§16.4.9](structs.md#1649-constructors)).
+The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). When a struct does not declare an explicit parameterless instance constructor, the default constructor is synthesized and always returns the value that results from setting all fields to their default values. The `default` expression always produces the zero-initialized default value, even when a struct declares an explicit parameterless instance constructor (§16.4.9).
 
 > *Note*: Structs should be designed to consider the default initialization state a valid state. In the example
 >

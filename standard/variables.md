@@ -851,7 +851,7 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
 - The definite-assignment statement of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
-  - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* (§qdot-expressions), then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_second*.
+  - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* ([§9.4.4.35](variables.md#94435--expressions)), then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 > *Note*: The rule above formalizes that for an expression like `a?.M(out x) ?? (x = false)`, either the `a?.M(out x)` was fully evaluated and produced a non-null value, in which case `x` was assigned, or the `x = false` was evaluated, in which case `x` was also assigned. Therefore `x` is always assigned after this expression.
@@ -1032,7 +1032,7 @@ For an expression *expr* of the form:
 - If the variable ‘v’ is declared in *pattern*, then the definite-assignment state of ‘v’ after *expr* is “definitely assigned when true”.
 - Otherwise the definite assignment state of ‘v’ after *expr* is the same as the definite assignment state of ‘v’ after *expr_operand*.
 
-#### §qdot-expressions ?. expressions
+#### 9.4.4.35 ?. expressions
 
 For an expression *E* of the form:
 
@@ -1083,7 +1083,7 @@ let *E₀* be the expression obtained by textually removing the leading `?` from
 >
 > For example, given a conditional expression `a?.b(out x)?.c(x)`, the non-conditional counterpart is `a.b(out x).c(x)`. If the definite-assignment state of `x` before `?.c(x)` is to be determined, for example, a “hypothetical” analysis of `a.b(out x)` can be performed and the resulting state can be used as an input to `?.c(x)`. *end note*
 
-#### §boolean-constant-expressions Boolean constant expressions
+#### 9.4.4.36 Boolean constant expressions
 
 For an expression *expr*, where *expr* is a constant expression with a `bool` value, the definite-assignment state of *v* after *expr* is determined, as follows:
 
@@ -1094,7 +1094,7 @@ For an expression *expr*, where *expr* is a constant expression with a `bool` va
 >
 > Being in a conditional state *before* visiting a constant expression, is never expected, so there is no need to account for scenarios such as “*expr* is a constant expression with value *true* and the state of *v* before *expr* is definitely assigned when true.” *end note*
 
-#### §relational-equality-expressions ==/!= expressions
+#### 9.4.4.37 ==/!= expressions
 
 For an expression *expr* of the form:
 
@@ -1143,7 +1143,7 @@ All of the above rules are commutative.
 >
 > *end note*
 
-#### §isop-ispattern-expressions is operator and is pattern expressions
+#### 9.4.4.38 is operator and is pattern expressions
 
 For an expression *expr* of the form:
 
@@ -1162,7 +1162,7 @@ where *T* is any type or pattern:
   - If *E* is of type `bool` and `T` is a pattern that only matches a `false` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr*.
   - Otherwise, if the definite-assignment state of *v* after *E* is "definitely assigned," then the definite-assignment state of *v* after *expr* is "definitely assigned."
 
-> *Note*: This subclause addresses similar scenarios as §relational-equality-expressions. It does not, however, address recursive patterns; e.g., `(a?.b(out x), c?.d(out y)) is (object, object)`. *end note*
+> *Note*: This subclause addresses similar scenarios as [§9.4.4.37](variables.md#94437--expressions). It does not, however, address recursive patterns; e.g., `(a?.b(out x), c?.d(out y)) is (object, object)`. *end note*
 
 ## 9.5 Variable references
 
@@ -1233,7 +1233,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-> *Note*: The related notion of a *safe-context* is defined in ([§16.4.15](structs.md#16415-safe-context-constraint)), along with associated constraints. *end note*
+> *Note*: The related notion of a *safe-context* is defined in (§16.4.15), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
@@ -1373,7 +1373,7 @@ For a variable `c` resulting from a ref-returning function invocation, its ref-s
 - The caller-context.
 - The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
 - For each input parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
-- The safe-context ([§16.4.15](structs.md#16415-safe-context-constraint)) of all argument expressions (including the receiver).
+- The safe-context (§16.4.15) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
 >
