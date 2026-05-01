@@ -915,7 +915,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > In the assignments
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], expectedWarnings:["CS1998"], additionalFiles:["R.cs"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], additionalFiles:["R.cs"]} -->
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
