@@ -82,15 +82,15 @@ When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declara
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
-The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier.
+The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier. (`file` is a contextual keyword (§6.4.4) that has special meaning when used as a top-level type modifier.)
 
 The `file` modifier shall only appear in a type declaration for a top-level type.
 
 When a type declaration contains the `file` modifier, that type is said to be a ***file-local type***.
 
-The implementation shall guarantee that file-local types with the same name declared in different compilation units, are distinct at runtime. The implementation shall guarantee that a file-local type with the same name as a non-file-local type declared in different compilation units, are distinct at runtime.
+The implementation shall guarantee that two type declarations are distinct at runtime when either both are file-local types with the same name declared in different compilation units, or one is a file-local type and the other is a non-file-local type with the same name.
 
-A file-local class that is an attribute type may be used an as attribute within both file-local types and non-file-local types, just as if the attribute type were a non-file-local class.
+A file-local class that is an attribute type may be used as an attribute within both file-local types and non-file-local types, just as if the attribute type were a non-file-local class.
 
 #### 15.2.2.2 Abstract classes
 
@@ -810,6 +810,8 @@ For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They 
 The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
+
+For a partial type, either all parts shall include the `file` modifier and be declared in the same compilation unit, or no part shall include the `file` modifier.
 
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
 
