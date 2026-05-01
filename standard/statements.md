@@ -278,7 +278,7 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 13.6.1 General
 
-A *declaration_statement* declares one or more local variables, one or more local constants, a local function, or a local using scope ([§13.14.2](statements.md#13142-using-declaration)). Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements. A *local_using_declaration* differs from the other forms in that it shall not appear directly in a *switch_block*, but may appear in a block nested within a *switch_block*.
+A *declaration_statement* declares one or more local variables via a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), one or more local constants via a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)), a local function via a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)), or a local using scope via a *local_using_declaration* ([§13.14.2](statements.md#13142-using-declaration)). Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements. A *local_using_declaration* differs from the other forms in that it shall not appear directly in a *switch_block*, but may appear in a block nested within a *switch_block*.
 
 ```ANTLR
 declaration_statement
@@ -288,8 +288,6 @@ declaration_statement
     | local_using_declaration
     ;
 ```
-
-A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)). A using declaration is declared using a *local_using_declaration* (§13.14.2).
 
 Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
 
