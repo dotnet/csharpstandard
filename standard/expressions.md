@@ -266,7 +266,7 @@ Given a type `T` and an operation `operator «op»(A)`, where «op» is an ove
 - Determine the type `T₀`. If `T` is a nullable value type, `T₀` is its underlying type; otherwise, `T₀` is equal to `T`.
 - Find the set of user-defined operators, `U`. This set consists of:
   - In an `unchecked` evaluation context, all regular `operator «op»` declarations in `T₀`.
-  - In a `checked` evaluation context, all checked and non-checked `operator «op»` declarations in `T₀` except regular declarations that have a pair-wise matching checked operator declaration.
+  - In a `checked` evaluation context, all checked and regular `operator «op»` declarations in `T₀` (see [§15.10.1](classes.md#15101-general)) except regular declarations that have a pair-wise matching checked operator declaration.
 - For all `operator «op»` declarations in `T₀` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators in `T₀`.
 - Otherwise, if `T₀` is `object`, the set of candidate operators is empty.
 - Otherwise, the set of candidate operators provided by `T₀` is the set of candidate operators provided by the direct base class of `T₀`, or the effective base class of `T₀` if `T₀` is a type parameter.
@@ -3361,7 +3361,7 @@ For all other operand types, the `sizeof` operator is specified in [§24.6.9](un
 
 ### 12.8.20 The checked and unchecked operators
 
-The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](classes.md#15104-conversion-operators)).
+The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general)).
 
 ```ANTLR
 checked_expression
@@ -3383,6 +3383,8 @@ The following operations are affected by the overflow checking context establish
 - The predefined `-` unary operator ([§12.9.3](expressions.md#1293-unary-minus-operator)), when the operand is of an integral type.
 - The predefined `+`, `-`, `*`, and `/` binary operators ([§12.13](expressions.md#1213-arithmetic-operators)), when both operands are of integral or enum types.
 - Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from one integral or enum type to another integral or enum type, or from `float` or `double` to an integral or enum type.
+- User-defined `++`, `--`, unary `-`, and binary `+`, `-`, `*`, and `/` operators ([§15.10.1](classes.md#15101-general)), when a checked form of the operator is declared on the operand type.
+- User-defined explicit conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), when a checked form of the conversion operator is declared.
 
 When one of the above operations produces a result that is too large to represent in the destination type, the context in which the operation is performed controls the resulting behavior:
 
