@@ -604,7 +604,7 @@ keyword
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'file'      | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
@@ -625,7 +625,7 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'      | 'alias'     | 'and'      | 'ascending' | 'async'
     | 'await'    | 'by'        | 'Cdecl'    | 'descending' | 'dynamic'
-    | 'equals'   | 'Fastcall'  | 'from'     | 'get'       | 'global'
+    | 'equals'   | 'Fastcall'  | 'file'     | 'from'     | 'get'       | 'global'
     | 'group'    | 'init'      | 'into'     | 'join'      | 'let'
     | 'managed'  | 'nameof'    | 'nint'     | 'not'       | 'notnull'
     | 'nuint'    | 'on'        | 'or'       | 'orderby'   | 'partial'
