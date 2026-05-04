@@ -1261,6 +1261,10 @@ It is an error to use `[UnscopedRef]` on
 
 See §scoped-modifier for more information.
 
+### §ScopedRefAttribute The ScopedRef attribute
+
+The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter's `scoped` annotation differs from its default state, in order to encode the `scoped` modifier (§scoped-modifier) in metadata. This attribute is not permitted in source.
+
 ### 23.5.8 The EnumeratorCancellation attribute
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.15.5.2](classes.md#151552-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) in the body of that method.

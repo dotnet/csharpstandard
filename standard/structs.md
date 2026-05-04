@@ -754,7 +754,12 @@ struct_field_declaration
 
 A *struct_field_declaration* without `ref`, `readonly ref`, or `ref readonly` is as described in [§15.5](classes.md#155-fields).
 
-A `ref` or `readonly ref` field is a reference variable and shall only be declared in a `ref` struct.
+A `ref` or `readonly ref` field is a reference variable and is subject to the following constraints:
+
+- It shall only be declared in a `ref struct`.
+- It shall not be declared `static`, `volatile`, or `const`.
+- Its type shall not itself be a `ref struct` type.
+- In a `readonly ref struct`, every `ref` field shall be declared `readonly ref` (it may additionally be declared `readonly ref readonly`).
 
 Consider the following ref struct declaration:
 
