@@ -4286,7 +4286,7 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 For an operation of the form `x + y`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator.
 
-The predefined addition operators are listed below. For numeric and enumeration types, the predefined addition operators compute the sum of the two operands. When one or both operands are of type `string`, or both are of type `ReadOnlySpan<byte>`, the predefined addition operators concatenate the string representation of the operands.
+The predefined addition operators are listed below. For numeric and enumeration types, the predefined addition operators compute the sum of the two operands. When one or both operands are of type `string`, the predefined addition operators concatenate the string representation of the operands. When both operands are of type `ReadOnlySpan<byte>` and both are semantically UTF-8 byte representations, the predefined addition operator concatenates the bytes of the operands.
 
 - Integer addition:
 
@@ -4344,7 +4344,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   string operator +(object x, string y);
   ```
 
-  These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3]( structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
+  These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3](structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
   
   > *Example*:
   >
@@ -4380,8 +4380,9 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ReadOnlySpan<byte> operator +(ReadOnlySpan<byte> x, ReadOnlySpan<byte> y);
   ```
 
-  This overload of the binary `+` operator performs concatenation of UTF-8 string literals and the concatenated results thereof (which is much more restrictive than for UTF-16 string concatenation). The operands shall be UTF-8-encoded values.
-  The result of the operator is a ReadOnlySpan<byte> that consists of the bytes of the left operand followed by the bytes of the right operand. The result may be used directly as an operand to the UTF-8 string concatenation operator.
+  This overload of the binary `+` operator performs concatenation of UTF-8 string literals and the results of other applications of this operator (which is much more restrictive than UTF-16 string concatenation). It is applicable if and only if both operands are *semantically UTF-8 byte representations*. An operand is *semantically a UTF-8 byte representation* if it is a UTF-8 string literal, the result of an application of this operator, or a parenthesized expression whose enclosed expression is *semantically a UTF-8 byte representation*.
+
+  The result of the operator is a `ReadOnlySpan<byte>` that consists of the bytes of the left operand followed by the bytes of the right operand. The result is itself *semantically a UTF-8 byte representation*, and so may be used as an operand to a further application of this operator.
 
   > *Example*:
   >
