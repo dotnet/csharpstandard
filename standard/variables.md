@@ -1498,6 +1498,53 @@ Consider the following declarations and their safe contexts:
 
 In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
 
+> *Example*: The following illustrates how `scoped` restricts the lifetime of a local and prevents it from escaping its enclosing function:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedLocalCannotEscape", expectedErrors:["CS8352"]} -->
+> ```csharp
+> using System;
+>
+> class C
+> {
+>     static Span<int> Bad()
+>     {
+>         // Without `scoped`, the safe-context of `s` would be caller-context
+>         // because the right-hand side has safe-context of caller-context.
+>         // The `scoped` modifier forces the safe-context to function-member,
+>         // so `s` cannot be returned.
+>         scoped Span<int> s = default;
+>         return s;   // Error: s has safe-context of function-member
+>     }
+> }
+> ```
+>
+> *end example*
+
+> *Example*: The following illustrates how `scoped ref` on a parameter prevents the parameter from being captured by a constructed `ref struct` value that the method returns:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedRefParameter", expectedErrors:["CS8347","CS8166"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public ref int RefField;
+>     public RS(ref int i) { RefField = ref i; }
+> }
+>
+> class C
+> {
+>     // `scoped ref` means `value` does not contribute ref-safe-context
+>     // to the return value. The `RS` constructor requires a ref argument
+>     // with ref-safe-context of caller-context, but `value` only contributes
+>     // function-member, so the call is rejected.
+>     static RS CreateWithoutCapture(scoped ref int value)
+>         => new RS(ref value);
+> }
+> ```
+>
+> *end example*
+
+In summary, two `ref` locations are implicitly `scoped`: the `this` parameter of a struct instance method, and every `out` parameter. See §9.7.2.3.
+
 ### §parameter-scope-variance Parameter scope variance
 
 The `scoped` modifier (§scoped-modifier) and `[UnscopedRef]` attribute (§UnscopedRefAttribute) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
