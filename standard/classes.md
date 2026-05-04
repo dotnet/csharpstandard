@@ -4941,6 +4941,9 @@ operator_modifier
     : 'public'
     | 'static'
     | 'extern'
+    | 'abstract'
+    | 'virtual'
+    | 'sealed'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -4992,7 +4995,7 @@ There are three categories of overloadable operators: Unary operators ([§15.10.
 
 The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
-For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
+For `extern` operators, the *operator_body* consists simply of a semicolon. For an abstract operator declaration in an interface ([§19.4.7](interfaces.md#1947-interface-operators)), the *operator_body* is a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 

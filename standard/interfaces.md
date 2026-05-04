@@ -348,11 +348,11 @@ This clause augments the description of methods in classes [§15.6](classes.md#1
 Interface methods are declared using *method_declaration*s ([§15.6](classes.md#156-methods))). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
 
 - *method_modifier* shall not include `override`.
-- A method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
-- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
+- An instance method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed. A static method whose body is a semi-colon (`;`) shall include the `abstract` modifier.
+- An interface instance method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed. For a static method the `virtual` modifier is permitted.
 - A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 - The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
-  - A static declaration that is not extern shall have a block body or expression body as a *method_body*.
+  - A static declaration that is not extern shall have a block body or expression body as a *method_body*, or shall be declared `abstract`.
   - A virtual declaration that is not extern shall have a block body or expression body as a *method_body*.
   - A private declaration that is not extern shall have a block body or expression body as a *method_body*.
   - A sealed declaration that is not extern shall have a block body or expression body as a *method_body*.
@@ -440,7 +440,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
-- An interface instance method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed. For a static method the `virtual` modifier is permitted.
+- An interface instance property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed. For a static property or property accessor the `virtual` modifier is permitted.
 - An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)). However, the `abstract` modifier shall be present if a static property is to be abstract.
 - A *property_declaration* may contain the `sealed` modifier.
 
@@ -460,7 +460,7 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 
 ### 19.4.6 Interface indexers
 
-This sub clause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
+This subclause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
 
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
@@ -800,7 +800,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 ### 19.6.2 Explicit interface member implementations
 
 <!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, indexer, or operator declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.7.2](basic-concepts.md#772-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
 
@@ -858,7 +858,7 @@ A derived interface member that satisfies interface mapping ([§19.6.5](interfac
 
 It is not possible to access an explicit interface member implementation through its qualified interface member name in a method invocation, property access, event access, or indexer access. An explicit interface instance member implementation can only be accessed through an interface instance, and is in that case referenced simply by its member name. An explicit interface static member implementation can only be accessed through the interface name.
 
-It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
+It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern`, `async`, or `static`. An explicit interface member implementation that implements a static member shall include the `static` modifier.
 
 An explicit interface method implementation inherits any type parameter constraints from the interface.
 
