@@ -1396,7 +1396,7 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 ### 12.8.3 Interpolated string expressions
 
-An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications. Any quoted text that is not part of an interpolation (as defined by the grammar rules *Interpolated_Regular_String_Mid* and *Interpolated_Verbatim_String_Mid* shown below) is part of an *interpolated string expression segment*. As such, the quoted text contains zero or more interpolated string expression segments. Consider the following *interpolated_string_expression*:
+An *interpolated_string_expression* begins with one or more `$` characters, optionally combined with `@` (for an interpolated verbatim string), and is immediately followed by text within `"` or `"""`-style delimiters. Within the quoted text there are zero or more ***interpolations*** delimited by one or more `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications. Any quoted text that is not part of an interpolation (as defined by the grammar rules *Interpolated_Regular_String_Mid*, *Interpolated_Verbatim_String_Mid*, and *Interpolated_Raw_String_Mid* shown below) is part of an *interpolated string expression segment*. As such, the quoted text contains zero or more interpolated string expression segments. Consider the following *interpolated_string_expression*:
 
 ```csharp
 $"val = {{{val,4:X}}}; 2 * val = {2 * val}."
@@ -1695,7 +1695,7 @@ Then:
 A *constant interpolated string* is an *interpolated_string_expression* that contains
 
 - no interpolations, or
-- interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
+- interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format* specifiers.
 
 For example, $“Hello”, $“{cs1}, world!” (given `const string cs1 = $"Hello";`), $“{“Hello,” + $“world!"}”, and $“xxx{(true ? $“{“X”}” : $“{$“{“Y”}”}”)}yyy” are all constant interpolated strings. However, $“{123}” and $“{“abc”}{123.45}” are not.
 

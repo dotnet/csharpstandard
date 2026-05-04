@@ -952,7 +952,7 @@ fragment Raw_String_Literal
     ;
 
 fragment Single_Line_Raw_String_Literal
-    : Raw_String_Literal_Delimiter  Raw_String_Literal Content
+    : Raw_String_Literal_Delimiter  Raw_String_Literal_Content
       Raw_String_Literal_Delimiter
     ;
 
@@ -960,14 +960,14 @@ fragment Raw_String_Literal_Delimiter
     : '"""'  '"'*
     ;
 
-fragment Raw_String_Literal Content
+fragment Raw_String_Literal_Content
     // anything except New_Line
     : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
-      (Raw_String_Literal Content | New_Line)* New_Line
+      (Raw_String_Literal_Content | New_Line)* New_Line
       Whitespace* Raw_String_Literal_Delimiter
     ;
 ```
@@ -980,23 +980,23 @@ For any *Raw_String_Literal*:
   > *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
 - The beginning and end delimiters shall have the same raw string literal delimiter length.
   > *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
-- A *Raw_String_Literal Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
+- A *Raw_String_Literal_Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
   > *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
-- As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal Content*.
+- As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal_Content*.
 
 For a *Single_Line_Raw_String_Literal* only:
 
 - A *Single_Line_Raw_String_Literal* cannot be empty; it must contain at least one character.
-- A *Raw_String_Literal Content* cannot begin with `"`, as such a character is considered to belong to the preceding start delimiter. Similarly, a *Raw_String_Literal Content* cannot end with `"`, as such a character is considered to belong to the following end delimiter.
-- The value of the literal is *Raw_String_Literal Content*, which can contain leading, embedded, and trailing horizontal whitespace (as in `"""x  x   x"""` and `""" xxx           """`, the latter having a leading space and trailing tabs).
+- A *Raw_String_Literal_Content* cannot begin with `"`, as such a character is considered to belong to the preceding start delimiter. Similarly, a *Raw_String_Literal_Content* cannot end with `"`, as such a character is considered to belong to the following end delimiter.
+- The value of the literal is *Raw_String_Literal_Content*, which can contain leading, embedded, and trailing horizontal whitespace (as in `"""x  x   x"""` and `""" xxx           """`, the latter having a leading space and trailing tabs).
 
 For a *Multi_Line_Raw_String_Literal* only:
 
-- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal Content*s.
-- A *Raw_String_Literal Content* shall not appear on the same line as a start or end delimiter.
-- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal Content*s and one or more *New_Line*s).
-- A *Raw_String_Literal Content* can begin or end with `"`.
-- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal Content*s and *New_Lines* after any whitespace at the beginning of each *Raw_String_Literal Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
+- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal_Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal_Content*s.
+- A *Raw_String_Literal_Content* shall not appear on the same line as a start or end delimiter.
+- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal_Content*s and one or more *New_Line*s).
+- A *Raw_String_Literal_Content* can begin or end with `"`.
+- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal_Content*s and *New_Line*s after any whitespace at the beginning of each *Raw_String_Literal_Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
 
 > *Example*: The example
 >
@@ -1068,7 +1068,7 @@ For a *Multi_Line_Raw_String_Literal* only:
 >         </element>
 > ```
 >
-> In the case of `xml1`, the end delimiter has 8 leading spaces, so that is the amount of leading whitespace removed from each content line. With `xm12`, 4 leading spaces are removed, and with `xml3`, no leading spaces are removed. *end example*
+> In the case of `xml1`, the end delimiter has 8 leading spaces, so that is the amount of leading whitespace removed from each content line. With `xml2`, 4 leading spaces are removed, and with `xml3`, no leading spaces are removed. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
