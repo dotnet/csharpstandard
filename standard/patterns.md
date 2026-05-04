@@ -704,7 +704,7 @@ list_pattern_clause
     ;
 ```
 
-A *list_pattern* is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *indexable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support)  for details of implicit index support.)
+A *list_pattern* is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *indexable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support) for details of implicit index support.)
 
 A pattern of the form `expr is [1, 2, 3]` is equivalent to the following code:
 
@@ -757,7 +757,7 @@ slice_pattern
 
 A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *sliceable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support) for details of implicit index support.)
 
-A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]`  is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
+A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]` is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
 
 ```csharp
 expr.Length is >= 2
@@ -768,7 +768,7 @@ expr.Length is >= 2
 
 The input type for a *slice_pattern* is the return type of the underlying `this[Range]` or `Slice` method with two exceptions: For `string`s and arrays, `string.Substring` and `RuntimeHelpers.GetSubArray`, respectively, shall be used.
 
-> *Example*: A slice pattern  can be used to match elements only at the start or/and the end of an input sequence.
+> *Example*: A slice pattern can be used to match elements only at the start or/and the end of an input sequence.
 >
 > <!-- Example: {template:"standalone-console", name:"SlicePattern1", expectedOutput:[ "True", "True", "False", "False", "True", "False", "True", "True", "True", "False"]} -->
 > ```csharp
@@ -792,7 +792,7 @@ The input type for a *slice_pattern* is the return type of the underlying `this[
 <!-- markdownlint-enable MD028 -->
 > *Example*: A subpattern can be nested within a slice pattern:
 >
-> <!-- Example: {template:"standalone-console", name:" SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
+> <!-- Example: {template:"standalone-console", name:"SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
 > ```csharp
 > MatchMessage("aBBA");  // output: Message aBBA matches; inner part is BB.
 > MatchMessage("apron"); // output: Message apron doesn't match.
@@ -895,7 +895,7 @@ The following assumptions are made on the members being used:
 - The property that makes the type *countable* is assumed to always return a non-negative value, if and only if the type is *indexable*. For instance, the pattern `{ Length: -1 }` can never match an array.
 - The member that makes the type *sliceable* is assumed to be well-behaved; that is, the return value is never `null` and that it is a proper subslice of the containing list.
 
-The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn't hold.[
+The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn't hold.
 
 ## 11.4 Pattern exhaustiveness
 
