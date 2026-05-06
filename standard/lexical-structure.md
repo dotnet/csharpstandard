@@ -10,7 +10,7 @@ Conceptually speaking, a program is compiled using three steps:
 1. Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
 1. Syntactic analysis, which translates the stream of tokens into executable code.
 
-Apart from accepting UTF-8 encoded input (as required by [§5](conformance.md#5-conformance), a conforming implementation can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
+Apart from accepting UTF-8 encoded input (as required by [§5](conformance.md#5-conformance), a conforming implementation may choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
 
 > *Note*: The handling of the Unicode NULL character (U+0000) is implementation-defined. It is strongly recommended that developers avoid using this character in their source code, for the sake of both portability and readability. When the character is required within a character or string literal, the escape sequences `\0` or `\u0000` may be used instead. *end note*
 <!-- markdownlint-disable MD028 -->
