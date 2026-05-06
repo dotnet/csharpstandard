@@ -371,7 +371,7 @@ fragment Unicode_Escape_Sequence
     ;
 ```
 
-A *Unicode_Escape_Sequence* represents the Unicode code point whose value is the hexadecimal number following the “\u” or “\U” characters. Since C# uses UTF-16 encoding in `char` and `string` values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two UTF-16 surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
+A *Unicode_Escape_Sequence* represents the Unicode code point whose value is the hexadecimal number following the “\u” or “\U” characters. Unicode code points in the range `U+10000` to `U+10FFFF` require two UTF-16 surrogate code units; as C# `char` values are represented using a single UTF-16 code unit ([§8.3.6](types.md#836-integral-types)) Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
 
 Multiple translations are not performed. For instance, the string literal `"\u005Cu005C"` is equivalent to `"\u005C"` rather than `"\"`.
 
