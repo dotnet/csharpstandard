@@ -24,20 +24,22 @@ jobs:
       pull-requests: write    
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v6.0.2
 
     - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 8.0.x
 
     - name: Set up JDK 15
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v5
       with:
         java-version: 15.0
+        distribution: zulu
 
     - name: Smarten quotes
       id: smarten-quote
@@ -54,7 +56,7 @@ jobs:
       shell: bash
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v3.4.1
+      uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
       if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
       with:
         title: "Automated Section renumber and grammar extraction"
@@ -68,7 +70,7 @@ jobs:
       shell: bash
 
     - name: Upload Word artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       if: > 
         ${{ steps.renumber-sections.outputs.status }} == 'success' && 
         ${{ steps.update-grammar.outputs.status }} == 'success' && 

@@ -24,7 +24,7 @@ public class MarkdownSourceConverterTests
     [InlineData("table-with-emphasis")]
     public void SingleResourceConversion(string name, bool includeNumbering = false)
     {
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter(null, $"{name}.md");
         var expectedXml = ReadResource($"{name}.xml");
         var spec = MarkdownSpec.ReadFiles(new[] { $"{name}.md" }, reporter, name => new StreamReader(new MemoryStream(ReadResource(name))));
 
@@ -82,7 +82,7 @@ public class MarkdownSourceConverterTests
         string line = new string('x', lineLength);
         string suffix = code ? "```\r\n" : "";
         string text = $"# 1 Heading\r\n{prefix}{line}\r\n{suffix}";
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter(null, "test.md");
         var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
         var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
         var source = spec.Sources.Single();
@@ -105,7 +105,7 @@ public class MarkdownSourceConverterTests
     public void InvalidListStartErrors(string text, int expectedErrorCount)
     {
         text = $"# 1 Heading\r\n{text}";
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter();
         var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
         Assert.Equal(expectedErrorCount, reporter.Errors);
     }

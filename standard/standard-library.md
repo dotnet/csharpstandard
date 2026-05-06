@@ -2,7 +2,9 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification.
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of the types and their members identified in ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)), refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification. For a list of types and their members required beyond those identified in [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271), see [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271).
+
+> *Note*: The adoption of a subset of the CLI’s library API does not create a dependency on the CLI itself; a conforming implementation need not be built upon, or target, the CLI.
 
 **This text is informative.**
 
@@ -32,15 +34,21 @@ namespace System
     public class ArgumentException : SystemException
     {
         public ArgumentException();
-        public ArgumentException(string message);
-        public ArgumentException(string message, Exception innerException);
+        public ArgumentException(string? message);
+        public ArgumentException(string? message, Exception? innerException);
+    }
+
+    public class ArgumentOutOfRangeException : ArgumentException
+    {
+        public ArgumentOutOfRangeException(string? paramName);
+        public ArgumentOutOfRangeException(string? paramName, string? message);
     }
 
     public class ArithmeticException : Exception
     {
         public ArithmeticException();
-        public ArithmeticException(string message);
-        public ArithmeticException(string message, Exception innerException);
+        public ArithmeticException(string? message);
+        public ArithmeticException(string? message, Exception? innerException);
     }
 
     public abstract class Array : IList, ICollection, IEnumerable
@@ -53,9 +61,9 @@ namespace System
     public class ArrayTypeMismatchException : Exception
     {
         public ArrayTypeMismatchException();
-        public ArrayTypeMismatchException(string message);
-        public ArrayTypeMismatchException(string message,
-            Exception innerException);
+        public ArrayTypeMismatchException(string? message);
+        public ArrayTypeMismatchException(string? message,
+            Exception? innerException);
     }
 
     [AttributeUsageAttribute(AttributeTargets.All, Inherited = true,
@@ -103,8 +111,8 @@ namespace System
     public class DivideByZeroException : ArithmeticException
     {
         public DivideByZeroException();
-        public DivideByZeroException(string message);
-        public DivideByZeroException(string message, Exception innerException);
+        public DivideByZeroException(string? message);
+        public DivideByZeroException(string? message, Exception? innerException);
     }
 
     public readonly struct Double { }
@@ -117,17 +125,22 @@ namespace System
     public class Exception
     {
         public Exception();
-        public Exception(string message);
-        public Exception(string message, Exception innerException);
-        public sealed Exception InnerException { get; }
+        public Exception(string? message);
+        public Exception(string? message, Exception? innerException);
+        public Exception? InnerException { get; }
         public virtual string Message { get; }
     }
 
-    public class GC { }
+    public static class GC { }
 
     public interface IDisposable
     {
         void Dispose();
+    }
+
+    public interface IEquatable<T>
+    {
+        bool Equals(T? other);
     }
 
     public interface IFormattable { }
@@ -135,9 +148,9 @@ namespace System
     public sealed class IndexOutOfRangeException : Exception
     {
         public IndexOutOfRangeException();
-        public IndexOutOfRangeException(string message);
-        public IndexOutOfRangeException(string message,
-            Exception innerException);
+        public IndexOutOfRangeException(string? message);
+        public IndexOutOfRangeException(string? message,
+            Exception? innerException);
     }
 
     public readonly struct Int16 { }
@@ -148,34 +161,27 @@ namespace System
     public class InvalidCastException : Exception
     {
         public InvalidCastException();
-        public InvalidCastException(string message);
-        public InvalidCastException(string message, Exception innerException);
+        public InvalidCastException(string? message);
+        public InvalidCastException(string? message, Exception? innerException);
     }
 
     public class InvalidOperationException : Exception
     {
         public InvalidOperationException();
-        public InvalidOperationException(string message);
-        public InvalidOperationException(string message,
-            Exception innerException);
+        public InvalidOperationException(string? message);
+        public InvalidOperationException(string? message,
+            Exception? innerException);
     }
 
     public class NotSupportedException : Exception
     {
         public NotSupportedException();
-        public NotSupportedException(string message);
-        public NotSupportedException(string message, 
-            Exception innerException);    
+        public NotSupportedException(string? message);
+        public NotSupportedException(string? message, 
+            Exception? innerException);    
     }
 
-    public class OperationCanceledException : Exception
-    {
-        public OperationCanceledException();
-        public OperationCanceledException(string message);
-        public OperationCanceledException(string message, Exception innerException);
-    }
-
-    public struct Nullable<T>
+    public struct Nullable<T> where T : struct
     {
         public bool HasValue { get; }
         public T Value { get; }
@@ -184,18 +190,18 @@ namespace System
     public class NullReferenceException : Exception
     {
         public NullReferenceException();
-        public NullReferenceException(string message);
-        public NullReferenceException(string message, Exception innerException);
+        public NullReferenceException(string? message);
+        public NullReferenceException(string? message, Exception? innerException);
     }
 
     public class Object
     {
         public Object();
         ~Object();
-        public virtual bool Equals(object obj);
+        public virtual bool Equals(object? obj);
         public virtual int GetHashCode();
         public Type GetType();
-        public virtual string ToString();
+        public virtual string? ToString();
     }
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Struct |
@@ -206,24 +212,24 @@ namespace System
     public sealed class ObsoleteAttribute : Attribute
     {
         public ObsoleteAttribute();
-        public ObsoleteAttribute(string message);
-        public ObsoleteAttribute(string message, bool error);
+        public ObsoleteAttribute(string? message);
+        public ObsoleteAttribute(string? message, bool error);
         public bool IsError { get; }
-        public string Message { get; }
+        public string? Message { get; }
     }
 
     public class OutOfMemoryException : Exception
     {
         public OutOfMemoryException();
-        public OutOfMemoryException(string message);
-        public OutOfMemoryException(string message, Exception innerException);
+        public OutOfMemoryException(string? message);
+        public OutOfMemoryException(string? message, Exception? innerException);
     }
 
     public class OverflowException : ArithmeticException
     {
         public OverflowException();
-        public OverflowException(string message);
-        public OverflowException(string message, Exception innerException);
+        public OverflowException(string? message);
+        public OverflowException(string? message, Exception? innerException);
     }
 
     public readonly struct SByte { }
@@ -232,15 +238,24 @@ namespace System
     public sealed class StackOverflowException : Exception
     {
         public StackOverflowException();
-        public StackOverflowException(string message);
-        public StackOverflowException(string message, Exception innerException);
+        public StackOverflowException(string? message);
+        public StackOverflowException(string? message, Exception? innerException);
     }
 
-    public sealed class String : IEnumerable<Char>, IEnumerable
+    public sealed class String : IEnumerable<char>, IEnumerable
     {
         public int Length { get; }
         public char this [int index] { get; }
-        public static string Format(string format, params object[] args);
+        public static string Format(string format, params object?[] args);
+        System.Collections.IEnumerator IEnumerable.GetEnumerator();
+        System.Collections.Generic.IEnumerator<char> IEnumerable<char>.GetEnumerator();
+    }
+
+    public class SystemException : Exception
+    {
+        public SystemException();
+        public SystemException(string? message);
+        public SystemException(string? message, Exception? innerException);
     }
 
     public abstract class Type : MemberInfo { }
@@ -248,85 +263,13 @@ namespace System
     public sealed class TypeInitializationException : Exception
     {
         public TypeInitializationException(string fullTypeName,
-            Exception innerException);
+            Exception? innerException);
     }
 
     public readonly struct UInt16 { }
     public readonly struct UInt32 { }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
-
-    public struct ValueTuple<T1>
-    {
-        public T1 Item1;
-        public ValueTuple(T1 item1);
-    }
-    public struct ValueTuple<T1, T2>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public ValueTuple(T1 item1, T2 item2);
-    }
-    public struct ValueTuple<T1, T2, T3>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public ValueTuple(T1 item1, T2 item2, T3 item3);
-    }
-    public struct ValueTuple<T1, T2, T3, T4>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public TRest Rest;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7, TRest rest);
-    }
 
     public abstract class ValueType
     {
@@ -360,13 +303,13 @@ namespace System.Collections
     {
         bool IsFixedSize { get; }
         bool IsReadOnly { get; }
-        object this [int index] { get; set; }
-        int Add(object value);
+        object? this [int index] { get; set; }
+        int Add(object? value);
         void Clear();
-        bool Contains(object value);
-        int IndexOf(object value);
-        void Insert(int index, object value);
-        void Remove(object value);
+        bool Contains(object? value);
+        int IndexOf(object? value);
+        void Insert(int index, object? value);
+        void Remove(object? value);
         void RemoveAt(int index);
     }
 }
@@ -401,16 +344,6 @@ namespace System.Collections.Generic
         void Insert(int index, T item);
         void RemoveAt(int index);
     }
-
-    public interface IReadOnlyCollection<out T> : IEnumerable<T>
-    {
-        int Count { get; }
-    }
-
-    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
-    {
-        T this [int index] { get; }
-    }
 }
 
 namespace System.Diagnostics
@@ -436,7 +369,7 @@ namespace System.Runtime.CompilerServices
 {
     public sealed class IndexerNameAttribute : Attribute
     {
-        public IndexerNameAttribute(String indexerName);
+        public IndexerNameAttribute(string indexerName);
     }
 
     public static class Unsafe
@@ -464,19 +397,362 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 ```csharp
 namespace System
 {
-    public class FormattableString : IFormattable { }
+    public interface IAsyncDisposable
+    {
+        System.Threading.Tasks.ValueTask DisposeAsync();
+    }
+
+    public abstract class FormattableString : IFormattable { }
+
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string? message);
+        public OperationCanceledException(string? message, Exception? innerException);
+    }
+
+    /// <summary>
+    ///    A read-only value type which represents an abstract
+    ///    index to be used with collections.
+    ///    - The Index can be relative to the start or end of a
+    ///      collection.
+    ///    - An Index can be converted to a zero-based concrete
+    ///      from-start index to be used with a collection
+    ///      of some specified length.
+    ///    - Equality between Index values is provided, however
+    ///      unlike concrete indices they are not ordered.
+    ///    - Array and String element access support indexing
+    ///      with Index values.
+    /// </summary>
+    public readonly struct Index : IEquatable<Index>
+    {
+        /// <summary>
+        ///    Construct an Index from an integer value and a
+        ///    boolean indicating whether the value is relative
+        ///    to the end (true) or start (false).
+        /// </summary>
+        /// <param name="value">
+        ///    The value, must be ≥ 0.
+        /// </param>
+        /// <param name="fromEnd">
+        ///    Optional boolean indicating whether the Index is
+        ///    relative to the end (true) or start (false).
+        ///    The default value is false.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///    Thrown if value < 0.
+        /// </exception>
+        /// <remarks>
+        ///    If the Index is relative to the start then:
+        ///       - the value 0 refers to the first element.
+        ///    If the Index is relative to the end then:
+        ///       - the value 1 refers to the last element; and
+        ///       - the value 0 refers to beyond last element.
+        /// </remarks>
+        public Index(int value, bool fromEnd = false);
+
+        /// <summary>
+        ///    Implicit conversion from integer to a
+        ///    from-start Index.
+        /// </summary>
+        /// <remarks>
+        ///    The predefined operator:
+        ///       <c>Index operator ^(int value);</c>
+        ///    is provided to convert from integer to a
+        ///    from-end Index.
+        /// </remarks>
+        public static implicit operator Index(int value);
+
+        /// <summary>
+        ///    Return the value.
+        /// </summary>
+        public int Value { get; }
+
+        /// <summary>
+        ///    Return whether the Index is relative to
+        ///    the end (true) or start (false).
+        /// </summary>
+        public bool IsFromEnd { get; }
+
+        /// <summary>
+        ///    Return a concrete from-start index for a
+        ///    given collection length.
+        /// </summary>
+        /// <param name="length">
+        ///    The length of the collection that the index
+        ///    will be used with.
+        /// </param>
+        /// <remarks>
+        ///    This method performs no sanity checking and
+        ///    will never throw an IndexOutOfRangeException.
+        ///    It is expected that the returned index will be
+        ///    used with a collection which will do validation.
+        /// </remarks>
+        public int GetOffset(int length);
+
+        /// <summary>
+        ///    Indicates whether the current Index value is
+        ///    equal to another Index value.
+        /// </summary>
+        /// <param name="other">
+        ///    The value to compare with this Index.
+        /// </param>
+        public bool Equals(Index other);
+    }
+
+    /// <summary>
+    ///    A read-only value type which represents a range of
+    ///    abstract indices to be used with collections.
+    ///    - The Range has two Index properties, Start and End.
+    ///    - A Range can be converted to a concrete index from
+    ///      the start and a length value to be used with a
+    ///      collection of some specified length.
+    ///    - Equality between Range values is provided,
+    ///      however they are not ordered.
+    ///    - Array and String element access supports indexing
+    ///      with Range values, returning a sub-array/substring
+    ///      of the indexed value respectively.
+    /// </summary>
+    public readonly struct Range : IEquatable<Range>
+    {
+        /// <summary>
+        ///    Construct a Range from two Index values.
+        /// </summary>
+        /// <param name="start">
+        ///    The inclusive Index value for the start
+        ///    of the range.
+        /// </param>
+        /// <param name="end">
+        ///    The exclusive Index value for the end
+        ///    of the range.</param>
+        /// <remarks>
+        ///    As Index values represent unordered abstract
+        ///    indices no sanity checking can be performed
+        ///    on the resultant Range value,
+        ///    <see cref="GetOffsetAndLength">".
+        ///
+        ///    The predefined operator:
+        ///       <c>Range operator ..(Index start, Index end);</c>
+        ///    also exists to create a Range value.
+        /// </remarks>
+        public Range(Index start, Index end);
+
+        /// <summary>Return the starting Index.</summary>
+        public Index Start { get; }
+
+        /// <summary>Return the ending Index.</summary>
+        public Index End { get; }
+
+        /// <summary>
+        ///    Return a concrete from-start index and the
+        ///    range length for a given collection length.
+        /// </summary>
+        /// <param name="length">
+        ///    The length of the collection that the result
+        ///    will be used with.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///    Thrown if the range is not valid wrt length.
+        /// </exception>
+        /// <returns>
+        ///    A tuple consisting of an index value and range length
+        /// </returns>
+        public (int Offset, int Length) GetOffsetAndLength(int length);
+
+        /// <summary>
+        ///    Indicates whether the current Range value is equal
+        ///    to another Range value.
+        /// </summary>
+        /// <param name="other">
+        ///    The value to compare with this Range.
+        /// </param>
+        public bool Equals(Range other);
+    }
+
     public readonly ref struct ReadOnlySpan<T>
     {
         public int Length { get; }
         public ref readonly T this[int index] { get; }
     }
+
     public readonly ref struct Span<T>
     {
         public int Length { get; }
         public ref T this[int index] { get; }
         public static implicit operator ReadOnlySpan<T>(Span<T> span);
     }
+
+    public struct ValueTuple<T1>
+    {
+        public T1 Item1;
+        public ValueTuple(T1 item1);
+    }
+
+    public struct ValueTuple<T1, T2>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public ValueTuple(T1 item1, T2 item2);
+    }
+
+    public struct ValueTuple<T1, T2, T3>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7, TRest rest);
+    }
 }
+
+namespace System.Collections.Generic
+{
+    public interface IReadOnlyCollection<out T> : IEnumerable<T>
+    {
+        int Count { get; }
+    }
+
+    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
+    {
+        T this [int index] { get; }
+    }
+
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        System.Threading.Tasks.ValueTask<bool> MoveNextAsync();
+        T Current { get; }
+    }
+}
+
+namespace System.Diagnostics.CodeAnalysis
+{
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class AllowNullAttribute : Attribute
+    {
+        public AllowNullAttribute();
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class DisallowNullAttribute : Attribute
+    {
+        public DisallowNullAttribute();
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited=false)]
+    public sealed class DoesNotReturnAttribute : Attribute
+    {
+        public DoesNotReturnAttribute();
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class DoesNotReturnIfAttribute : Attribute
+    {
+        public DoesNotReturnIfAttribute(bool parameterValue);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field | 
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class MaybeNullAttribute : Attribute
+    {
+        public MaybeNullAttribute();
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class MaybeNullWhenAttribute : Attribute
+    {
+        public MaybeNullWhenAttribute(bool returnValue);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class NotNullAttribute : Attribute
+    {
+        public NotNullAttribute();
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter | 
+      System.AttributeTargets.Property | System.AttributeTargets.ReturnValue, 
+      AllowMultiple=true, Inherited=false)]
+    public sealed class NotNullIfNotNullAttribute : Attribute
+    {
+        public NotNullIfNotNullAttribute(string parameterName);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class NotNullWhenAttribute : Attribute
+    {
+        public NotNullWhenAttribute(bool returnValue);
+    }
+}
+
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
@@ -484,6 +760,7 @@ namespace System.Linq.Expressions
         public TDelegate Compile();
     }
 }
+
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
@@ -491,56 +768,72 @@ namespace System.Runtime.CompilerServices
         Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
-        public AsyncMethodBuilderAttribute(Type builderType) {}
+        public AsyncMethodBuilderAttribute(Type builderType);
  
         public Type BuilderType { get; }
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
-        public CallerFilePathAttribute() { }
+        public CallerFilePathAttribute();
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerLineNumberAttribute : Attribute
     {
-        public CallerLineNumberAttribute() { }
+        public CallerLineNumberAttribute();
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerMemberNameAttribute : Attribute
     {
-        public CallerMemberNameAttribute() { }
+        public CallerMemberNameAttribute();
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class EnumeratorCancellationAttribute : Attribute
+    {
+        public EnumeratorCancellationAttribute();
+    }
+    
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
-            params object[] arguments);
+            params object?[] arguments);
     }
+
     public interface ICriticalNotifyCompletion : INotifyCompletion
     {
         void UnsafeOnCompleted(Action continuation);
     }
+
     public interface INotifyCompletion
     {
         void OnCompleted(Action continuation);
     }
+
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
+
     public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
+
     public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
+
     public readonly struct ValueTaskAwaiter<TResult>
         : ICriticalNotifyCompletion, INotifyCompletion
     {
@@ -548,20 +841,42 @@ namespace System.Runtime.CompilerServices
         public TResult GetResult();
     }
 }
+
+namespace System.Threading
+{
+    public class CancellationTokenSource : IDisposable
+    {
+        public CancellationTokenSource();
+        public System.Threading.CancellationToken Token { get; }
+        public void Cancel();
+        public static CancellationTokenSource CreateLinkedTokenSource
+                                             (CancellationToken token1,
+                                              CancellationToken token2);
+    }
+
+    public readonly struct CancellationToken : IEquatable<CancellationToken>
+    {
+        public bool IsCancellationRequested { get; }
+    }
+}
+
 namespace System.Threading.Tasks
 {
     public class Task
     {
         public System.Runtime.CompilerServices.TaskAwaiter GetAwaiter();
     }
+
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
     }
+
     public readonly struct ValueTask : System.IEquatable<ValueTask>
     {
         public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
     }
+
     public readonly struct ValueTask<TResult>
         : System.IEquatable<ValueTask<TResult>>
     {
@@ -885,7 +1200,7 @@ backslash character causes the next character in the custom format to be interpr
 as an escape sequence. It is used with C language
 formatting sequences, such as ‘\n’ (newline). In some languages, the escape character
 itself is required to be preceded by an escape character
-when used as a literal. Otherwise, the compiler interprets the character as
+when used as a literal. Otherwise, a compiler interprets the character as
 an escape sequence. This escape character is not required to be
 supported in all programming languages.</td>
 </tr>
@@ -956,38 +1271,29 @@ The following library types are referenced in this specification. The full names
 
 - `global::System.Action`
 - `global::System.ArgumentException`
+- `global::System.ArgumentOutOfRangeException`
 - `global::System.ArithmeticException`
 - `global::System.Array`
-- `global::System.ArrayTypeMisMatchException`
+- `global::System.ArrayTypeMismatchException`
 - `global::System.Attribute`
 - `global::System.AttributeTargets`
 - `global::System.AttributeUsageAttribute`
 - `global::System.Boolean`
 - `global::System.Byte`
 - `global::System.Char`
-- `global::System.Collections.Generic.ICollection<T>`
-- `global::System.Collections.Generic.IEnumerable<T>`
-- `global::System.Collections.Generic.IEnumerator<T>`
-- `global::System.Collections.Generic.IList<T>`
-- `global::System.Collections.Generic.IReadonlyCollection<out T>`
-- `global::System.Collections.Generic.IReadOnlyList<out T>`
-- `global::System.Collections.ICollection`
-- `global::System.Collections.IEnumerable`
-- `global::System.Collections.IList`
-- `global::System.Collections.IEnumerator`
 - `global::System.Decimal`
 - `global::System.Delegate`
-- `global::System.Diagnostics.ConditionalAttribute`
 - `global::System.DivideByZeroException`
 - `global::System.Double`
 - `global::System.Enum`
 - `global::System.Exception`
+- `global::System.FormattableString`
 - `global::System.GC`
-- `global::System.ICollection`
+- `global::System.IAsyncDisposable`
 - `global::System.IDisposable`
-- `global::System.IEnumerable`
-- `global::System.IEnumerable<out T>`
-- `global::System.IList`
+- `global::System.IEquatable<T>`
+- `global::System.IFormattable`
+- `global::System.Index`
 - `global::System.IndexOutOfRangeException`
 - `global::System.Int16`
 - `global::System.Int32`
@@ -995,37 +1301,76 @@ The following library types are referenced in this specification. The full names
 - `global::System.IntPtr`
 - `global::System.InvalidCastException`
 - `global::System.InvalidOperationException`
-- `global::System.Linq.Expressions.Expression<TDelegate>`
-- `global::System.MemberInfo`
 - `global::System.NotSupportedException`
 - `global::System.Nullable<T>`
 - `global::System.NullReferenceException`
 - `global::System.Object`
 - `global::System.ObsoleteAttribute`
+- `global::System.OperationCanceledException`
 - `global::System.OutOfMemoryException`
 - `global::System.OverflowException`
-- `global::System.Runtime.CompilerServices.CallerFileAttribute`
-- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
-- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
-- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
-- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
-- `global::System.Runtime.CompilerServices.INotifyCompletion`
-- `global::System.Runtime.CompilerServices.TaskAwaiter`
-- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.Range`
+- `global::System.ReadOnlySpan`
 - `global::System.SByte`
 - `global::System.Single`
+- `global::System.Span`
 - `global::System.StackOverflowException`
 - `global::System.String`
 - `global::System.SystemException`
-- `global::System.Threading.Monitor`
-- `global::System.Threading.Tasks.Task`
-- `global::System.Threading.Tasks.Task<TResult>`
 - `global::System.Type`
 - `global::System.TypeInitializationException`
 - `global::System.UInt16`
 - `global::System.UInt32`
 - `global::System.UInt64`
 - `global::System.UIntPtr`
+- `global::System.ValueTuple<T1>`
+- `global::System.ValueTuple<T1, T2>`
+- `global::System.ValueTuple<T1, T2, T3>`
+- `global::System.ValueTuple<T1, T2, T3, T4>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>`
 - `global::System.ValueType`
+- `global::System.Collections.ICollection`
+- `global::System.Collections.IEnumerable`
+- `global::System.Collections.IEnumerator`
+- `global::System.Collections.IList`
+- `global::System.Collections.Generic.IAsyncEnumerable<out T>`
+- `global::System.Collections.Generic.IAsyncEnumerator<out T>`
+- `global::System.Collections.Generic.ICollection<T>`
+- `global::System.Collections.Generic.IEnumerable<T>`
+- `global::System.Collections.Generic.IEnumerator<T>`
+- `global::System.Collections.Generic.IList<T>`
+- `global::System.Collections.Generic.IReadOnlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyList<out T>`
+- `global::System.Diagnostics.ConditionalAttribute`
+- `global::System.Diagnostics.CodeAnalysis.AllowNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DisallowNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MaybeNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
+- `global::System.Linq.Expressions.Expression<TDelegate>`
+- `global::System.Reflection.MemberInfo`
+- `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
+- `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
+- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
+- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.FormattableStringFactory`
+- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
+- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
+- `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.TaskAwaiter`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
+- `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
+- `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
+- `global::System.Runtime.CompilerServices.Unsafe`
+- `global::System.Threading.Monitor`
+- `global::System.Threading.Tasks.Task`
+- `global::System.Threading.Tasks.Task<TResult>`
 
 **End of informative text.**

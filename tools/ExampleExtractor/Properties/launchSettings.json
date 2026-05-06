@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ExampleExtractor": {
+      "commandName": "Project",
+      "commandLineArgs": "../standard example-templates tmp",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

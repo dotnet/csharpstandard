@@ -1,18 +1,18 @@
-# 21 Exceptions
+# 22 Exceptions
 
-## 21.1 General
+## 22.1 General
 
 Exceptions in C# provide a structured, uniform, and type-safe way of handling both system level and application-level error conditions.
 
-## 21.2 Causes of exceptions
+## 22.2 Causes of exceptions
 
 Exceptions can be thrown in two different ways.
 
 - A `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)) throws an exception immediately and unconditionally. Control never reaches the statement immediately following the `throw`.
-- Certain exceptional conditions that arise during the processing of C# statements and expressions cause an exception to be thrown in certain circumstances when the operation cannot be completed normally. See [§21.5](exceptions.md#215-common-exception-classes) for a list of the various exceptions that can be thrown in this way.  
-    > *Example*: An integer division operation ([§12.10.3](expressions.md#12103-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
+- Certain exceptional conditions that arise during the processing of C# statements and expressions cause an exception to be thrown in certain circumstances when the operation cannot be completed normally. See [§22.5](exceptions.md#225-common-exception-classes) for a list of the various exceptions that can be thrown in this way.
+    > *Example*: An integer division operation ([§12.12.3](expressions.md#12123-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
 
-## 21.3 The System.Exception class
+## 22.3 The System.Exception class
 
 The `System.Exception` class is the base type of all exceptions. This class has a few notable properties that all exceptions share:
 
@@ -21,13 +21,13 @@ The `System.Exception` class is the base type of all exceptions. This class has 
 
 The value of these properties can be specified in calls to the instance constructor for `System.Exception`.
 
-## 21.4 How exceptions are handled
+## 22.4 How exceptions are handled
 
 Exceptions are handled by a `try` statement ([§13.11](statements.md#1311-the-try-statement)).
 
-When an exception is thrown ([§21.2](exceptions.md#212-causes-of-exceptions)), the system searches for the nearest catch clause that can handle the exception, as determined by the run-time type of the exception. First, the current method is searched for a lexically enclosing `try` statement, and the associated `catch` clauses of the `try` statement are considered in order. If that fails, the method that called the current method is searched for a lexically enclosing `try` statement that encloses the point of the call to the current method. This search continues until a `catch` clause is found that can handle the current exception, by naming an exception class that is of the same class, or a base class, of the run-time type of the exception being thrown. A `catch` clause that doesn’t name an exception class can handle any exception.
+When an exception is thrown ([§22.2](exceptions.md#222-causes-of-exceptions)), the system searches for the nearest catch clause that can handle the exception, as determined by the run-time type of the exception. First, the current method is searched for a lexically enclosing `try` statement, and the associated `catch` clauses of the `try` statement are considered in order. If that fails, the method that called the current method is searched for a lexically enclosing `try` statement that encloses the point of the call to the current method. This search continues until a `catch` clause is found that can handle the current exception, by naming an exception class that is of the same class, or a base class, of the run-time type of the exception being thrown. A `catch` clause that does not name an exception class can handle any exception.
 
-Once a matching `catch` clause is found, the system prepares to transfer control to the first statement of the `catch` clause. Before execution of the `catch` clause begins, the system first executes, in order, any `finally` clauses that were associated with `try` statements more nested that than the one that caught the exception.
+Once a matching `catch` clause is found, the system prepares to transfer control to the first statement of the `catch` clause. Before execution of the `catch` clause begins, the system first executes, in order, any `finally` clauses that were associated with `try` statements more nested than the one that caught the exception.
 
 If no matching `catch` clause is found:
 
@@ -35,7 +35,7 @@ If no matching `catch` clause is found:
 - Otherwise, if an exception occurs during finalizer execution, and that exception is not caught, then the behavior is unspecified.
 - Otherwise, if the search for matching `catch` clauses reaches the code that initially started the thread, then execution of the thread is terminated. The impact of such termination is implementation-defined.
 
-## 21.5 Common exception classes
+## 22.5 Common exception classes
 
 The following exceptions are thrown by certain C# operations.
 
@@ -46,6 +46,7 @@ The following exceptions are thrown by certain C# operations.
 `System.DivideByZeroException`           | Thrown when an attempt to divide an integral value by zero occurs.
 `System.IndexOutOfRangeException`        | Thrown when an attempt to index an array via an index that is less than zero or outside the bounds of the array.
 `System.InvalidCastException`            | Thrown when an explicit conversion from a base type or interface to a derived type fails at run-time.
+`System.InvalidOperationException`       | Thrown when a method call is invalid for the object’s current state.
 `System.NullReferenceException`          | Thrown when a `null` reference is used in a way that causes the referenced object to be required.
 `System.OutOfMemoryException`            | Thrown when an attempt to allocate memory (via `new`) fails.
 `System.OverflowException`               | Thrown when an arithmetic operation in a `checked` context overflows.

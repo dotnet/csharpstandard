@@ -1,3 +1,5 @@
+using System;
+
 public static class Extensions
 {
     public static int ToInt32(this string s) => Int32.Parse(s);

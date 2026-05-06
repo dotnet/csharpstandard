@@ -21,7 +21,7 @@ Some conversions in the language are defined from expressions to types, others f
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"Conversions2", ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"Conversions2", ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > enum Color { Red, Blue, Green }
 >
@@ -46,26 +46,25 @@ Some conversions in the language are defined from expressions to types, others f
 
 The following conversions are classified as implicit conversions:
 
-- Identity conversions
-- Implicit numeric conversions
-- Implicit enumeration conversions
-- Implicit interpolated string conversions
-- Implicit reference conversions
-- Boxing conversions
-- Implicit dynamic conversions
-- Implicit type parameter conversions
-- Implicit constant expression conversions
-- User-defined implicit conversions
-- Anonymous function conversions
-- Method group conversions
-- Null literal conversions
-- Implicit nullable conversions
-- Implicit tuple conversions
-- Lifted user-defined implicit conversions
-- Default literal conversions
-- Implicit throw conversion
+- Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion))
+- Implicit numeric conversions ([§10.2.3](conversions.md#1023-implicit-numeric-conversions))
+- Implicit enumeration conversions ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions))
+- Implicit interpolated string conversions ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions))
+- Implicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions))
+- Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
+- Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions))
+- Implicit type parameter conversions ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
+- User-defined (including lifted) implicit conversions ([§10.2.14](conversions.md#10214-user-defined-implicit-conversions))
+- Anonymous function conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Method group conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Null literal conversions ([§10.2.7](conversions.md#1027-null-literal-conversions))
+- Implicit nullable conversions ([§10.2.6](conversions.md#1026-implicit-nullable-conversions))
+- Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
+- Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
+- Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 
-Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), and assignments ([§12.21](expressions.md#1221-assignment-operators)).
+Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.23](expressions.md#1223-assignment-operators)).
 
 The pre-defined implicit conversions always succeed and never cause exceptions to be thrown.
 
@@ -73,13 +72,14 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 For the purposes of conversion, the types `object` and `dynamic` are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)).
 
-However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
+However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
 ### 10.2.2 Identity conversion
 
 An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself. The following identity conversions exist:
 
 - Between `T` and `T`, for any type `T`.
+- Between `T` and `T?` for any reference type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
@@ -113,7 +113,7 @@ An identity conversion converts from any type to the same type or a type that is
 
 All identity conversions are symmetric. If an identity conversion exists from `T₁` to `T₂`, then an identity conversion exists from `T₂` to `T₁`. Two types are *identity convertible* when an identity conversion exists between two types.
 
-In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
+In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 ### 10.2.3 Implicit numeric conversions
 
@@ -136,7 +136,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 10.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
+An implicit enumeration conversion permits a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
 
 ### 10.2.5 Implicit interpolated string conversions
 
@@ -167,7 +167,7 @@ The implicit reference conversions are:
 - From any *delegate_type* to `System.Delegate` and the interfaces it implements.
 - From the null literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any reference-type.
 - From any *reference_type* to a *reference_type* `T` if it has an implicit identity or reference conversion to a *reference_type* `T₀` and `T₀` has an identity conversion to `T`.
-- From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `T`.
+- From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `T`.
 - Implicit conversions involving type parameters that are known to be reference types. See [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) for more details on implicit conversions involving type parameters.
 
 The implicit reference conversions are those conversions between *reference_type*s that can be proven to always succeed, and therefore require no checks at run-time.
@@ -185,7 +185,7 @@ A boxing conversion permits a *value_type* to be implicitly converted to a *refe
 - From any *enum_type* to the type `System.Enum`.
 - From any *non_nullable_value_type* to any *interface_type* implemented by the *non_nullable_value_type*.
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` has an identity conversion to `I`.
-- From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `I`.
+- From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `I`.
 - From any *nullable_value_type* to any *reference_type* where there is a boxing conversion from the underlying type of the *nullable_value_type* to the *reference_type.*
 - From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters).
 
@@ -315,7 +315,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
 ### 10.2.12 Implicit conversions involving type parameters
@@ -339,16 +339,22 @@ For a *type_parameter* `T` that is *not* known to be a reference type, there is 
 The following further implicit conversions exist for a given type parameter `T`:
 
 - From `T` to a reference type `S` if it has an implicit conversion to a reference type `S₀` and `S₀` has an identity conversion to `S`. At run-time, the conversion is executed the same way as the conversion to `S₀`.
-- From `T` to an interface type `I` if it has an implicit conversion to an interface type `I₀`, and `I₀` is variance-convertible to `I` ([§18.2.3.3](interfaces.md#18233-variance-conversion)). At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. Otherwise, the conversion is executed as an implicit reference conversion or identity conversion.
+- From `T` to an interface type `I` if it has an implicit conversion to an interface type `I₀`, and `I₀` is variance-convertible to `I` ([§19.2.3.3](interfaces.md#19233-variance-conversion)). At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. Otherwise, the conversion is executed as an implicit reference conversion or identity conversion.
 
 In all cases, the rules ensure that a conversion is executed as a boxing conversion if and only if at run-time the conversion is from a value type to a reference type.
 
 ### 10.2.13 Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
+An implicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an implicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
 
-If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
 
+An implicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an implicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple `t` with value `(t₁, ..., tₙ)` and of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"ImplicitTupleConversions", ignoredWarnings:["CS0219","CS8123"], expectedErrors:["CS0037"]} -->
@@ -360,7 +366,7 @@ If an element name in the tuple expression does not match a corresponding elemen
 > (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
 > ```
 >
-> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since in each case implicit conversions exist from the tuple literal elements to the corresponding target variable element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple literal differs from those in the tuple type.
 >
 > *end example*
 
@@ -374,11 +380,15 @@ Anonymous functions and method groups do not have types in and of themselves, bu
 
 ### 10.2.16 Default literal conversions
 
-An implicit conversion exists from a *default_literal* ([§12.8.20](expressions.md#12820-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
+An implicit conversion exists from a *default_literal* ([§12.8.21](expressions.md#12821-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
 
 ### 10.2.17 Implicit throw conversions
 
 While throw expressions do not have a type, they may be implicitly converted to any type.
+
+### 10.2.18 Switch expression conversion
+
+There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
 
 ## 10.3 Explicit conversions
 
@@ -386,19 +396,18 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 The following conversions are classified as explicit conversions:
 
-- All implicit conversions
-- Explicit numeric conversions
-- Explicit enumeration conversions
-- Explicit nullable conversions
-- Explicit tuple conversions
-- Explicit reference conversions
-- Explicit interface conversions
-- Unboxing conversions
-- Explicit type parameter conversions
-- Explicit dynamic conversions
-- User-defined explicit conversions
+- All implicit conversions ([§10.2](conversions.md#102-implicit-conversions))
+- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions))
+- Explicit enumeration conversions ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions))
+- Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
+- Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
+- Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
+- Explicit interface conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
+- Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
+- Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
+- User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
 
-Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
+Explicit conversions can occur in cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 The set of explicit conversions includes all implicit conversions.
 
@@ -423,17 +432,17 @@ The explicit numeric conversions are the conversions from a *numeric_type* to an
 - From `double` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `decimal`.
 - From `decimal` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `double`.
 
-Because the explicit conversions include all implicit and explicit numeric conversions, it is always possible to convert from any *numeric_type* to any other *numeric_type* using a cast expression ([§12.9.7](expressions.md#1297-cast-expressions)).
+Because the explicit conversions include all implicit and explicit numeric conversions, it is always possible to convert from any *numeric_type* to any other *numeric_type* using a cast expression ([§12.9.8](expressions.md#1298-cast-expressions)).
 
 The explicit numeric conversions possibly lose information or possibly cause exceptions to be thrown. An explicit numeric conversion is processed as follows:
 
-- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a `checked` context, the conversion succeeds if the value of the source operand is within the range of the destination type, but throws a `System.OverflowException` if the value of the source operand is outside the range of the destination type.
   - In an `unchecked` context, the conversion always succeeds, and proceeds as follows.
     - If the source type is larger than the destination type, then the source value is truncated by discarding its “extra” most significant bits. The result is then treated as a value of the destination type.
     - If the source type is the same size as the destination type, then the source value is treated as a value of the destination type
 - For a conversion from `decimal` to an integral type, the source value is rounded towards zero to the nearest integral value, and this integral value becomes the result of the conversion. If the resulting integral value is outside the range of the destination type, a `System.OverflowException` is thrown.
-- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a checked context, the conversion proceeds as follows:
     - If the value of the operand is NaN or infinite, a `System.OverflowException` is thrown.
     - Otherwise, the source operand is rounded towards zero to the nearest integral value. If this integral value is within the range of the destination type then this value is the result of the conversion.
@@ -461,7 +470,7 @@ The explicit enumeration conversions are:
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
 
-> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
+> *Example*: Given an *enum_type* `E` with an underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
 
 ### 10.3.4 Explicit nullable conversions
 
@@ -471,7 +480,7 @@ The explicit nullable conversions are those nullable conversions ([§10.6.1](con
 
 The explicit reference conversions are:
 
-- From object and dynamic to any other *reference_type*.
+- From object to any other *reference_type*.
 - From any *class_type* `S` to any *class_type* `T`, provided `S` is a base class of `T`.
 - From any *class_type* `S` to any *interface_type* `T`, provided `S` is not sealed and provided `S` does not implement `T`.
 - From any *interface_type* `S` to any *class_type* `T`, provided `T` is not sealed or provided `T` implements `S`.
@@ -484,12 +493,12 @@ The explicit reference conversions are:
 - From `System.Collections.Generic.IList<S>`, `System.Collections.Generic.IReadOnlyList<S>`, and their base interfaces to a single-dimensional array type `T[]`, provided that there is an identity conversion or explicit reference conversion from `S` to T.
 - From `System.Delegate` and the interfaces it implements to any *delegate_type*.
 - From a reference type `S` to a reference type `T` if it has an explicit reference conversion from `S` to a reference type `T₀` and `T₀` and there is an identity conversion from `T₀` to `T`.
-- From a reference type `S` to an interface or delegate type `T` if it there is an explicit reference conversion from `S` to an interface or delegate type `T₀` and either `T₀` is variance-convertible to `T` or `T` is variance-convertible to `T₀` [§18.2.3.3](interfaces.md#18233-variance-conversion).
+- From a reference type `S` to an interface or delegate type `T` if it there is an explicit reference conversion from `S` to an interface or delegate type `T₀` and either `T₀` is variance-convertible to `T` or `T` is variance-convertible to `T₀` [§19.2.3.3](interfaces.md#19233-variance-conversion).
 - From `D<S₁...Sᵥ>` to `D<T₁...Tᵥ>` where `D<X₁...Xᵥ>` is a generic delegate type, `D<S₁...Sᵥ>` is not compatible with or identical to `D<T₁...Tᵥ>`, and for each type parameter `Xᵢ` of `D` the following holds:
   - If `Xᵢ` is invariant, then `Sᵢ` is identical to `Tᵢ`.
   - If `Xᵢ` is covariant, then there is an identity conversion, implicit reference conversion or explicit reference conversion from `Sᵢ` to `Tᵢ`.
   - If `Xᵢ` is contravariant, then `Sᵢ` and `Tᵢ` are either identical or both reference types.
-- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 The explicit reference conversions are those conversions between *reference_type*s that require run-time checks to ensure they are correct.
 
@@ -499,7 +508,13 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### 10.3.6 Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
+An explicit conversion exists from a tuple literal `e`, of the form `(e₁, ..., eₙ)`, to a tuple value of type `T = (T₁, ..., Tₙ)` if there is an explicit conversion for each element `eᵢ` to the corresponding element type `Tᵢ`. The result of the conversion is the tuple value `((T₁)e₁, ..., (Tₙ)eₙ)` of type `T`.
+
+If an element name in the tuple literal does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+An explicit conversion exists from the tuple type `T = (T₁, ..., Tₙ)` to the tuple type `S = (S₁, ..., Sₙ)` if there is an explicit conversion from each `Tᵢ` to the corresponding `Sᵢ`. The result of this conversion when applied to a tuple value `(t₁, ..., tₙ)` of type `T` is the tuple value `((S₁)t₁, ..., (Sₙ)tₙ)` of type `S`.
+
+> *Note*: When a conversion is applied to a tuple value, as opposed to a tuple literal, no warnings are required if element names do not match. *end note*
 
 ### 10.3.7 Unboxing conversions
 
@@ -508,11 +523,11 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From the type `object` to any *value_type*.
 - From the type `System.ValueType` to any *value_type*.
 - From the type `System.Enum` to any *enum_type*.
-- From any *interface_type* to any *non-nullable_value_type* that implements the *interface_type*.
+- From any *interface_type* to any *non_nullable_value_type* that implements the *interface_type*.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
-- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
+- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§19.2.3.3](interfaces.md#19233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
-- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 An unboxing operation to a *non_nullable_value_type* consists of first checking that the object instance is a boxed value of the given *non_nullable_value_type*, and then copying the value out of the instance.
 
@@ -540,54 +555,13 @@ For an unboxing conversion to a given *non_nullable_value_type* to succeed at ru
 
 For an unboxing conversion to a given *nullable_value_type* to succeed at run-time, the value of the source operand shall be either null or a reference to a boxed value of the underlying *non_nullable_value_type* of the *nullable_value_type*. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
 
-### 10.3.8 Explicit dynamic conversions
-
-An explicit dynamic conversion exists from an expression of type `dynamic` to any type `T`. The conversion is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), which means that an explicit conversion will be sought at run-time from the run-time type of the expression to `T`. If no conversion is found, a run-time exception is thrown.
-
-If dynamic binding of the conversion is not desired, the expression can be first converted to `object`, and then to the desired type.
-
-> *Example*: Assume the following class is defined:
->
-> <!-- Example: {template:"standalone-lib", name:"ExplicitDynamic1"} -->
-> <!-- Maintenance Note: A version of this type exists in additional-files as "CForConversions.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
-> ```csharp
-> class C
-> {
->     int i;
->
->     public C(int i)
->     {
->         this.i = i;
->     }
->
->     public static explicit operator C(string s)
->     {
->         return new C(int.Parse(s));
->     }
-> }
-> ```
->
-> The following illustrates explicit dynamic conversions:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"ExplicitDynamic2", expectedException:"InvalidCastException", additionalFiles:["CForConversions.cs"]} -->
-> ```csharp
-> object o = "1";
-> dynamic d = "2";
-> var c1 = (C)o; // Compiles, but explicit reference conversion fails
-> var c2 = (C)d; // Compiles and user defined conversion succeeds
-> ```
->
-> The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds.
->
-> *end example*
-
-### 10.3.9 Explicit conversions involving type parameters
+### 10.3.8 Explicit conversions involving type parameters
 
 For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exist:
 
 - From the effective base class `C` of `T` to `T` and from any base class of `C` to `T`.
 - From any *interface_type* to `T`.
-- From `T` to any *interface_type* `I` provided there isn’t already an implicit reference conversion from `T` to `I`.
+- From `T` to any *interface_type* `I` provided there is not already an implicit reference conversion from `T` to `I`.
 - From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   > *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of U will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
 
@@ -636,7 +610,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >
 > *end example*
 
-### 10.3.10 User-defined explicit conversions
+### 10.3.9 User-defined explicit conversions
 
 A user-defined explicit conversion consists of an optional standard explicit conversion, followed by execution of a user-defined implicit or explicit conversion operator, followed by another optional standard explicit conversion. The exact rules for evaluating user-defined explicit conversions are described in [§10.5.5](conversions.md#1055-user-defined-explicit-conversions).
 
@@ -703,8 +677,8 @@ Once a most-specific user-defined conversion operator has been identified, the a
 Evaluation of a user-defined conversion never involves more than one user-defined or lifted conversion operator. In other words, a conversion from type `S` to type `T` will never first execute a user-defined conversion from `S` to `X` and then execute a user-defined conversion from `X` to `T`.
 
 - Exact definitions of evaluation of user-defined implicit or explicit conversions are given in the following subclauses. The definitions make use of the following terms:
-- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface_type* `s`, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
-- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from an expression `E` to a type `B`, and if neither `B` nor the type of `E` (if it has one) are *interface_type* `s`, then `E` is said to be *encompassed by* `B`, and `B` is said to *encompass* `E`.
+- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface_type*s, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
+- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from an expression `E` to a type `B`, and if neither `B` nor the type of `E` (if it has one) are *interface_type*s, then `E` is said to be *encompassed by* `B`, and `B` is said to *encompass* `E`.
 - The ***most-encompassing type*** in a set of types is the one type that encompasses all other types in the set. If no single type encompasses all other types, then the set has no most-encompassing type. In more intuitive terms, the most-encompassing type is the “largest” type in the set—the one type to which each of the other types can be implicitly converted.
 - The ***most-encompassed type*** in a set of types is the one type that is encompassed by all other types in the set. If no single type is encompassed by all other types, then the set has no most-encompassed type. In more intuitive terms, the most-encompassed type is the “smallest” type in the set—the one type that can be implicitly converted to each of the other types.
 
@@ -715,10 +689,11 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
 - Determine the types `S`, `S₀` and `T₀`.
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
-  - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sₓ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+  - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
 
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` to a type encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, `Sₓ` is the most-encompassed type in the combined set of source types of the operators in `U`. If exactly one most-encompassed type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific target type, `Tₓ`, of the operators in `U`:
@@ -743,10 +718,10 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). `A` type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
-  - If S exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
+  - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, if any of the operators in `U` convert from types that encompass `E`, then `Sₓ` is the most-encompassed type in the combined set of source types of those operators. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
   - Otherwise, `Sₓ` is the most-encompassing type in the combined set of source types of the operators in `U`. If exactly one most-encompassing type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific target type, `Tₓ`, of the operators in `U`:
@@ -754,24 +729,99 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - Otherwise, if any of the operators in `U` convert to types that are encompassed by `T`, then `Tₓ` is the most-encompassing type in the combined set of target types of those operators. If exactly one most-encompassing type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
   - Otherwise, `Tₓ` is the most-encompassed type in the combined set of target types of the operators in `U`. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
 - Find the most-specific conversion operator:
-  - If U contains exactly one user-defined conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
+  - If `U` contains exactly one user-defined conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
   - Otherwise, if `U` contains exactly one lifted conversion operator that converts from `Sₓ` to `Tₓ`, then this is the most-specific conversion operator.
   - Otherwise, the conversion is ambiguous and a compile-time error occurs.
-- Finally, apply the conversion:
-  - If `E` does not already have the type `Sₓ`, then a standard explicit conversion from E to `Sₓ` is performed.
-  - The most-specific user-defined conversion operator is invoked to convert from `Sₓ` to `Tₓ`.
-  - If `Tₓ` is not `T`, then a standard explicit conversion from `Tₓ` to `T` is performed.
+- Finally, determine the runtime conversions required, in order:
+  - If `E` does not already have the type `Sₓ`, then a standard explicit conversion from `E` to `Sₓ` is required.
+    - If this added standard explicit conversion is an explicit numeric ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) or enumeration ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions)) one which may result in information loss ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)), and the context is `unchecked` ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators), [§13.12](statements.md#1312-the-checked-and-unchecked-statements)), then a compile-time warning shall be issued.<br>*Note*: In a `checked` context information loss would result in a runtime exception, hence no warning is required. If information loss is intended adding an explicit cast to the source will document this and silence the warning. *end note*
+  - The most-specific user-defined conversion operator is required to convert from `Sₓ` to `Tₓ`.
+  - If `Tₓ` is not `T`, then a standard explicit conversion from `Tₓ` to `T` is required.
 
 A user-defined explicit conversion from a type `S` to a type `T` exists if a user-defined explicit conversion exists from a variable of type `S` to `T`.
+
+> *Example*:
+>
+> The user-defined type `Dose` is used by the examples below.
+> Note that for doses greater than `MaxDosage` the user-defined type `LargeDose` is mentioned,
+> however it is not otherwise used and no source is given.
+>
+> ```csharp
+> public readonly struct Dose
+> {
+>     private readonly ushort dose;
+>
+>     public Dose(ushort dose)
+>     {
+>         const ushort MaxDosage = 1000; // mg
+>
+>         if (dose > MaxDosage)
+>         {
+>             throw new ArgumentOutOfRangeException
+>             (   $"Dosage too large (> {MaxDosage}mg)."
+>                 + " Consider LargeDose."
+>             );
+>         }
+>         this.dose = dose;
+>     }
+>
+>     public static explicit operator Dose(ushort b) => new Dose(b);
+>
+>     public override string ToString() => $"{dose}mg";
+>
+>     // other methods
+> }
+> ```
+>
+>
+> The following examples illustrate the above rules for explicit casting involving user-defined conversions:
+>
+> ```csharp
+> ushort amt0 = 500;          // ≤ MaxDosage
+> var dose0 = (Dose)amt0;     // amt0 is ushort, no additional conversions added
+> Console.WriteLine(dose0);   // outputs 500mg
+>
+> byte amt1 = 250;            // ≤ MaxDosage
+> var dose1 = (Dose)amt1;     // amt0 is byte, byte to ushort conversion added
+>                             // this does not risk information loss, no warning
+> Console.WriteLine(dose1);   // outputs 250mg
+>
+> var amt3 = 500;             // > MaxDosage, var types amt3 as int
+> var dose3 = (Dose)amt3;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose3);   // outputs 500mg, no actual information loss
+>
+> ushort amt4 = 1500;         // > MaxDosage, requires LargeDose
+> var dose4 = (Dose)amt4;     // amt4 is ushort, no additional conversions added
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt5 = 1500;            // > MaxDosage, var types amt5 as int
+> var dose5 = (Dose)amt5;     // amt5 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+>                             // no actual information loss but out of range
+>                             // throws ArgumentOutOfRangeException
+>
+> var amt6 = 66036;           // var types amt6 as int
+> var dose6 = (Dose)amt6;     // amt3 is int, int to ushort conversion added
+>                             // warning as information loss may occur
+> Console.WriteLine(dose6);   // outputs 500mg, not 66036mg, due to information loss
+>
+> // Using a constructor instead of user-defined conversion:
+>
+> var dose7 = new Dose(amt6); // amt6 is int, constructor requires ushort
+>                             // compile time type error
+> ```
+>
+> *end example*
 
 ## 10.6 Conversions involving nullable types
 
 ### 10.6.1 Nullable Conversions
 
-***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
+A ***nullable conversion*** permits a predefined conversion that operates on a non-nullable value type to also be used with the nullable form of that type. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
 
 - An implicit or explicit conversion from `S?` to `T?`
-- An implicit or explicit conversion from `S` to `T`?
+- An implicit or explicit conversion from `S` to `T?`
 - An explicit conversion from `S?` to `T`.
 
 A nullable conversion is itself classified as an implicit or explicit conversion.
@@ -794,22 +844,22 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 ### 10.7.1 General
 
-An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
+An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.21](expressions.md#1221-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
 Specifically, an anonymous function `F` is compatible with a delegate type `D` provided:
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
-- If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` has the out parameter modifier.
+- If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` is an output parameter.
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
-- If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
-- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+- If `F` has an implicitly typed parameter list, `D` has no reference or output parameters.
+- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
-- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
+- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
 - If the body of `F` is a block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§13.3](statements.md#133-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
 
 > *Example*: The following examples illustrate these rules:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok
@@ -820,7 +870,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > D d6 = delegate(int x) { return x; };        // Error, return type mismatch
 >
 > delegate void E(out int x);
-> E e1 = delegate { };                         // Error, E has an out parameter
+> E e1 = delegate { };                         // Error, E has an output parameter
 > E e2 = delegate(out int x) { x = 1; };       // Ok
 > E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
 >
@@ -865,7 +915,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > In the assignments
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], expectedWarnings:["CS1998"], additionalFiles:["R.cs"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], additionalFiles:["R.cs"]} -->
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
@@ -891,7 +941,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
@@ -922,34 +972,34 @@ class Test
 }
 ```
 
-Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, the compiler is permitted to have the delegates refer to the same target method. Indeed, the compiler is permitted to return the very same delegate instance from both anonymous function expressions.
+Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, a compiler is permitted to have the delegates refer to the same target method. Indeed, a compiler is permitted to return the very same delegate instance from both anonymous function expressions.
 
 ### 10.7.3 Evaluation of lambda expression conversions to expression tree types
 
 Conversion of a lambda expression to an expression tree type produces an expression tree ([§8.6](types.md#86-expression-tree-types)). More precisely, evaluation of the lambda expression conversion produces an object structure that represents the structure of the lambda expression itself.
 
-Not every lambda expression can be converted to expression tree types. The conversion to a compatible delegate type always *exists*, but it may fail at compile-time for implementation-specific reasons.
+Not every lambda expression can be converted to expression tree types. The conversion to a compatible delegate type always *exists*, but it may fail at compile-time for implementation-defined reasons.
 
 > *Note*: Common reasons for a lambda expression to fail to convert to an expression tree type include:
 >
 > - It has a block body
 > - It has the `async` modifier
 > - It contains an assignment operator
-> - It contains an `out` or `ref` parameter
+> - It contains an output or reference parameter
 > - It contains a dynamically bound expression
 >
 > *end note*
 
 ## 10.8 Method group conversions
 
-An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§20.4](delegates.md#204-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
+An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§21.4](delegates.md#214-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
-- A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) of the form `E(A)`, with the following modifications:
-  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *formal_parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
+- A single method `M` is selected corresponding to a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) of the form `E(A)`, with the following modifications:
+  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
+- A conversion is considered to exist if the algorithm of [§12.8.10.2](expressions.md#128102-method-invocations) produces a single best method `M` which is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.
@@ -1043,5 +1093,5 @@ the target object of the delegate is determined from the instance expression ass
   - If the instance expression is of a *value_type*, a boxing operation ([§10.2.9](conversions.md#1029-boxing-conversions)) is performed to convert the value to an object, and this object becomes the target object.
 - Otherwise, the selected method is part of a static method call, and the target object of the delegate is `null`.
 - A delegate instance of delegate type `D` is obtained with a reference to the method that was determined at compile-time and a reference to the target object computed above, as follows:
-- The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.
-- If an existing instance was not reused, a new one is created ([§20.5](delegates.md#205-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.
+  - The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.
+  - If an existing instance was not reused, a new one is created ([§21.5](delegates.md#215-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.

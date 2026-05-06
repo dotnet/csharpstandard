@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ExampleTester": {
+      "commandName": "Project",
+      "commandLineArgs": "tmp",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}
