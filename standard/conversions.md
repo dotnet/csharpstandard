@@ -155,7 +155,7 @@ An implicit conversion exists from the `null` literal to any reference type or n
 
 The implicit reference conversions are:
 
-- A null literal conversion (§10.2.7) to any *reference_type*.
+- A null literal conversion ([§10.2.7](conversions.md#1027-null-literal-conversions)) to any *reference_type*.
 - From any *reference_type* to `object` and `dynamic`.
 - From any *class_type* `S` to any *class_type* `T`, provided `S` is derived from `T`.
 - From any *class_type* `S` to any *interface_type* `T`, provided `S` implements `T`.
