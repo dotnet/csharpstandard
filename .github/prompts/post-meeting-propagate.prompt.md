@@ -41,10 +41,55 @@ next with a regular merge commit and pushes.
 If the user names a different starting branch, start there and propagate to
 every later branch in the list.
 
+## Pre-flight (run once, before walking the chain)
+
+These artifacts are referenced by Step B (conflict resolution) and Step B.6
+(future-version comment inventory). Capture them up front and persist them
+for the duration of the run.
+
+1. **Baseline.** Determine the SHA on each branch in the chain at the
+   *previous* propagation. A reliable proxy is the most recent merge commit
+   whose subject begins with `Post-meeting propagation:` on that branch
+   (`git log --grep '^Post-meeting propagation:' -1 --format=%H origin/<branch>`).
+   Record `BASE_<branch>` for each branch. If a branch has no such commit
+   yet, fall back to the branch point and warn the user.
+
+2. **Deletion inventory** for the starting branch. Identify text the
+   committee removed in this cycle so Step B can recognize resurrection:
+
+   ```bash
+   # Files where lines were removed since the previous propagation:
+   git log "$BASE_<starting>"..origin/<starting> --diff-filter=MD \
+     --name-only --pretty=format: -- standard/ | sort -u
+
+   # Hunks (negative lines) for review:
+   git log "$BASE_<starting>"..origin/<starting> -p -- standard/ \
+     > /tmp/starting-deletions.patch
+   ```
+
+   Show the user the list of PRs merged this cycle (`gh pr list --base
+   <starting> --state merged --search 'merged:>=<last-meeting-date>'`) and
+   ask which performed substantive prose removals. Persist that list.
+
+3. **vNext-comment baseline** for every branch in the chain. Snapshot the
+   current set of HTML comments in `standard/*.md` mentioning a future
+   version, so Step B.6 can diff against it after each merge:
+
+   ```bash
+   for b in <chain>; do
+     git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
+       "origin/$b" -- 'standard/*.md' > /tmp/vnext-baseline-$b.txt || true
+   done
+   ```
+
+   The grep is intentionally loose (false positives are fine — Phase 4
+   surfaces them for human triage; nothing is auto-applied).
+
 ## Procedure
 
 Before starting, confirm the chain with the user and show which branches will
-be touched. Then for each branch in order:
+be touched. Confirm the pre-flight artifacts above are captured. Then for
+each branch in order:
 
 ### Step A — Process auto-PR on the current branch
 
@@ -62,6 +107,10 @@ be touched. Then for each branch in order:
    - Wait until checks pass (`gh pr checks <num> --watch` is acceptable, with
      a reasonable timeout — if it doesn't go green within a few minutes, stop
      and ask the user).
+   - The auto-PR's checks include the `StandardAnchorTags` job. If that job
+     reports any `TOC002` ("`<ref>` not found") diagnostic, **stop** even
+     if `gh pr checks` reports the PR overall as mergeable — broken
+     cross-references must be resolved before merging.
    - Merge it with a **merge commit**:
      `gh pr merge <num> --merge --delete-branch`.
    - `git pull --ff-only` on the branch.
@@ -82,17 +131,91 @@ be touched. Then for each branch in order:
    ```
 
 2. **Conflicts:**
-   - If the conflicts are limited to `standard/grammar.md`, the TOC/anchor
-     output of the renumber tool, or other purely mechanical regenerated
-     files where "take the version from the previous (upstream) branch" is
-     correct, resolve by taking the upstream side, stage, and commit.
-   - For any conflict in prose/normative text, in `tools/`, in `.github/`, or
-     anything you are not 100% sure is mechanical: **abort the merge**
-     (`git merge --abort`), report the conflicting files and a brief diff
-     summary to the user, and stop. Do not push.
-3. Push: `git push origin <branch>`.
-4. The push triggers `update-on-merge.yaml`, which will open a fresh auto-PR.
-   Loop back to Step A for this branch before moving on.
+   - **Never blanket "take upstream"** on a conflict whose hunks touch
+     prose in `standard/*.md`. Doing so can silently resurrect text the
+     committee deleted on the downstream branch in this cycle or a prior
+     one.
+   - For each conflicted hunk in `standard/*.md`:
+     a. Cross-check the hunk's file and line range against the deletion
+        inventory captured in Pre-flight (`/tmp/starting-deletions.patch`)
+        **and** against any prior `Post-meeting propagation:` merges on
+        the downstream branch (`git log --grep '^Post-meeting propagation:'
+        -p origin/<branch> -- <file>`).
+     b. If the downstream side intentionally removed the text, keep the
+        deletion and re-apply only non-overlapping upstream edits to the
+        surrounding region.
+     c. If unclear, **abort the merge** (`git merge --abort`) and report
+        to the user with the file, line range, and both sides of the hunk.
+   - Mechanical "take upstream" is acceptable **only** for:
+     - regenerated `standard/grammar.md`,
+     - TOC blocks below the
+       `<!-- The remaining text is generated by a tool. Do not hand edit -->`
+       marker,
+     - the generated TOC in `standard/README.md`.
+   - For any conflict in `tools/`, `.github/`, or any prose conflict you
+     are not 100% sure is mechanical: **abort the merge** and stop.
+3. After conflicts are resolved (or if the merge was clean), **do not push
+   yet**. Run Steps B.5 and B.6 below first.
+
+### Step B.5 — Cross-reference validation
+
+Run the section-renumber tool in dry-run mode against the post-merge
+working tree to surface broken or drifted cross-references *before*
+pushing:
+
+```bash
+( cd tools && dotnet run --project StandardAnchorTags -- \
+    --owner dotnet --repo csharpstandard --dryrun )
+```
+
+1. **Broken references.** Any `TOC002` ("`<ref>` not found") diagnostic
+   is a **hard stop**. Reset the merge commit
+   (`git reset --hard origin/<branch>`), report the failing references
+   to the user, and do not push.
+2. **Concept drift.** Count how many section numbers the dry run would
+   change (lines beginning with `§` in the tool's diff output). If more
+   than ~25 sections shift, sections have drifted enough that surviving
+   cross-references like `§X.Y (Foo)` may now point at a different
+   concept — the renumber tool fixes the *number* but cannot detect when
+   the *concept* (parenthetical name, surrounding prose) is now wrong.
+   Pause, list the affected references to the user, and proceed only on
+   explicit confirmation.
+3. The actual renumber/grammar regeneration runs in the auto-PR opened
+   by `update-on-merge.yaml` after push (Step A on the next iteration);
+   do not commit dry-run output.
+
+### Step B.6 — Future-version comment inventory
+
+Diff the current branch's HTML comments mentioning future versions
+against the Pre-flight baseline to surface anything new this propagation
+brought in (these are notes the committee left for upcoming versions
+and need to be routed to the appropriate feature PRs by
+`post-meeting-rebase-prs.prompt.md`):
+
+```bash
+git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
+  HEAD -- 'standard/*.md' > /tmp/vnext-current-<branch>.txt
+diff /tmp/vnext-baseline-<branch>.txt /tmp/vnext-current-<branch>.txt \
+  > /tmp/vnext-delta-<branch>.txt || true
+```
+
+For each *new* comment in the delta, record:
+
+- file path and line number,
+- full comment text,
+- branch where it appeared (`<branch>`),
+- best-guess target version parsed from the comment (e.g. `v10` from
+  `<!-- v10: tighten wording -->`); leave blank if not parseable.
+
+Persist the accumulated list across the whole run. Include it in the
+final report so `post-meeting-rebase-prs.prompt.md` can consume it.
+**Do not edit `standard/*.md` to remove or apply these comments.**
+
+### Step B.7 — Push
+
+1. Push: `git push origin <branch>`.
+2. The push triggers `update-on-merge.yaml`, which will open a fresh
+   auto-PR. Loop back to Step A for this branch before moving on.
 
 ### Step C — Move to the next branch
 
@@ -106,6 +229,11 @@ When finished (or when stopped on a conflict), produce a short report:
 - For each branch: action taken (auto-PR merged, propagation merge SHA,
   skipped).
 - Any branches where you stopped and why.
+- The deletion inventory captured in Pre-flight (file list + originating
+  PR numbers).
+- The accumulated future-version comment inventory from Step B.6
+  (file:line, comment text, source branch, best-guess target version).
+  Hand this to `post-meeting-rebase-prs.prompt.md`.
 - A reminder to the user to run `post-meeting-rebase-prs.prompt.md` next.
 
 ## Safety rules

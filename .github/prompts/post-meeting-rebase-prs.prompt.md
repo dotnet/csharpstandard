@@ -9,38 +9,132 @@ After `post-meeting-propagate.prompt.md` has updated all draft/alpha branches,
 every open feature PR is now stale relative to its base. Update each PR
 according to whether its head branch is in this repo or on a fork.
 
+This prompt also consumes two artifacts from the propagate run:
+
+- the **future-version comment inventory** (Step B.6 of the propagate
+  prompt) — used by Step 0.5 below to route those notes to the
+  appropriate feature PRs;
+- the deletion inventory — used as context when judging rebase conflicts.
+
+Ask the user for the propagate report (or its location) before starting.
+
 ## Procedure
 
-1. List target base branches (the propagation chain — see the propagate
-   prompt). Default:
-   `draft-v8 draft-v9 v9-alpha draft-v10 v10-alpha draft-v11 v11-alpha draft-v12`.
-   Allow the user to override.
+### Step 0 — Detect feature-PR drift across cycles
 
-2. For each base branch, list open PRs:
+A feature PR open against `draft-vN` may have been edited between
+meetings, while an *earlier* version of the same feature was already
+merged into `vN-alpha` at a previous meeting. Plain propagation will not
+carry the new edits onto `vN-alpha` until the next meeting. Surface
+these so authors can decide whether to open a separate alpha-targeted
+PR sooner.
+
+For every open PR P with base `draft-vN`:
+
+1. Read its files: `gh pr view <num> --json files,author,number,headRefOid`.
+2. Look for prior commits on `vN-alpha` by the same author touching the
+   same files:
 
    ```bash
-   gh pr list --base <base> --state open \
-     --json number,title,headRefName,headRepositoryOwner,isDraft,author,url
+   git log origin/vN-alpha --author='<login>' -- <files…>
    ```
 
-3. For each PR returned:
+3. If prior commits exist and the current PR head SHA introduces changes
+   to those files not yet on `vN-alpha`, record P as
+   **"alpha has stale version"**.
 
-   - If `headRepositoryOwner.login` matches this repo's owner (`dotnet`), the
-     head is in this repo. **Rebase it:**
-     1. `gh pr checkout <num>`
-     2. `git fetch origin <base>`
-     3. `git rebase origin/<base>`
-     4. **If the rebase has conflicts:** `git rebase --abort`, record the PR
-        as "needs manual rebase", post the "attempted rebase" comment below,
-        and move on. Do not attempt to resolve feature-text conflicts.
-     5. Otherwise: `git push --force-with-lease`. Record success.
+Surface the list to the user. **Do not** cherry-pick or push to
+`vN-alpha`. Instead, post the **alpha-drift notice** comment template
+(below) on each affected PR; the marker dedupes on rerun.
 
-   - If the head is on a fork, **do not attempt to rebase.** Post the
-     "please rebase" comment below. Avoid duplicate comments: skip if any
-     existing comment on the PR already contains the marker
-     `<!-- post-meeting-rebase-notice -->`.
+### Step 0.5 — Route future-version comments to feature PRs
 
-4. Skip draft PRs unless the user asks otherwise.
+Consume the future-version comment inventory from the propagate prompt's
+report. For each entry (file:line, comment text, source branch,
+best-guess target `vN`):
+
+1. List candidate open PRs:
+
+   ```bash
+   gh pr list --base draft-vN --state open --json number,title,files,url
+   gh pr list --base vN-alpha --state open --json number,title,files,url
+   ```
+
+2. Match the comment to candidate PRs by:
+   - **file path**: the comment's file appears in the PR's changed files;
+   - **proximity**: the comment's line is within or near a hunk modified
+     by the PR (best-effort; surface multiple candidates rather than
+     guessing).
+
+3. For each (comment, candidate-PR) pair, post the **vNext-routing**
+   comment template (below) on the PR. The HTML marker
+   `<!-- post-meeting-vnext-routing -->` includes the source `file:line`
+   so re-runs do not duplicate (skip if a comment with that marker and
+   the same `file:line` already exists on the PR).
+
+4. Comments with **no** candidate PR are listed in the final report
+   under "unrouted vNext comments" for the user to triage.
+
+If `vN` is missing or unparseable from the comment, list the entry as
+unrouted and surface it in the report.
+
+**This step never edits `standard/*.md`.** The prompts neither apply
+nor remove these comments; the matched PR's author decides whether to
+fold the change in or open a new PR.
+
+### Step 1 — List target base branches
+
+List target base branches (the propagation chain — see the propagate
+prompt). Default:
+`draft-v8 draft-v9 v9-alpha draft-v10 v10-alpha draft-v11 v11-alpha draft-v12`.
+Allow the user to override.
+
+### Step 2 — For each base branch, list and process open PRs
+
+For each base branch, list open PRs:
+
+```bash
+gh pr list --base <base> --state open \
+  --json number,title,headRefName,headRepositoryOwner,isDraft,author,url
+```
+
+For each PR returned:
+
+- If `headRepositoryOwner.login` matches this repo's owner (`dotnet`), the
+  head is in this repo. **Rebase it:**
+  1. `gh pr checkout <num>`
+  2. **Capture the pre-rebase SHA** so we can recover if the post-rebase
+     cross-reference check fails: `PRE=$(git rev-parse HEAD)`.
+  3. `git fetch origin <base>`
+  4. `git rebase origin/<base>`
+  5. **If the rebase has conflicts:** `git rebase --abort`, record the PR
+     as "needs manual rebase", post the **attempted-rebase** comment
+     below, and move on. Do not attempt to resolve feature-text
+     conflicts.
+  6. **Cross-reference check before push.** Run the renumber tool in
+     dry-run mode against the rebased worktree:
+
+     ```bash
+     ( cd tools && dotnet run --project StandardAnchorTags -- \
+         --owner dotnet --repo csharpstandard --dryrun )
+     ```
+
+     If any `TOC002` diagnostic fires, the rebase has produced broken
+     cross-references. Recover with `git reset --hard "$PRE"`, record
+     the PR as "needs manual rebase", and post the **attempted-rebase**
+     comment below with the failing references quoted in the body. Do
+     not push.
+  7. Otherwise: `git push --force-with-lease`. Record success with the
+     new SHA.
+
+- If the head is on a fork, **do not attempt to rebase.** Post the
+  **please-rebase** comment below. Avoid duplicate comments: skip if any
+  existing comment on the PR already contains the marker
+  `<!-- post-meeting-rebase-notice -->`.
+
+### Step 3 — Drafts
+
+Skip draft PRs unless the user asks otherwise.
 
 ## Comment templates
 
@@ -64,6 +158,34 @@ TC49-TG2 committee meeting but encountered conflicts. Please rebase locally
 and resolve them. Thanks!
 ```
 
+**Alpha-drift notice (feature PRs whose alpha branch already has an older
+version of this feature):**
+
+```markdown
+<!-- post-meeting-rebase-notice -->
+An earlier version of this feature is already present on `{{alpha}}` from
+a prior meeting. Edits made to this PR since then are **not** yet on
+`{{alpha}}`; they will land at the next propagation. If you need them on
+`{{alpha}}` sooner, please open a separate PR targeting `{{alpha}}`.
+Thanks!
+```
+
+**vNext-routing (notes left on an older version that target this PR's
+version):**
+
+```markdown
+<!-- post-meeting-vnext-routing source={{file}}:{{line}} -->
+While propagating post-meeting changes, the following note targeting
+`{{target_version}}` was found on `{{source_branch}}` at
+`{{file}}:{{line}}`:
+
+> {{comment_text}}
+
+This PR appears to touch the same area. Please consider whether this
+note applies — either fold the change into this PR or open a follow-up.
+The note in `standard/*.md` was **not** edited or removed by tooling.
+```
+
 Post via `gh pr comment <num> --body-file <tempfile>`.
 
 ## Reporting
@@ -71,9 +193,13 @@ Post via `gh pr comment <num> --body-file <tempfile>`.
 At the end, output a table grouped by base branch:
 
 - PRs successfully rebased + force-pushed (with new SHA)
-- PRs left for manual rebase (with reason)
+- PRs left for manual rebase (with reason — including any failing
+  `TOC002` references from the post-rebase cross-reference check)
 - Fork PRs commented on
 - PRs that already had the notice (skipped)
+- PRs flagged with the **alpha-drift notice** (Step 0)
+- vNext comments routed (PR number + source `file:line`) and any
+  **unrouted vNext comments** for human triage (Step 0.5)
 
 ## Safety rules
 

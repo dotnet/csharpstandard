@@ -21,6 +21,19 @@ description: (Stub) Converge a finished version's draft and alpha branches.
 - What needs to happen to in-flight feature PRs whose base was the
   retired `vN-alpha`?
 - Is there a Word/PDF artifact step to run at convergence?
+- How do we reconcile feature PRs whose `draft-vN` head differs from the
+  version already merged into `vN-alpha`? See the alpha-drift handling
+  in `post-meeting-rebase-prs.prompt.md` (Step 0). Convergence must
+  define whether the canonical text is the alpha version, the draft
+  version, or requires per-file manual reconciliation.
+- How do we audit that no committee-approved deletion on `vN-alpha` was
+  silently resurrected during the version's propagation history?
+  Suggested: a final `git log --diff-filter=D` review against the
+  `standard-v(N-1)` baseline at convergence time.
+- Disposition of any unrouted or still-unresolved vNext HTML comments
+  remaining in `standard/*.md` when version N converges (see Step 0.5
+  of `post-meeting-rebase-prs.prompt.md`). Do they get applied,
+  deferred to v(N+1), or deleted?
 
 ## Outline (to be fleshed out once decided)
 
