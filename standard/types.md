@@ -834,7 +834,7 @@ A *nullable reference type* is denoted by appending a *nullable_type_annotation*
 
 There are two forms of nullability for reference types:
 
-- *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
+- *nullable*: A *nullable reference* can be assigned a `null` value. Its default null state is *maybe-null*.
 - *non-nullable*: A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
