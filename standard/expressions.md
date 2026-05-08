@@ -4392,11 +4392,14 @@ equality_expression
     ;
 ```
 
-> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*  
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` on the right-hand-side of `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression. *end note*
+<!--
+[TODO] PR#1428 recommended changing *pattern* on the RHS of 'is' above to restrict constant_pattern to relational_pattern to
+avoid precedence issues, this was not done. This might be required for a certain compiler but ANTLR grammar semantics does the
+right thing, maybe not obviously for some, and so no change was made – making the change in the grammar is effectively harmless
+as it does not effect the resulting parse at all, but the prose gets messier. For C#9 this decision should be checked to be
+still valid after the new pattern changes.
+-->
+When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 The `is` operator is described in [§12.14.12](expressions.md#121412-the-is-operator) and the `as` operator is described in [§12.14.13](expressions.md#121413-the-as-operator).
 
@@ -7151,7 +7154,7 @@ A constant expression is an expression that shall be fully evaluated at compile-
 
 ```ANTLR
 constant_expression
-    : expression
+    : conditional_expression
     ;
 ```
 
