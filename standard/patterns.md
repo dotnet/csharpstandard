@@ -2,14 +2,14 @@
 
 ## 11.1 General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.14.12](expressions.md#121412-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to express the shape of data against which incoming data is to be compared. Patterns may be recursive, so that parts of the data may be matched against ***sub-patterns***.  
+A ***pattern*** may be used with the `is` operator ([§12.14.12](expressions.md#121412-the-is-operator)), in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)), and in a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to describe the shape of data against which incoming data is to be compared. Patterns may be nested, with parts of the data being matched against ***sub-patterns***.
 
 A pattern is tested against a value in a number of contexts:
 
-- In a switch statement, the *pattern* of a case label is tested against the *expression* of the switch statement.  
-- In an *is-pattern* operator, the *pattern* on the right-hand-side is tested against the expression on the left.  
-- In a switch expression, the *pattern* of a *switch_expression_arm* is tested against the expression on the switch-expression’s left-hand-side.  
-- In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.  
+- In a *switch_statement*, the *pattern* of a *switch_label* is tested against the *selector_expression* of the *switch_statement*.
+- With an *is-pattern* operator, the *pattern* on the right-hand-side is tested against the expression on the left.
+- In a *switch_expression*, the *pattern* of a *switch_expression_arm* is tested against the expression on the *switch_expression*’s left-hand-side.
+- In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.
 
 The value against which a pattern is tested is called the ***pattern input value***.
 
@@ -82,13 +82,15 @@ single_variable_designation
     ;
 ```
 
-A *simple_designation* with the token `_` shall be considered a *discard_designation* rather than a *single_variable_designation*.
+When recognising a *simple_designation* if both the *discard_designation* and *single_variable_designation* alternatives are applicable then the former shall be chosen.
+
+> *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
 The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
 
 > *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` is not a nullable type. *end note*
 
-Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is *discard_designation*, it denotes a discard ([§9.2.9.2](variables.md#9292-discards)), and the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) Otherwise, if the *simple_designation* is *single_variable_designation*, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.  
+Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is a *discard_designation*, denoting a discard ([§9.2.9.2](variables.md#9292-discards)), the value of *e* is not bound to anything. Otherwise, if the *simple_designation* is a *single_variable_designation*, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.
 
 Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit or explicit reference conversion, a boxing conversion, an unboxing conversion, or an implicit or explicit nullable value type conversion from `E` to `T`, or if either `E` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)). A declaration pattern naming a type `T` is *applicable to* every type `E` for which `E` is pattern compatible with `T`.
 
@@ -217,8 +219,8 @@ In order to extract the values to match against the patterns in the list,
 
 - If *type* is omitted and the input expression’s type is a tuple type, then the number of subpatterns shall to be the same as the cardinality of the tuple. Each tuple element is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a tuple element at the corresponding position in the tuple type.
 - Otherwise, if a suitable `Deconstruct` exists as a member of *type*, it is a compile-time error if the type of the input value is not pattern-compatible with *type*. At runtime the input value is tested against *type*. If this fails, then the positional pattern match fails. If it succeeds, the input value is converted to this type and `Deconstruct` is invoked with fresh compiler-generated variables to receive the output parameters. Each value that was received is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a parameter at the corresponding position of `Deconstruct`.
-- Otherwise, if *type* is omitted, and the input value is of type `object` or some type that can be converted to `System.ITuple` by an implicit reference conversion, and no *identifier* appears among the subpatterns, then the match uses `System.ITuple`.  
-- Otherwise, the pattern is a compile-time error.
+- Otherwise, if *type* is omitted, and the input value is of type `object` or some type that can be converted to `System.ITuple` by an implicit reference conversion, and no *identifier* appears among the subpatterns, then the match uses `System.ITuple`.
+- Otherwise, the pattern is invalid and a compile-time error shall be issued.
 
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
 
@@ -310,9 +312,9 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 >
 > *end note*
 
-Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern-compatible with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.  
+Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern-compatible with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
 
-At runtime, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.  
+At runtime, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.
 
 The *property_pattern* may be used to pattern-match with anonymous types.
 
@@ -369,7 +371,7 @@ discard_pattern
     ;
 ```
 
-It is a compile-time error to use a discard pattern in a *relational_expression* of the form *relational_expression* `is` *pattern* or as the pattern of a *switch_label*.  
+It is a compile-time error to use a discard pattern in a *relational_expression* of the form *relational_expression* `is` *pattern* or as the pattern of a *switch_label*.
 
 > *Note*: In those cases, to match any expression, use a *var_pattern* with a discard `var _`. *end note*
 <!-- markdownlint-disable MD028 -->
