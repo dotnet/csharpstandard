@@ -532,7 +532,7 @@ Once a particular function member has been identified at binding-time, possibly 
 
 Every function member and delegate invocation includes an argument list, which provides actual values or variable references for the parameters of the function member. The syntax for specifying the argument list of a function member invocation depends on the function member category:
 
-- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
+- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.
    > *Note*: This additional argument is not used for overload resolution, just during invocation of the set accessor. *end note*
 - For properties, the argument list is empty when invoking the get accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the set accessor.
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
@@ -828,7 +828,7 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]` and `U` is an array type `U₁[...]` of the same rank
   - `V` is the type `V₁?` and `U` is the type `U₁`
-  - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`  
+  - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
@@ -842,7 +842,7 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
-  - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)  
+  - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
   - Otherwise, if `U` is an array type then a *lower-bound inference* is made
@@ -862,7 +862,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is one of `IEnumerable<Uₑ>`, `ICollection<Uₑ>`, `IReadOnlyList<Uₑ>`, `IReadOnlyCollection<Uₑ>` or `IList<Uₑ>` and `V` is a single-dimensional array type `Vₑ[]`
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
-  - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
+  - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
@@ -1057,7 +1057,7 @@ When the implicit conversion from the argument type to the parameter type of an 
 > ```
 >
 > *end example*
-  
+
 - A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
 - An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
   - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§12.8.14](expressions.md#12814-this-access).
@@ -1317,7 +1317,7 @@ primary_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
-    | nameof_expression    
+    | nameof_expression
     | anonymous_method_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
@@ -1571,7 +1571,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
   - Otherwise, if the location where the *simple_name* occurs is enclosed by a namespace declaration for `N`:
     - If `e` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then the *simple_name* refers to that namespace or type.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
-    - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
+    - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression ([§12.19](expressions.md#1219-declaration-expressions)).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
@@ -1596,7 +1596,7 @@ A *tuple_literal* represents a tuple, and consists of two or more comma-separate
 tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
     ;
-    
+
 tuple_element
     : (identifier ':')? expression
     ;
@@ -1675,7 +1675,7 @@ The *member_access* is evaluated and classified as follows:
 
 - If `e` is zero and `E` is a namespace and `E` contains a nested namespace with name `I`, then the result is that namespace.
 - Otherwise, if `E` is a namespace and `E` contains an accessible type having name `I` and `K` type parameters, then the result is that type constructed with the given type arguments.
-- If `E` is classified as a type, if `E` is not a type parameter, and if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `E` with `K` type parameters produces a match, then `E.I` is evaluated and classified as follows:  
+- If `E` is classified as a type, if `E` is not a type parameter, and if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `E` with `K` type parameters produces a match, then `E.I` is evaluated and classified as follows:
   > *Note*: When the result of such a member lookup is a method group and `K` is zero, the method group can contain methods having type parameters. This allows such methods to be considered for type argument inferencing. *end note*
   - If `I` identifies a type, then the result is that type constructed with any given type arguments.
   - If `I` identifies one or more methods, then the result is a method group with no associated instance expression.
@@ -1752,7 +1752,7 @@ null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
       (null_forgiving_operator? dependent_access)*
     ;
-    
+
 dependent_access
     : '.' identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
@@ -2365,7 +2365,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 - If the type of `P` is a nullable value type:
 
   Let `T` be the type of the expression `P.Value[A]B`.
-  
+
   - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
@@ -2385,7 +2385,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 - Otherwise:
 
   Let `T` be the type of the expression `P[A]B`.
-  
+
   - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
@@ -3606,12 +3606,12 @@ For an operation of the form `–x`, unary operator overload resolution ([§12.
   ```csharp
   int operator –(int x);
   long operator –(long x);
-  ```  
+  ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int` or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
-  
+
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
-  
+
   If the operand of the negation operator is of type `ulong`, a compile-time error occurs. An exception is the rule that permits the `long` value `−9223372036854775808` (−2⁶³) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals))
 - Floating-point negation:
 
@@ -3619,14 +3619,14 @@ For an operation of the form `–x`, unary operator overload resolution ([§12.
   float operator –(float x);
   double operator –(double x);
   ```
-  
+
   The result is the value of `X` with its sign inverted. If `x` is `NaN`, the result is also `NaN`.
 - Decimal negation:
 
   ```csharp
   decimal operator –(decimal x);
   ```
-  
+
   The result is computed by subtracting `X` from zero. Decimal negation is equivalent to using the unary minus operator of type `System.Decimal`.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined unary minus operators defined above are also predefined.
@@ -3886,9 +3886,14 @@ If a switch expression is not subject to a *switch expression conversion*, then
 
 It is an error if some *switch_expression_arm*’s pattern cannot affect the result because some previous pattern and guard will always match.
 
-A switch expression is said to be *exhaustive* if every value of its input is handled by at least one arm of the switch expression.  The compiler shall produce a warning if a switch expression is not exhaustive.
+A switch expression is *exhaustive* if every value of its input is handled by at least one arm of the switch expression. A warning may be issued if a switch expression is not exhaustive.
+
 At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.InvalidOperationException` (or a class derived from that).
 
+> *Note*: A corollary of the above is that a *switch_expression* with no *switch_expression_arms* will produce a compile time warning, and if evaluated at runtime will always throw an exception. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following converts values of an enum representing visual directions on an online map to the corresponding cardinal directions:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"SwitchExpression1", ignoredWarnings:["CS8321"]} -->
@@ -3968,7 +3973,7 @@ The predefined multiplication operators are listed below. The operators all comp
   ```
 
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
-  
+
   |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
   | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
   | **`+x`**  |   `+z`   |   `-z`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
@@ -4056,7 +4061,7 @@ The predefined remainder operators are listed below. The operators all compute t
   long operator %(long x, long y);
   ulong operator %(ulong x, ulong y);
   ```
-  
+
   The result of `x % y` is the value produced by `x – (x / y) * y`. If `y` is zero, a `System.DivideByZeroException` is thrown.
 
   If the left operand is the smallest `int` or `long` value and the right operand is `–1`, a `System.OverflowException` is thrown if and only if `x / y` would throw an exception.
@@ -4066,7 +4071,7 @@ The predefined remainder operators are listed below. The operators all compute t
   float operator %(float x, float y);
   double operator %(double x, double y);
   ```
-  
+
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
   |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
@@ -4086,7 +4091,7 @@ The predefined remainder operators are listed below. The operators all compute t
   ```
 
   If the value of the right operand is zero, a `System.DivideByZeroException` is thrown. It is implementation-defined when a `System.ArithmeticException` (or a subclass thereof) is thrown. A conforming implementation shall not throw an exception for `x % y` in any case where `x / y` does not throw an exception. The scale of the result, before any rounding, is the larger of the scales of the two operands, and the sign of the result, if non-zero, is the same as that of `x`.
-  
+
   Decimal remainder is equivalent to using the remainder operator of type `System.Decimal`.
   > *Note*: These rules ensure that for all types, the result never has the opposite sign of the left operand. *end note*
 
@@ -4126,7 +4131,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   | **`+∞`**  |   `+∞`  |   `+∞`   |   `+∞`   |   `+∞`   |   `NaN`  |   `NaN`   |
   | **`-∞`**  |   `-∞`  |   `-∞`   |   `-∞`   |   `NaN`  |   `-∞`   |   `NaN`   |
   | **`NaN`** |   `NaN` |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
-  
+
 - Decimal addition:
 
   ```csharp
@@ -4153,7 +4158,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```
 
   These overloads of the binary `+` operator perform string concatenation. If an operand of string concatenation is `null`, an empty string is substituted. Otherwise, any non-`string` operand is converted to its string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty string is substituted.
-  
+
   > *Example*:
   >
   > <!-- Example: {template:"standalone-console", name:"AdditionOperator", expectedOutput:["s = ><","i = 1","f = 1.23E+15","d = 2.900"]} -->
@@ -4227,7 +4232,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   | **`+∞`**  |  `+∞`   |  `+∞`    |   `+∞`   |   `NaN`  |   `+∞`   |   `NaN`   |
   | **`-∞`**  |  `-∞`   |  `-∞`    |   `-∞`   |   `-∞`   |   `NaN`  |   `NaN`   |
   | **`NaN`** |  `NaN`  |  `NaN`   |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
-  
+
   (In the above table, the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
 
@@ -4773,9 +4778,7 @@ The operation `E is T` is evaluated as follows:
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
    1. Let `R` be the runtime type of `E`.
-   1. Let `D` be derived from `R` as follows:
-      1. If `R` is a nullable value type, `D` is the underlying type of `R`.
-      1. Otherwise, `D` is `R`.
+   1. Determine the type `D`. If `R` is a nullable value type, `D` is its underlying type; otherwise, `D` is equal to `R`.
    1. The result depends on `D` and `T` as follows:
       1. If `T` is a reference type, the result is `true` if:
          - an identity conversion exists between `D` and `T`, or
@@ -4811,7 +4814,7 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
-Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true`.
+Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true` ([§9.4.4.34](variables.md#94434-is-pattern-expressions)).
 
 ### 12.14.13 The as operator
 
