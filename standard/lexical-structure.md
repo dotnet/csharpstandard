@@ -134,8 +134,6 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 >
 > *end example*
 
-When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
-
 ## 6.3 Lexical analysis
 
 ### 6.3.1 General
