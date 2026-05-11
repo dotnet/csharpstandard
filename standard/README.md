@@ -788,9 +788,11 @@
       - [§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute)  The DoesNotReturnIf attribute
       - [§23.5.7.6](attributes.md#23576-the-maybenull-attribute)  The MaybeNull attribute
       - [§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute)  The MaybeNullWhen attribute
-      - [§23.5.7.8](attributes.md#23578-the-notnull-attribute)  The NotNull attribute
-      - [§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
-      - [§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute)  The NotNullWhen attribute
+      - [§23.5.7.8](attributes.md#23578-the-membernotnull-attribute)  The MemberNotNull attribute
+      - [§23.5.7.9](attributes.md#23579-the-membernotnullwhen-attribute)  The MemberNotNullWhen attribute
+      - [§23.5.7.10](attributes.md#235710-the-notnull-attribute)  The NotNull attribute
+      - [§23.5.7.11](attributes.md#235711-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
+      - [§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute)  The NotNullWhen attribute
     - [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
