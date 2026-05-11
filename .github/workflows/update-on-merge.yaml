@@ -8,6 +8,10 @@ on:
       - standard-v6
       - standard-v7
       - draft-v8
+      - draft-v9
+      - draft-v11
+      - draft-v11
+      - draft-v12
   workflow_dispatch:
     inputs:
       reason:
