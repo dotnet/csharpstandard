@@ -1656,6 +1656,7 @@ declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
+    | local_using_declaration
     ;
 
 // Source: §13.6.2.1 General
@@ -1959,7 +1960,7 @@ non_ref_local_variable_declaration
     ;
 
 // Source: §13.14.2 Using declaration
-using_declaration
+local_using_declaration
     : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 

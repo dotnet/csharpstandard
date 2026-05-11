@@ -6711,7 +6711,9 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to zero or more *variable_reference*s.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to two or more targets.
+
+The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard ([§9.2.9.2](variables.md#9292-discards)). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
 Each of the alternatives takes the same general form of `l <op> r`, where `<op>` is an ***assignment operator***.
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
@@ -6730,7 +6732,7 @@ simple_assignment
     ;
 ```
 
-In a simple assignment the `=` operator is called the ***simple assignment operator***. The expression assigns the value of the right operand to the variable, property or indexer element given by the left operand. The left operand of the simple assignment operator can also be an event access as described in [§15.8.2](classes.md#1582-field-like-events).
+In a simple assignment the `=` operator is called the ***simple assignment operator***. When the left operand is not a discard, the expression assigns the value of the right operand to the variable, property, or indexer element given by the left operand. When the left operand is a discard, the right operand is evaluated but no value is stored. The left operand of the simple assignment operator can also be an event access as described in [§15.8.2](classes.md#1582-field-like-events).
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Eᵢ]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Eᵢ]` where at least one element of `Eᵢ` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
@@ -7005,7 +7007,7 @@ ref_assignment
 
 The operator `= ref`  is called the ***ref assignment operator***. The expression makes the right operand the referent of the reference variable designated by the left operand.
 
-The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, or an input parameter. The right operand shall be an expression that yields a *variable_reference* ([§9.5](variables.md#95-variable-references)) designating a value of the same type as the left operand.
+The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, an input parameter, or a discard. When the left operand is a discard, the right operand is evaluated but no variable reference is stored. Otherwise, the right operand shall be an expression that yields a *variable_reference* ([§9.5](variables.md#95-variable-references)) designating a value of the same type as the left operand.
 
 It is a compile time error if the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of the left operand is wider than the ref-safe-context of the right operand.
 
@@ -7066,6 +7068,8 @@ compound_assignment_operator
 ```
 
 The operators in *compound_assignment_operator* are called the ***compound assignment operator***s.
+
+The left operand of a compound assignment operator shall not be a discard ([§9.2.9.2](variables.md#9292-discards)).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operator***s. No other compound assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.23.6](expressions.md#12236-event-assignment).
 
