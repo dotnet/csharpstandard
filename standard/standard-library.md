@@ -817,7 +817,7 @@ namespace System.Runtime.CompilerServices
     ///    Provides indexed access to the elements of a
     ///    tuple-like value at runtime. This interface is
     ///    used by the language to implement positional
-    ///    pattern matching ([§11.2.5](patterns.md#1125-positional-pattern)) when no static
+    ///    pattern matching (§11.2.5) when no static
     ///    tuple type or <c>Deconstruct</c> method is
     ///    available.
     /// </summary>
