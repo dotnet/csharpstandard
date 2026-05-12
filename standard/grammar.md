@@ -807,7 +807,11 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : '(' pattern ')'
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
     | declaration_pattern
     | constant_pattern
     | var_pattern
@@ -893,10 +897,10 @@ type_pattern
 
 // Source: §11.2.9 Relational pattern
 relational_pattern
-    : '<'  constant_expression
-    | '<=' constant_expression
-    | '>'  constant_expression
-    | '>=' constant_expression
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
     ;
 
 // Source: §11.2.10 Logical pattern
@@ -916,7 +920,7 @@ conjunctive_pattern
 
 negated_pattern
     : 'not' negated_pattern
-    | pattern
+    | primary_pattern
     ;
 
 // Source: §11.2.11 List pattern
@@ -959,7 +963,7 @@ primary_expression
     | interpolated_string_expression
     | simple_name
     | parenthesized_expression
-    | tuple_expression
+    | tuple_literal
     | member_access
     | null_conditional_member_access
     | invocation_expression
@@ -1168,27 +1172,13 @@ parenthesized_expression
     : '(' expression ')'
     ;
 
-// Source: §12.8.6 Tuple expressions
-tuple_expression
+// Source: §12.8.6 Tuple literals
+tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
-    | deconstruction_expression
     ;
     
 tuple_element
     : (identifier ':')? expression
-    ;
-    
-deconstruction_expression
-    : 'var' deconstruction_tuple
-    ;
-    
-deconstruction_tuple
-    : '(' deconstruction_element (',' deconstruction_element)+ ')'
-    ;
-
-deconstruction_element
-    : deconstruction_tuple
-    | identifier
     ;
 
 // Source: §12.8.7.1 General
@@ -1754,12 +1744,60 @@ query_continuation
 
 // Source: §12.24.1 General
 assignment
-    : unary_expression assignment_operator expression
+    : deconstructing_assignment
+    | simple_assignment
+    | compound_assignment
+    | ref_assignment
     ;
 
-assignment_operator
-    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' |
-      '<<=' | '??='
+// Source: §12.24.2 Simple assignment
+simple_assignment
+    : unary_expression '=' expression
+    ;
+
+// Source: §12.24.3.1 General
+deconstructing_assignment
+    : deconstructor '=' expression
+    ;
+
+deconstructor
+    : '(' deconstructor_element (',' deconstructor_element)+ ')'
+    | abridged_deconstructor
+    ;
+
+deconstructor_element
+    : deconstructor
+    | declaration_expression
+    | discard_token
+    | variable_reference
+    ;
+
+// Source: §12.24.3.2 Abridged deconstructors
+abridged_deconstructor
+    : 'var' abridged_deconstructor_elements
+    ;
+
+abridged_deconstructor_elements
+    : '(' abridged_deconstructor_element (',' abridged_deconstructor_element)+ ')'
+    ;
+
+abridged_deconstructor_element
+    : identifier
+    | abridged_deconstructor_elements
+    ;
+
+// Source: §12.24.4 Ref assignment
+ref_assignment
+    : unary_expression '=' 'ref' expression
+    ;
+
+// Source: §12.24.5 Compound assignment
+compound_assignment
+    : unary_expression compound_assignment_operator expression
+    ;
+
+compound_assignment_operator
+    : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
     | unsigned_right_shift_assignment
     ;
@@ -1771,8 +1809,7 @@ expression
     ;
 
 non_assignment_expression
-    : declaration_expression
-    | conditional_expression
+    : conditional_expression
     | lambda_expression
     | query_expression
     ;
@@ -1836,6 +1873,7 @@ declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
+    | local_using_declaration
     ;
 
 // Source: §13.6.2.1 General
@@ -1975,7 +2013,7 @@ switch_statement
 
 selector_expression
     : '(' expression ')'
-    | tuple_expression
+    | tuple_literal
     ;
 
 switch_block
@@ -2142,7 +2180,7 @@ non_ref_local_variable_declaration
     ;
 
 // Source: §13.14.2 Using declaration
-using_declaration
+local_using_declaration
     : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 
@@ -2154,7 +2192,7 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-: extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
@@ -2165,6 +2203,11 @@ compilation_unit_body
 // Source: §14.3 Namespace declarations
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -2181,57 +2224,57 @@ extern_alias_directive
     : 'extern' 'alias' identifier ';'
     ;
 
-// Source: §14.4.1 General
+// Source: §14.5.1 General
 global_using_directive
     : global_using_alias_directive
     | global_using_namespace_directive
     | global_using_static_directive
     ;
 
-// Source: §14.4.2 Global using alias directives
+// Source: §14.5.2 Global using alias directives
 global_using_alias_directive
     : 'global' using_alias_directive
     ;
 
-// Source: §14.4.3 Global using namespace directives
+// Source: §14.5.3 Global using namespace directives
 global_using_namespace_directive
     : 'global' using_namespace_directive
     ;
 
-// Source: §14.4.4 Global using static directives
+// Source: §14.5.4 Global using static directives
 global_using_static_directive
     : 'global' using_static_directive
     ;
 
-// Source: §14.5.1 General
+// Source: §14.6.1 General
 using_directive
     : using_alias_directive
     | using_namespace_directive
     | using_static_directive    
     ;
 
-// Source: §14.5.2 Using alias directives
+// Source: §14.6.2 Using alias directives
 using_alias_directive
     : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
-// Source: §14.5.3 Using namespace directives
+// Source: §14.6.3 Using namespace directives
 using_namespace_directive
     : 'using' namespace_name ';'
     ;
 
-// Source: §14.5.4 Using static directives
+// Source: §14.6.4 Using static directives
 using_static_directive
     : 'using' 'static' type_name ';'
     ;
 
-// Source: §14.6 Namespace member declarations
+// Source: §14.7 Namespace member declarations
 namespace_member_declaration
     : namespace_declaration
     | type_declaration
     ;
 
-// Source: §14.7 Type declarations
+// Source: §14.8 Type declarations
 type_declaration
     : class_declaration
     | struct_declaration
@@ -2240,7 +2283,7 @@ type_declaration
     | delegate_declaration
     ;
 
-// Source: §14.8.1 General
+// Source: §14.9.1 General
 qualified_alias_member
     : identifier '::' identifier type_argument_list?
     ;
@@ -2820,7 +2863,7 @@ struct_body
     : '{' struct_member_declaration* '}'
     ;
 
-// Source: §16.3 Struct members
+// Source: §16.3.1 General
 struct_member_declaration
     : constant_declaration
     | struct_field_declaration

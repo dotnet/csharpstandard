@@ -8,7 +8,7 @@ var token = Environment.GetEnvironmentVariable("GH_TOKEN");
 
 var rootCommand = new RootCommand();
 new TesterConfigurationBinder().ConfigureCommand(rootCommand, ExecuteAsync);
-int exitCode = rootCommand.Invoke(args);
+int exitCode = rootCommand.Parse(args).Invoke();
 
 if ((token is not null) && (headSha is not null))
 {

@@ -850,11 +850,11 @@ namespace System.Runtime.CompilerServices
         public Type BuilderType { get; }
     }
 
-    [System.AttributeUsage(System.AttributeTargets.Parameter, AllowMultiple=false,
-        Inherited=false)]
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false,
+        Inherited = false)]
     public sealed class CallerArgumentExpressionAttribute : Attribute
     {
-        public CallerArgumentExpressionAttribute (string parameterName);
+        public CallerArgumentExpressionAttribute(string parameterName);
     }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]

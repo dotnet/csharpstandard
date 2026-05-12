@@ -278,19 +278,18 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 13.6.1 General
 
-A *declaration_statement* declares one or more local variables, one or more local constants, or a local function. Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares one or more local variables via a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), one or more local constants via a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)), a local function via a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)), or a local using scope via a *local_using_declaration* ([§13.14.2](statements.md#13142-using-declaration)). Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements. A *local_using_declaration* differs from the other forms in that it shall not appear directly in a *switch_block*, but may appear in a block nested within a *switch_block*.
 
 ```ANTLR
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
+    | local_using_declaration
     ;
 ```
 
-A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)).
-
-The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)).
+Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
 
 ### 13.6.2 Local variable declarations
 
@@ -403,7 +402,7 @@ For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
 > var z = null;           // Error, null does not have a type
-> var u = x => x + 1;     // Error, anonymous functions do not have a type
+> var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
 > scoped var i = 10;      // Error, i must be a ref or ref struct 
 > ```
@@ -753,7 +752,7 @@ switch_statement
 
 selector_expression
     : '(' expression ')'
-    | tuple_expression
+    | tuple_literal
     ;
 
 switch_block
@@ -774,9 +773,9 @@ case_guard
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a *tuple_expression* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
+A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_expression*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
+> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
 The ***governing type*** of a `switch` statement is established by the switch’s *selector_expression*.
 
@@ -1264,7 +1263,7 @@ is then equivalent to:
 }
 ```
 
-The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.24.3](expressions.md#12243-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.24.3](expressions.md#12243-deconstructing-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 
@@ -1986,7 +1985,7 @@ non_ref_local_variable_declaration
 
 A ***resource type*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
+If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
@@ -2166,7 +2165,7 @@ is semantically equivalent to
 A syntactic variant of the using statement is a *using declaration*.
 
 ```ANTLR
-using_declaration
+local_using_declaration
     : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 ```
@@ -2203,7 +2202,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.3](basic-concepts.md#73-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp
@@ -2218,7 +2217,7 @@ static void M()
 }
 ```
 
-A using declaration shall not appear directly inside a *switch_label*, but, instead, may be within a block inside a *switch_label*.
+A *local_using_declaration* shall not appear directly inside a *switch_block*, but may appear within a block nested inside a *switch_block*.
 
 ## 13.15 The yield statement
 

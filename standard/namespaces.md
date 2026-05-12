@@ -4,7 +4,7 @@
 
 C# programs are organized using namespaces. Namespaces are used both as an “internal” organization system for a program, and as an “external” organization system—a way of presenting program elements that are exposed to other programs.
 
-Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to facilitate the use of namespaces.
+Using directives ([§14.6](namespaces.md#146-using-directives)) and global using directives ([§14.5](namespaces.md#145-global-using-directives)) are provided to facilitate the use of namespaces.
 
 ## 14.2 Compilation units
 
@@ -12,7 +12,7 @@ A *compilation_unit* consists of zero or more *extern_alias_directive*s followed
 
 ```ANTLR
 compilation_unit
-: extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
@@ -23,9 +23,11 @@ compilation_unit_body
 
 A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
+The *extern_alias_directive*s of a compilation unit affect the *global_using_directive*s, *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
 The *using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
+
+The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
@@ -54,6 +56,11 @@ A *namespace_declaration* consists of the keyword namespace, followed by a names
 ```ANTLR
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -160,6 +167,40 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 >
 > *end example*
 
+A *file_scoped_namespace_declaration* permits a namespace declaration to be written without an accompanying `{ … }` block.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
+> ```csharp
+> namespace Name;
+> using System;
+> class C
+> {
+> }
+> ```
+>
+> is semantically equivalent to
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
+> ```csharp
+> namespace Name
+> {
+>     using System;
+>     class C
+>     {
+>     }
+> }
+> ```
+>
+> *end example*
+
+A *file_scoped_namespace_declaration* is treated the same as a *namespace_declaration* at the same location in the *compilation_unit* with the same *qualified_identifier*.  The *extern_alias_directive*s, *using_directive*s and *type_declaration*s of that *file_scoped_namespace_declaration* act as if they were declared in the same order inside the *namespace_body* of that *namespace_declaration*.
+
+> *Note*: As determined by the grammar, a compilation unit cannot contain both a *file_scoped_namespace_declaration* and a *namespace_declaration*. It cannot contain multiple *file_scoped_namespace_declaration*s. It cannot contain both a *file_scoped_namespace_declaration* and any top level *statement*s. *type_declaration*s cannot precede a *file_scoped_namespace_declaration*. *end note*
+
+Different compilation units may contribute to the same namespace using either or both of the *namespace_member_declaration* or *file_scoped_namespace_declaration* syntax.
+
 ## 14.4 Extern alias directives
 
 An *extern_alias_directive* introduces an identifier that serves as an alias for a namespace. The specification of the aliased namespace is external to the source code of the program and applies also to nested namespaces of the aliased namespace.
@@ -174,7 +215,7 @@ The scope of an *extern_alias_directive* is described in [§7.7.1](basic-concept
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
-The alias introduced by an *extern_alias_directive* is very similar to the alias introduced by a *using_alias_directive*. See [§14.5.2](namespaces.md#1452-using-alias-directives) for more detailed discussion of *extern_alias_directive*s and *using_alias_directive*s.
+The alias introduced by an *extern_alias_directive* is very similar to the alias introduced by a *using_alias_directive*. See [§14.6.2](namespaces.md#1462-using-alias-directives) for more detailed discussion of *extern_alias_directive*s and *using_alias_directive*s.
 
 `alias` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning when it immediately follows the `extern` keyword in an *extern_alias_directive*.
 
@@ -199,9 +240,11 @@ An error occurs if a program declares an extern alias for which no external defi
 > The program declares the existence of the extern aliases `X` and `Y`, but the actual definitions of the aliases are external to the program. The identically named `N.B` classes can now be referenced as `X.N.B` and `Y.N.B`, or, using the namespace alias qualifier, `X::N.B` and `Y::N.B`.
 > *end example*
 
-### 14.4.1 General
+## 14.5 Global using directives
 
-A ***global using directive*** is a using directive ([§14.5](namespaces.md#145-using-directives)) at the top level of a compilation unit.
+### 14.5.1 General
+
+A ***global using directive*** is a using directive ([§14.6](namespaces.md#146-using-directives)) at the top level of a compilation unit.
 
 ```ANTLR
 global_using_directive
@@ -215,7 +258,7 @@ global_using_directive
 >
 > The effect of adding a *global_using_directive* to a program can be thought of as the effect of adding a similar *using_directive* that resolves to the same target namespace or type to every compilation unit of the program. However, the target of a *global_using_directive* is resolved in the context of the compilation unit that contains it. *end note*
 
-### 14.4.2 Global using alias directives
+### 14.5.2 Global using alias directives
 
 A *global_using_alias_directive* introduces an identifier that serves as an alias for a namespace or type within the program.
 
@@ -239,7 +282,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 
 Using aliases can name a closed constructed type, but cannot name an unbound generic type declaration without supplying type arguments.
 
-### 14.4.3 Global using namespace directives
+### 14.5.3 Global using namespace directives
 
 A *global_using_namespace_directive* imports the types contained in a namespace into the program, enabling the identifier of each type to be used without qualification.
 
@@ -261,7 +304,7 @@ Furthermore, when more than one namespace or type imported by *global_using_name
 
 The *namespace_name* referenced by a *global_using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *global_using_alias_directive*. Thus, *global_using_namespace_directive*s in the same program do not affect each other and can be written in any order.
 
-### 14.4.4 Global using static directives
+### 14.5.4 Global using static directives
 
 A *global_using_static_directive* imports the nested types and static members contained directly in a type declaration into the containing program, enabling the identifier of each member and type to be used without qualification.
 
@@ -277,13 +320,13 @@ A *global_using_static_directive* specifically does not import extension methods
 
 A *global_using_static_directive* only imports members and types declared directly in the given type, not members and types declared in base classes.
 
-Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in [§14.4.3](namespaces.md#1443-global-using-namespace-directives).
+Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-global-using-namespace-directives).
 
 It is a compile-time error to use a file-local type in a *global_using_static_directive*.
 
-## 14.5 Using directives
+## 14.6 Using directives
 
-### 14.5.1 General
+### 14.6.1 General
 
 A ***using directive*** facilitates the use of namespaces and types defined in other namespaces. Using directives impact the name resolution process of *namespace_or_type_name*s ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *simple_name*s ([§12.8.4](expressions.md#1284-simple-names)), but unlike declarations, *using_directive*s do not contribute new members to the underlying declaration spaces of the compilation units or namespaces within which they are used.
 
@@ -295,15 +338,15 @@ using_directive
     ;
 ```
 
-A *using_alias_directive* ([§14.5.2](namespaces.md#1452-using-alias-directives)) introduces an alias for a namespace or type.
+A *using_alias_directive* ([§14.6.2](namespaces.md#1462-using-alias-directives)) introduces an alias for a namespace or type.
 
-A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-directives)) imports the type members of a namespace.
+A *using_namespace_directive* ([§14.6.3](namespaces.md#1463-using-namespace-directives)) imports the type members of a namespace.
 
-A *using_static_directive* ([§14.5.4](namespaces.md#1454-using-static-directives)) imports the nested types and static members of a type.
+A *using_static_directive* ([§14.6.4](namespaces.md#1464-using-static-directives)) imports the nested types and static members of a type.
 
 The scope of a *using_directive* is described in [§7.7.1](basic-concepts.md#771-general).
 
-### 14.5.2 Using alias directives
+### 14.6.2 Using alias directives
 
 A *using_alias_directive* introduces an identifier that serves as an alias for a namespace or type within the immediately enclosing compilation unit or namespace body.
 
@@ -458,7 +501,7 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > }
 > ```
 >
-> In the second namespace body for `N3`, unqualified use of `B` results in an error, since `N3` contains a member named `B` and the namespace body that also declares an alias with name `B`; likewise for `A`. The class `N3.B` can be referenced as `N3.B` or `global::N3.B`. The alias `A` can be used in a *qualified-alias-member* ([§14.8](namespaces.md#148-qualified-alias-member)), such as `A::B`. The alias `B` is essentially useless. It cannot be used in a *qualified_alias_member* since only namespace aliases can be used in a *qualified_alias_member* and `B` aliases a type.
+> In the second namespace body for `N3`, unqualified use of `B` results in an error, since `N3` contains a member named `B` and the namespace body that also declares an alias with name `B`; likewise for `A`. The class `N3.B` can be referenced as `N3.B` or `global::N3.B`. The alias `A` can be used in a *qualified-alias-member* ([§14.9](namespaces.md#149-qualified-alias-member)), such as `A::B`. The alias `B` is essentially useless. It cannot be used in a *qualified_alias_member* since only namespace aliases can be used in a *qualified_alias_member* and `B` aliases a type.
 >
 > *end example*
 
@@ -481,7 +524,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 >
 > *end example*
 
-The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s** but has the correct set of *extern_alias_directive*s.
+The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* shall come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. And, if the *using_alias_directive* is immediately contained in a compilation unit, is not affected by the *global_using_directive*s in the program. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s and, if the *using_alias_directive* is immediately contained in a compilation unit, the program had no *global_using_directive*s but has the correct set of *extern_alias_directive*s.
 
 > *Example*: In the following code
 >
@@ -589,7 +632,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 >
 > *end example*
 
-### 14.5.3 Using namespace directives
+### 14.6.3 Using namespace directives
 
 A *using_namespace_directive* imports the types contained in a namespace into the immediately enclosing compilation unit or namespace body, enabling the identifier of each type to be used without qualification.
 
@@ -748,7 +791,7 @@ Like a *using_alias_directive*, a *using_namespace_directive* does not contribut
 
 The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
 
-### 14.5.4 Using static directives
+### 14.6.4 Using static directives
 
 A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
 
@@ -863,11 +906,11 @@ A *using_static_directive* only imports members and types declared directly in t
 >
 > *end example*
 
-Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-using-namespace-directives).
+Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.6.3](namespaces.md#1463-using-namespace-directives).
 
-## 14.6 Namespace member declarations
+## 14.7 Namespace member declarations
 
-A *namespace_member_declaration* is either a *namespace_declaration* ([§14.3](namespaces.md#143-namespace-declarations)) or a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)).
+A *namespace_member_declaration* is either a *namespace_declaration* ([§14.3](namespaces.md#143-namespace-declarations)) or a *type_declaration* ([§14.8](namespaces.md#148-type-declarations)).
 
 ```ANTLR
 namespace_member_declaration
@@ -878,7 +921,7 @@ namespace_member_declaration
 
 A compilation unit or a namespace body can contain *namespace_member_declaration*s, and such declarations contribute new members to the underlying declaration space of the containing compilation unit or namespace body.
 
-## 14.7 Type declarations
+## 14.8 Type declarations
 
 A *type_declaration* is a *class_declaration* ([§15.2](classes.md#152-class-declarations)), a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)), an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)), an *enum_declaration* ([§20.2](enums.md#202-enum-declarations)), or a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)).
 
@@ -904,9 +947,9 @@ The permitted access modifiers and the default access for a type declaration dep
 - Types declared in classes can have `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private` access. The default is `private` access.
 - Types declared in structs can have `public`, `internal`, or `private` access. The default is `private` access.
 
-## 14.8 Qualified alias member
+## 14.9 Qualified alias member
 
-### 14.8.1 General
+### 14.9.1 General
 
 The ***namespace alias qualifier*** `::` makes it possible to guarantee that type name lookups are unaffected by the introduction of new types and members. The namespace alias qualifier always appears between two identifiers referred to as the left-hand and right-hand identifiers. Unlike the regular `.` qualifier, the left-hand identifier of the `::` qualifier is looked up only as an extern or using alias.
 
@@ -920,7 +963,7 @@ qualified_alias_member
 
 A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) or as the left operand in a *member_access* ([§12.8.7](expressions.md#1287-member-access)).
 
-A *qualified_alias_member* consists of two identifiers, referred to as the left-hand and right-hand identifiers, seperated by the `::` token and optionally followed by a *type_argument_list*. When the left-hand identifier is global then the global namespace is searched for the right-hand identifier. For any other left-hand identifier, that identifier is looked up as an extern or using alias ([§14.4](namespaces.md#144-extern-alias-directives) and [§14.5.2](namespaces.md#1452-using-alias-directives)). A compile-time error occurs if there is no such alias or the alias references a type. If the alias references a namespace then that namespace is searched for the right-hand identifier.
+A *qualified_alias_member* consists of two identifiers, referred to as the left-hand and right-hand identifiers, seperated by the `::` token and optionally followed by a *type_argument_list*. When the left-hand identifier is global then the global namespace is searched for the right-hand identifier. For any other left-hand identifier, that identifier is looked up as an extern or using alias ([§14.4](namespaces.md#144-extern-alias-directives) and [§14.6.2](namespaces.md#1462-using-alias-directives)). A compile-time error occurs if there is no such alias or the alias references a type. If the alias references a namespace then that namespace is searched for the right-hand identifier.
 
 A *qualified_alias_member* has one of two forms:
 
@@ -1006,7 +1049,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > *end note*
 
-### 14.8.2 Uniqueness of aliases
+### 14.9.2 Uniqueness of aliases
 
 Each compilation unit and namespace body has a separate declaration space for extern aliases and using aliases. Thus, while the name of an extern alias or using alias shall be unique within the set of extern aliases and using aliases declared in the immediately containing compilation unit or namespace body, an alias is permitted to have the same name as a type or namespace as long as it is used only with the `::` qualifier.
 
