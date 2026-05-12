@@ -10,7 +10,7 @@ Conceptually speaking, a program is compiled using three steps:
 1. Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
 1. Syntactic analysis, which translates the stream of tokens into executable code.
 
-Conforming implementations shall accept Unicode compilation units encoded with the UTF-8 encoding form (as defined by the Unicode standard), and transform them into a sequence of Unicode characters. Implementations can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
+Apart from accepting UTF-8 encoded input (as required by [§5](conformance.md#5-conformance), a conforming implementation may choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
 
 > *Note*: The handling of the Unicode NULL character (U+0000) is implementation-defined. It is strongly recommended that developers avoid using this character in their source code, for the sake of both portability and readability. When the character is required within a character or string literal, the escape sequences `\0` or `\u0000` may be used instead. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -85,7 +85,7 @@ If a sequence of tokens can be parsed, in context, as one of the disambiguated p
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
-> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)). *end note*
+> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -136,22 +136,6 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 > *end example*
 
 When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
-
-To differentiate a collection initializer ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
-
-```csharp
-var y = new C { [A] = x };    // OK: y[A] = x
-var z = new C { [A] x => x }; // OK: z[0] = [A] x => x
-```
-
-The parser shall treat `?[` as the start of a *null_conditional_element_access* ([[§12.8.13](expressions.md#12813-null-conditional-element-access)):
-
-```csharp
-x = b ? [A];               // OK
-y = b ? [A] () => { } : z; // error
-```
-
-To differentiate a method call `T()` from a lambda expression `T () => e`, the parser shall look ahead.
 
 ## 6.3 Lexical analysis
 
@@ -378,7 +362,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -388,7 +372,7 @@ fragment Unicode_Escape_Sequence
     ;
 ```
 
-A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the “\u” or “\U” characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
+A *Unicode_Escape_Sequence* represents the Unicode code point whose value is the hexadecimal number following the “\u” or “\U” characters. Unicode code points in the range `U+10000` to `U+10FFFF` require two UTF-16 surrogate code units; as C# `char` values are represented using a single UTF-16 code unit ([§8.3.6](types.md#836-integral-types)) Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
 
 Multiple translations are not performed. For instance, the string literal `"\u005Cu005C"` is equivalent to `"\u005C"` rather than `"\"`.
 
@@ -683,7 +667,9 @@ The type of a *boolean_literal* is `bool`.
 
 #### 6.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. (There is no way to write values of type `nint` and `nuint`. Instead, implicit or explicit casts of other integral constant values may be used.) Integer literals have three possible forms: decimal, hexadecimal, and binary.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal, hexadecimal, and binary.
+
+> *Note:* There is no way to write literal values of type `nint` and `nuint`. Instead, implicit or explicit casts of other integral constant values may be used. *end note*
 
 ```ANTLR
 Integer_Literal
@@ -841,7 +827,7 @@ The value of a real literal of type `float` or `double` is determined by using t
 
 #### 6.4.5.5 Character literals
 
-A character literal represents a single character, and consists of a character in quotes, as in `'a'`.
+A character literal represents a single character as a UTF-16 code unit, and consists of a character or *Unicode_Escape_Sequence* in quotes, as in `'a'`, `'\u0061'`, or `'\U00000061'`.
 
 ```ANTLR
 Character_Literal
@@ -886,7 +872,7 @@ fragment Hexadecimal_Escape_Sequence
 >
 > *end note*
 
-A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
+A hexadecimal escape sequence represents a UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
 
 If the value represented by a character literal is greater than `U+FFFF`, a compile-time error occurs.
 
@@ -1256,7 +1242,7 @@ The following pre-processing directives are available:
 
 - `#define` and `#undef`, which are used to define and undefine, respectively, conditional compilation symbols ([§6.5.4](lexical-structure.md#654-definition-directives)).
 - `#if`, `#elif`, `#else`, and `#endif`, which are used to skip conditionally sections of source code ([§6.5.5](lexical-structure.md#655-conditional-compilation-directives)).
-- `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
+- `#line`, which is used to control line numbers and source file mapping emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).
@@ -1717,34 +1703,43 @@ The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the source location information reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-Together, the tokens *Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the so-called mapped file *PP_Compilation_Unit_Name*.
+Together, the tokens *PP_Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
 
-*PP_Start_Line_Character* represents the start line (*PP_Start_Line*) and column (*PP_Start_Character*) pair of the first character on the line following the directive, which is the mapped file text; for example, `(1,1)`.
+*PP_Start_Line_Character* represents a start position in the mapped file, specified as a line (*PP_Start_Line*) and column (*PP_Start_Character*) pair; for example, `(1,1)`. This position corresponds to the first character on the line following the directive in the generated code.
 
-*PP_End_Line_Character* represents the end line (*PP_End_Line*) and column (*PP_End_Character*) pair of the mapped file text; for example, `(3,10)`.
+*PP_End_Line_Character* represents an end position in the mapped file, specified as a line (*PP_End_Line*) and column (*PP_End_Character*) pair; for example, `(3,10)`.
 
-*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify UTF-16 character numbers. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first UTF-16 character on each line is assigned number 1.
+*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify character numbers. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first character on each line is assigned number 1.
 
-By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of UTF-16 characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
+The end position shall not precede the start position: *PP_End_Line* shall be greater than or equal to *PP_Start_Line*, and when *PP_Start_Line* equals *PP_End_Line*, *PP_End_Character* shall be greater than *PP_Start_Character*.
+
+By default, the mapped text starts at the first character on the line following the `#line` directive. However, this can be adjusted using *PP_Character_Offset*. If *PP_Character_Offset* is omitted, it defaults to 0; otherwise, it specifies the number of characters to skip in that next line. That number shall be non-negative and less than the length of the line following the `#line` directive.
 
 The mapping specified by a *PP_Line* is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first.
 
-> *Example*: Consider the following:
+> *Example*: A code generator that produces C# from a template file can use the enhanced form of the `#line` directive to map diagnostics back to positions in the original source. If line 5, columns 3 through 17 of `template.dsl` contains `Greet("Hello")`, the generator might emit:
 >
-> <!-- Example: {template:"standalone-console", name:"LineWithMapping"} -->
 > ```csharp
-> // exxample goes here
+> #line (5,3)-(5,17) "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
 > ```
 >
-> the output produced might be something like the following:
+> Any diagnostic produced for the `output.Add(Greet("Hello"));` statement would be reported at line 5, columns 3–17 in `template.dsl`.
 >
-> ```console
-> ???
+> The *PP_Character_Offset* form allows the generator to account for an inserted prefix. With a character offset of `11` for the prefix `output.Add(`:
+>
+> ```csharp
+> #line (5,3)-(5,17) 11 "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
 > ```
+>
+> the offset causes the mapped span to begin at `Greet("Hello")` rather than at `output.Add(`, mapping `Greet("Hello")` to line 5, column 3 in `template.dsl`.
 >
 > *end example*
 

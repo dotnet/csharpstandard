@@ -1,5 +1,7 @@
 ﻿using Utilities;
 using System.Text.Json;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 
 namespace StandardAnchorTags;
 
@@ -19,11 +21,48 @@ public class Program
     /// <summary>
     /// Update section numbers, anchor tags, and the TOC
     /// </summary>
+    /// <param name="args">Command line arguments</param>
+    /// <returns>0 on success, non-zero on failure</returns>
+    static int Main(string[] args)
+    {
+        var ownerOption = new Option<string>("--owner") { Description = "The GitHub owner org (for example, \"dotnet\")" };
+        var repoOption = new Option<string>("--repo") { Description = "The GitHub repo name (for example, \"csharpstandard\")" };
+        var dryrunOption = new Option<bool>("--dryrun") { Description = "True for a dry run, false to update the text in all files" };
+
+        var rootCommand = new RootCommand("Update section numbers, anchor tags, and the TOC")
+        {
+            ownerOption,
+            repoOption,
+            dryrunOption
+        };
+
+        rootCommand.Action = new CustomAction(async parseResult =>
+        {
+            var owner = parseResult.GetValue(ownerOption);
+            var repo = parseResult.GetValue(repoOption);
+
+            if (string.IsNullOrEmpty(owner) || string.IsNullOrEmpty(repo))
+            {
+                Console.WriteLine("Error: --owner and --repo are required");
+                return 1;
+            }
+
+            var dryrun = parseResult.GetValue(dryrunOption);
+
+            return await ExecuteAsync(owner, repo, dryrun);
+        });
+
+        return rootCommand.Parse(args).Invoke();
+    }
+
+    /// <summary>
+    /// Execute the main logic
+    /// </summary>
     /// <param name="owner">The GitHub owner org (for example, "dotnet")</param>
     /// <param name="repo">The GitHub repo name (for example, "csharpstandard")</param>
     /// <param name="dryrun">True for a dry run, false to update the text in all files</param>
     /// <returns>0 on success, non-zero on failure</returns>
-    static async Task<int> Main(string owner, string repo, bool dryrun =false)
+    static async Task<int> ExecuteAsync(string owner, string repo, bool dryrun)
     {
         var logger = new StatusCheckLogger(Console.Out, "..", "TOC and Anchor updater");
         var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
@@ -65,6 +104,21 @@ public class Program
             }
         }
         return logger.Success ? 0 : 1;
+    }
+
+    private class CustomAction : AsynchronousCommandLineAction
+    {
+        private readonly Func<ParseResult, Task<int>> _action;
+
+        public CustomAction(Func<ParseResult, Task<int>> action)
+        {
+            _action = action;
+        }
+
+        public override async Task<int> InvokeAsync(ParseResult parseResult, CancellationToken cancellationToken = default)
+        {
+            return await _action(parseResult);
+        }
     }
 
     private static async Task<TocSectionNumberBuilder> BuildSectionMap(bool dryrun, StatusCheckLogger logger)

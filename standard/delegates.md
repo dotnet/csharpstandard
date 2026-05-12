@@ -8,7 +8,7 @@ A delegate declaration defines a class that is derived from the class `System.De
 
 ## 21.2 Delegate declarations
 
-A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new delegate type.
+A *delegate_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-type-declarations)) that declares a new delegate type.
 
 ```ANTLR
 delegate_declaration
@@ -217,7 +217,7 @@ The set of methods encapsulated by a delegate instance is called an *invocation 
 
 When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
 
-Delegates are combined using the binary `+` ([§12.13.5](expressions.md#12135-addition-operator)) and `+=` operators ([§12.24.4](expressions.md#12244-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator)) and `-=` operators ([§12.24.4](expressions.md#12244-compound-assignment)). Delegates can be compared for equality ([§12.15.9](expressions.md#12159-delegate-equality-operators)).
+Delegates are combined using the binary `+` ([§12.13.5](expressions.md#12135-addition-operator)) and `+=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator)) and `-=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). Delegates can be compared for equality ([§12.15.9](expressions.md#12159-delegate-equality-operators)).
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >
