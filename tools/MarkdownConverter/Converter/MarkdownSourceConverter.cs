@@ -100,7 +100,7 @@ public class MarkdownSourceConverter
             var p = new Paragraph { ParagraphProperties = props };
             context.MaxBookmarkId.Value += 1;
             p.AppendChild(new BookmarkStart { Name = sr.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() });
-            p.Append(Span2Elements(MarkdownSpan.NewLiteral(sr.TitleWithoutNumber, FSharpOption<MarkdownRange>.None)));
+            p.Append(Span2Elements(MarkdownSpan.NewLiteral(sr.TitleWithoutNumber, default)));
             p.AppendChild(new BookmarkEnd { Id = context.MaxBookmarkId.Value.ToString() });
             yield return p;
 
@@ -989,9 +989,9 @@ public class MarkdownSourceConverter
             return level;
         }
         //
-        var literal2 = MarkdownSpan.NewLiteral(literal.text.Substring(25), FSharpOption<MarkdownRange>.None);
+        var literal2 = MarkdownSpan.NewLiteral(literal.text.Substring(25), default);
         var spans2 = Microsoft.FSharp.Collections.FSharpList<MarkdownSpan>.Cons(literal2, spans.Tail);
-        var p2 = MarkdownParagraph.NewParagraph(spans2, FSharpOption<MarkdownRange>.None);
+        var p2 = MarkdownParagraph.NewParagraph(spans2, default);
         mdp = p2;
         return 0;
     }
