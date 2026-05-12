@@ -278,19 +278,18 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 13.6.1 General
 
-A *declaration_statement* declares one or more local variables, one or more local constants, or a local function. Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares one or more local variables via a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), one or more local constants via a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)), a local function via a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)), or a local using scope via a *local_using_declaration* ([§13.14.2](statements.md#13142-using-declaration)). Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements. A *local_using_declaration* differs from the other forms in that it shall not appear directly in a *switch_block*, but may appear in a block nested within a *switch_block*.
 
 ```ANTLR
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
+    | local_using_declaration
     ;
 ```
 
-A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§13.6.4](statements.md#1364-local-function-declarations)).
-
-The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)).
+Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
 
 ### 13.6.2 Local variable declarations
 
@@ -2133,7 +2132,7 @@ is semantically equivalent to
 A syntactic variant of the using statement is a *using declaration*.
 
 ```ANTLR
-using_declaration
+local_using_declaration
     : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 ```
@@ -2170,7 +2169,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.3](basic-concepts.md#73-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp
@@ -2185,7 +2184,7 @@ static void M()
 }
 ```
 
-A using declaration shall not appear directly inside a *switch_label*, but, instead, may be within a block inside a *switch_label*.
+A *local_using_declaration* shall not appear directly inside a *switch_block*, but may appear within a block nested inside a *switch_block*.
 
 ## 13.15 The yield statement
 

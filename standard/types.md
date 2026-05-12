@@ -121,7 +121,7 @@ The `dynamic` type is further described in [§8.7](types.md#87-the-dynamic-type)
 
 ### 8.2.5 The string type
 
-The `string` type is a sealed class type that inherits directly from `object`. Instances of the `string` class represent Unicode character strings.
+The `string` type is a sealed class type that inherits directly from `object`. Instances of the `string` class represent a sequence of UTF-16 code units.
 
 Values of the `string` type can be written as string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)).
 
@@ -341,7 +341,7 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
-- The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
+- The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive, as a UTF-16 code unit.
   > *Note*: Although `char` has the same representation as `ushort`, not all operations permitted on one type are permitted on the other. *end note*
   
 All signed integral types are represented using two’s complement format.
@@ -852,7 +852,7 @@ A *nullable reference type* is denoted by appending a *nullable_type_annotation*
 
 There are two forms of nullability for reference types:
 
-- *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
+- *nullable*: A *nullable reference* can be assigned a `null` value. Its default null state is *maybe-null*.
 - *non-nullable*: A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*

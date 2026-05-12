@@ -57,7 +57,8 @@ public static class FastCsprojCompilationParser
         specificDiagnosticOptions: [
             new("NU1605", ReportDiagnostic.Error),
             new("CS1702", ReportDiagnostic.Suppress),
-            new("CS1701", ReportDiagnostic.Suppress)]);
+            new("CS1701", ReportDiagnostic.Suppress),
+            new("CS8002", ReportDiagnostic.Suppress)]);
 
     public static CsprojParseResult ParseCsproj(XDocument csprojDocument, string filePath)
     {

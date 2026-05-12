@@ -156,12 +156,13 @@ The implicit nullable conversions are those nullable conversions ([§10.6.1](con
 
 ### 10.2.7 Null literal conversions
 
-An implicit conversion exists from the `null` literal to any reference type or nullable value type. This conversion produces a null reference if the target type is a reference type, or the null value ([§8.3.12](types.md#8312-nullable-value-types)) of the given nullable value type.
+An implicit conversion exists from the `null` literal to any reference type or nullable value type. This conversion produces a null reference if the target type is a reference type, or the null value ([§8.3.12](types.md#8312-nullable-value-types)) of the given nullable value type. A null literal conversion to a reference type is also classified as an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)).
 
 ### 10.2.8 Implicit reference conversions
 
 The implicit reference conversions are:
 
+- A null literal conversion ([§10.2.7](conversions.md#1027-null-literal-conversions)) to any *reference_type*.
 - From any *reference_type* to `object` and `dynamic`.
 - From any *class_type* `S` to any *class_type* `T`, provided `S` is derived from `T`.
 - From any *class_type* `S` to any *interface_type* `T`, provided `S` implements `T`.
@@ -172,7 +173,6 @@ The implicit reference conversions are:
 - From a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>`, `System.Collections.Generic.IReadOnlyList<T>`, and their base interfaces, provided that there is an implicit identity or reference conversion from `S` to `T`.
 - From any *array_type* to `System.Array` and the interfaces it implements.
 - From any *delegate_type* to `System.Delegate` and the interfaces it implements.
-- From the null literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any reference-type.
 - From any *reference_type* to a *reference_type* `T` if it has an implicit identity or reference conversion to a *reference_type* `T₀` and `T₀` has an identity conversion to `T`.
 - From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `T`.
 - Implicit conversions involving type parameters that are known to be reference types. See [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) for more details on implicit conversions involving type parameters.
@@ -960,7 +960,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > In the assignments
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], expectedWarnings:["CS1998"], additionalFiles:["R.cs"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], additionalFiles:["R.cs"]} -->
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
