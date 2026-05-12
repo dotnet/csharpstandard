@@ -90,6 +90,8 @@ The runtime type of the value is tested against the *type* in the pattern using 
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is *discard_designation*, it denotes a discard ([§9.2.9.2](variables.md#9292-discards)), and the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) Otherwise, if the *simple_designation* is *single_variable_designation*, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.  
 
+> *Note*: This treatment of `_` within a *declaration_pattern* differs from that of a standalone `_` written as a *pattern* ([§11.2.7](patterns.md#1127-discard-pattern)): in the latter case, an in-scope declaration named `_`, if any, is *not* hidden. *end note*
+
 Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit or explicit reference conversion, a boxing conversion, an unboxing conversion, or an implicit or explicit nullable value type conversion from `E` to `T`, or if either `E` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)). A declaration pattern naming a type `T` is *applicable to* every type `E` for which `E` is pattern compatible with `T`.
 
 > *Note*: The support for open types can be most useful when checking types that may be either struct or class types, and boxing is to be avoided. *end note*
@@ -369,7 +371,11 @@ discard_pattern
     ;
 ```
 
-It is a compile-time error to use a discard pattern in a *relational_expression* of the form *relational_expression* `is` *pattern* or as the pattern of a *switch_label*.  
+Where the syntactic context permits a *pattern*, if the token `_` would resolve as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) to an accessible constant or to a type, then `_` is *not* treated as a *discard_pattern*; instead, it is interpreted as a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern)) when `_` is an accessible constant, or as a reference to the type named `_` (so that the surrounding form is matched per the rules for that referent — for example, as a *constant_pattern* whose constant expression names the type, or as the *type* of a *declaration_pattern*). This rule preserves backward compatibility with code that defined `_` prior to the introduction of the discard pattern.
+
+> *Note*: This is analogous to the rule for `var` in §11.2.4, but for `_` an in-scope declaration *demotes* the token to a reference to that declaration rather than producing an error. *end note*
+
+After applying the preceding rule, it is a compile-time error to use a *discard_pattern* in a *relational_expression* of the form *relational_expression* `is` *pattern* or as the pattern of a *switch_label*.  
 
 > *Note*: In those cases, to match any expression, use a *var_pattern* with a discard `var _`. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -405,6 +411,36 @@ It is a compile-time error to use a discard pattern in a *relational_expression*
 > ```
 >
 > Here, a discard pattern is used to handle `null` and any integer value that does not have the corresponding member of the `DayOfWeek` enumeration. That guarantees that the `switch` expression handles all possible input values.
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following illustrates the demotion rule. In the second `switch_expression`, an in-scope constant named `_` causes the arm `_ => …` to be interpreted as a *constant_pattern* matching only `0`, rather than as a *discard_pattern* matching every value.
+>
+> ```csharp
+> int n = 1;
+>
+> // No `_` in scope: the `_` arm is a discard pattern matching any value.
+> string s1 = n switch
+> {
+>     1 => "one",
+>     _ => "other",
+> };
+>
+> {
+>     const int _ = 0;
+>
+>     // `_` is in scope as a constant: the `_` arm is a constant pattern
+>     // that matches only the value 0.
+>     string s2 = n switch
+>     {
+>         1 => "one",
+>         _ => "zero",
+>         var x => "other: " + x,
+>     };
+> }
+> ```
+>
 > *end example*
 
 ## 11.3 Pattern subsumption
