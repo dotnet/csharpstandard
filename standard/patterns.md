@@ -458,8 +458,9 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 - `P` is a constant pattern and any of the patterns in the set `Q` would match `P`’s *converted value*
 - `P` is a var pattern, the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and, if the pattern input value is of a nullable type, some pattern in `Q` would match `null`.
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
+- `P` is a *positional_pattern* or a *property_pattern* and every value that `P` would match would also be matched by some pattern in `Q`.
 
-Subsumption involving a *positional_pattern* or a *property_pattern* is not otherwise defined by this specification; an implementation is permitted, but not required, to detect additional cases of subsumption involving such patterns.
+> *Note*: The last rule applies recursively through *sub-patterns*; for example, the set `{ (var x, var y) }` subsumes the pattern `(0, 0)` because every pair of values matched by the latter is also matched by the former. The precise extent to which an implementation detects subsumption involving *positional_pattern*s and *property_pattern*s is not specified beyond what these rules require. *end note*
 
 > *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
 >
@@ -487,10 +488,13 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 
 1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
 2. Some pattern in `Q` is a *var_pattern* or a *discard_pattern*; or
-3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
+3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`; or
+4. `Q` contains a set of *positional_pattern*s or *property_pattern*s such that every non-`null` value of `T` is matched by at least one pattern in that set.
 
-A set of patterns containing only *constant_pattern*s, *positional_pattern*s, or *property_pattern*s (in any combination), other than as covered by rule 1 above, is not considered exhaustive by this specification. An implementation is permitted, but not required, to recognize additional sets of patterns as exhaustive.
+> *Note*: Rule 4 applies recursively through *sub-patterns*. The precise extent to which an implementation detects exhaustiveness arising from combinations of *positional_pattern*s, *property_pattern*s, and *constant_pattern*s is not specified beyond what these rules require. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PatternExhaustiveness1", replaceEllipsis:true, customEllipsisReplacements: [""], ignoredWarnings:["CS8321"]} -->
