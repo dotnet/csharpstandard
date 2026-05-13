@@ -89,9 +89,21 @@ For each PR returned:
        (`git checkout --theirs <file> && git add <file>`) and continue
        the rebase. These are feature-specific test artifacts and the PR's
        version is correct.
-     - **Prose conflicts** in `standard/*.md` or conflicts in `tools/`:
-       `git rebase --abort`, record the PR as "needs manual rebase",
-       and move on. Do not attempt to resolve feature-text conflicts.
+     - **Formatting-only conflicts** in `standard/*.md` (e.g. table
+       pipe characters, smart-quote vs straight-quote differences):
+       take the PR's version (`git checkout --theirs <file> && git add
+       <file>`) and continue. The PR's formatting fix is the intended
+       change.
+     - **Independent additive conflicts** in `standard/*.md` (two
+       features each added text to the same list or paragraph, but the
+       additions are logically independent): combine both additions in
+       the correct order, resolve, and continue.
+     - **Structural/semantic conflicts** in `standard/*.md` (e.g.
+       grammar reorganization where the base refactored a production
+       hierarchy and the PR uses the old structure), or conflicts in
+       `tools/`: `git rebase --abort`, record the PR as "needs manual
+       rebase", and move on. Do not attempt to resolve conflicts that
+       require the author's design decision.
   6. **Cross-reference check before push.** Run the renumber tool in dry-run mode against the rebased worktree:
 
      ```bash
