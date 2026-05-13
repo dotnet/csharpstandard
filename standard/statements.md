@@ -473,7 +473,7 @@ ref_local_variable_declarator
 
 An *explicitly_typed_ref_local_variable_declaration* introduces one or more local ref variables with the specified `scoped` modifier and *type*.
 
-The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.24.3](expressions.md#12243-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.24.4](expressions.md#12244-ref-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
