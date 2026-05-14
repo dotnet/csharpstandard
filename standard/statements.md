@@ -739,6 +739,8 @@ case_guard
 
 A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
+A *switch_label* or *switch_expression_arm* ([§12.11](expressions.md#1211-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with the value `true`.
+
 > *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
 The ***governing type*** of a `switch` statement is established by the switch’s *selector_expression*.
@@ -751,7 +753,7 @@ There can be at most one `default` label in a `switch` statement.
 
 It is an error if the pattern of any switch label is not *applicable* ([§11.2.1](patterns.md#1121-general)) to the type of the input expression.
 
-It is an error if the pattern of any switch label is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
+It is an error if the pattern of any switch label is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of earlier *unguarded* switch labels of the switch statement.
 
 > *Example*:
 >
