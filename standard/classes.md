@@ -6085,12 +6085,33 @@ A record class type shall have a public constructor whose signature corresponds 
 
 At runtime the primary constructor
 
-1. Executes the instance initializers appearing in *record_body*
-1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present
+1. Stores the value of each parameter in the corresponding generated field.
+1. Executes the instance initializers appearing in *record_body*.
+1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
+
+Each reference to a parameter in user code is replaced with a reference to the corresponding generated field.
 
 If a record class has a primary constructor, any user-defined constructor, except the copy constructor, shall have an explicit `this` *constructor_initializer*.
 
-Parameters of the primary constructor as well as members of the record class are in scope within the *argument_list* of the *record_base* clause and within initializers of instance fields or properties. Instance members would be an error in these locations, but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
+It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
+
+- a `nameof` argument.
+- an initializer of an instance field, property or event of the declaring type.
+- the `argument_list` of `class_base` of the declaring type.
+- the body of an instance method of the declaring type.
+- the body of an instance accessor of the declaring type.
+
+In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
+
+```csharp
+record class C(int i)
+{
+    protected int i = i;
+    public int I => i;
+}
+```
+
+the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
 
 A warning shall be produced if a parameter of the primary constructor is not read.
 
@@ -6126,6 +6147,19 @@ Expression variables declared in *argument_list* are in scope within the *argume
 > ```
 >
 > As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor. *end example*
+
+A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
+
+A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
+
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
+- The argument is not part of an expanded `params` argument;
+
+For a primary constructor with an auto-generated field and corresponding property, attributes may be applied to those, as follows:
+
+```csharp
+record C([property: Attr1] int X, [field: Attr2] int Y);
+```
 
 #### §rec-class-pos-mem-props Properties
 
