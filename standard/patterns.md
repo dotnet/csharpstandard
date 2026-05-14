@@ -325,9 +325,9 @@ The *property_pattern* may be used to pattern-match with anonymous types.
 > ```
 >
 > *end example*
-> <!-- markdownlint-disable MD028 -->
->
-> <!-- markdownlint-enable MD028 -->
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*: A run-time type check and a variable declaration can be added to a property pattern, as follow:
 >
 > <!-- Example: {template:"standalone-console", name:"PropertyPattern3", inferOutput:true} -->
@@ -422,7 +422,9 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
 
 > *Note*: Only *unguarded* cases or arms ([§13.8.3](statements.md#1383-the-switch-statement)) contribute to subsumption; a *case_guard* whose expression is not a constant expression with the value `true` cannot in general be evaluated at compile time, so the corresponding case or arm is conservatively assumed not to match every input value to which its pattern is applicable. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
 >
 > <!-- Example: {template:"code-in-main", name:"SwitchExprUnguardedSubsumption"} -->
