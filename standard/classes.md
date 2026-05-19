@@ -14,34 +14,24 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
-    : attributes? class_modifier* 'partial'? class_tag identifier
-        type_parameter_list? delimited_parameter_list? class_base?
-        type_parameter_constraints_clause* class_body
+    : non_record_class_declaration
+    | record_class_declaration
     ;
 
-class_tag
-    : 'class'
-    | 'record'
+non_record_class_declaration
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body ';'?
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1]( classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in §rec-class. The differences between the two kinds are discussed in §rec-class-diffs.
+
+A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
-
-If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***.
-
-For a record class, *class_modifier* shall not be `static`.
-
-*delimited_parameter_list* shall not be present in a non-record class.
-
-A *class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
-
-At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
-
-Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### 15.2.2 Class modifiers
 
@@ -194,14 +184,12 @@ class_base
     | ':' class_type base_argument_list? ',' interface_type_list
     ;
 
-base_argument_list
-    : '(' argument_list? ')'
-    ;
-
 interface_type_list
     : interface_type (',' interface_type)*
     ;
 ```
+
+*base_argument_list* is discussed in §rec-class-class-base-specification.
 
 A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
 
@@ -774,14 +762,9 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-    : '{' class_member_declaration* '}' ';'?
-    | ';'
+    : '{' class_member_declaration* '}'
     ;
 ```
-
-A non-record class shall not have a *class_body* of `;`.
-
-For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those synthesized by the compiler (§synth-members).
 
 ### 15.2.7 Partial type declarations
 
@@ -849,7 +832,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class. For a record class, the member set also includes the synthesized members generated by the compiler (§synth-members).
+The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
 
 ```ANTLR
 class_member_declaration
@@ -936,10 +919,6 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > *end example*
 
 Field initialization order can be significant within C# code, and some guarantees are provided, as defined in [§15.5.6.1](classes.md#15561-general). Otherwise, the ordering of members within a type is rarely significant, but may be significant when interfacing with other languages and environments. In these cases, the ordering of members within a type declared in multiple parts is undefined.
-
-It is an error for a member of a record class to be named `Clone`.
-
-It is an error for an instance field of a record class to have an unsafe type.
 
 ### 15.3.2 The instance type
 
@@ -4925,8 +4904,6 @@ Instance constructors are not inherited. Thus, a class has no instance construct
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) and through *constructor_initializer*s.
 
-A positional record class ([§15.2.1](classes.md#1521-general)) has a synthesized primary constructor; see §rec-class-pos-mem-pricon for more information.
-
 ### 15.11.2 Constructor initializers
 
 All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
@@ -5146,39 +5123,6 @@ If overload resolution is unable to determine a unique best candidate for the ba
 > ```
 >
 > *end example*
-
-### §copy-constructor Copy constructors
-
-A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
-
-> *Example*: Consider the following:
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
-> ```csharp
-> class Person
-> {
->     public int Age { get; set; }
->     public string Name { get; set; }
->     public Person(Person aPerson)
->     {
->         Name = aPerson.Name;
->         Age = aPerson.Age;
->     }
-> }
-> ````
->
-> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
->
-> In the following case,
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
-> ```csharp
-> record Person(int Age, string Name);
-> ````
->
-> the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
-
-In certain circumstances (§rec-class-copyclone), a copy constructor may be synthesized by the compiler, and called by synthesized code.
 
 ## 15.12 Static constructors
 
