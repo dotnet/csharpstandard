@@ -94,6 +94,10 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
+The *type* of a *declaration_pattern* cannot be the *identifier* `var`.
+
+> *Note*: In such a case the input may be recognisable as a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)). The exclusion applies only to the *identifier* `var`; the verbatim identifier `@var` and Unicode-escaped equivalents are distinct identifiers and remain valid as the *type* of a *declaration_pattern* when they name a type in scope. *end note*
+
 It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
 
 The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value.
@@ -186,6 +190,8 @@ A *var_pattern* *matches* every value. That is, a pattern-matching operation wit
 
 A *var_pattern* is *applicable to* every type.
 
+A *var_pattern* cannot be used when a type named `var` is in scope.
+
 ```ANTLR
 var_pattern
     : 'var' designation
@@ -203,8 +209,6 @@ designations
 ```
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if *designation* is *discard_designation*, it denotes a discard ([§9.2.9.2](variables.md#9292-discards)), and the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) Otherwise, if *designation* is *single_variable_designation*, at runtime the value of *e* is bound to a newly introduced local variable ([§9.2.9](variables.md#929-local-variables)) of that name whose type is the static type of *e*, and the pattern input value is assigned to that local variable.
-
-It is an error if the name `var` would bind to a type where a *var_pattern* is used.
 
 If *designation* is a *tuple_designation*, the pattern is equivalent to a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)) of the form `(var` *designation*, … `)` where the *designation*s are those found within the *tuple_designation*.  For example, the pattern `var (x, (y, z))` is equivalent to `(var x, (var y, var z))`.
 
