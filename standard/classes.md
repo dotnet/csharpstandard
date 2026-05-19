@@ -5677,7 +5677,7 @@ record_class_declaration
     ;
 ```
 
-A *record_class_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *class_modifier*s ([§14.2.2](classes.md#1422-class-modifiers)), followed by an optional `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1]( classes.md#15621-general)), followed by an optional *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
+A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
 
 *class_modifier* shall not be `static`.
 
@@ -5685,7 +5685,7 @@ A *record_class_declaration* having a *delimited_parameter_list* declares a ***p
 
 At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
 
-Parameters in * delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
+Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### §rec-class-class-base-specification Class base specification
 
@@ -5747,7 +5747,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >     }
 > }
 > ````
-> 
+>
 > This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
 >
 > In the following case,
@@ -5756,7 +5756,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 > ```csharp
 > record Person(int Age, string Name);
 > ````
-> 
+>
 > the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
 
 In certain circumstances (§rec-class-copyclone), a copy constructor may be synthesized by the compiler, and called by synthesized code.
