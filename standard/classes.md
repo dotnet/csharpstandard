@@ -5720,19 +5720,48 @@ It is an error for an instance field of a record class to have an unsafe type.
 
 A positional record class (§rec-class-general) has a synthesized primary constructor; see §rec-class-pos-mem-pricon for more information.
 
+### §synth-members Synthesized record class members
 
+#### §synth-members-general General
 
-
-
-## §synth-members Synthesized record class members
-
-### §synth-members-general General
-
-Certain members are synthesized by the compiler unless a member with a matching signature is declared in the class body, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the compiler from generating that member only, not any other synthesized members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+Certain members are synthesized by the compiler unless a member with a matching signature is declared in the *record_class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the compiler from generating that member only, not any other synthesized members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The synthesized members are described in the following subclauses.
 
-### §rec-class-equalmem Equality members
+#### §copy-constructor Copy constructors
+
+A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
+> ```csharp
+> class Person
+> {
+>     public int Age { get; set; }
+>     public string Name { get; set; }
+>     public Person(Person aPerson)
+>     {
+>         Name = aPerson.Name;
+>         Age = aPerson.Age;
+>     }
+> }
+> ````
+> 
+> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
+>
+> In the following case,
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
+> ```csharp
+> record Person(int Age, string Name);
+> ````
+> 
+> the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
+
+In certain circumstances (§rec-class-copyclone), a copy constructor may be synthesized by the compiler, and called by synthesized code.
+
+#### §rec-class-equalmem Equality members
 
 If a record class is derived directly from `object`, the record class type has a synthesized, readonly property equivalent to a property declared as follows:
 
@@ -5752,7 +5781,7 @@ The property may be declared explicitly. It is an error if the explicit declarat
 
 The record class type implements `System.IEquatable<R>` and includes a synthesized, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
 
-If `Equals(R? other)` is user-defined (that is, not synthesized) but `GetHashCode` is not, a warning shall be issued.
+If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
 ```csharp
 public virtual bool Equals(R? other);
@@ -5899,7 +5928,7 @@ The synthesized override of `GetHashCode()` returns an `int` result of combining
 >
 > *end example*
 
-### §rec-class-copyclone Copy and clone members
+#### §rec-class-copyclone Copy and clone members
 
 A record class type contains two copying members:
 
@@ -5910,7 +5939,7 @@ The copy constructor shall not execute any instance field/property initializers 
 
 If a virtual clone method is present in the base record class, the synthesized clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the synthesized clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-### §rec-class-prtmem Printing members
+#### §rec-class-prtmem Printing members
 
 If a record class is derived directly from `object`, the class includes a synthesized method equivalent to a method declared as follows:
 
@@ -6078,20 +6107,20 @@ The synthesized method:
 >
 > *end example*
 
-### §rec-class-pos-mem Positional record class members
+#### §rec-class-pos-mem Positional record class members
 
-#### §rec-class-pos-mem-gen General
+##### §rec-class-pos-mem-gen General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) synthesize additional members with the same conditions as the other members, as described in the following subclauses.
 
-#### §rec-class-pos-mem-pricon Primary constructor
+##### §rec-class-pos-mem-pricon Primary constructor
 
-A record class type shall have a public constructor whose signature corresponds to the value parameters of the type declaration. This is called the ***primary constructor*** for the type, and causes the implicitly declared default constructor, if present, to be suppressed. It is an error to have a primary constructor and a constructor with the same signature already present in the class.
+A record class type shall have a public constructor whose signature corresponds to the value parameters of the type declaration, if any. This is called the ***primary constructor*** for the type, and causes the implicitly declared default constructor, if present, to be suppressed. It is an error to have a primary constructor and a constructor with the same signature already present in the class.
 
 At runtime the primary constructor
 
 1. Stores the value of each parameter in the corresponding generated field.
-1. Executes the instance initializers appearing in *record_body*.
+1. Executes the instance initializers appearing in *record_class_body*.
 1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
 
 Each reference to a parameter in user code is replaced with a reference to the corresponding generated field.
@@ -6160,13 +6189,7 @@ A primary constructor parameter is considered to be passed to the base type via 
 - The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
 - The argument is not part of an expanded `params` argument;
 
-For a primary constructor with an auto-generated field and corresponding property, attributes may be applied to those, as follows:
-
-```csharp
-record C([property: Attr1] int X, [field: Attr2] int Y);
-```
-
-#### §rec-class-pos-mem-props Properties
+##### §rec-class-pos-mem-props Properties
 
 For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
 
@@ -6194,7 +6217,7 @@ For a record class:
 >
 > *end example*
 
-#### §rec-class-pos-mem-decon Deconstruct
+##### §rec-class-pos-mem-decon Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be synthesized a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6223,3 +6246,15 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
+
+## §rec-class-diffs Record class and non-record class differences
+
+A record class differs from a non-record class in several important ways:
+
+- It is declared using the keyword `record` instead of `class`.
+- It has a number of members generated for it by the implementation, including a copy constructor.
+- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the generation of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
+- If it is derived from other than `object`, it may pass arguments to its base type.
+- Its class body may be omitted.
+- It shall not have a member called `Clone`.
+- It shall not have an instance field with an unsafe type.
