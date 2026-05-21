@@ -70,6 +70,61 @@ Each pattern form defines the set of values for which the pattern *matches* the 
 
 The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
 
+The *identifier* `var` appearing in any *pattern* is bound using the normal identifier-resolution rules. The *identifier* `var` may appear in patterns only where the entity to which it resolves is valid in that position. When no declaration of the *identifier* `var` is in scope, the form `var` *designation* is recognised as a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)); when any declaration of the *identifier* `var` is in scope, a *var_pattern* cannot be used. The verbatim identifier `@var` and Unicode-escaped equivalents are distinct identifiers from the contextual keyword `var` and are bound and used in patterns according to the entities they denote, like any other identifier.
+
+> *Note*: When a declaration of the *identifier* `var` is in scope, the consequences of the rule above are:
+>
+> - If `var` denotes a type, then `var` may be the *type* of a *declaration_pattern* ([§11.2.2](patterns.md#1122-declaration-pattern)).
+> - If `var` denotes a constant, then `var` may be the *constant_expression* of a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern)).
+> - Otherwise (for example, when `var` denotes a field, property, local variable, parameter, or any other entity that is neither a type nor a constant), `var` is not valid in pattern position.
+>
+> *end note*
+
+### 11.2.3 Constant pattern
+
+A *constant_pattern* is used to test the value of a pattern input value ([§11.1](patterns.md#111-general)) against the given constant value.
+
+```ANTLR
+constant_pattern
+    : constant_expression
+    ;
+```
+
+When a declaration of the *identifier* `var` in scope resolves to a constant, `var` may appear as the *constant_expression* of a *constant_pattern*; the general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
+
+A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
+
+For a constant pattern `P`, its *converted value* is
+
+- if the pattern input value’s type is an integral type or an enum type, the pattern’s constant value converted to that type; otherwise
+- if the pattern input value’s type is the nullable version of an integral type or an enum type, the pattern’s constant value converted to its underlying type; otherwise
+- the value of the pattern’s constant value.
+
+Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
+
+- if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
+- the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
+
+> *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
+>
+> <!-- Example: {template:"standalone-console", name:"ConstantPattern1", replaceEllipsis:true, customEllipsisReplacements: ["\"xxx\""], ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> static decimal GetGroupTicketPrice(int visitorCount)
+> {
+>     switch (visitorCount) 
+>     {
+>         case 1: return 12.0m;
+>         case 2: return 20.0m;
+>         case 3: return 27.0m;
+>         case 4: return 32.0m;
+>         case 0: return 0.0m;
+>         default: throw new ArgumentException(...);
+>     }
+> }
+> ```
+>
+> *end example*
+
 ### 11.2.2 Declaration pattern
 
 A *declaration_pattern* is used to test that a value has a given type and, if the test succeeds, to optionally provide the value in a variable of that type.
@@ -94,9 +149,9 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
-The *type* of a *declaration_pattern* cannot be the *identifier* `var`.
+When a declaration of the *identifier* `var` in scope resolves to a type, `var` may appear as the *type* of a *declaration_pattern*; the general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
 
-> *Note*: In such a case the input may be recognisable as a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)). The exclusion applies only to the *identifier* `var`; the verbatim identifier `@var` and Unicode-escaped equivalents are distinct identifiers and remain valid as the *type* of a *declaration_pattern* when they name a type in scope. *end note*
+The *type* of a *declaration_pattern* cannot be `dynamic`, because the runtime type test is defined in terms of the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)), which does not permit `dynamic`.
 
 It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
 
@@ -141,56 +196,13 @@ A type `E` is said to be ***pattern compatible*** with the type `T` if there exi
 >
 > The condition of the `if` statement is `true` at runtime and the variable `v` holds the value `3` of type `int` inside the block. After the block the variable `v` is in scope, but not definitely assigned. *end example*
 
-### 11.2.3 Constant pattern
-
-A *constant_pattern* is used to test the value of a pattern input value ([§11.1](patterns.md#111-general)) against the given constant value.
-
-```ANTLR
-constant_pattern
-    : constant_expression
-    ;
-```
-
-A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
-
-For a constant pattern `P`, its *converted value* is
-
-- if the pattern input value’s type is an integral type or an enum type, the pattern’s constant value converted to that type; otherwise
-- if the pattern input value’s type is the nullable version of an integral type or an enum type, the pattern’s constant value converted to its underlying type; otherwise
-- the value of the pattern’s constant value.
-
-Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
-
-- if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
-- the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
-
-> *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
->
-> <!-- Example: {template:"standalone-console", name:"ConstantPattern1", replaceEllipsis:true, customEllipsisReplacements: ["\"xxx\""], ignoredWarnings:["CS8321"]} -->
-> ```csharp
-> static decimal GetGroupTicketPrice(int visitorCount)
-> {
->     switch (visitorCount) 
->     {
->         case 1: return 12.0m;
->         case 2: return 20.0m;
->         case 3: return 27.0m;
->         case 4: return 32.0m;
->         case 0: return 0.0m;
->         default: throw new ArgumentException(...);
->     }
-> }
-> ```
->
-> *end example*
-
 ### 11.2.4 Var pattern
 
 A *var_pattern* *matches* every value. That is, a pattern-matching operation with a *var_pattern* always succeeds.
 
 A *var_pattern* is *applicable to* every type.
 
-A *var_pattern* cannot be used when a type named `var` is in scope.
+A *var_pattern* cannot be used when any declaration of the *identifier* `var` is in scope. See [§11.2.1](patterns.md#1121-general) for the interpretation of `var` in pattern position in that case.
 
 ```ANTLR
 var_pattern
@@ -231,7 +243,19 @@ subpattern
     ;
 ```
 
-Let *n* be the number of *subpattern*s appearing between the parentheses. The matching strategy is selected at compile time by applying the following cases in order; the first case whose conditions are satisfied is used, and the remaining cases are not considered. Once a case is selected, that strategy is committed: any compile-time error stated within that case is reported, and matching does not fall through to a subsequent case.
+Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstruction declaration.
+It is an error if a *positional_pattern* omits the type, has a single *subpattern* without an *identifier*, has no *property_subpattern* and has no *simple_designation*. This disambiguates between a *constant_pattern* that is parenthesized and a *positional_pattern*.
+
+> *Note*: A tuple literal can be matched by patterns of several different forms, which are not interchangeable:
+>
+> - `(int, int) x` is a *declaration_pattern* with type `(int, int)` and *simple_designation* `x`.
+> - `var (x, y)` is a *var_pattern* with a *tuple_designation*.
+> - `(int x, int y)` is a *positional_pattern*.
+> - `(int, int) (x, y)` is not a valid pattern.
+>
+> *end note*
+
+In order to extract the values to match against the patterns in the list,
 
 1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
 2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstruction declaration, with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
