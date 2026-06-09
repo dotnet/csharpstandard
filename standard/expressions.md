@@ -829,6 +829,7 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
   - `V` is an array type `V₁[...]` and `U` is an array type `U₁[...]` of the same rank
   - `V` is the type `V₁?` and `U` is the type `U₁`
   - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`
+
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
@@ -843,6 +844,7 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
   - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)
+
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
   - Otherwise, if `U` is an array type then a *lower-bound inference* is made
@@ -863,6 +865,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
   - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)
+
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
