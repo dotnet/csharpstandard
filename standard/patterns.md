@@ -410,7 +410,7 @@ It is a compile-time error to use a discard pattern in a *relational_expression*
 ## 11.3 Pattern subsumption
 
 In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
-Informally, this means that any input value would have been matched by one of the previous cases or arms.
+> *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
 The following rules define when a set of patterns subsumes a given pattern:
 
 A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
@@ -421,10 +421,6 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 - `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
 - `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
 
-> *Note*: Only *unguarded* cases or arms ([§13.8.3](statements.md#1383-the-switch-statement)) contribute to subsumption; a *case_guard* whose expression is not a constant expression with the value `true` cannot in general be evaluated at compile time, so the corresponding case or arm is conservatively assumed not to match every input value to which its pattern is applicable. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
 >
 > <!-- Example: {template:"code-in-main", name:"SwitchExprUnguardedSubsumption"} -->
