@@ -849,7 +849,7 @@ primary_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
-    | nameof_expression    
+    | nameof_expression
     | anonymous_method_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
@@ -979,7 +979,7 @@ parenthesized_expression
 tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
     ;
-    
+
 tuple_element
     : (identifier ':')? expression
     ;
@@ -1002,7 +1002,7 @@ null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
       (null_forgiving_operator? dependent_access)*
     ;
-    
+
 dependent_access
     : '.' identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
@@ -1599,7 +1599,7 @@ non_assignment_expression
 
 // Source: §12.25 Constant expressions
 constant_expression
-    : expression
+    : conditional_expression
     ;
 
 // Source: §12.26 Boolean expressions
@@ -1856,8 +1856,15 @@ statement_expression_list
 
 // Source: §13.9.5.1 General
 foreach_statement
-    : 'await'? 'foreach' '(' ref_kind? local_variable_type identifier
-      'in' expression ')' embedded_statement
+    : // synchronous foreach
+      'foreach' '(' ref_kind? local_variable_type identifier 'in' expression ')'
+          embedded_statement
+    | // asynchronous foreach
+      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
+          embedded_statement
+    | // deconstructing foreach
+      'await'? 'foreach' '(' deconstructor 'in' expression ')'
+          embedded_statement
     ;
 
 // Source: §13.10.1 General

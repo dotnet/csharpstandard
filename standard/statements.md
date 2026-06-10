@@ -1122,7 +1122,7 @@ foreach_statement
 
 There are three forms of the *foreach_statement*: *synchronous*, *asynchronous* and *deconstructing*; corresponding to the three alternatives of the above grammar.
 
-The deconstructing foreach supports both synchronous and asynchronous forms and is described in §deconstructing-foreach.
+The deconstructing foreach supports both synchronous and asynchronous forms and is described in [§13.9.5.4](statements.md#13954-deconstructing-foreach).
 
 The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
@@ -1439,7 +1439,7 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
-#### §deconstructing-foreach Deconstructing foreach
+#### 13.9.5.4 Deconstructing foreach
 
 A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
 
