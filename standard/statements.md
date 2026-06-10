@@ -1106,14 +1106,23 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'await'? 'foreach' '(' ref_kind? local_variable_type identifier
-      'in' expression ')' embedded_statement
+    : // synchronous foreach
+      'foreach' '(' ref_kind? local_variable_type identifier 'in' expression ')'
+          embedded_statement
+    | // asynchronous foreach
+      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
+          embedded_statement
+    | // deconstructing foreach
+      'await'? 'foreach' '(' deconstructor 'in' expression ')'
+          embedded_statement
     ;
 ```
 
-The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
+There are three forms of the *foreach_statement*: *synchronous*, *asynchronous* and *deconstructing*; corresponding to the three alternatives of the above grammar.
 
-It is a compile time error for both `await` and `ref_kind` to be present in a `foreach statement`.
+The deconstructing foreach supports both synchronous and asynchronous forms and is described in §deconstructing-foreach.
+
+The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
 If the *foreach_statement* contains both or neither `ref` and `readonly`, the iteration variable denotes a variable that is treated as read-only. Otherwise, if *foreach_statement* contains `ref` without `readonly`, the iteration variable denotes a variable that shall be writable.
 
@@ -1121,7 +1130,7 @@ The iteration variable corresponds to a local variable with a scope that extends
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
-The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within ‘«’ and ‘»’ are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within ‘«’ and ‘»’ are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-asynchronous-foreach) for an asynchronous `foreach` statement.
 
 1. Determine whether the type `X` of *expression* has an appropriate «GetEnumerator» method:
    1. Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described in step 2. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
@@ -1137,7 +1146,7 @@ The determination is similar for the synchronous and asynchronous versions. Diff
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in [§13.9.5.2](statements.md#13952-synchronous-foreach) and [§13.9.5.3](statements.md#13953-await-foreach).
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in [§13.9.5.2](statements.md#13952-synchronous-foreach) and [§13.9.5.3](statements.md#13953-asynchronous-foreach).
 
 #### 13.9.5.2 Synchronous foreach
 
@@ -1166,7 +1175,7 @@ A `foreach` statement of the form
 foreach (V v in x) «embedded_statement»
 ```
 
-is then equivalent to:
+is semantically equivalent to:
 
 ```csharp
 {
@@ -1194,7 +1203,7 @@ When the iteration variable is a reference variable ([§9.7](variables.md#97-ref
 foreach (ref V v in x) «embedded_statement»
 ```
 
-is then equivalent to:
+is semantically equivalent to:
 
 ```csharp
 {
@@ -1273,7 +1282,7 @@ The body of the `finally` block is constructed according to the following steps:
   ```
 
 - Otherwise, the `finally` clause is expanded to:
-  
+
   ```csharp
   finally
   {
@@ -1336,7 +1345,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 >
 > *end example*
 
-#### 13.9.5.3 await foreach
+#### 13.9.5.3 Asynchronous foreach
 
 An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in [§13.9.5.1](statements.md#13951-general), where:
 
@@ -1356,18 +1365,20 @@ await foreach (T item in enumerable) «embedded_statement»
 is semantically equivalent to:
 
 ```csharp
-var enumerator = enumerable.GetAsyncEnumerator();
-try
 {
-    while (await enumerator.MoveNextAsync())
+    var enumerator = enumerable.GetAsyncEnumerator();
+    try
     {
-       T item = enumerator.Current;
-       «embedded_statement»
+        while (await enumerator.MoveNextAsync())
+        {
+           T item = enumerator.Current;
+           «embedded_statement»
+        }
     }
-}
-finally
-{
-    // dispose of enumerator as described later in this clause.
+    finally
+    {
+        // dispose of enumerator as described later in this clause.
+    }
 }
 ```
 
@@ -1410,7 +1421,7 @@ The body of the `finally` block is constructed according to the following steps:
   ```
 
 - Otherwise, the `finally` clause is expanded to:
-  
+
   ```csharp
   finally
   {
@@ -1425,6 +1436,77 @@ The body of the `finally` block is constructed according to the following steps:
 The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
 
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
+
+#### §deconstructing-foreach Deconstructing foreach
+
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
+
+All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
+
+A foreach statement of the form:
+
+```csharp
+foreach («deconstructor» in x) «embedded_statement»
+```
+
+is semantically equivalent to:
+
+```csharp
+{
+    E e = ((C)(x)).GetEnumerator();
+    try
+    {
+        while (e.MoveNext())
+        {
+            «deconstructor» = e.Current;
+            «embedded_statement»
+        }
+    }
+    finally
+    {
+        ... // dispose of enumerator as for synchronous foreach
+    }
+}
+```
+
+This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+
+- `C` and `E` are determined as for synchronous foreach
+- `e` is not visible or accessible anywhere in the program accept as indicated in the above code
+- the variables declared by the «deconstructor» are read-only to the «embedded_statement»
+- the code in the `finally` block is determined as for synchronous foreach
+
+An `await foreach` statement of the form:
+
+```csharp
+await foreach («deconstructor» in enumerable) «embedded_statement»
+```
+
+is semantically equivalent to:
+
+```csharp
+{
+    var enumerator = enumerable.GetAsyncEnumerator();
+    try
+    {
+        while (await enumerator.MoveNextAsync())
+        {
+           «deconstructor» = enumerator.Current;
+           «embedded_statement»
+        }
+    }
+    finally
+    {
+        // dispose of enumerator as for asynchronous foreach
+    }
+}
+```
+
+This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+
+- `enumerator` is not visible or accessible anywhere in the program accept as indicated in the above code
+- the variables declared by the «deconstructor» are read-only to the «embedded_statement»
+- the code in the `finally` block is determined as for asynchronous foreach
 
 ## 13.10 Jump statements
 
@@ -1813,14 +1895,14 @@ If an exception is thrown during execution of a `finally` block, and is not caug
 >         {
 >             Console.WriteLine("Catch");
 >         }
-> 
+>
 >         bool ExceptionFilter(Exception ex)
 >         {
 >             Console.WriteLine("Filter");
 >             return true;
 >         }
 >     }
-> 
+>
 >     static void Method()
 >     {
 >         try
@@ -1945,10 +2027,10 @@ A `using` statement is translated into three parts: acquisition, usage, and disp
 A `using` statement of the form
 
 ```csharp
-using (ResourceType resource = «expression» ) «statement»
+using (ResourceType resource = «expression») «statement»
 ```
 
-corresponds to one of three possible formulations. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to
+corresponds to one of three possible formulations. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to:
 
 ```csharp
 {
@@ -2080,16 +2162,16 @@ using (ResourceType rN = eN)
 When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other formulations for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
 
 ```csharp
-await using (ResourceType resource = «expression» ) «statement»
+await using (ResourceType resource = «expression») «statement»
 ```
 
 is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
 
 ```csharp
-await using (ResourceType resource = «expression» ) «statement»
+await using (ResourceType resource = «expression») «statement»
 ```
 
-is semantically equivalent to
+is semantically equivalent to:
 
 ```csharp
 {
@@ -2128,7 +2210,7 @@ using «local_variable_type» «local_variable_declarators»
 // statements
 ```
 
-is semantically equivalent to
+is semantically equivalent to:
 
 ```csharp
 using («local_variable_type» «local_variable_declarators»)
@@ -2144,7 +2226,7 @@ await using «local_variable_type» «local_variable_declarators»
 // statements
 ```
 
-is semantically equivalent to
+is semantically equivalent to:
 
 ```csharp
 await using («local_variable_type» «local_variable_declarators»)
@@ -2163,7 +2245,7 @@ static void M()
     using FileStream f2 = new FileStream(...), f3 = new FileStream(...);
     ...
     // Dispose f3
-    // Dispose f2 
+    // Dispose f2
     // Dispose f1
 }
 ```
