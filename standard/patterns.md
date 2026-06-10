@@ -204,7 +204,7 @@ If *designation* is a *tuple_designation*, the pattern is equivalent to a *posit
 
 A *positional_pattern* checks that the input value is not `null`, extracts a sequence of values from it, and matches each extracted value against a corresponding *subpattern*. The values are extracted in one of three ways: by treating the input as a tuple, by invoking a `Deconstruct` method, or by indexing the input through `System.Runtime.CompilerServices.ITuple`.
 
-> *Note*: The use of `Deconstruct` here is distinct from the source-level deconstruction transformation defined in [§12.7](expressions.md#127-deconstruction); the `Deconstruct` method is invoked directly to obtain the values matched against the *subpattern*s. *end note*
+> *Note*: The use of `Deconstruct` here is distinct from the source-level deconstruction transformation defined in [§12.7](expressions.md#127-deconstruction). *end note*
 
 ```ANTLR
 positional_pattern
