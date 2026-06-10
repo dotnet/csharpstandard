@@ -1443,7 +1443,7 @@ A deconstructing foreach replaces the declaration and initialisation of a single
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
-For a `foreach` statement of the form:
+A foreach statement of the form:
 
 ```csharp
 foreach («deconstructor» in x) «embedded_statement»
@@ -1469,7 +1469,7 @@ is semantically equivalent to:
 }
 ```
 
-this follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
 
 - `C` and `E` are determined as for synchronous foreach
 - `e` is not visible or accessible anywhere in the program accept as indicated in the above code
@@ -1502,7 +1502,7 @@ is semantically equivalent to:
 }
 ```
 
-this follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
 
 - `enumerator` is not visible or accessible anywhere in the program accept as indicated in the above code
 - the variables declared by the «deconstructor» are read-only to the «embedded_statement»
