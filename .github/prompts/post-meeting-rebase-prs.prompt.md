@@ -26,7 +26,7 @@ For every open PR P with base `draft-vN`:
 2. Look for prior commits on `vN-alpha` by the same author touching the same files:
 
    ```bash
-   git log origin/vN-alpha --author='<login>' -- <files…>
+   git log upstream/vN-alpha --author='<login>' -- <files…>
    ```
 
 3. If prior commits exist and the current PR head SHA introduces changes to those files not yet on `vN-alpha`, record P as **"alpha has stale version"**.
@@ -58,7 +58,11 @@ If `vN` is missing or unparseable from the comment, list the entry as unrouted a
 
 ### Step 1 — List target base branches
 
-List target base branches (the propagation chain — see the propagate prompt). Default: `draft-v8 draft-v9 v9-alpha draft-v10 v10-alpha draft-v11 v11-alpha draft-v12`. Allow the user to override.
+List target base branches (the propagation chain — see the propagate prompt). Default: `draft-v8 draft-v9 alpha-v9 draft-10 alpha-v10 draft-v11 v11-alpha draft-v12`. Allow the user to override.
+
+> **Branch-naming is inconsistent across versions** (e.g. `alpha-v9` vs
+> `v11-alpha`, `draft-10` vs `draft-v11`). Always verify actual branch
+> names with `git branch -r | grep upstream/` before starting.
 
 ### Step 2 — For each base branch, list and process open PRs
 
@@ -72,11 +76,34 @@ gh pr list --base <base> --state open \
 For each PR returned:
 
 - If `headRepositoryOwner.login` matches this repo's owner (`dotnet`), the head is in this repo. **Rebase it:**
-  1. `gh pr checkout <num>`
+  1. `gh pr checkout <num>` — if this fails to fast-forward (branch has
+     diverged from upstream), run `git reset --hard upstream/<headRefName>`
+     to sync to the upstream version of the PR branch before proceeding.
   2. **Capture the pre-rebase SHA** so we can recover if the post-rebase cross-reference check fails: `PRE=$(git rev-parse HEAD)`.
-  3. `git fetch origin <base>`
-  4. `git rebase origin/<base>`
-  5. **If the rebase has conflicts:** `git rebase --abort`, record the PR as "needs manual rebase", post the **attempted-rebase** comment below, and move on. Do not attempt to resolve feature-text conflicts.
+  3. `git fetch upstream <base>`
+  4. `git rebase upstream/<base>` — **use `upstream/`** (the main repo
+     remote), not `origin/`. The PR branches track `upstream`.
+  5. **If the rebase has conflicts:**
+     - **Binary conflicts** in `.github/workflows/dependencies/` (e.g.
+       `GrammarTestingEnv.tgz`): resolve by taking the PR's version
+       (`git checkout --theirs <file> && git add <file>`) and continue
+       the rebase. These are feature-specific test artifacts and the PR's
+       version is correct.
+     - **Formatting-only conflicts** in `standard/*.md` (e.g. table
+       pipe characters, smart-quote vs straight-quote differences):
+       take the PR's version (`git checkout --theirs <file> && git add
+       <file>`) and continue. The PR's formatting fix is the intended
+       change.
+     - **Independent additive conflicts** in `standard/*.md` (two
+       features each added text to the same list or paragraph, but the
+       additions are logically independent): combine both additions in
+       the correct order, resolve, and continue.
+     - **Structural/semantic conflicts** in `standard/*.md` (e.g.
+       grammar reorganization where the base refactored a production
+       hierarchy and the PR uses the old structure), or conflicts in
+       `tools/`: `git rebase --abort`, record the PR as "needs manual
+       rebase", and move on. Do not attempt to resolve conflicts that
+       require the author's design decision.
   6. **Cross-reference check before push.** Run the renumber tool in dry-run mode against the rebased worktree:
 
      ```bash
@@ -84,8 +111,16 @@ For each PR returned:
          --owner dotnet --repo csharpstandard --dryrun )
      ```
 
-     If any `TOC002` diagnostic fires, the rebase has produced broken cross-references. Recover with `git reset --hard "$PRE"`, record the PR as "needs manual rebase", and post the **attempted-rebase** comment below with the failing references quoted in the body. Do not push.
-  7. Otherwise: `git push --force-with-lease`. Record success with the new SHA.
+     If any *new* `TOC002` diagnostic fires that was not already present
+     on the PR branch before rebase, the rebase has introduced broken
+     cross-references. Recover with `git reset --hard "$PRE"`, record
+     the PR as "needs manual rebase", and move on. To distinguish new
+     from pre-existing: check the same ref against
+     `upstream/<headRefName>` (the pre-rebase state). Pre-existing
+     TOC002s from incomplete feature work are expected and do not block
+     the push.
+  7. Otherwise: `git push --force-with-lease upstream <headRefName>`.
+     Record success with the new SHA.
 
 - If the head is on a fork, **do not attempt to rebase.** Post the
   **please-rebase** comment below. Avoid duplicate comments: skip if any existing comment on the PR already contains the marker `<!-- post-meeting-rebase-notice -->`.
