@@ -30,6 +30,8 @@ pattern
     ;
 ```
 
+If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
+
 Some *pattern*s can result in the declaration of a local variable.
 
 Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is a compile-time error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
@@ -60,7 +62,7 @@ Each pattern form defines the set of types for input values that the pattern may
 
 Each pattern form defines the set of values for which the pattern *matches* the value at runtime.
 
-The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of methods in `System.ITuple`) is not specified.
+The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
 
 ### 11.2.2 Declaration pattern
 
@@ -200,7 +202,9 @@ If *designation* is a *tuple_designation*, the pattern is equivalent to a *posit
 
 ### 11.2.5 Positional pattern
 
-A *positional_pattern* checks that the input value is not `null`, invokes an appropriate `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), and performs further pattern matching on the resulting values.  It also supports a tuple-like pattern syntax (without the type being provided) when the type of the input value is the same as the type containing `Deconstruct`, or if the type of the input value is a tuple type, or if the type of the input value is `object` or `System.ITuple` and the runtime type of the expression implements `System.ITuple`.
+A *positional_pattern* checks that the input value is not `null`, extracts a sequence of values from it, and matches each extracted value against a corresponding *subpattern*. The values are extracted in one of three ways: by treating the input as a tuple, by invoking a `Deconstruct` method, or by indexing the input through `System.Runtime.CompilerServices.ITuple`.
+
+> *Note*: The use of `Deconstruct` here is distinct from the source-level deconstruction transformation defined in [§12.7](expressions.md#127-deconstruction). *end note*
 
 ```ANTLR
 positional_pattern
@@ -215,14 +219,12 @@ subpattern
     ;
 ```
 
-Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstruction declaration.
-It is an error if a *positional_pattern* omits the type, has a single *subpattern* without an *identifier*, has no *property_subpattern* and has no *simple_designation*. This disambiguates between a *constant_pattern* that is parenthesized and a *positional_pattern*.
-In order to extract the values to match against the patterns in the list,
+Let *n* be the number of *subpattern*s appearing between the parentheses. The matching strategy is selected at compile time by applying the following cases in order; the first case whose conditions are satisfied is used, and the remaining cases are not considered. Once a case is selected, that strategy is committed: any compile-time error stated within that case is reported, and matching does not fall through to a subsequent case.
 
-- If *type* is omitted and the input expression’s type is a tuple type, then the number of subpatterns shall to be the same as the cardinality of the tuple. Each tuple element is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a tuple element at the corresponding position in the tuple type.
-- Otherwise, if a suitable `Deconstruct` exists as a member of *type*, it is a compile-time error if the type of the input value is not pattern-compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with *type*. At runtime the input value is tested against *type*. If this fails, then the positional pattern match fails. If it succeeds, the input value, viewed as an expression of *type*, is deconstructed ([§12.7](expressions.md#127-deconstruction)) using that `Deconstruct`, and each element of the resulting tuple is matched against the corresponding *subpattern*. Each value that was received is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, then that shall name a parameter at the corresponding position of `Deconstruct`.
-- Otherwise, if *type* is omitted, and the input value is of type `object` or some type that can be converted to `System.ITuple` by an implicit reference conversion, and no *identifier* appears among the subpatterns, then the match uses `System.ITuple`.
-- Otherwise, the pattern is invalid and a compile-time error shall be issued.
+1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal (§12.8.6), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method (§12.7), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstruction declaration, with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible (§11.2.2) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value's `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
+4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
 
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
 
@@ -314,7 +316,7 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 >
 > *end note*
 
-Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern-compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
+Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
 
 At runtime, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.
 
