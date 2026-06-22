@@ -3781,7 +3781,7 @@ Properties can be used to delay initialization of a resource until the moment it
 An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
 
 - During execution of an *object_initializer* (§12.8.17.2.2)
-- During evaluation of a *with_expression*’s *member_initializer_list*  (§records-grammar)
+- During evaluation of a *with_expression*’s *member_initializer_list*
 - Inside an instance constructor of the containing or derived type, on `this` or `base`
 - Inside the *init_accessor_declaration* of any property, on `this` or `base`
 - Inside attribute usages with named parameters (§23.2.3)
