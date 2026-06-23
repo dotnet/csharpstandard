@@ -11,6 +11,7 @@ You are propagating the changes merged into the current "starting" draft branch 
 
 - The committee secretary has already merged all approved PRs into the starting branch (default: `draft-v8`). Do **not** merge any other open PRs.
 - The `.github/workflows/update-on-merge.yaml` workflow will open an automated PR titled "Automated Section renumber and grammar extraction" on each branch that receives a push. These auto-PRs **must be merged** before the next propagation hop.
+- Auto-PRs may show a `BLOCKED` merge state due to branch protection rules requiring review approval — this is normal and not a CI failure. Wait for checks to pass, then merge.
 - You have `git` and `gh` available, and push permission to this repo.
 
 ## Propagation chain
@@ -19,17 +20,26 @@ Walk these branches in order. Each step merges the previous branch into the next
 
 1. `draft-v8`   (starting branch — no merge in; just merge its auto-PR)
 2. `draft-v9`   ← merges `draft-v8`
-3. `v9-alpha`   ← merges `draft-v9`
-4. `draft-v10`  ← merges `v9-alpha`
-5. `v10-alpha`  ← merges `draft-v10`
-6. `draft-v11`  ← merges `v10-alpha`
+3. `alpha-v9`   ← merges `draft-v9`
+4. `draft-10`   ← merges `alpha-v9`
+5. `alpha-v10`  ← merges `draft-10`
+6. `draft-v11`  ← merges `alpha-v10`
 7. `v11-alpha`  ← merges `draft-v11`
 8. `draft-v12`  ← merges `v11-alpha`
 
-> When new version branches are added (v12-alpha, draft-v13, etc.), append
-> them here in the same pattern: each `draft-v(N+1)` merges `vN-alpha`, and
-> each `vN-alpha` merges `draft-vN`. Also add the new branches to
+> **Branch-naming is inconsistent across versions** (e.g. `alpha-v9` vs
+> `v11-alpha`, `draft-10` vs `draft-v11`). Always verify actual branch
+> names with `git branch -r | grep upstream/` before starting.
+>
+> When new version branches are added, append them here using the actual
+> branch names on the remote. Also add any new branches to
 > `.github/workflows/update-on-merge.yaml` `on.push.branches`.
+>
+> Note: `update-on-merge.yaml` currently only triggers on `standard-v6`,
+> `standard-v7`, `draft-v8`, `draft-v9`, `draft-v11`, and `draft-v12`.
+> Alpha branches are **not** covered, so no auto-PR will appear on those
+> branches — the renumber/grammar tools must be run by a later merge into
+> the next draft branch.
 
 If the user names a different starting branch, start there and propagate to
 every later branch in the list.
@@ -63,7 +73,8 @@ for the duration of the run.
    ```bash
    for b in <chain>; do
      git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
-       "origin/$b" -- 'standard/*.md' > /tmp/vnext-baseline-$b.txt || true
+       "origin/$b" -- 'standard/*.md' | sed "s|^origin/$b:||" \
+       > /tmp/vnext-baseline-$b.txt || true
    done
    ```
 
@@ -107,6 +118,13 @@ Before starting, confirm the chain with the user and show which branches will be
      prose in `standard/*.md`. Doing so can silently resurrect text the
      committee deleted on the downstream branch in this cycle or a prior
      one.
+   - **Never use `git checkout --theirs <file>` or `git checkout --ours <file>`**
+     to resolve conflicts — these commands replace the *entire file* with
+     one side, not just the conflicted hunks, silently discarding all
+     non-conflicting changes from the other side. Resolve each hunk
+     individually in the conflict markers instead. If you accidentally
+     run `checkout --theirs/--ours`, recover with `git checkout -m <file>`
+     to restore the conflict markers.
    - For each conflicted hunk in `standard/*.md`:
      a. Cross-check the hunk's file and line range against the deletion inventory captured in Pre-flight (`/tmp/starting-deletions.patch`) **and** against any prior `Post-meeting propagation:` merges on the downstream branch (`git log --grep '^Post-meeting propagation:' -p origin/<branch> -- <file>`).
      b. If the downstream side intentionally removed the text, keep the deletion and re-apply only non-overlapping upstream edits to the surrounding region.
@@ -117,6 +135,14 @@ Before starting, confirm the chain with the user and show which branches will be
      - the generated TOC in `standard/README.md`.
    - For any conflict in `tools/`, `.github/`, or any prose conflict you are not 100% sure is mechanical: **abort the merge** and stop.
 3. After conflicts are resolved (or if the merge was clean), **do not push yet**. Run Steps B.5 and B.6 below first.
+4. **Section-number drift in alpha branches.** Alpha branches often have
+   additional sections inserted (e.g. new feature clauses), which shift
+   subsequent section numbers. When merging upstream changes into an alpha
+   branch, check for duplicate section headers (e.g. two `## 14.5` headings)
+   caused by the merge combining the upstream's numbering with the alpha's
+   shifted numbering. The StandardAnchorTags tool will crash with
+   `System.InvalidOperationException: Duplicate section header` if this
+   happens. Fix by renumbering the duplicated header to its correct value.
 
 ### Step B.5 — Cross-reference validation
 
@@ -127,7 +153,7 @@ Run the section-renumber tool in dry-run mode against the post-merge working tre
     --owner dotnet --repo csharpstandard --dryrun )
 ```
 
-1. **Broken references.** Any `TOC002` ("`<ref>` not found") diagnostic is a **hard stop**. Reset the merge commit (`git reset --hard origin/<branch>`), report the failing references to the user, and do not push.
+1. **Broken references.** Any *new* `TOC002` ("`<ref>` not found") diagnostic that was not already present on `upstream/<branch>` before the merge is a **hard stop**. Compare the tool output against a pre-merge run (or `git stash && run && git stash pop`) to distinguish new from pre-existing. Pre-existing TOC002s from incomplete feature PRs on alpha branches are expected and should be reported but do not block the merge.
 2. **Concept drift.** Count how many section numbers the dry run would change (lines beginning with `§` in the tool's diff output). If more than ~25 sections shift, sections have drifted enough that surviving cross-references like `§X.Y (Foo)` may now point at a different concept — the renumber tool fixes the *number* but cannot detect when the *concept* (parenthetical name, surrounding prose) is now wrong. Pause, list the affected references to the user, and proceed only on explicit confirmation.
 3. The actual renumber/grammar regeneration runs in the auto-PR opened by `update-on-merge.yaml` after push (Step A on the next iteration); do not commit dry-run output.
 
@@ -138,10 +164,14 @@ against the Pre-flight baseline to surface anything new this propagation brought
 
 ```bash
 git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
-  HEAD -- 'standard/*.md' > /tmp/vnext-current-<branch>.txt
+  HEAD -- 'standard/*.md' | sed 's|^HEAD:||' > /tmp/vnext-current-<branch>.txt
 diff /tmp/vnext-baseline-<branch>.txt /tmp/vnext-current-<branch>.txt \
   > /tmp/vnext-delta-<branch>.txt || true
 ```
+
+> Strip the `HEAD:` prefix with `sed` so diffs against the baseline
+> (which uses `upstream/<branch>:` as prefix) don't produce false
+> positives on every line.
 
 For each *new* comment in the delta, record:
 
