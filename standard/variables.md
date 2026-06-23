@@ -669,7 +669,7 @@ The following rule applies to these kinds of expressions: literals ([§12.8.2](e
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.4](expressions.md#12244-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -1053,7 +1053,7 @@ let *E₀* be the expression obtained by textually removing the leading `?` from
 <!-- markdownlint-enable MD028 -->
 > *Note*: The concept of “directly contains” allows skipping over relatively simple “wrapper” expressions when analyzing conditional accesses that are compared to other values. For example, in general, `((a?.b(out x))!) == true` is expected to result in the same flow state as `a?.b == true`.
 >
-> The intent is to allow analysis to function in the presence of a number of possible conversions on a conditional access. Propagating out “state when not null” is not possible when the conversion is user-defined, though, since one can't count on user-defined conversions to honor the constraint that the output is non-null only if the input is non-null. The only exception to this is when the user-defined conversion’s input is a non-nullable value type. For example:
+> The intent is to allow analysis to function in the presence of a number of possible conversions on a conditional access. Propagating out “state when not null” is not possible when the conversion is user-defined, though, since one can’t count on user-defined conversions to honor the constraint that the output is non-null only if the input is non-null. The only exception to this is when the user-defined conversion’s input is a non-nullable value type. For example:
 >
 > ```csharp
 > public struct S1 { }
@@ -1092,7 +1092,7 @@ For an expression *expr*, where *expr* is a constant expression with a `bool` va
 - If *expr* is a constant expression with value *true*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
 - If *expr* is a constant expression with value *false*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
 
-> *Note*: It is assumed that if an expression has a constant value bool `false`, that it's impossible to reach any branch that requires the expression to return `true`. Therefore, variables are assumed to be definitely assigned in such branches.
+> *Note*: It is assumed that if an expression has a constant value bool `false`, that it’s impossible to reach any branch that requires the expression to return `true`. Therefore, variables are assumed to be definitely assigned in such branches.
 >
 > Being in a conditional state *before* visiting a constant expression, is never expected, so there is no need to account for scenarios such as “*expr* is a constant expression with value *true* and the state of *v* before *expr* is definitely assigned when true.” *end note*
 
@@ -1134,14 +1134,14 @@ All of the above rules are commutative.
 >
 > Some consequences of these rules are:
 >
-> - `if (a?.b(out var x) == true) x() else x();` will error in the 'else' branch
-> - `if (a?.b(out var x) == 42) x() else x();` will error in the 'else' branch
-> - `if (a?.b(out var x) == false) x() else x();` will error in the 'else' branch
-> - `if (a?.b(out var x) == null) x() else x();` will error in the 'then' branch
-> - `if (a?.b(out var x) != true) x() else x();` will error in the 'then' branch
-> - `if (a?.b(out var x) != 42) x() else x();` will error in the 'then' branch
-> - `if (a?.b(out var x) != false) x() else x();` will error in the 'then' branch
-> - `if (a?.b(out var x) != null) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == true) x() else x();` will error in the ‘else’ branch
+> - `if (a?.b(out var x) == 42) x() else x();` will error in the ‘else’ branch
+> - `if (a?.b(out var x) == false) x() else x();` will error in the ‘else’ branch
+> - `if (a?.b(out var x) == null) x() else x();` will error in the ‘then’ branch
+> - `if (a?.b(out var x) != true) x() else x();` will error in the ‘then’ branch
+> - `if (a?.b(out var x) != 42) x() else x();` will error in the ‘then’ branch
+> - `if (a?.b(out var x) != false) x() else x();` will error in the ‘then’ branch
+> - `if (a?.b(out var x) != null) x() else x();` will error in the ‘else’ branch
 >
 > *end note*
 
@@ -1162,7 +1162,7 @@ where *T* is any type or pattern:
   - If *E* directly contains a null-conditional expression, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” and `T` is a pattern that matches a `null` input, then the state of *v* after *expr* is “definitely assigned when false.”
   - If *E* is of type `bool` and `T` is a pattern that only matches a `true` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *E*.
   - If *E* is of type `bool` and `T` is a pattern that only matches a `false` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr*.
-  - Otherwise, if the definite-assignment state of *v* after *E* is "definitely assigned," then the definite-assignment state of *v* after *expr* is "definitely assigned."
+  - Otherwise, if the definite-assignment state of *v* after *E* is “definitely assigned,” then the definite-assignment state of *v* after *expr* is “definitely assigned.”
 
 > *Note*: This subclause addresses similar scenarios as [§9.4.4.37](variables.md#94437--expressions). It does not, however, address recursive patterns; e.g., `(a?.b(out x), c?.d(out y)) is (object, object)`. *end note*
 
@@ -1235,7 +1235,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-> *Note*: The related notion of a *safe-context* is defined in (§16.4.15), along with associated constraints. *end note*
+> *Note*: The related notion of a *safe-context* is defined in ([§16.5.15](structs.md#16515-safe-context-constraint)), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 

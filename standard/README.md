@@ -512,7 +512,8 @@
     - [§13.9.5](statements.md#1395-the-foreach-statement)  The foreach statement
       - [§13.9.5.1](statements.md#13951-general)  General
       - [§13.9.5.2](statements.md#13952-synchronous-foreach)  Synchronous foreach
-      - [§13.9.5.3](statements.md#13953-await-foreach)  await foreach
+      - [§13.9.5.3](statements.md#13953-asynchronous-foreach)  Asynchronous foreach
+      - [§13.9.5.4](statements.md#13954-deconstructing-foreach)  Deconstructing foreach
   - [§13.10](statements.md#1310-jump-statements)  Jump statements
     - [§13.10.1](statements.md#13101-general)  General
     - [§13.10.2](statements.md#13102-the-break-statement)  The break statement
