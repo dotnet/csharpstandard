@@ -887,7 +887,7 @@ For an invocation that occurs within a local function or an anonymous function, 
 
 #### 23.5.6.5 The CallerArgumentExpression attribute
 
-The attribute `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter's argument as a string, referred to here as the *captured string*.
+The attribute `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
 Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*.
 
@@ -907,7 +907,7 @@ class Test
 }
 ```
 
-in which the target parameter is `text` and the sibling parameter is `val`, whose corresponding argument's source-code text can be captured in `text` when `M` is called.
+in which the target parameter is `text` and the sibling parameter is `val`, whose corresponding argument’s source-code text can be captured in `text` when `M` is called.
 
 The attribute constructor takes an argument of type `string`. That string
 
@@ -920,7 +920,7 @@ The type of the target parameter shall have a standard conversion from `string`.
 
 > *Note:* This means no user-defined conversions from `string` are allowed, and in practice means the type of such a parameter must be `string`, `object`, or an interface implemented by `string`. *end note*
 
-If an explicit argument is passed for the target parameter, no string is captured, and that parameter takes on that argument's value. Otherwise, the text for the argument corresponding to the sibling parameter is converted to a captured string, according to the following rules:
+If an explicit argument is passed for the target parameter, no string is captured, and that parameter takes on that argument’s value. Otherwise, the text for the argument corresponding to the sibling parameter is converted to a captured string, according to the following rules:
 
 - Leading and trailing white space is removed both before and after any outermost grouping parentheses are removed.
 - All outermost grouping parentheses are removed both before and after any leading and trailing white space is removed.
@@ -1125,7 +1125,7 @@ Specifies that a non-nullable argument may be `null` when the method returns the
 
 #### 23.5.7.8 The MemberNotNull attribute
 
-Specifies that the given member won't be ``null`` when the method returns.
+Specifies that the given member won’t be ``null`` when the method returns.
 
 > *Example*: A helper method may include the ``MemberNotNull`` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
 >
@@ -1156,11 +1156,11 @@ Specifies that the given member won't be ``null`` when the method returns.
 > }
 > ``````
 >
-> Multiple field names may be given as arguments to the attribute's constructor. *end example*
+> Multiple field names may be given as arguments to the attribute’s constructor. *end example*
 
 #### 23.5.7.9 The MemberNotNullWhen attribute
 
-Specifies that the listed member won't be ``null`` when the method returns the specified ``bool`` value.
+Specifies that the listed member won’t be ``null`` when the method returns the specified ``bool`` value.
 
 > *Example*: This attribute is like `MemberNotNull` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
