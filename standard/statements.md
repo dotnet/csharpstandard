@@ -764,7 +764,7 @@ case_guard
 
 A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-A *switch_label* or *switch_expression_arm* ([§12.11](expressions.md#1211-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with the value `true`.
+A *switch_label* or *switch_expression_arm* ([§12.12](expressions.md#1212-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with the value `true`.
 
 > *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
@@ -1475,7 +1475,7 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 #### 13.9.5.4 Deconstructing foreach
 
-A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.24.3](expressions.md#12243-deconstructing-assignment)) of a *deconstructing_assignment*.
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
