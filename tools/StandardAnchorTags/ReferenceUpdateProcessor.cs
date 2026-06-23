@@ -28,10 +28,13 @@ internal class ReferenceUpdateProcessor
         using (var readStream = new StreamReader(inputPath))
         {
             using StreamWriter writeStream = new(tmpFileName);
+            bool inCodeFence = false;
             while (await readStream.ReadLineAsync() is string line)
             {
+                // Don't add links in codefenced examples.
+                inCodeFence ^= line.Contains("```");
                 lineNumber++;
-                var updatedLine = line.Contains(sectionReference)
+                var updatedLine = (!inCodeFence && line.Contains(sectionReference))
                     ? ProcessSectionLinks(line, lineNumber, inputPath)
                     : line;
                 await writeStream.WriteLineAsync(updatedLine);

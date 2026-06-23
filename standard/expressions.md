@@ -303,7 +303,6 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 > *Example*: For the operation `b * s`, where `b` is a `byte` and `s` is a `short`, overload resolution selects `operator *(int, int)` as the best operator. Thus, the effect is that `b` and `s` are converted to `int`, and the type of the result is `int`. Likewise, for the operation `i * d`, where `i` is an `int` and `d` is a `double`, `overload` resolution selects `operator *(double, double)` as the best operator. *end example*
 
-
 **End of informative text.**
 
 #### 12.4.7.2 Unary numeric promotions
@@ -854,7 +853,8 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]` and `U` is an array type `U₁[...]` of the same rank
   - `V` is the type `V₁?` and `U` is the type `U₁`
-  - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`  
+  - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`
+
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
@@ -1112,7 +1112,7 @@ When the implicit conversion from the argument type to the parameter type of an 
 > ```
 >
 > *end example*
-  
+
 - A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
 - An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
   - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§12.8.14](expressions.md#12814-this-access).
@@ -1387,7 +1387,7 @@ primary_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
-    | nameof_expression    
+    | nameof_expression
     | anonymous_method_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
@@ -1705,7 +1705,7 @@ A *constant interpolated string* is an *interpolated_string_expression* that con
 - no interpolations, or
 - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
 
-For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
+For example, $“Hello”, $“{cs1}, world!” (given `const string cs1 = $"Hello";`), $“{“Hello,” + $“world!"}”, and $“xxx{(true ? $“{“X”}” : $“{$“{“Y”}”}”)}yyy” are all constant interpolated strings. However, $“{123}” and $“{“abc”}{123.45}” are not.
 
 For simplicity, the term *ISE* is used throughout this specification to mean either an *interpolated_string_expression* or an *additive_expression* composed entirely of *interpolated_string_expression*s and binary `+` operators.
 
@@ -1765,7 +1765,7 @@ A *tuple_literal* represents a tuple, and consists of two or more comma-separate
 tuple_literal
     : '(' tuple_element (',' tuple_element)+ ')'
     ;
-    
+
 tuple_element
     : (identifier ':')? expression
     ;
@@ -1842,7 +1842,7 @@ The *member_access* is evaluated and classified as follows:
 
 - If `e` is zero and `E` is a namespace and `E` contains a nested namespace with name `I`, then the result is that namespace.
 - Otherwise, if `E` is a namespace and `E` contains an accessible type having name `I` and `K` type parameters, then the result is that type constructed with the given type arguments.
-- If `E` is classified as a type, if `E` is not a type parameter, and if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `E` with `K` type parameters produces a match, then `E.I` is evaluated and classified as follows:  
+- If `E` is classified as a type, if `E` is not a type parameter, and if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `E` with `K` type parameters produces a match, then `E.I` is evaluated and classified as follows:
   > *Note*: When the result of such a member lookup is a method group and `K` is zero, the method group can contain methods having type parameters. This allows such methods to be considered for type argument inferencing. *end note*
   - If `I` identifies a type, then the result is that type constructed with any given type arguments.
   - If `I` identifies one or more methods, then the result is a method group with no associated instance expression.
@@ -1919,7 +1919,7 @@ null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
       (null_forgiving_operator? dependent_access)*
     ;
-    
+
 dependent_access
     : '.' identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
@@ -2558,7 +2558,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 - If the type of `P` is a nullable value type:
 
   Let `T` be the type of the expression `P.Value[A]B`.
-  
+
   - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
@@ -2578,7 +2578,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 - Otherwise:
 
   Let `T` be the type of the expression `P[A]B`.
-  
+
   - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
@@ -3852,14 +3852,14 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   float operator -(float x);
   double operator -(double x);
   ```
-  
+
   The result is the value of `X` with its sign inverted. If `x` is `NaN`, the result is also `NaN`.
 - Decimal negation:
 
   ```csharp
   decimal operator -(decimal x);
   ```
-  
+
   The result is computed by subtracting `X` from zero. Decimal negation is equivalent to using the unary minus operator of type `System.Decimal`.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined unary minus operators defined above are also predefined.
@@ -4067,13 +4067,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
 
-*identifier* shall be an accessible instance field or property of the receiver's type.
+*identifier* shall be an accessible instance field or property of the receiver’s type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver's clone method ([§15.16.3](classes.md#15163-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.3](classes.md#15163-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
@@ -4164,9 +4164,13 @@ If a switch expression is not subject to a *switch expression conversion*, then
 
 It is an error if some *switch_expression_arm*’s pattern is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of preceding *switch_expression_arm*s of the switch expression that do not have a *case_guard* or whose *case_guard* is a constant expression with the value `true`.
 
-A switch expression is said to be *exhaustive* if the set of patterns of its *switch_expression_arm*s is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the switch expression's input. The compiler shall produce a warning if a switch expression is not exhaustive.
+A switch expression is said to be *exhaustive* if the set of patterns of its *switch_expression_arm*s is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the switch expression’s input. The compiler shall produce a warning if a switch expression is not exhaustive.
 At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
 
+> *Note*: A corollary of the above is that a *switch_expression* with no *switch_expression_arms* will produce a compile time warning, and if evaluated at runtime will always throw an exception. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following converts values of an enum representing visual directions on an online map to the corresponding cardinal directions:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"SwitchExpression1", ignoredWarnings:["CS8321"]} -->
@@ -4248,7 +4252,7 @@ The predefined multiplication operators are listed below. The operators all comp
   ```
 
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
-  
+
   |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
   | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
   | **`+x`**  |   `+z`   |   `-z`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
@@ -4340,7 +4344,7 @@ The predefined remainder operators are listed below. The operators all compute t
   long operator %(long x, long y);
   ulong operator %(ulong x, ulong y);
   ```
-  
+
   The result of `x % y` is the value produced by `x – (x / y) * y`. If `y` is zero, a `System.DivideByZeroException` is thrown.
 
   If the left operand is the smallest `int`, `nint`, or `long` value and the right operand is `–1`, a `System.OverflowException` is thrown if and only if `x / y` would throw an exception.
@@ -4350,7 +4354,7 @@ The predefined remainder operators are listed below. The operators all compute t
   float operator %(float x, float y);
   double operator %(double x, double y);
   ```
-  
+
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
   |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
@@ -4370,7 +4374,7 @@ The predefined remainder operators are listed below. The operators all compute t
   ```
 
   If the value of the right operand is zero, a `System.DivideByZeroException` is thrown. It is implementation-defined when a `System.ArithmeticException` (or a subclass thereof) is thrown. A conforming implementation shall not throw an exception for `x % y` in any case where `x / y` does not throw an exception. The scale of the result, before any rounding, is the larger of the scales of the two operands, and the sign of the result, if non-zero, is the same as that of `x`.
-  
+
   Decimal remainder is equivalent to using the remainder operator of type `System.Decimal`.
   > *Note*: These rules ensure that for all types, the result never has the opposite sign of the left operand. *end note*
 
@@ -4412,7 +4416,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   | **`+∞`**  |   `+∞`  |   `+∞`   |   `+∞`   |   `+∞`   |   `NaN`  |   `NaN`   |
   | **`-∞`**  |   `-∞`  |   `-∞`   |   `-∞`   |   `NaN`  |   `-∞`   |   `NaN`   |
   | **`NaN`** |   `NaN` |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
-  
+
 - Decimal addition:
 
   ```csharp
@@ -4536,7 +4540,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   | **`+∞`**  |  `+∞`   |  `+∞`    |   `+∞`   |   `NaN`  |   `+∞`   |   `NaN`   |
   | **`-∞`**  |  `-∞`   |  `-∞`    |   `-∞`   |   `-∞`   |   `NaN`  |   `NaN`   |
   | **`NaN`** |  `NaN`  |  `NaN`   |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
-  
+
   (In the above table, the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
 
@@ -4720,11 +4724,14 @@ equality_expression
     ;
 ```
 
-> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*  
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` on the right-hand-side of `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression. *end note*
+<!--
+[TODO] PR#1428 recommended changing *pattern* on the RHS of 'is' above to restrict constant_pattern to relational_pattern to
+avoid precedence issues, this was not done. This might be required for a certain compiler but ANTLR grammar semantics does the
+right thing, maybe not obviously for some, and so no change was made – making the change in the grammar is effectively harmless
+as it does not effect the resulting parse at all, but the prose gets messier. For C#9 this decision should be checked to be
+still valid after the new pattern changes.
+-->
+When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 The `is` operator is described in [§12.15.12](expressions.md#121512-the-is-operator) and the `as` operator is described in [§12.15.13](expressions.md#121513-the-as-operator).
 
@@ -5116,9 +5123,7 @@ The operation `E is T` is evaluated as follows:
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
    1. Let `R` be the runtime type of `E`.
-   1. Let `D` be derived from `R` as follows:
-      1. If `R` is a nullable value type, `D` is the underlying type of `R`.
-      1. Otherwise, `D` is `R`.
+   1. Determine the type `D`. If `R` is a nullable value type, `D` is its underlying type; otherwise, `D` is equal to `R`.
    1. The result depends on `D` and `T` as follows:
       1. If `T` is a reference type, the result is `true` if:
          - an identity conversion exists between `D` and `T`, or
@@ -5154,7 +5159,7 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
-Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true`.
+Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true` ([§9.4.4.34](variables.md#94434-is-pattern-expressions)).
 
 ### 12.15.13 The as operator
 
@@ -7618,7 +7623,7 @@ A constant expression is an expression that shall be fully evaluated at compile-
 
 ```ANTLR
 constant_expression
-    : expression
+    : conditional_expression
     ;
 ```
 
@@ -7696,7 +7701,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
