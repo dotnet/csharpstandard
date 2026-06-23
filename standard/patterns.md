@@ -877,7 +877,7 @@ case [_, 1, ..]: // expr.Length is >= 2 && expr[1] is 1
 case [.., 1, _]: // expr.Length is >= 2 && expr[^2] is 1
 ```
 
-Given a specific length, it's possible that two subpatterns refer to the same element, in which case, a test for this value is inserted into the decision DAG.
+Given a specific length, it’s possible that two subpatterns refer to the same element, in which case, a test for this value is inserted into the decision DAG.
 
 - For instance, `[_, >0, ..] or [.., <=0, _]` becomes `length >= 2 && ([1] > 0 || length == 3 || [^2] <= 0)` where the length value of 3 implies the other test.
 - Conversely, `[_, >0, ..] and [.., <=0, _]` becomes `length >= 2 && [1] > 0 && length != 3 && [^2] <= 0` where the length value of 3 disallows the other test.
@@ -891,7 +891,7 @@ The following assumptions are made on the members being used:
 - The property that makes the type *countable* is assumed to always return a non-negative value, if and only if the type is *indexable*. For instance, the pattern `{ Length: -1 }` can never match an array.
 - The member that makes the type *sliceable* is assumed to be well-behaved; that is, the return value is never `null` and that it is a proper subslice of the containing list.
 
-The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn't hold.[
+The behavior of a pattern-matching operation is undefined if any of the above assumptions doesn’t hold.[
 
 ## 11.4 Pattern exhaustiveness
 

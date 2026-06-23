@@ -1029,7 +1029,7 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method’s return value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347"]} -->
 > ```csharp
@@ -1111,7 +1111,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 
 - caller-context.
 - If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
-- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+- If the out variable’s type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 
