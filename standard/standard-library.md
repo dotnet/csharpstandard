@@ -829,6 +829,42 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
+    /// <summary>
+    ///    Provides indexed access to the elements of a
+    ///    tuple-like value at runtime. This interface is
+    ///    used by the language to implement positional
+    ///    pattern matching (§11.2.5) when no static
+    ///    tuple type or <c>Deconstruct</c> method is
+    ///    available.
+    /// </summary>
+    public interface ITuple
+    {
+        /// <summary>
+        ///    The number of elements in the tuple.
+        /// </summary>
+        /// <remarks>
+        ///    The value returned shall be non-negative,
+        ///    and shall not change for the lifetime of
+        ///    the instance.
+        /// </remarks>
+        int Length { get; }
+
+        /// <summary>
+        ///    Returns the element at the specified
+        ///    zero-based position.
+        /// </summary>
+        /// <param name="index">
+        ///    The zero-based position of the element
+        ///    to return; shall be ≥ 0 and &lt; <see cref="Length"/>.
+        /// </param>
+        /// <exception cref="IndexOutOfRangeException">
+        ///    Thrown if <paramref name="index"/> is
+        ///    outside the range
+        ///    <c>[0, Length)</c>.
+        /// </exception>
+        object? this[int index] { get; }
+    }
+
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
@@ -1382,6 +1418,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.ITuple`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
 - `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
