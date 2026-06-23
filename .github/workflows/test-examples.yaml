@@ -31,7 +31,7 @@ jobs:
 
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v6.0.3
 
     # We build examples against .NET 6.0, but use
     # 10.0 for the tools themselves. (The closer we
