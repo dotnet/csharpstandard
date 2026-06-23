@@ -28,7 +28,7 @@ jobs:
         statuses: write
 
     steps:
-    - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
     - uses: DavidAnson/markdownlint-cli2-action@ded1f9488f68a970bc66ea5619e13e9b52e601cd # v23.2.0
       with:
         config: ".markdownlint-cli2.jsonc"
