@@ -1543,7 +1543,7 @@ An *interpolated_string_expression* is classified as a value, which is evaluated
 
 1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
 1. If the target of an assignment or method-call argument has type `System.IFormattable` or `System.FormattableString`, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created.
-1. If the target of an assignment or method-call argument has a custom interpolated string handler (§custInterpStrExpHandler) type, then
+1. If the target of an assignment or method-call argument has a custom interpolated string handler (§23.5.9.1) type, then
 
 - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
 - Otherwise, the expression is processed by the custom interpolated string handler and the result has that custom interpolated string handler’s type.
