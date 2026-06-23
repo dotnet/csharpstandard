@@ -1559,7 +1559,7 @@ A `#line hidden` directive has no effect on the source location information repo
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-Together, the tokens *PP_Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
+Together, the tokens *PP_Start_Line_Character* ‘-’ *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
 
 *PP_Start_Line_Character* represents a start position in the mapped file, specified as a line (*PP_Start_Line*) and column (*PP_Start_Character*) pair; for example, `(1,1)`. This position corresponds to the first character on the line following the directive in the generated code.
 
