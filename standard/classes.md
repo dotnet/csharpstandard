@@ -6282,7 +6282,9 @@ The record class shall include a synthesized method equivalent to a method decla
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either synthesized, or explicitly declared, method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility. It is an error if either synthesized, or explicitly declared, method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+
+Sealing an explicitly declared `ToString` method prevents the compiler from synthesizing a `ToString` method for any derived record types. However, this does not prevent the compiler from synthesizing `PrintMembers`.
 
 The synthesized method:
 
@@ -6520,6 +6522,3 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
-
-
-
