@@ -10,6 +10,7 @@ This annex collects some information about portability that appears in this spec
 
 The behavior is undefined in the following circumstances:
 
+1. If certain assumptions regarding pattern subsumption do not hold ([§11.3](patterns.md#113-pattern-subsumption)).
 1. The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.9.4](expressions.md#12994-run-time-evaluation-of-await-expressions)).
 1. Passing pointers as `ref` or `out` parameters ([§24.3.2](unsafe-code.md#2432-data-pointers)).
 1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§24.5.1](unsafe-code.md#2451-general)).
