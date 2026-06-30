@@ -3201,7 +3201,7 @@ The `typeof` operator can be used on a type parameter. It is a compile time erro
 
 ### 12.8.19 The sizeof operator
 
-The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
+The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type.
 
 ```ANTLR
 sizeof_expression
@@ -3227,7 +3227,7 @@ For certain predefined types the `sizeof` operator yields a constant `int` value
 |`sizeof(bool)`     | 1          |
 |`sizeof(decimal)`  | 16         |
 
-For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator).
+For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator), and is allowed only in an unsafe context.
 
 ### 12.8.20 The checked and unchecked operators
 
