@@ -3209,7 +3209,7 @@ sizeof_expression
     ;
 ```
 
-For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
+For certain types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
 |**Expression**     | **Result** |
 |-----------------  | ---------- |
@@ -3227,7 +3227,9 @@ For certain predefined types the `sizeof` operator yields a constant `int` value
 |`sizeof(bool)`     | 1          |
 |`sizeof(decimal)`  | 16         |
 
-For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator), and is allowed only in an unsafe context.
+For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above.
+
+For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator), and is allowed only in an unsafe context.
 
 ### 12.8.20 The checked and unchecked operators
 
