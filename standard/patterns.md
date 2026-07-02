@@ -449,7 +449,7 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 
 In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
 
-> *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
+A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
 
 ## 11.4 Pattern exhaustiveness
 
