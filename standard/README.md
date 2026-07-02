@@ -261,8 +261,6 @@
     - [§11.2.5](patterns.md#1125-positional-pattern)  Positional pattern
     - [§11.2.6](patterns.md#1126-property-pattern)  Property pattern
     - [§11.2.7](patterns.md#1127-discard-pattern)  Discard pattern
-  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
-  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
