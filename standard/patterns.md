@@ -13,6 +13,12 @@ A pattern is tested against a value in a number of contexts:
 
 The value against which a pattern is tested is called the ***pattern input value***.
 
+A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
+
+In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
+
+A set of patterns is exhaustive if, for every possible input value, some pattern in the set is applicable. When an implementation detects that a set of patterns is not exhaustive, it shall issue a warning.
+
 ## 11.2 Pattern forms
 
 ### 11.2.1 General
@@ -444,13 +450,3 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 > ```
 >
 > *end example*
-
-## 11.3 Pattern subsumption
-
-In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
-
-A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
-
-## 11.4 Pattern exhaustiveness
-
-A set of patterns is exhaustive if, for every possible input value, some pattern in the set is applicable. When an implementation detects that a set of patterns is not exhaustive, it shall issue a warning.
