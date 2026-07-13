@@ -1279,10 +1279,8 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
   >```
 
   Where `andThen` is a pseudo C# operation which performs its left-hand operand and then returns its right-operand as the result.
-<!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
-  >> *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
+  > *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
