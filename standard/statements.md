@@ -1441,9 +1441,9 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 #### 13.9.5.4 Deconstructing foreach
 
-A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a *deconstructor* ([§12.23.3](expressions.md#12233-deconstructing-assignment)) whose *deconstructor_element*s are matched, per iteration, against the elements obtained by deconstructing each collection element.
 
-All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
+Each *deconstructor_element* shall be either a *declaration_expression*, which declares an iteration variable, or a discard, which is a placeholder that matches its corresponding element without declaring a variable. It is a compile-time error for any *deconstructor_element* to be a *variable_reference*.
 
 A foreach statement of the form:
 
@@ -1471,10 +1471,10 @@ is semantically equivalent to:
 }
 ```
 
-This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* whose *deconstructor* declares an iteration variable for each *declaration_expression* it contains (discards declare none):
 
 - `C` and `E` are determined as for synchronous foreach
-- `e` is not visible or accessible anywhere in the program accept as indicated in the above code
+- `e` is not visible or accessible anywhere in the program except as indicated in the above code
 - the variables declared by the «deconstructor» are read-only to the «embedded_statement»
 - the code in the `finally` block is determined as for synchronous foreach
 
@@ -1504,11 +1504,24 @@ is semantically equivalent to:
 }
 ```
 
-This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* whose *deconstructor* declares an iteration variable for each *declaration_expression* it contains (discards declare none):
 
-- `enumerator` is not visible or accessible anywhere in the program accept as indicated in the above code
+- `enumerator` is not visible or accessible anywhere in the program except as indicated in the above code
 - the variables declared by the «deconstructor» are read-only to the «embedded_statement»
 - the code in the `finally` block is determined as for asynchronous foreach
+
+> *Example*: A deconstructing foreach uses discards as placeholders for elements that are not needed. Here each element of the collection is a tuple whose second element is discarded:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingForeach1", expectedOutput:["1","3"]} -->
+> ```csharp
+> var points = new List<(int X, int Y)> { (1, 2), (3, 4) };
+> foreach (var (x, _) in points)
+> {
+>     Console.WriteLine(x);
+> }
+> ```
+>
+> *end example*
 
 ## 13.10 Jump statements
 
