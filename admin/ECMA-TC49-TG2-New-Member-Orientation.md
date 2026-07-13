@@ -47,8 +47,6 @@ While the grammar is written in ANTLR notation the ANTLR parser generator itself
 
 We have an internal tool to extract the grammar from the spec, apply ANTLR generator specific implementation techniques, validate the grammar, and run grammar tests. (See [antlr-testing](https://github.com/ECMA-TC49-TG2/antlr-testing/blob/v2/ReadMe.md).)
 
-Nigel made a tool to extract the grammar from the spec and to rearrange the grammar to get it to pass the ANTLR validator.
-
 ## Examples in the spec
 
 We have tools to extract the examples and compile them and execute them. (See https://github.com/dotnet/csharpstandard/blob/draft-v8/tools/README.md.)
