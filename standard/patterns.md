@@ -320,6 +320,7 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 > if (s is {}) ...
 > ```
 >
+> The example declaring `x2` is similar to `if (s is var x2)` in terms of inferring the variable type, but the property pattern guarantees that `x2` is non-null.
 > *end note*
 
 Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
