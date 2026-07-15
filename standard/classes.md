@@ -2059,13 +2059,13 @@ A ***method*** is a member that implements a computation or action that can be p
 
 ```ANTLR
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2074,7 +2074,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier* 'partial'?
+    : ref_method_modifier*
     ;
 
 method_header
@@ -3031,19 +3031,20 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)). Partial methods may be defined in one part of a type declaration and implemented in another.
 
-In *method_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the *return_type*. A partial method cannot explicitly implement interface methods.
+In *method_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the *return_type* or *ref_kind*. A partial method cannot explicitly implement interface methods.
 
 Partial method declarations are classified as follows:
 
-- A method with an *expression-body* or a *block-body* or is declared with the `extern` modifier is said to be an ***implementing partial method declaration***.
+- A method with an *expression-body* or *block-body*, or a method declared with the `extern` modifier, is said to be an ***implementing partial method declaration***.
 - Otherwise, a method declaration where the body of the method declaration is a semicolon is said to be a ***defining partial method declaration***.
 
 Across the parts of a type declaration, there shall be exactly one defining partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same method name, number of type parameters, and number of parameters.
 - The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
+- The declarations shall have the same return type: they shall both return no value, or they shall both return by value or by reference with the same type (modulo differences in type parameter names). If they return by reference, the declarations shall have the same *ref_kind*.
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
-- Corresponding type parameters in the declarations shall have the same constraints. An implementation may choose to issue a warning if the type parameter names are different in the defining and implementing declarations.
+- Corresponding type parameters in the declarations, by ordinal position, shall have equivalent constraints after substituting each type parameter of one declaration with the corresponding type parameter of the other declaration.
 
 There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
 
