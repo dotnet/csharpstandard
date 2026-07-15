@@ -70,15 +70,15 @@ Each pattern form defines the set of values for which the pattern *matches* the 
 
 The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
 
-The *identifier* `var` appearing in any *pattern* is bound using the normal identifier-resolution rules. The *identifier* `var` may appear in patterns only where the entity to which it resolves is valid in that position. When no declaration of the *identifier* `var` is in scope, the form `var` *designation* is recognised as a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)); when any declaration of the *identifier* `var` is in scope, a *var_pattern* cannot be used. The verbatim identifier `@var` and Unicode-escaped equivalents are distinct identifiers from the contextual keyword `var` and are bound and used in patterns according to the entities they denote, like any other identifier.
+The token `var` in a *pattern* is recognised as the contextual keyword of a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)) only in the form `var` *designation*. The verbatim identifier `@var` and Unicode-escaped spellings of `var` are never recognised as the contextual keyword of a *var_pattern*; they are ordinary identifiers denoting whatever entity is in scope. A pattern that uses such a spelling is therefore interpreted as a *declaration_pattern*, *constant_pattern*, or other pattern form according to the entity that the identifier denotes.
 
-> *Note*: When a declaration of the *identifier* `var` is in scope, the consequences of the rule above are:
->
-> - If `var` denotes a type, then `var` may be the *type* of a *declaration_pattern* ([§11.2.2](patterns.md#1122-declaration-pattern)).
-> - If `var` denotes a constant, then `var` may be the *constant_expression* of a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern)).
-> - Otherwise (for example, when `var` denotes a field, property, local variable, parameter, or any other entity that is neither a type nor a constant), `var` is not valid in pattern position.
->
-> *end note*
+When a declaration of the *identifier* `var` is in scope, the following rules apply:
+
+- If `var` denotes a type, then the plain token `var` cannot be used as the *type* of a *declaration_pattern*; that type shall be named another way, such as by the verbatim identifier `@var`.
+- If `var` denotes a constant, then `var` may be the *constant_expression* of a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern)).
+- Otherwise (for example, when `var` denotes a namespace, field, property, local variable, parameter, or any other entity that is neither a type nor a constant), `var` is not valid as the first token of a *pattern* unless it is used in the form `var` *designation*.
+
+<!-- C# 9 update marker: the committee's empirical testing shows that in C# 8, when `var` names a type, `o is (var)` and `o is (@var)` fail CS8400 because type patterns are not available; in C# 9 they bind as *type_pattern*s and are valid. Draft-v9 should update this boundary for type patterns and parenthesized patterns, while preserving that bare `is T` and pattern `is (T)` are distinct grammar/binding paths. -->
 
 ### 11.2.3 Constant pattern
 
@@ -149,7 +149,7 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
-When a declaration of the *identifier* `var` in scope resolves to a type, `var` may appear as the *type* of a *declaration_pattern*; the general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
+When a declaration of the *identifier* `var` in scope resolves to a type, the plain token `var` cannot appear as the *type* of a *declaration_pattern*; that type shall be named another way, such as by the verbatim identifier `@var`. The general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
 
 The *type* of a *declaration_pattern* cannot be `dynamic`, because the runtime type test is defined in terms of the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)), which does not permit `dynamic`.
 
@@ -202,7 +202,7 @@ A *var_pattern* *matches* every value. That is, a pattern-matching operation wit
 
 A *var_pattern* is *applicable to* every type.
 
-A *var_pattern* cannot be used when any declaration of the *identifier* `var` is in scope. See [§11.2.1](patterns.md#1121-general) for the interpretation of `var` in pattern position in that case.
+A *var_pattern* cannot be used when the plain token `var` would refer to an in-scope type named `var`. See [§11.2.1](patterns.md#1121-general) for the interpretation of `var` when it is the first token of a *pattern* in that case.
 
 ```ANTLR
 var_pattern
