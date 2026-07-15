@@ -856,6 +856,8 @@ For an invocation that occurs within a local function or an anonymous function, 
 >     static void Main()
 >     {
 >         F1();
+>         Action anonymousFunction = () => F2();
+>         anonymousFunction();
 >
 >         void F1([CallerMemberName] string? name = null)
 >         {
@@ -876,9 +878,10 @@ For an invocation that occurs within a local function or an anonymous function, 
 > ```console
 > F1 MemberName: |Main|
 > F2 MemberName: |Main|
+> F2 MemberName: |Main|
 > ```
 >
-> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
+> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of that invocation of `F2` is also `Main`. Similarly, when `F2` is called by the anonymous function assigned to `anonymousFunction`, the reported caller is the method `Main`, which calls that anonymous function. *end example*
 
 ### 23.5.7 Code analysis attributes
 
