@@ -447,9 +447,11 @@ The nullability of the type argument need not match the nullability of the type 
 
 > *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
-Unless a type parameter is explicitly constrained to value types, the nullable type annotation `?` can only be applied to a type parameter within a `#nullable enable` context.
+Except when a type parameter is explicitly constrained to value types, the nullable type annotation `?` can only be applied to a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive)).
 
 For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
+
+> *Note*: On a type parameter, a return type `T?` has the same nullability effect as `[MaybeNull] T`, and a parameter type `T?` has the same nullability effect as `[AllowNull] T`. *end note*
 
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
@@ -535,9 +537,9 @@ The unmanaged type constraint specifies that a type argument used for the type p
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
-The `default` constraint allows a *nullable_type_annotation* on a type parameter that is not constrained to reference types or value types.
+The `default` constraint applies to a type parameter whose inherited constraints do not establish it as a reference type or a value type; its effect on `T?` in override methods and explicit interface method implementations is specified in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations).
 
-Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
+Pointer types are never allowed to be type arguments, and do not satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
@@ -2834,7 +2836,7 @@ A compile-time error occurs unless all of the following are true for an override
 > }
 > ```
 >
-> The `default` constraint on `B2.F2` is required to override the unconstrained `A2.F2` with a `T?` parameter. Without it, `T?` would be interpreted as a nullable value type. *end example*
+> The `default` constraint on `B2.F2` is required to override the unconstrained `A2.F2` with a `T?` parameter. Without it, `T?` in the second override would be interpreted as a nullable value type, so the declaration would not override the unconstrained `A2.F2`. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
