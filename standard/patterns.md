@@ -292,7 +292,7 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 > The output produced is
 >
 > ```console
-> Sum of [10 20 30] is 60
+> Sum of [10 20 30] is 60; average is 20
 > ```
 >
 > *end example*
