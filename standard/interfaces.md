@@ -901,7 +901,7 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 > }
 > ```
 >
-> The `default` constraint on `C2.F2` is required to implement the unconstrained `I2.F2` with a `T?` parameter. Without it, `T?` would be interpreted as a nullable value type. *end example*
+> The `default` constraint on `C2.F2` is required to implement the unconstrained `I2.F2` with a `T?` parameter. Without it, `T?` in the second implementation would be interpreted as a nullable value type, so the declaration would not implement the unconstrained `I2.F2`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
