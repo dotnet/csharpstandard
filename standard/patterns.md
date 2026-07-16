@@ -266,12 +266,17 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 > <!-- Example: {template:"standalone-console", name:"PositionalPattern2", ignoredWarnings:["CS8321"], inferOutput:true} -->
 > ```csharp
 > var numbers = new List<int> { 10, 20, 30 };
-> if (SumAndCount(numbers) is (Sum: var sum, Count: var count))
+> if (SumAndAverage(numbers) is (Sum: var sum, Average: var average))
 > {
->     Console.WriteLine($"Sum of [{string.Join(" ", numbers)}] is {sum}");
+>     Console.WriteLine($"Sum of [{string.Join(" ", numbers)}] is {sum}; average is {average}");
+> }
+> else
+> {
+>     // Note: sum and average are in scope here, but not definitely assigned
+>     Console.WriteLine("No numbers provided to compute sum and average.");   
 > }
 >
-> static (double Sum, int Count) SumAndCount(IEnumerable<int> numbers)
+> static (double Sum, double Average)? SumAndAverage(IEnumerable<int> numbers)
 > {
 >     int sum = 0;
 >     int count = 0;
@@ -280,7 +285,7 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 >         sum += number;
 >         count++;
 >     }
->     return (sum, count);
+>     return count == 0 ? null : (sum, sum / count);
 > }
 > ```
 >
