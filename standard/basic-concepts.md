@@ -628,7 +628,6 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a local variable declared in a *for_initializer* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* of the `for` statement.
 - The scope of a local constant declared in a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)) is the *block* in which the declaration occurs. It is a compile-time error to refer to a local constant in a textual position that precedes its *constant_declarator*.
 - The scope of a variable declared as part of a *foreach_statement*, *using_statement*, *lock_statement* or *query_expression* is determined by the expansion of the given construct.
-- The scope of a variable declared within a *pattern* ([§11.1](patterns.md#111-general)) is 
 
 Within the scope of a namespace, class, struct, or enumeration member it is possible to refer to the member in a textual position that precedes the declaration of the member.
 
