@@ -6400,8 +6400,8 @@ class Program
 {
     static void Main()
     {
-        Console.WriteLine(new Person("Jane", "Wilson");
-        Console.WriteLine(new Person("Dr.", "Jane", "Wilson");
+        Console.WriteLine(new Person("Jane", "Wilson"));
+        Console.WriteLine(new Person("Dr.", "Jane", "Wilson"));
     }
 }
 ```
@@ -6414,7 +6414,7 @@ Dr. Jane Wilson
 ```
 
 Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
- 
+
 ```csharp
 public Person(string firstName, string lastName);
 ```
