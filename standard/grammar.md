@@ -1728,9 +1728,9 @@ constant_declarator
 
 // Source: §13.6.4 Local function declarations
 local_function_declaration
-    : local_function_modifier* return_type local_function_header
+    : attributes? local_function_modifier* return_type local_function_header
       local_function_body
-    | ref_local_function_modifier* ref_kind ref_return_type
+    | attributes? ref_local_function_modifier* ref_kind ref_return_type
       local_function_header ref_local_function_body
     ;
 
@@ -1747,6 +1747,7 @@ local_function_modifier
 
 ref_local_function_modifier
     : 'static'
+    | 'extern'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -1754,11 +1755,13 @@ local_function_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    | ';'
     ;
 
 ref_local_function_body
     : block
     | '=>' 'ref' variable_reference ';'
+    | ';'
     ;
 
 // Source: §13.7 Expression statements
