@@ -670,13 +670,13 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 >
 > *end example*
 
-#### §conditional-local-function Conditional local functions
+#### 23.5.3.3 Conditional local functions
 
 A static local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
 
 A compile time error occurs if a non-static local function is made conditional.
 
-#### 23.5.3.3 Conditional attribute classes
+#### 23.5.3.4 Conditional attribute classes
 
 An attribute class ([§23.2](attributes.md#232-attribute-classes)) decorated with one or more `Conditional` attributes is a conditional attribute class. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
 
