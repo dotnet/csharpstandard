@@ -773,7 +773,8 @@
     - [§23.5.3](attributes.md#2353-the-conditional-attribute)  The Conditional attribute
       - [§23.5.3.1](attributes.md#23531-general)  General
       - [§23.5.3.2](attributes.md#23532-conditional-methods)  Conditional methods
-      - [§23.5.3.3](attributes.md#23533-conditional-attribute-classes)  Conditional attribute classes
+      - [§23.5.3.3](attributes.md#23533-conditional-local-functions)  Conditional local functions
+      - [§23.5.3.4](attributes.md#23534-conditional-attribute-classes)  Conditional attribute classes
     - [§23.5.4](attributes.md#2354-the-obsolete-attribute)  The Obsolete attribute
     - [§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)  The AsyncMethodBuilder attribute
     - [§23.5.6](attributes.md#2356-caller-info-attributes)  Caller-info attributes
