@@ -9,7 +9,7 @@ on:
       - standard-v7
       - draft-v8
       - draft-v9
-      - draft-10
+      - draft-v10
       - draft-v11
       - draft-v12
   workflow_dispatch:
