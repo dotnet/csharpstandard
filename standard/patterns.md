@@ -13,6 +13,12 @@ A pattern is tested against a value in a number of contexts:
 
 The value against which a pattern is tested is called the ***pattern input value***.
 
+A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
+
+In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
+
+A set of patterns is exhaustive if, for every possible input value, some pattern in the set is applicable. When an implementation detects that a set of patterns is not exhaustive, it shall issue a warning.
+
 ## 11.2 Pattern forms
 
 ### 11.2.1 General
@@ -88,9 +94,11 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
+It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
 
-> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` is not a nullable type. *end note*
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value.
+
+> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when both are valid. *end note*
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is a *discard_designation*, denoting a discard ([§9.2.9.2](variables.md#9292-discards)), the value of *e* is not bound to anything. Otherwise, if the *simple_designation* is a *single_variable_designation*, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.
 
@@ -258,12 +266,17 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 > <!-- Example: {template:"standalone-console", name:"PositionalPattern2", ignoredWarnings:["CS8321"], inferOutput:true} -->
 > ```csharp
 > var numbers = new List<int> { 10, 20, 30 };
-> if (SumAndCount(numbers) is (Sum: var sum, Count: var count))
+> if (SumAndAverage(numbers) is (Sum: var sum, Average: var average))
 > {
->     Console.WriteLine($"Sum of [{string.Join(" ", numbers)}] is {sum}");
+>     Console.WriteLine($"Sum of [{string.Join(" ", numbers)}] is {sum}; average is {average}");
+> }
+> else
+> {
+>     // Note: sum and average are in scope here, but not definitely assigned
+>     Console.WriteLine("No numbers provided to compute sum and average.");   
 > }
 >
-> static (double Sum, int Count) SumAndCount(IEnumerable<int> numbers)
+> static (double Sum, double Average)? SumAndAverage(IEnumerable<int> numbers)
 > {
 >     int sum = 0;
 >     int count = 0;
@@ -272,14 +285,14 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 >         sum += number;
 >         count++;
 >     }
->     return (sum, count);
+>     return count == 0 ? null : (sum, sum / count);
 > }
 > ```
 >
 > The output produced is
 >
 > ```console
-> Sum of [10 20 30] is 60
+> Sum of [10 20 30] is 60; average is 20
 > ```
 >
 > *end example*
@@ -314,6 +327,7 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 > if (s is {}) ...
 > ```
 >
+> The example declaring `x2` is similar to `if (s is var x2)` in terms of inferring the variable type, but the property pattern guarantees that `x2` is non-null.
 > *end note*
 
 Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
@@ -442,67 +456,6 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 >         _ => "zero",
 >         var x => "other: " + x,
 >     };
-> }
-> ```
->
-> *end example*
-
-## 11.3 Pattern subsumption
-
-In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
-> *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
-The following rules define when a set of patterns subsumes a given pattern:
-
-A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
-
-A set of patterns `Q` *subsumes* a pattern `P` if any of the following conditions hold:
-
-- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`’s *converted value*
-- `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
-- `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
-
-> *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
->
-> <!-- Example: {template:"code-in-main", name:"SwitchExprUnguardedSubsumption"} -->
-> ```csharp
-> object x = 10;
-> bool b = false;
-> int y = x switch
-> {
->     int i when !b => 0,
->     int i when b  => 1,
->     int i         => 2,
->     _             => 3
-> };
-> ```
->
-> Arms 1 and 2 have non-constant guards and so are not *unguarded*; only arm 3 is *unguarded* with pattern `int i`, which does not subsume the final `_` arm because it does not match a non-`int` value such as `null`. *end example*
-
-## 11.4 Pattern exhaustiveness
-
-Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable.
-The following rules define when a set of patterns is *exhaustive* for a type:
-
-A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
-
-1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
-2. Some pattern in `Q` is a *var pattern*; or
-3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
-
-> *Example*:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"PatternExhaustiveness1", replaceEllipsis:true, customEllipsisReplacements: [""], ignoredWarnings:["CS8321"]} -->
-> ```csharp
-> static void M(byte b)
-> {
->     switch (b) {
->         case 0: case 1: case 2: ... // handle every specific value of byte
->             break;
->         // error: the pattern 'byte other' is subsumed by the (exhaustive)
->         // previous cases
->         case byte other: 
->             break;
->     }
 > }
 > ```
 >
