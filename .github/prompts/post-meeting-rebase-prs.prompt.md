@@ -58,10 +58,10 @@ If `vN` is missing or unparseable from the comment, list the entry as unrouted a
 
 ### Step 1 — List target base branches
 
-List target base branches (the propagation chain — see the propagate prompt). Default: `draft-v8 draft-v9 alpha-v9 draft-10 alpha-v10 draft-v11 v11-alpha draft-v12`. Allow the user to override.
+List target base branches (the propagation chain — see the propagate prompt). Default: `draft-v8 draft-v9 alpha-v9 draft-v10 alpha-v10 draft-v11 v11-alpha draft-v12`. Allow the user to override.
 
 > **Branch-naming is inconsistent across versions** (e.g. `alpha-v9` vs
-> `v11-alpha`, `draft-10` vs `draft-v11`). Always verify actual branch
+> `v11-alpha`). Always verify actual branch
 > names with `git branch -r | grep upstream/` before starting.
 
 ### Step 2 — For each base branch, list and process open PRs
