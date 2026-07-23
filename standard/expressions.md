@@ -1319,10 +1319,8 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
   >```
 
   Where `andThen` is a pseudo C# operation which performs its left-hand operand and then returns its right-operand as the result.
-<!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
-  >> *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
+  > *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
@@ -3274,7 +3272,7 @@ The `typeof` operator can be used on a type parameter. It is a compile time erro
 
 ### 12.8.19 The sizeof operator
 
-The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
+The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type.
 
 ```ANTLR
 sizeof_expression
@@ -3282,7 +3280,7 @@ sizeof_expression
     ;
 ```
 
-For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
+For certain types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
 |**Expression**     | **Result** |
 |-----------------  | ---------- |
@@ -3300,7 +3298,9 @@ For certain predefined types the `sizeof` operator yields a constant `int` value
 |`sizeof(bool)`     | 1          |
 |`sizeof(decimal)`  | 16         |
 
-For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator).
+For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above.
+
+For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator), and is allowed only in an unsafe context.
 
 ### 12.8.20 The checked and unchecked operators
 
@@ -4001,15 +4001,10 @@ switch_expression_arm_expression
     ;
 ```
 
-There is a *switch expression conversion* ([§10.2.18](conversions.md#10218-switch-expression-conversion)) from a switch expression to a type `T`
-if there is an implicit conversion from every *switch_expression_arm_expression* of each of the switch expression’s *switch_expression_arm*s to `T`.
+The type of a *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and if each *switch_expression_arm_expression* can be implicitly converted to that type. Otherwise, the *switch_expression* has no type, but may still be subject to *switch expression conversions* ([§10.2.18](conversions.md#10218-switch-expression-conversion)).
+<— The best common type is the “natural type” when we add natural types for lambda expressions and other typeless expressions —>
 
-If a switch expression is not subject to a *switch expression conversion*, then
-
-- The type of the *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and each *switch_expression_arm_expression* can be implicitly converted to that type.
-- It is an error if no such type exists.
-
-It is an error if some *switch_expression_arm*’s pattern is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of preceding *switch_expression_arm*s of the switch expression that do not have a *case_guard* or whose *case_guard* is a constant expression with the value `true`.
+It is an error if the pattern of any *switch_expression_arm* is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) *switch_expression_arm*s of the switch expression.
 
 A switch expression is said to be *exhaustive* if the set of patterns of its *switch_expression_arm*s is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the switch expression's input. The compiler shall produce a warning if a switch expression is not exhaustive.
 At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
