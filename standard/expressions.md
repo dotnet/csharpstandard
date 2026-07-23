@@ -4057,8 +4057,8 @@ switch_expression_arm_expression
     ;
 ```
 
-The type of a *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and if each *switch_expression_arm_expression* can be implicitly converted to that type. Otherwise, the *switch_expression* has no type, but may still be subject to *switch expression conversions* ([§10.2.18](conversions.md#10218-switch-expression-conversion)).
-<— The best common type is the “natural type” when we add natural types for lambda expressions and other typeless expressions —>
+There is a *switch expression conversion* ([§10.2.18](conversions.md#10218-switch-expression-conversion)) from a switch expression to a type `T`
+if there is an implicit conversion from every *switch_expression_arm_expression* of each of the switch expression’s *switch_expression_arm*s to `T`.
 
 If a switch expression is not subject to a *switch expression conversion*, then
 
