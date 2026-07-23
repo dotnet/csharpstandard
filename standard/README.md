@@ -278,8 +278,6 @@
     - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
     - [§11.2.11](patterns.md#11211-list-pattern)  List pattern
     - [§11.2.12](patterns.md#11212-slice-pattern)  Slice pattern
-  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
-  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
