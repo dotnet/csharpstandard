@@ -1441,9 +1441,9 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 #### 13.9.5.4 Deconstructing foreach
 
-A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a *deconstructor* ([§12.23.3](expressions.md#12233-deconstructing-assignment)) whose *deconstructor_element*s are matched, per iteration, against the elements obtained by deconstructing each collection element.
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
 
-Each *deconstructor_element* shall be either a *declaration_expression*, which declares an iteration variable, or a discard, which is a placeholder that matches its corresponding element without declaring a variable. It is a compile-time error for any *deconstructor_element* to be a *variable_reference*.
+All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
 A foreach statement of the form:
 
