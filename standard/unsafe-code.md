@@ -862,7 +862,7 @@ Because an implicit conversion exists from any pointer type to the `void*` type,
 
 ### 24.6.9 The sizeof operator
 
-For certain predefined types ([§12.8.19](expressions.md#12819-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
+For certain types ([§12.8.19](expressions.md#12819-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
 
 The order in which members are packed into a struct is unspecified.
 
