@@ -778,7 +778,7 @@ There can be at most one `default` label in a `switch` statement.
 
 It is an error if the pattern of any switch label is not *applicable* ([§11.2.1](patterns.md#1121-general)) to the type of the input expression.
 
-It is an error if the pattern of any switch label is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of earlier *unguarded* switch labels of the switch statement.
+It is an error if the pattern of any switch label is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* switch labels of the switch statement.
 
 > *Example*:
 >
@@ -974,7 +974,7 @@ A switch label is reachable if at least one of the following is true:
 - The switch’s *selector_expression* is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
   - it is a `default` label and
-    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type; or
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.1](patterns.md#111-general)) for the switch governing type; or
     - the switch governing type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
 - The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
@@ -984,7 +984,7 @@ The end point of a `switch` statement is reachable if the switch statement is re
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
 - No `default` label is present and either
-  - The switch’s *selector_expression* is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type.
+  - The switch’s *selector_expression* is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.1](patterns.md#111-general)) for the switch governing type.
   - The switch’s *selector_expression* is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null`.
   - The switch’s *selector_expression* is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
 

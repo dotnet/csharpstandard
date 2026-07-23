@@ -1339,10 +1339,8 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
   >```
 
   Where `andThen` is a pseudo C# operation which performs its left-hand operand and then returns its right-operand as the result.
-<!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
-  >> *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
+  > *Note*: `andThen` is equivalent to C & C++’s comma operator. *end note*
 
 If none of the above hold `E` cannot be deconstructed, which is a compile-time error.
 
@@ -3328,7 +3326,7 @@ The `typeof` operator can be used on a type parameter. It is a compile time erro
 
 ### 12.8.19 The sizeof operator
 
-The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
+The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type.
 
 ```ANTLR
 sizeof_expression
@@ -3336,7 +3334,7 @@ sizeof_expression
     ;
 ```
 
-For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
+For certain types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
 |**Expression**     | **Result** |
 |-----------------  | ---------- |
@@ -3354,7 +3352,9 @@ For certain predefined types the `sizeof` operator yields a constant `int` value
 |`sizeof(bool)`     | 1          |
 |`sizeof(decimal)`  | 16         |
 
-For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator).
+For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above.
+
+For all other operand types, the `sizeof` operator is specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator), and is allowed only in an unsafe context.
 
 ### 12.8.20 The checked and unchecked operators
 
