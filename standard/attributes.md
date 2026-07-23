@@ -1051,7 +1051,7 @@ Specifies that a non-nullable argument may be `null` when the method returns the
 
 #### 23.5.7.8 The MemberNotNull attribute
 
-Specifies that the given member won't be ``null`` when the method returns.
+Specifies that the given member won’t be ``null`` when the method returns.
 
 > *Example*: A helper method may include the ``MemberNotNull`` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
 >
@@ -1082,11 +1082,11 @@ Specifies that the given member won't be ``null`` when the method returns.
 > }
 > ``````
 >
-> Multiple field names may be given as arguments to the attribute's constructor. *end example*
+> Multiple field names may be given as arguments to the attribute’s constructor. *end example*
 
 #### 23.5.7.9 The MemberNotNullWhen attribute
 
-Specifies that the listed member won't be ``null`` when the method returns the specified ``bool`` value.
+Specifies that the listed member won’t be ``null`` when the method returns the specified ``bool`` value.
 
 > *Example*: This attribute is like `MemberNotNull` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
@@ -1231,5 +1231,3 @@ For interoperation with other languages, an indexer may be implemented using ind
 > Now, the indexer’s name is `TheItem`.
 >
 > *end example*
-
-
