@@ -4006,7 +4006,7 @@ The type of a *switch_expression* is the best common type [§12.6.3.16](expressi
 
 It is an error if the pattern of any *switch_expression_arm* is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) *switch_expression_arm*s of the switch expression.
 
-A switch expression is said to be *exhaustive* if the set of patterns of its *switch_expression_arm*s is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the switch expression's input. The compiler shall produce a warning if a switch expression is not exhaustive.
+A switch expression is *exhaustive* if every value of its input is handled by at least one arm of the switch expression. A warning may be issued if a switch expression is not exhaustive.
 At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
 
 > *Note*: A corollary of the above is that a *switch_expression* with no *switch_expression_arms* will produce a compile time warning, and if evaluated at runtime will always throw an exception. *end note*
