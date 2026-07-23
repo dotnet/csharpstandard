@@ -274,8 +274,6 @@
     - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
     - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
     - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
-  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
-  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
