@@ -291,7 +291,6 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 > *Example*: For the operation `b * s`, where `b` is a `byte` and `s` is a `short`, overload resolution selects `operator *(int, int)` as the best operator. Thus, the effect is that `b` and `s` are converted to `int`, and the type of the result is `int`. Likewise, for the operation `i * d`, where `i` is an `int` and `d` is a `double`, `overload` resolution selects `operator *(double, double)` as the best operator. *end example*
 
-
 **End of informative text.**
 
 #### 12.4.7.2 Unary numeric promotions

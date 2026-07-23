@@ -1231,5 +1231,3 @@ For interoperation with other languages, an indexer may be implemented using ind
 > Now, the indexer’s name is `TheItem`.
 >
 > *end example*
-
-

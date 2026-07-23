@@ -6520,6 +6520,3 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
-
-
-
