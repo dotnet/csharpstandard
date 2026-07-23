@@ -573,15 +573,15 @@ It is a compile-time error for a pattern variable to be declared beneath a `not`
 
 In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
 
-- If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
-- Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
+- If `P` is a type pattern, the *narrowed type* is the type of the type pattern’s type.
+- Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern’s type.
 - Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
 - Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)), the *narrowed type* is the type `System.ITuple`.
 - Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
 - Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
-- Otherwise the *narrowed type* of `P` is `P`'s input type.
+- Otherwise the *narrowed type* of `P` is `P`’s input type.
 
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
 
