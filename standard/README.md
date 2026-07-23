@@ -48,42 +48,40 @@
     - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
     - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
-  - [§7.1](basic-concepts.md#71-application-startup-and-termination)  Application startup and termination
+  - [§7.1](basic-concepts.md#71-application-startup)  Application startup
     - [§7.1.1](basic-concepts.md#711-general)  General
-    - [§7.1.2](basic-concepts.md#712-named-entry-points)  Named entry points
+    - [§7.1.2](basic-concepts.md#712-using-a-named-entry-point)  Using a named entry point
     - [§7.1.3](basic-concepts.md#713-using-top-level-statements)  Using top-level statements
-    - [§7.1.4](basic-concepts.md#714-externally-defined-entry-point)  Externally defined entry point
-    - [§7.1.5](basic-concepts.md#715-entry-point-selection)  Entry point selection
-    - [§7.1.6](basic-concepts.md#716-entry-point-invocation)  Entry point invocation
-  - [§7.2](basic-concepts.md#72-declarations)  Declarations
-  - [§7.3](basic-concepts.md#73-members)  Members
-    - [§7.3.1](basic-concepts.md#731-general)  General
-    - [§7.3.2](basic-concepts.md#732-namespace-members)  Namespace members
-    - [§7.3.3](basic-concepts.md#733-struct-members)  Struct members
-    - [§7.3.4](basic-concepts.md#734-enumeration-members)  Enumeration members
-    - [§7.3.5](basic-concepts.md#735-class-members)  Class members
-    - [§7.3.6](basic-concepts.md#736-interface-members)  Interface members
-    - [§7.3.7](basic-concepts.md#737-array-members)  Array members
-    - [§7.3.8](basic-concepts.md#738-delegate-members)  Delegate members
-  - [§7.4](basic-concepts.md#74-member-access)  Member access
+  - [§7.2](basic-concepts.md#72-application-termination)  Application termination
+  - [§7.3](basic-concepts.md#73-declarations)  Declarations
+  - [§7.4](basic-concepts.md#74-members)  Members
     - [§7.4.1](basic-concepts.md#741-general)  General
-    - [§7.4.2](basic-concepts.md#742-declared-accessibility)  Declared accessibility
-    - [§7.4.3](basic-concepts.md#743-accessibility-domains)  Accessibility domains
-    - [§7.4.4](basic-concepts.md#744-protected-access)  Protected access
-    - [§7.4.5](basic-concepts.md#745-accessibility-constraints)  Accessibility constraints
-  - [§7.5](basic-concepts.md#75-signatures-and-overloading)  Signatures and overloading
-  - [§7.6](basic-concepts.md#76-scopes)  Scopes
-    - [§7.6.1](basic-concepts.md#761-general)  General
-    - [§7.6.2](basic-concepts.md#762-name-hiding)  Name hiding
-      - [§7.6.2.1](basic-concepts.md#7621-general)  General
-      - [§7.6.2.2](basic-concepts.md#7622-hiding-through-nesting)  Hiding through nesting
-      - [§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance)  Hiding through inheritance
-  - [§7.7](basic-concepts.md#77-namespace-and-type-names)  Namespace and type names
+    - [§7.4.2](basic-concepts.md#742-namespace-members)  Namespace members
+    - [§7.4.3](basic-concepts.md#743-struct-members)  Struct members
+    - [§7.4.4](basic-concepts.md#744-enumeration-members)  Enumeration members
+    - [§7.4.5](basic-concepts.md#745-class-members)  Class members
+    - [§7.4.6](basic-concepts.md#746-interface-members)  Interface members
+    - [§7.4.7](basic-concepts.md#747-array-members)  Array members
+    - [§7.4.8](basic-concepts.md#748-delegate-members)  Delegate members
+  - [§7.5](basic-concepts.md#75-member-access)  Member access
+    - [§7.5.1](basic-concepts.md#751-general)  General
+    - [§7.5.2](basic-concepts.md#752-declared-accessibility)  Declared accessibility
+    - [§7.5.3](basic-concepts.md#753-accessibility-domains)  Accessibility domains
+    - [§7.5.4](basic-concepts.md#754-protected-access)  Protected access
+    - [§7.5.5](basic-concepts.md#755-accessibility-constraints)  Accessibility constraints
+  - [§7.6](basic-concepts.md#76-signatures-and-overloading)  Signatures and overloading
+  - [§7.7](basic-concepts.md#77-scopes)  Scopes
     - [§7.7.1](basic-concepts.md#771-general)  General
-    - [§7.7.2](basic-concepts.md#772-unqualified-names)  Unqualified names
-    - [§7.7.3](basic-concepts.md#773-fully-qualified-names)  Fully qualified names
-  - [§7.8](basic-concepts.md#78-automatic-memory-management)  Automatic memory management
-  - [§7.9](basic-concepts.md#79-execution-order)  Execution order
+    - [§7.7.2](basic-concepts.md#772-name-hiding)  Name hiding
+      - [§7.7.2.1](basic-concepts.md#7721-general)  General
+      - [§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)  Hiding through nesting
+      - [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)  Hiding through inheritance
+  - [§7.8](basic-concepts.md#78-namespace-and-type-names)  Namespace and type names
+    - [§7.8.1](basic-concepts.md#781-general)  General
+    - [§7.8.2](basic-concepts.md#782-unqualified-names)  Unqualified names
+    - [§7.8.3](basic-concepts.md#783-fully-qualified-names)  Fully qualified names
+  - [§7.9](basic-concepts.md#79-automatic-memory-management)  Automatic memory management
+  - [§7.10](basic-concepts.md#710-execution-order)  Execution order
 - [§8](types.md#8-types)  Types
   - [§8.1](types.md#81-general)  General
   - [§8.2](types.md#82-reference-types)  Reference types
@@ -267,12 +265,15 @@
   - [§11.1](patterns.md#111-general)  General
   - [§11.2](patterns.md#112-pattern-forms)  Pattern forms
     - [§11.2.1](patterns.md#1121-general)  General
-    - [§11.2.2](patterns.md#1122-constant-pattern)  Constant pattern
-    - [§11.2.3](patterns.md#1123-declaration-pattern)  Declaration pattern
+    - [§11.2.2](patterns.md#1122-declaration-pattern)  Declaration pattern
+    - [§11.2.3](patterns.md#1123-constant-pattern)  Constant pattern
     - [§11.2.4](patterns.md#1124-var-pattern)  Var pattern
     - [§11.2.5](patterns.md#1125-positional-pattern)  Positional pattern
     - [§11.2.6](patterns.md#1126-property-pattern)  Property pattern
     - [§11.2.7](patterns.md#1127-discard-pattern)  Discard pattern
+    - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
+    - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
+    - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
@@ -370,11 +371,11 @@
       - [§12.8.17.1](expressions.md#128171-general)  General
       - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
         - [§12.8.17.2.1](expressions.md#1281721-general)  General
-        - [§12.8.17.2.2](expressions.md#1281722-object-initializers)  Object initializers
-        - [§12.8.17.2.3](expressions.md#1281723-collection-initializers)  Collection initializers
-      - [§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)  Anonymous object creation expressions
-      - [§12.8.17.4](expressions.md#128174-array-creation-expressions)  Array creation expressions
-      - [§12.8.17.5](expressions.md#128175-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.8.17.3](expressions.md#128173-object-initializers)  Object initializers
+        - [§12.8.17.3.1](expressions.md#1281731-collection-initializers)  Collection initializers
+      - [§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)  Anonymous object creation expressions
+      - [§12.8.17.5](expressions.md#128175-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.6](expressions.md#128176-delegate-creation-expressions)  Delegate creation expressions
     - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
     - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
     - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators
@@ -651,6 +652,7 @@
     - [§15.11.3](classes.md#15113-instance-variable-initializers)  Instance variable initializers
     - [§15.11.4](classes.md#15114-constructor-execution)  Constructor execution
     - [§15.11.5](classes.md#15115-default-constructors)  Default constructors
+    - [§15.11.6](classes.md#15116-copy-constructors)  Copy constructors
   - [§15.12](classes.md#1512-static-constructors)  Static constructors
   - [§15.13](classes.md#1513-finalizers)  Finalizers
   - [§15.14](classes.md#1514-async-functions)  Async Functions
@@ -671,24 +673,16 @@
     - [§15.15.6](classes.md#15156-enumerable-objects)  Enumerable objects
       - [§15.15.6.1](classes.md#151561-general)  General
       - [§15.15.6.2](classes.md#151562-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
-  - [§15.16](classes.md#1516-record-classes)  Record classes
+  - [§15.16](classes.md#1516-synthesized-record-class-members)  Synthesized record class members
     - [§15.16.1](classes.md#15161-general)  General
-    - [§15.16.2](classes.md#15162-class-base-specification)  Class base specification
-    - [§15.16.3](classes.md#15163-record-class-body)  Record class body
-    - [§15.16.4](classes.md#15164-class-members)  Class members
-    - [§15.16.5](classes.md#15165-instance-constructors)  Instance constructors
-    - [§15.16.6](classes.md#15166-implicit-record-class-members)  Implicit record class members
-      - [§15.16.6.1](classes.md#151661-general)  General
-      - [§15.16.6.2](classes.md#151662-copy-constructors)  Copy constructors
-      - [§15.16.6.3](classes.md#151663-equality-members)  Equality members
-      - [§15.16.6.4](classes.md#151664-copy-and-clone-members)  Copy and clone members
-      - [§15.16.6.5](classes.md#151665-printing-members)  Printing members
-      - [§15.16.6.6](classes.md#151666-positional-record-class-members)  Positional record class members
-        - [§15.16.6.6.1](classes.md#1516661-general)  General
-        - [§15.16.6.6.2](classes.md#1516662-primary-constructor)  Primary constructor
-        - [§15.16.6.6.3](classes.md#1516663-properties)  Properties
-        - [§15.16.6.6.4](classes.md#1516664-deconstruct)  Deconstruct
-  - [§15.17](classes.md#1517-record-class-and-non-record-class-differences)  Record class and non-record class differences
+    - [§15.16.2](classes.md#15162-equality-members)  Equality members
+    - [§15.16.3](classes.md#15163-copy-and-clone-members)  Copy and clone members
+    - [§15.16.4](classes.md#15164-printing-members)  Printing members
+    - [§15.16.5](classes.md#15165-positional-record-class-members)  Positional record class members
+      - [§15.16.5.1](classes.md#151651-general)  General
+      - [§15.16.5.2](classes.md#151652-primary-constructor)  Primary constructor
+      - [§15.16.5.3](classes.md#151653-properties)  Properties
+      - [§15.16.5.4](classes.md#151654-deconstruct)  Deconstruct
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations
@@ -701,45 +695,39 @@
   - [§16.3](structs.md#163-struct-members)  Struct members
     - [§16.3.1](structs.md#1631-general)  General
     - [§16.3.2](structs.md#1632-readonly-members)  Readonly members
-  - [§16.4](structs.md#164-record-structs)  Record structs
+  - [§16.4](structs.md#164-synthesized-record-struct-members)  Synthesized record struct members
     - [§16.4.1](structs.md#1641-general)  General
-    - [§16.4.2](structs.md#1642-struct-members)  Struct members
-    - [§16.4.3](structs.md#1643-record-struct-body)  Record struct body
-    - [§16.4.4](structs.md#1644-implicit-record-struct-members)  Implicit record struct members
+    - [§16.4.2](structs.md#1642-equality-members)  Equality members
+    - [§16.4.3](structs.md#1643-printing-members)  Printing members
+    - [§16.4.4](structs.md#1644-positional-record-struct-members)  Positional record struct members
       - [§16.4.4.1](structs.md#16441-general)  General
-      - [§16.4.4.2](structs.md#16442-primary-constructors)  Primary constructors
-      - [§16.4.4.3](structs.md#16443-equality-members)  Equality members
-      - [§16.4.4.4](structs.md#16444-printing-members)  Printing members
-      - [§16.4.4.5](structs.md#16445-positional-record-struct-members)  Positional record struct members
-        - [§16.4.4.5.1](structs.md#164451-general)  General
-        - [§16.4.4.5.2](structs.md#164452-primary-constructor)  Primary constructor
-        - [§16.4.4.5.3](structs.md#164453-properties)  Properties
-        - [§16.4.4.5.4](structs.md#164454-deconstruct)  Deconstruct
-  - [§16.5](structs.md#165-record-struct-and-non-record-struct-differences)  Record struct and non-record struct differences
-  - [§16.6](structs.md#166-class-and-struct-differences)  Class and struct differences
-    - [§16.6.1](structs.md#1661-general)  General
-    - [§16.6.2](structs.md#1662-value-semantics)  Value semantics
-    - [§16.6.3](structs.md#1663-inheritance)  Inheritance
-    - [§16.6.4](structs.md#1664-assignment)  Assignment
-    - [§16.6.5](structs.md#1665-default-values)  Default values
-    - [§16.6.6](structs.md#1666-boxing-and-unboxing)  Boxing and unboxing
-    - [§16.6.7](structs.md#1667-meaning-of-this)  Meaning of this
-    - [§16.6.8](structs.md#1668-field-initializers)  Field initializers
-    - [§16.6.9](structs.md#1669-constructors)  Constructors
-    - [§16.6.10](structs.md#16610-static-constructors)  Static constructors
-    - [§16.6.11](structs.md#16611-properties)  Properties
-    - [§16.6.12](structs.md#16612-methods)  Methods
-    - [§16.6.13](structs.md#16613-indexers)  Indexers
-    - [§16.6.14](structs.md#16614-events)  Events
-    - [§16.6.15](structs.md#16615-safe-context-constraint)  Safe context constraint
-      - [§16.6.15.1](structs.md#166151-general)  General
-      - [§16.6.15.2](structs.md#166152-parameter-safe-context)  Parameter safe context
-      - [§16.6.15.3](structs.md#166153-local-variable-safe-context)  Local variable safe context
-      - [§16.6.15.4](structs.md#166154-field-safe-context)  Field safe context
-      - [§16.6.15.5](structs.md#166155-operators)  Operators
-      - [§16.6.15.6](structs.md#166156-method-and-property-invocation)  Method and property invocation
-      - [§16.6.15.7](structs.md#166157-stackalloc)  stackalloc
-      - [§16.6.15.8](structs.md#166158-constructor-invocations)  Constructor invocations
+      - [§16.4.4.2](structs.md#16442-primary-constructor)  Primary constructor
+      - [§16.4.4.3](structs.md#16443-properties)  Properties
+      - [§16.4.4.4](structs.md#16444-deconstruct)  Deconstruct
+  - [§16.5](structs.md#165-class-and-struct-differences)  Class and struct differences
+    - [§16.5.1](structs.md#1651-general)  General
+    - [§16.5.2](structs.md#1652-value-semantics)  Value semantics
+    - [§16.5.3](structs.md#1653-inheritance)  Inheritance
+    - [§16.5.4](structs.md#1654-assignment)  Assignment
+    - [§16.5.5](structs.md#1655-default-values)  Default values
+    - [§16.5.6](structs.md#1656-boxing-and-unboxing)  Boxing and unboxing
+    - [§16.5.7](structs.md#1657-meaning-of-this)  Meaning of this
+    - [§16.5.8](structs.md#1658-field-initializers)  Field initializers
+    - [§16.5.9](structs.md#1659-constructors)  Constructors
+    - [§16.5.10](structs.md#16510-static-constructors)  Static constructors
+    - [§16.5.11](structs.md#16511-properties)  Properties
+    - [§16.5.12](structs.md#16512-methods)  Methods
+    - [§16.5.13](structs.md#16513-indexers)  Indexers
+    - [§16.5.14](structs.md#16514-events)  Events
+    - [§16.5.15](structs.md#16515-safe-context-constraint)  Safe context constraint
+      - [§16.5.15.1](structs.md#165151-general)  General
+      - [§16.5.15.2](structs.md#165152-parameter-safe-context)  Parameter safe context
+      - [§16.5.15.3](structs.md#165153-local-variable-safe-context)  Local variable safe context
+      - [§16.5.15.4](structs.md#165154-field-safe-context)  Field safe context
+      - [§16.5.15.5](structs.md#165155-operators)  Operators
+      - [§16.5.15.6](structs.md#165156-method-and-property-invocation)  Method and property invocation
+      - [§16.5.15.7](structs.md#165157-stackalloc)  stackalloc
+      - [§16.5.15.8](structs.md#165158-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types

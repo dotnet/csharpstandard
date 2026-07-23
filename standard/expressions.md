@@ -4067,7 +4067,7 @@ It is an error if the pattern of any *switch_expression_arm* is *subsumed* by ([
 
 A switch expression is *exhaustive* if every value of its input is handled by at least one arm of the switch expression. A warning may be issued if a switch expression is not exhaustive.
 
-At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.InvalidOperationException` (or a class derived from that).
+At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*’s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
 
 > *Note*: A corollary of the above is that a *switch_expression* with no *switch_expression_arms* will produce a compile time warning, and if evaluated at runtime will always throw an exception. *end note*
 <!-- markdownlint-disable MD028 -->
