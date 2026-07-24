@@ -63,6 +63,7 @@ The following conversions are classified as implicit conversions:
 - Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
+- Anonymous function type conversions (§anon-func-type-conversion)
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
@@ -385,7 +386,7 @@ A user-defined implicit conversion consists of an optional standard implicit con
 
 ### 10.2.15 Anonymous function conversions and method group conversions
 
-Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
+Anonymous functions and method groups do not have types in and of themselves, but they may have a natural type (§anon-func-type). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
 
 ### 10.2.16 Default literal conversions
 
@@ -428,6 +429,46 @@ For a *conditional_expression* `c ? e1 : e2`, when
 1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+### §anon-func-type-conversion Anonymous function type conversion
+
+The following conversions are permitted from an anonymous function type `F`(§anon-func-type):
+
+- To an anonymous function type `G` if the parameters and return types of `F` are variance-convertible to the parameters and return type of `G`.
+- To `System.Delegate` or its base classes or interfaces.
+- To `System.Linq.Expressions.Expression` or `System.Linq.Expressions.LambdaExpression`.
+
+There are no conversions to an anonymous function type from a type other than an anonymous function type.
+
+A conversion to `System.Delegate` or its base classes or interfaces realizes the anonymous function or method group as an instance of an appropriate delegate type.
+
+A conversion to `System.Linq.Expressions.Expression<TDelegate>` or its base classes realizes the anonymous function or method group as an expression tree with an appropriate delegate type.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "AnonFuncTypeConv1", ignoredWarnings:["CS8974"]} -->
+> ```csharp
+> Delegate d = delegate (object obj) { }; // Action<object>
+> Expression e = () => "";                // Expression<Func<string>>
+> object o = "".Clone;                    // Func<object>
+> ```
+>
+> *end example*
+
+Anonymous function type conversions are not implicit or explicit standard conversions and are not considered when determining whether a user-defined conversion operator is applicable to an anonymous function or method group.
+
+Although an implicit conversion to `object` is permitted, a warning shall be issued, as this may have been unintentional.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "AnonFuncTypeConv2", ignoredWarnings:["CS8974"]} -->
+> ```csharp
+> Random r = new Random();
+> object obj;
+> obj = r.NextDouble;         // warning: was this intentional?
+> obj = (object)r.NextDouble; // ok
+> ```
+>
+> *end example*
 
 ## 10.3 Explicit conversions
 
@@ -910,6 +951,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` is an output parameter.
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no reference or output parameters.
+- If `F` has an explicit return type, an identity conversion shall exist from the return type of `F` to the return type of `D`.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
 - If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
