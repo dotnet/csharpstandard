@@ -25,7 +25,7 @@ non_record_class_declaration
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in §rec-class. The differences between the two kinds are discussed in §rec-class-diffs.
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
 
 A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
@@ -189,7 +189,7 @@ interface_type_list
     ;
 ```
 
-*base_argument_list* is discussed in §rec-class-class-base-specification.
+*base_argument_list* is discussed in [§15.16.2](classes.md#15162-class-base-specification).
 
 A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
 
@@ -1578,7 +1578,7 @@ constant_modifier
 
 A *constant_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
@@ -1592,7 +1592,7 @@ A constant can itself participate in a *constant_expression*. Thus, a constant m
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As described in [§12.25](expressions.md#1225-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
+> *Note*: As described in [§12.26](expressions.md#1226-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
 When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§15.5.3](classes.md#1553-readonly-fields)) may be used instead.
 
@@ -1690,7 +1690,7 @@ The *type* of a *field_declaration* specifies the type of the members introduced
 
 The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.15](expressions.md#12815-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.23](expressions.md#1223-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)).
+The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.15](expressions.md#12815-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.24](expressions.md#1224-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)).
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
@@ -2789,7 +2789,7 @@ A compile-time error occurs unless all of the following are true for an override
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of the overridden base method.
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- The override method's return type is at least as accessible as the override method.
+- The override method’s return type is at least as accessible as the override method.
   > *Note*: This constraint permits an override method in a `private` class to have a `private` return type.  However, it requires a `public` override method in a `public` type to have a `public` return type. *end note*
 - A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
   - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
@@ -3083,7 +3083,7 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-#### §partial-methods-general General
+#### 15.6.9.1 General
 
 When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)). Partial methods may be defined in one part of a type declaration and implemented in another.
 
@@ -3243,7 +3243,7 @@ class Customer
 }
 ```
 
-#### §optional-partial-methods Optional partial methods
+#### 15.6.9.2 Optional partial methods
 
 An optional partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
 
@@ -3260,7 +3260,7 @@ If a defining declaration but not an implementing declaration is given for an op
 - Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
 - `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
 
-#### §required-partial-methods Required partial methods
+#### 15.6.9.3 Required partial methods
 
 A required partial method declaration includes an explicit access modifier. There shall be exactly one implementing partial method declaration.
 
@@ -3476,7 +3476,7 @@ The differences between static and instance members are discussed further in [§
 
 ### 15.7.3 Accessors
 
-#### §accessors-general General
+#### 15.7.3.1 General
 
 *Note*: This subclause and its sibling subclauses apply to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The text is written in terms of properties; when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
@@ -3671,7 +3671,7 @@ For more information about set and get accessors, see §set-and-get-accessors.
 
 For more information about init accessors, see §init-accessors.
 
-#### §set-and-get-accessors Set and get accessors
+#### 15.7.3.2 Set and get accessors
 
 The get and set accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
 
@@ -3873,7 +3873,7 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > *end example*
 
-#### §init-accessors Init accessors
+#### 15.7.3.3 Init accessors
 
 An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
 
@@ -4272,11 +4272,11 @@ Abstract property declarations are only permitted in abstract classes ([§15.2.2
 
 For an override property `P` declared in an interface `I`, the overridden base property is determined by examining each direct or indirect base interface of `I`, collecting the set of interfaces declaring an accessible property which has the same name as `P`. If this set of interfaces has a *most derived type*, to which there is an identity or implicit reference conversion from every type in this set, and that type contains a unique such property declaration, then that is the overridden base property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property's type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property’s type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
 
 The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
-> *Note*: The accessibility constraint on the overriding property's type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
+> *Note*: The accessibility constraint on the overriding property’s type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class or interface from further overriding the property. The accessors of a sealed property are also sealed.
 
@@ -6007,9 +6007,9 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
 
-## §rec-class Record classes
+## 15.16 Record classes
 
-### §rec-class-general General
+### 15.16.1 General
 
 A record class is a specialized reference type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record class, such as value-based equality and easy immutability.
 
@@ -6031,7 +6031,7 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### §rec-class-class-base-specification Class base specification
+### 15.16.2 Class base specification
 
 ```ANTLR
 base_argument_list
@@ -6041,7 +6041,7 @@ base_argument_list
 
 *argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
 
-### §rec-class-record-class-body Record class body
+### 15.16.3 Record class body
 
 The *record_class_body* of a record class identifies the explicitly declared members of that class.
 
@@ -6054,7 +6054,7 @@ record_class_body
 
 The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation (§implicit-members).
 
-### §rec-class-class-members Class members
+### 15.16.4 Class members
 
 For a record class, the member set also includes the members implicitly provided by the implementation (§implicit-members).
 
@@ -6062,19 +6062,19 @@ It is an error for a member of a record class to be named `Clone`.
 
 It is an error for an instance field of a record class to have an unsafe type.
 
-### §rec-class-instance-constructors Instance constructors
+### 15.16.5 Instance constructors
 
 A positional record class (§rec-class-general) has a primary constructor; see §rec-class-pos-mem-pricon for more information.
 
-### §implicit-members Implicit record class members
+### 15.16.6 Implicit record class members
 
-#### §synth-members-general General
+#### 15.16.6.1 General
 
 Certain members are provided by the implementation unless a member with a matching signature is declared in the *record_class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-#### §copy-constructor Copy constructors
+#### 15.16.6.2 Copy constructors
 
 A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
 
@@ -6107,7 +6107,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 
 In certain circumstances (§rec-class-copyclone), a copy constructor may be provided by the compiler, and called by provided code.
 
-#### §rec-class-equalmem Equality members
+#### 15.16.6.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6115,7 +6115,7 @@ If a record class is derived directly from `object`, the record class type has a
 System.Type EqualityContract { get; };
 ```
 
-The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
 
@@ -6123,9 +6123,9 @@ If the record class type is derived from some base record class type `Base`, the
 protected override System.Type EqualityContract { get; };
 ```
 
-The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn’t override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
 
-The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
@@ -6155,7 +6155,7 @@ If the record class type is derived from some base record class type, `Base`, th
 public sealed override bool Equals(Base? other);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
 
 The record class type includes a provided override declared as follows:
 
@@ -6163,7 +6163,7 @@ The record class type includes a provided override declared as follows:
 public override bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
 
 The record class type includes a provided override method declared as follows:
 
@@ -6171,7 +6171,7 @@ The record class type includes a provided override method declared as follows:
 public override int GetHashCode();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn’t override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
 
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
@@ -6274,18 +6274,18 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-#### §rec-class-copyclone Copy and clone members
+#### 15.16.6.4 Copy and clone members
 
 A record class type contains two copying members:
 
 - A copy constructor (§copy-constructor)
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
-The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-#### §rec-class-prtmem Printing members
+#### 15.16.6.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -6300,7 +6300,7 @@ The ***printable members of a class*** are the instance public field and readabl
 The method performs the following tasks:
 
 1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
-2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
+2. For each of the record class’s printable members, appends that member’s name followed by space `=`space, followed by the member’s value separated with `,` and a space.
 3. Returns `true` if the record class has printable members; otherwise, `false`.
 
 For a member that has a value type, its value is converted to a string representation.
@@ -6318,7 +6318,7 @@ If the record class has no printable members, the method shall call the base `Pr
 3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
 4. Returns `true`.
 
-The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
+The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed.
 
 The record class shall include a provided method method declared as follows:
 
@@ -6326,7 +6326,7 @@ The record class shall include a provided method method declared as follows:
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either provided, or explicitly declared, method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either provided, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
 The provided method:
 
@@ -6334,7 +6334,7 @@ The provided method:
 1. Appends the record class name to the builder, followed by ` { `,
 1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
 1. Appends `}`,
-1. Returns the builder's contents with `builder.ToString()`.
+1. Returns the builder’s contents with `builder.ToString()`.
 
 > *Example*: Given the following:
 >
@@ -6453,13 +6453,13 @@ The provided method:
 >
 > *end example*
 
-#### §rec-class-pos-mem Positional record class members
+#### 15.16.6.6 Positional record class members
 
-##### §rec-class-pos-mem-gen General
+##### 15.16.6.6.1 General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-##### §rec-class-pos-mem-pricon Primary constructor
+##### 15.16.6.6.2 Primary constructor
 
 For a record class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
 
@@ -6548,7 +6548,7 @@ A primary constructor parameter is considered to be passed to the base type via 
 
 If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
 
-##### §rec-class-pos-mem-props Properties
+##### 15.16.6.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
@@ -6578,7 +6578,7 @@ For a record class:
 >
 > *end example*
 
-##### §rec-class-pos-mem-decon Deconstruct
+##### 15.16.6.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6608,7 +6608,7 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 >
 > *end example*
 
-## §rec-class-diffs Record class and non-record class differences
+## 15.17 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
 
