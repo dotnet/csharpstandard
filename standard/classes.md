@@ -33,7 +33,7 @@ A class declaration shall not supply *type_parameter_constraints_clause*s unless
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***.
+If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***. `record` and `record class` are equivalent.
 
 For a record class, *class_modifier* shall not be `static`.
 
@@ -6070,7 +6070,7 @@ A record class is a specialized reference type that is optimized for storing dat
 
 ```ANTLR
 record_class_declaration
-    : attributes? class_modifier* 'partial'? 'record' identifier 
+    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier 
       type_parameter_list? delimited_parameter_list? class_base? 
       type_parameter_constraints_clause* record_class_body
     ;
@@ -6606,6 +6606,8 @@ If the class being declared has a *class_base* containing *base_argument_list*, 
 ##### 15.16.6.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
+
+For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) that has the same name and type as an inherited or explicitly declared instance field, the remainder of this subclause does not apply.
 
 For each parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
 
