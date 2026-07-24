@@ -851,7 +851,19 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
 - The definite-assignment statement of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
+  - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* (§qdot-expressions), then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
+
+> *Note*: The rule above formalizes that for an expression like `a?.M(out x) ?? (x = false)`, either the `a?.M(out x)` was fully evaluated and produced a non-null value, in which case `x` was assigned, or the `x = false` was evaluated, in which case `x` was also assigned. Therefore `x` is always assigned after this expression.
+>
+> This also handles the `dict?.TryGetValue(key, out var value) ?? false` scenario, by observing that *v* is definitely assigned after `dict.TryGetValue(key, out var value)`, and *v* is “definitely assigned when true” after `false`, and concluding that *v* must be “definitely assigned when true.”
+>
+> The more general formulation also allows the handling of some more unusual scenarios, such as:
+>
+> - `if (x?.M(out y) ?? (b && z.M(out y))) y.ToString();`
+> - `if (x?.M(out y) ?? z?.M(out y) ?? false) y.ToString();`
+>
+> *end note*
 
 #### 9.4.4.30 ?: expressions
 
@@ -869,6 +881,24 @@ For an expression *expr* of the form:
   - Otherwise, if *expr_cond* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
   - Otherwise, if the state of *v* after *expr_true* is definitely assigned and the state of *v* after *expr_false* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
+  - If the state of *v* after *expr_true* is “definitely assigned when true,” and the state of *v* after *expr_false* is “definitely assigned when true,” then the state of *v* after *expr* is “definitely assigned when true.”
+  - If the state of *v* after *expr_true* is “definitely assigned when false,” and the state of *v* after *expr_false* is “definitely assigned when false,” then the state of *v* after *expr* is “definitely assigned when false.”
+
+> *Note*: When both arms of a conditional expression result in a conditional state, the corresponding conditional states are joined and propagated out instead of unsplitting the state and allowing the final state to be non-conditional. This enables scenarios like the following:
+>
+> ```csharp
+> bool b = true;
+> object x = null;
+> int y;
+> if (b ? x != null && Set(out y) : x != null && Set(out y))
+> {
+>     y.ToString();
+> }
+>
+> bool Set(out int x) { x = 0; return true; }
+> ```
+>
+> *end note*
 
 #### 9.4.4.31 Anonymous functions
 
@@ -1001,6 +1031,138 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_operand* is the same as the definite-assignment state of *v* before *expr*.
 - If the variable ‘v’ is declared in *pattern*, then the definite-assignment state of ‘v’ after *expr* is “definitely assigned when true”.
 - Otherwise the definite assignment state of ‘v’ after *expr* is the same as the definite assignment state of ‘v’ after *expr_operand*.
+
+#### §qdot-expressions ?. expressions
+
+For an expression *E* of the form:
+
+```csharp
+«primary_expression» ?. «null_conditional_operation»
+```
+
+let *E₀* be the expression obtained by textually removing the leading `?` from each of the *null_conditional_operation*s of *E* that have one. (*E₀* is referred to as the ***non-conditional counterpart*** to the null-conditional expression.)
+
+- The definite-assignment state of *v* at any point within *E* is the same as the definite-assignment state at the corresponding point within *E₀*.
+- The definite-assignment state of *v* after *E* is the same as the definite-assignment state of *v* after *primary_expression*.
+
+> *Note*: *null_conditional_operation* is not actually a grammar rule; rather, it represents any form permitted by the grammar at that location. It is used here for convenience. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: The concept of “directly contains” allows skipping over relatively simple “wrapper” expressions when analyzing conditional accesses that are compared to other values. For example, in general, `((a?.b(out x))!) == true` is expected to result in the same flow state as `a?.b == true`.
+>
+> The intent is to allow analysis to function in the presence of a number of possible conversions on a conditional access. Propagating out “state when not null” is not possible when the conversion is user-defined, though, since one can't count on user-defined conversions to honor the constraint that the output is non-null only if the input is non-null. The only exception to this is when the user-defined conversion’s input is a non-nullable value type. For example:
+>
+> ```csharp
+> public struct S1 { }
+> public struct S2 { public static implicit operator S2?(S1 s1) => null; }
+> ```
+>
+> This also includes lifted conversions like the following:
+>
+> ```csharp
+> string x;
+>
+> S1? s1 = null;
+> _ = s1?.M1(x = "a") ?? s1.Value.M2(x = "a");
+>
+> x.ToString(); // ok
+>
+> public struct S1
+> {
+>     public S1 M1(object obj) => this;
+>     public S2 M2(object obj) => new S2();
+> }
+> public struct S2
+> {
+>     public static implicit operator S2(S1 s1) => default;
+> }
+> ```
+>
+> When it is considered whether a variable is assigned at a given point within a null-conditional expression, it can simply be assumed that any preceding null-conditional operations within the same null-conditional expression succeeded.
+>
+> For example, given a conditional expression `a?.b(out x)?.c(x)`, the non-conditional counterpart is `a.b(out x).c(x)`. If the definite-assignment state of `x` before `?.c(x)` is to be determined, for example, a “hypothetical” analysis of `a.b(out x)` can be performed and the resulting state can be used as an input to `?.c(x)`. *end note*
+
+#### §boolean-constant-expressions Boolean constant expressions
+
+For an expression *expr*, where *expr* is a constant expression with a `bool` value, the definite-assignment state of *v* after *expr* is determined, as follows:
+
+- If *expr* is a constant expression with value *true*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
+- If *expr* is a constant expression with value *false*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
+
+> *Note*: It is assumed that if an expression has a constant value bool `false`, that it's impossible to reach any branch that requires the expression to return `true`. Therefore, variables are assumed to be definitely assigned in such branches.
+>
+> Being in a conditional state *before* visiting a constant expression, is never expected, so there is no need to account for scenarios such as “*expr* is a constant expression with value *true* and the state of *v* before *expr* is definitely assigned when true.” *end note*
+
+#### §relational-equality-expressions ==/!= expressions
+
+For an expression *expr* of the form:
+
+```csharp
+«expr_first» == «expr_second»
+```
+
+where `==` is a predefined comparison operator ([§12.15](expressions.md#1215-relational-and-type-testing-operators)) or a lifted operator ([§12.4.8](expressions.md#1248-lifted-operators)), the definite-assignment state of *v* after *expr* is determined by:
+
+- If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E* and *expr_second* is a constant expression with value `null`, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
+- If *expr_first* directly contains a null-conditional expression *E* and *expr_second* is an expression of a non-nullable value type, or a constant expression with a non-null value, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
+- If *expr_first* is of type `bool`, and *expr_second* is a constant expression with value `true`, then the definite-assignment state after *expr* is the same as the definite-assignment state after *expr_first*.
+- If *expr_first* is of type `bool`, and *expr_second* is a constant expression with value `false`, then the definite-assignment state after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr_first*.
+
+For an expression *expr* of the form:
+
+```csharp
+«expr_first» != «expr_second»
+```
+
+where `!=` is a predefined comparison operator ([§12.15](expressions.md#1215-relational-and-type-testing-operators)) or a lifted operator ([§12.4.8](expressions.md#1248-lifted-operators)), the definite-assignment state of *v* after *expr* is determined by:
+
+- If *expr_first* directly contains a null-conditional expression *E* and *expr_second* is a constant expression with value `null`, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
+- If *expr_first* directly contains a null-conditional expression *E* and *expr_second* is an expression of a non-nullable value type, or a constant expression with a non-null value, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
+- If *expr_first* is of type `bool`, and *expr_second* is a constant expression with value `true`, then the definite-assignment state after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr_first*.
+- If *expr_first* is of type `bool`, and *expr_second* is a constant expression with value `false`, then the definite-assignment state after *expr* is the same as the definite-assignment state after *expr_first*.
+
+All of the above rules are commutative.
+
+> *Note*: The general idea expressed by these rules is:
+>
+> - if a conditional access is compared to `null`, then the operations definitely occurred if the result of the comparison is `false`.
+> - if a conditional access is compared to a non-nullable value type or a non-null constant, then the operations definitely occurred if the result of the comparison is `true`.
+> - since user-defined operators can’t be trusted to provide reliable answers where initialization safety is concerned, the new rules only apply when a predefined `==`/`!=` operator is in use.
+>
+> Some consequences of these rules are:
+>
+> - `if (a?.b(out var x) == true) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == 42) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == false) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == null) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != true) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != 42) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != false) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != null) x() else x();` will error in the 'else' branch
+>
+> *end note*
+
+#### §isop-ispattern-expressions is operator and is pattern expressions
+
+For an expression *expr* of the form:
+
+```csharp
+«E» is «T»
+```
+
+where *T* is any type or pattern:
+
+- The definite-assignment state of *v* before *E* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* after *expr* is determined by:
+
+  - If *E* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” and `T` is any type or a pattern that does not match a `null` input, then the state of *v* after *expr* is “definitely assigned when true.”
+  - If *E* directly contains a null-conditional expression, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” and `T` is a pattern that matches a `null` input, then the state of *v* after *expr* is “definitely assigned when false.”
+  - If *E* is of type `bool` and `T` is a pattern that only matches a `true` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *E*.
+  - If *E* is of type `bool` and `T` is a pattern that only matches a `false` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr*.
+  - Otherwise, if the definite-assignment state of *v* after *E* is "definitely assigned," then the definite-assignment state of *v* after *expr* is "definitely assigned."
+
+> *Note*: This subclause addresses similar scenarios as §relational-equality-expressions. It does not, however, address recursive patterns; e.g., `(a?.b(out x), c?.d(out y)) is (object, object)`. *end note*
 
 ## 9.5 Variable references
 
