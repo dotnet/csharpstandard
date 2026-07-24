@@ -21,14 +21,14 @@ Walk these branches in order. Each step merges the previous branch into the next
 1. `draft-v8`   (starting branch — no merge in; just merge its auto-PR)
 2. `draft-v9`   ← merges `draft-v8`
 3. `alpha-v9`   ← merges `draft-v9`
-4. `draft-10`   ← merges `alpha-v9`
-5. `alpha-v10`  ← merges `draft-10`
+4. `draft-v10`  ← merges `alpha-v9`
+5. `alpha-v10`  ← merges `draft-v10`
 6. `draft-v11`  ← merges `alpha-v10`
 7. `v11-alpha`  ← merges `draft-v11`
 8. `draft-v12`  ← merges `v11-alpha`
 
 > **Branch-naming is inconsistent across versions** (e.g. `alpha-v9` vs
-> `v11-alpha`, `draft-10` vs `draft-v11`). Always verify actual branch
+> `v11-alpha`). Always verify actual branch
 > names with `git branch -r | grep upstream/` before starting.
 >
 > When new version branches are added, append them here using the actual

@@ -31,8 +31,8 @@ gitGraph
    commit id: "v9 reviewed features"
    branch v9-alpha
    commit id: "v9 alpha feature PRs"
-   branch draft-10
-   checkout draft-10
+   branch draft-v10
+   checkout draft-v10
    commit id: "v10 base"
    commit id: "v10 reviewed features"
    branch v10-alpha
@@ -66,8 +66,8 @@ gitGraph
    commit id: "v9 reviewed features"
    branch v9-alpha
    commit id: "v9 alpha feature PRs"
-   branch draft-10
-   checkout draft-10
+   branch draft-v10
+   checkout draft-v10
    commit id: "v10 base"
    commit id: "v10 reviewed features"
    branch v10-alpha
@@ -84,10 +84,10 @@ gitGraph
    merge draft-v8
    checkout v9-alpha
    merge draft-v9
-   checkout draft-10
+   checkout draft-v10
    merge v9-alpha
    checkout v10-alpha
-   merge draft-10
+   merge draft-v10
    checkout draft-v11
    merge v10-alpha
    checkout v11-alpha
