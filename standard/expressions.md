@@ -149,7 +149,7 @@ The precedence of an operator is established by the definition of its associated
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `^` `++x` `--x` `(T)x` `await x` |
-> |  §12.11 | Range | `..` |
+> |  [§12.11](expressions.md#1211-range-operator) | Range | `..` |
 > |  [§12.12](expressions.md#1212-switch-expression)                                   | Switch                           | `switch { … }` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Additive                         | `+` `-` |
@@ -3916,13 +3916,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class type.
 
-*identifier* shall be an accessible instance field or property of the receiver's type.
+*identifier* shall be an accessible instance field or property of the receiver’s type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- The receiver's clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- The receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
 
@@ -7422,7 +7422,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
