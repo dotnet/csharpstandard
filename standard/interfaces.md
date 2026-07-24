@@ -855,10 +855,11 @@ It is a compile-time error for an explicit interface member implementation to in
 
 An explicit interface method implementation inherits any type parameter constraints from the interface.
 
-A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
+A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
 
-- If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-- If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
+- If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
+- If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
+- If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >
@@ -879,6 +880,28 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 > ```
 >
 > Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the `default` constraint works when explicitly implementing an interface method with an unconstrained type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ExplicitInterfaceMemberImplementations7"} -->
+> ```csharp
+> #nullable enable
+> interface I2
+> {
+>     void F2<T>(T? t) where T : struct;
+>     void F2<T>(T? t);
+> }
+>
+> class C2 : I2
+> {
+>     void I2.F2<T>(T? t) /*where T : struct*/ { }
+>     void I2.F2<T>(T? t) where T : default { }
+> }
+> ```
+>
+> The `default` constraint on `C2.F2` is required to implement the unconstrained `I2.F2` with a `T?` parameter. Without it, `T?` in the second implementation would be interpreted as a nullable value type, so the declaration would not implement the unconstrained `I2.F2`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
