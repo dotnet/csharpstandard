@@ -63,7 +63,7 @@ The following conversions are classified as implicit conversions:
 - Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
-- Anonymous function type conversions (§anon-func-type-conversion)
+- Anonymous function type conversions ([§10.2.23](conversions.md#10223-anonymous-function-type-conversion))
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
@@ -148,7 +148,7 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
 
-For any type `T` that is an applicable interpolated string handler type (§custInterpStrExpCustHandling), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
+For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -387,7 +387,7 @@ A user-defined implicit conversion consists of an optional standard implicit con
 
 ### 10.2.15 Anonymous function conversions and method group conversions
 
-Anonymous functions and method groups do not have types in and of themselves, but they may have a natural type (§anon-func-type). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
+Anonymous functions and method groups do not have types in and of themselves, but they may have a natural type ([§12.22.8](expressions.md#12228-anonymous-function-type)). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
 
 ### 10.2.16 Default literal conversions
 
@@ -420,7 +420,7 @@ an implicit ***conditional expression conversion*** exists that permits an impli
 
 There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
 
-Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
 ### 10.2.22 Implicit conditional expression conversions
 
@@ -430,9 +430,9 @@ For a *conditional_expression* `c ? e1 : e2`, when
 1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
-### §anon-func-type-conversion Anonymous function type conversion
+### 10.2.23 Anonymous function type conversion
 
-The following conversions are permitted from an anonymous function type `F`(§anon-func-type):
+The following conversions are permitted from an anonymous function type `F`([§12.22.8](expressions.md#12228-anonymous-function-type)):
 
 - To an anonymous function type `G` if the parameters and return types of `F` are variance-convertible to the parameters and return type of `G`.
 - To `System.Delegate` or its base classes or interfaces.

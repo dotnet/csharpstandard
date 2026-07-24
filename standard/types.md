@@ -272,7 +272,7 @@ Like any other instance constructor, the default constructor of a value type is 
 >
 > *end example*
 
-A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.4.9](structs.md#1649-constructors)).
+A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.6.9](structs.md#1669-constructors)).
 
 ### 8.3.4 Struct types
 

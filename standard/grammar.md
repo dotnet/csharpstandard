@@ -529,6 +529,8 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+      PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
 fragment PP_Compilation_Unit_Name
@@ -538,6 +540,35 @@ fragment PP_Compilation_Unit_Name
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
+    ;
+
+fragment PP_Start_Line_Character
+    : '(' PP_Whitespace? PP_Start_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_Start_Character PP_Whitespace? ')'
+    ;
+fragment PP_End_Line_Character
+    : '(' PP_Whitespace? PP_End_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_End_Character PP_Whitespace? ')'
+    ;
+
+fragment PP_Start_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_Start_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_Character_Offset
+    : Decimal_Digit+
     ;
 
 // Source: §6.5.9 Nullable directive
@@ -805,7 +836,11 @@ subpatterns
     ;
 subpattern
     : pattern
-    | identifier ':' pattern
+    | subpattern_name ':' pattern
+    ;
+subpattern_name
+    : identifier
+    | subpattern_name '.' identifier
     ;
 
 // Source: §11.2.6 Property pattern
@@ -1464,7 +1499,9 @@ conditional_expression
 
 // Source: §12.22.1 General
 lambda_expression
-    : anonymous_function_modifier? anonymous_function_signature '=>' anonymous_function_body
+    : attributes? anonymous_function_modifier?
+      (return_type | ref_kind ref_return_type)?
+      anonymous_function_signature '=>' anonymous_function_body
     ;
 
 anonymous_method_expression
@@ -1491,7 +1528,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type identifier
+    : attributes? anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -1511,7 +1548,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : identifier
+    : attributes? identifier
     ;
 
 anonymous_function_body
@@ -2051,13 +2088,22 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes?
-      statement_list* namespace_member_declaration*
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes? compilation_unit_body
+    ;
+
+compilation_unit_body
+    : statement_list* namespace_member_declaration*
+    | file_scoped_namespace_declaration
     ;
 
 // Source: §14.3 Namespace declarations
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -2075,34 +2121,56 @@ extern_alias_directive
     ;
 
 // Source: §14.5.1 General
+global_using_directive
+    : global_using_alias_directive
+    | global_using_namespace_directive
+    | global_using_static_directive
+    ;
+
+// Source: §14.5.2 Global using alias directives
+global_using_alias_directive
+    : 'global' using_alias_directive
+    ;
+
+// Source: §14.5.3 Global using namespace directives
+global_using_namespace_directive
+    : 'global' using_namespace_directive
+    ;
+
+// Source: §14.5.4 Global using static directives
+global_using_static_directive
+    : 'global' using_static_directive
+    ;
+
+// Source: §14.6.1 General
 using_directive
     : using_alias_directive
     | using_namespace_directive
     | using_static_directive    
     ;
 
-// Source: §14.5.2 Using alias directives
+// Source: §14.6.2 Using alias directives
 using_alias_directive
     : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
-// Source: §14.5.3 Using namespace directives
+// Source: §14.6.3 Using namespace directives
 using_namespace_directive
     : 'using' namespace_name ';'
     ;
 
-// Source: §14.5.4 Using static directives
+// Source: §14.6.4 Using static directives
 using_static_directive
     : 'using' 'static' type_name ';'
     ;
 
-// Source: §14.6 Namespace member declarations
+// Source: §14.7 Namespace member declarations
 namespace_member_declaration
     : namespace_declaration
     | type_declaration
     ;
 
-// Source: §14.7 Type declarations
+// Source: §14.8 Type declarations
 type_declaration
     : class_declaration
     | struct_declaration
@@ -2111,7 +2179,7 @@ type_declaration
     | delegate_declaration
     ;
 
-// Source: §14.8.1 General
+// Source: §14.9.1 General
 qualified_alias_member
     : identifier '::' identifier type_argument_list?
     ;
@@ -2639,7 +2707,7 @@ finalizer_body
 
 // Source: §15.16.1 General
 record_class_declaration
-    : attributes? class_modifier* 'partial'? 'record' identifier 
+    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier 
       type_parameter_list? delimited_parameter_list? class_base? 
       type_parameter_constraints_clause* record_class_body
     ;
@@ -2657,9 +2725,25 @@ record_class_body
 
 // Source: §16.2.1 General
 struct_declaration
+    : non_record_struct_declaration
+    | record_struct_declaration
+    ;
+
+non_record_struct_declaration
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
+    ;
+
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers
@@ -2696,6 +2780,19 @@ struct_member_declaration
     | static_constructor_declaration
     | type_declaration
     | fixed_size_buffer_declaration   // unsafe code support
+    ;
+
+// Source: §16.4.1 General
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+// Source: §16.4.3 Record struct body
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §17.7 Array initializers
