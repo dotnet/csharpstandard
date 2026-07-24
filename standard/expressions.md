@@ -456,7 +456,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>P = value</code></td>
->     <td>Scenario 1: The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>. Scenario 2: The init accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if this usage is not during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).</td>
+>     <td>Scenario 1: The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>. Scenario 2: The init accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if this usage is not during the construction phase of an object (§init-accessors).</td>
 >   </tr>  
 >   <tr>
 >     <td><code>T.P</code></td>
@@ -464,7 +464,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>  
 >   <tr>
 >     <td><code>T.P = value</code></td>
->     <td>Scenario 1: The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only. Scenario 2: The init accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if this usage is not during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).</td>
+>     <td>Scenario 1: The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only. Scenario 2: The init accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if this usage is not during the construction phase of an object (§init-accessors).</td>
 >   </tr>
 >   <tr>
 >     <td><code>e.P</code></td>
@@ -472,7 +472,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e.P = value</code></td>
->     <td>Scenario 1: The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only. Scenario 2: The init accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if this usage is not during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).</td>
+>     <td>Scenario 1: The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only. Scenario 2: The init accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if this usage is not during the construction phase of an object (§init-accessors).</td>
 >   </tr>  
 >   <tr>
 >     <td rowspan="6">Event access</td>
@@ -506,7 +506,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e[x, y] = value</code></td>
->     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. Scenario 1: The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only. Scenario 2: The init accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if this usage is not during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).</td>
+>     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. Scenario 1: The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only. Scenario 2: The init accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if this usage is not during the construction phase of an object (§init-accessors).</td>
 >   </tr>
 >   <tr>
 >     <td rowspan="2">Operator invocation</td>
@@ -783,7 +783,7 @@ The second phase proceeds as follows:
 
 If `E` is a method group or implicitly typed anonymous function and `T` is a delegate type or expression tree type then all the parameter types of `T` are *input types of* `E` *with type* `T`.
 
-If `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then all the parameter types of `T` are input types of `E` with type `T`.
+If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then all the parameter types of `T` are input types of `E` with type `T`.
 
 > *Note*: This is only applicable in unsafe code. *end note*
 
@@ -791,7 +791,7 @@ If `E` is an address-of method group and `T` is a function pointer type ([§24.3
 
 If `E` is a method group or an anonymous function and `T` is a delegate type or expression tree type then the return type of `T` is an *output type of* `E` *with type* `T`.
 
-If `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then the return type of `T` is an output type of `E` with type `T`.
+If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then the return type of `T` is an output type of `E` with type `T`.
 
 > *Note*: This is only applicable in unsafe code. *end note*
 
@@ -820,7 +820,7 @@ An *output type inference* is made *from* an expression `E` *to* a type `T` in
 - If `E` is a tuple literal with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
 - If `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
-- If `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then with parameter types `T1..Tk` and return type `Tb`, and overload resolution of `E` with the types `T1..Tk` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tb`.
+- If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then with parameter types `T1..Tk` and return type `Tb`, and overload resolution of `E` with the types `T1..Tk` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tb`.
   > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
@@ -854,9 +854,9 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
-  - `V` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) `delegate*<V2..Vk, V1>` and there is a function pointer type `delegate*<U2..Uk, U1>` such that `U` is identical to `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+  - `V` is a function pointer type (§function-pointers) `delegate*<V2..Vk, V1>` and there is a function pointer type `delegate*<U2..Uk, U1>` such that `U` is identical to `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
     > *Note*: This is only applicable in unsafe code. *end note*
-  - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)  
+  - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an exact inference is made
     > *Note*: This is only applicable in unsafe code. *end note*
@@ -885,9 +885,9 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is one of `IEnumerable<Uₑ>`, `ICollection<Uₑ>`, `IReadOnlyList<Uₑ>`, `IReadOnlyCollection<Uₑ>` or `IList<Uₑ>` and `V` is a single-dimensional array type `Vₑ[]`
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
-  - `U` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then `delegate*<U2..Uk, U1>` and `V` is a function pointer type which is identical to `delegate*<V2..Vk, V1>`, and the calling convention of `U` is identical to `V`, and the refness of `Ui` is identical to `Vi`.
+  - `U` is a function pointer type (§function-pointers) then `delegate*<U2..Uk, U1>` and `V` is a function pointer type which is identical to `delegate*<V2..Vk, V1>`, and the calling convention of `U` is identical to `V`, and the refness of `Ui` is identical to `Vi`.
     > *Note*: This is only applicable in unsafe code. *end note*
-  - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
+  - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an *exact inference* is made
     > *Note*: Function-pointer type-related text is only applicable in unsafe code. *end note*
@@ -1593,14 +1593,16 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures))), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters (§12.21.2)), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
-  - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
+  - If the declaration of `T` includes a primary constructor parameter `I` and the reference occurs within the `argument_list` of `T`’s `class_base` or within an initializer of a field, property or event of `T`, the result is the primary constructor parameter `I`.
+  - Otherwise, if `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
     - If `T` is the instance type of the immediately enclosing class or struct type and the lookup identifies one or more methods, the result is a method group with an associated instance expression of `this`. If a type argument list was specified, it is used in calling a generic method ([§12.8.10.2](expressions.md#128102-method-invocations)).
     - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
+  - Otherwise, if the declaration of `T` includes a primary constructor parameter `I`, the result is the primary constructor parameter `I`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
   - If `e` is zero and `I` is the name of a namespace in `N`, then:
     - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
@@ -2010,15 +2012,15 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
-- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct and indirect base interfaces. It is a compile-time error if no unique such type exists.
+- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
+- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration of the method found in the most specific (§19.4.10) interface from among `T` and its direct and indirect base interfaces. It is a compile-time error if no unique such type exists.
 - Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct and indirect base interfaces. It is a compile-time error if no unique such type exists.
 
 > *Note*: The following is only applicable in unsafe code. *end note*
 
 The *method_declaration* [§15.6.1](classes.md#1561-general) for an unmanaged method shall have the attribute `System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute`. The use of this attribute on a method results in the following constraints:
 
-- It is an error to directly call that method from C#. Instead, one can obtain a function pointer ([§24.3.3](unsafe-code.md#2433-function-pointers)) to that method and then invoke the method via that pointer.
+- It is an error to directly call that method from C#. Instead, one can obtain a function pointer (§function-pointers) to that method and then invoke the method via that pointer.
 - It is an error for that method to have a parameter or return type that is not an `unmanaged_type` ([§8.8](types.md#88-unmanaged-types)).
 - It is an error for that method to have type parameters, even if those type parameters are constrained to `unmanaged`.
 - It is an error for that method to be in a generic type.
@@ -2318,7 +2320,7 @@ The number of expressions in the *argument_list* shall be the same as the rank o
 
 - of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`; or
 - for single rank array access only, of type `Index` or `Range`; or
-- be implicitly convertible to one or more of the above types.
+- implicitly convertible to one or more of the above types.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
@@ -2602,7 +2604,7 @@ object_or_collection_initializer
 
 The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*.
 
-If `type` can be inferred from usage, it can be omitted, as allowed by *target_typed_new*. It is a compile-time error to omit `type` if the type cannot be inferred. A *target_typed_new* expression has no type. However, there is an implicit object-creation conversion ([§10.2.19](conversions.md#10219-implicit-object-creation-conversions)) from a *target_typed_new* expression to every type. It is a compile-time error if a *target_typed_new* is used as an operand of a unary or binary operator, or if it is used where it is not subject to an object-creation conversion.
+If `type` can be inferred from usage, it can be omitted, as allowed by *target_typed_new*. It is a compile-time error to omit `type` if the type cannot be inferred. A *target_typed_new* expression has no type. However, there is an implicit object-creation conversion (§imp-obj-creation-conv) from a *target_typed_new* expression to every type. It is a compile-time error if a *target_typed_new* is used as an operand of a unary or binary operator, or if it is used where it is not subject to an object-creation conversion.
 
 If `type` is present, let `T` be that type; otherwise, let `T` be the implied type.
 
@@ -3684,7 +3686,7 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   int operator -(int x);
   nint operator -(nint x);
   long operator -(long x);
-  ```  
+  ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
   
@@ -3817,7 +3819,7 @@ cast_expression
     ;
 ```
 
-A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_expression*, performs an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) of the value of `E` to type `T`. In the presence of a conditional expression conversion ([§10.2.20](conversions.md#10220-implicit-conditional-expression-conversions)) there may be more than one possible conversion from `E` to `T`, in which case, the conditional expression conversion shall only be used as a last resort. If no explicit conversion exists from `E` to `T`, a binding-time error occurs. Otherwise, the result is the value produced by the explicit conversion. The result is always classified as a value, even if `E` denotes a variable.
+A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_expression*, performs an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) of the value of `E` to type `T`. In the presence of a conditional expression conversion (§imp-cond-expr-conv) there may be more than one possible conversion from `E` to `T`, in which case, the conditional expression conversion shall only be used as a last resort. If no explicit conversion exists from `E` to `T`, a binding-time error occurs. Otherwise, the result is the value produced by the explicit conversion. The result is always classified as a value, even if `E` denotes a variable.
 
 The grammar for a *cast_expression* leads to certain syntactic ambiguities.
 
@@ -3899,7 +3901,7 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
-## 12.10 With expressions
+## §with-expressions With expressions
 
 A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified.
 
@@ -3914,13 +3916,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class type.
 
-*identifier* shall be an accessible instance field or property of the receiver’s type.
+*identifier* shall be an accessible instance field or property of the receiver's type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- The receiver’s clone method ([§15.16.3](classes.md#15163-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- The receiver's clone method (§rec-class-copyclone) is invoked, and its result is converted to the receiver’s type.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
 
@@ -3941,7 +3943,7 @@ a field or property access of the result of the conversion. Assignments are proc
 >
 > *end example*
 
-## 12.11 Range operator
+## 12.10 Range operator
 
 The `..` operator is called the *range* operator.
 
@@ -5464,9 +5466,9 @@ If the modifier `static` is present, the anonymous function cannot capture state
 A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing `static` anonymous function.
 
 <!-- markdownlint-disable MD028 -->
-> *Note*: Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program, other than possibly affecting delegate instance identity ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)). *end note*
+> *Note*: Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program, other than possibly affecting delegate instance identity (§10.7.2). *end note*
 
-> *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See [§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types). *end note*
+> *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See §10.7.2. *end note*
 <!-- markdownlint-enable MD028 -->
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
@@ -5541,6 +5543,8 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
 
+If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
+
 The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
 > *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discards. *end note*
@@ -5560,7 +5564,7 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
 - If the modifier `static` is present, it is a compile-time error for the body to reference `this`, `base`, or any outer variable, except as an operand of a `nameof` expression.
 - If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
-- If the modifier `static` is absent, the body has access to the outer variables ([§12.22.6](expressions.md#12226-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.22.7](expressions.md#12227-evaluation-of-anonymous-function-expressions)).
+- If the modifier `static` is absent, the body has access to the outer variables ([§12.21.6](expressions.md#12216-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.21.7](expressions.md#12217-evaluation-of-anonymous-function-expressions)).
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
 
@@ -5646,6 +5650,8 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 #### 12.22.6.1 General
 
 Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
+
+If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 
@@ -6926,11 +6932,10 @@ If the left operand of a simple assignment is of the form `E.P` or `E[Eᵢ]` whe
 
 The type of a simple assignment `x = y` is the type of an assignment to `x` of `y`, which is recursively determined as follows:
 
-- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements ([§12.7](expressions.md#127-deconstruction)), and each assignment to `xi` of `yi` has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
-- Otherwise, if `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
-- Otherwise, if `x` is classified as an implicitly typed variable (i.e., an implicitly typed declaration expression) and `y` has a type `T`, then the inferred type of the variable is `T`, and the assignment has the type `T`.
+- If `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
+- Otherwise, if `x` is classified as an implicitly typed variable (i.e. an implicitly typed declaration expression) and `y` has a type `T`, then the inferred type of the variable is `T`, and the assignment has the type `T`.
 - Otherwise, if `x` is classified as a property or indexer access, the property or indexer has an accessible set or init accessor, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
-- Otherwise, the assignment is not valid, and a binding-time error occurs.
+- Otherwise the assignment is not valid and a binding-time error occurs.
 
 The run-time processing of a simple assignment of the form `x = y` with type `T` is performed as an assignment to `x` of `y` with type `T`, which consists of the following recursive steps:
 
@@ -6941,12 +6946,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 - If `x` is classified as a property or indexer access:
   - `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - The set or init accessor of `x` is invoked with the value resulting from the evaluation and conversion of `y` as its value argument.
-  - The value resulting from the evaluation and conversion of `y` is yielded as the result of the assignment.
-- If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
-  - `y` is deconstructed with `n` elements to a tuple expression `e`.
-  - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
-  - for each `xi` in order from left to right, an assignment to `xi` of `t.Itemi` is performed, except that the `xi` are not evaluated again.
-  - `t` is yielded as the result of the assignment.
+  - The value resulting from the evaluation and conversion of `y` is yielded as the result of the simple assignment expression.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -7422,7 +7422,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 

@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* ([§24.3.1](unsafe-code.md#2431-general)) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 Value types differ from reference types in that a variable of a value types directly contains its data, whereas a variable of a reference type stores a ***reference*** to its data, the latter being known as an ***object***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -90,7 +90,7 @@ nullable_type_annotation
 
 ```
 
-*pointer_type* ([§24.3.1](unsafe-code.md#2431-general)) is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
@@ -222,7 +222,7 @@ nullable_value_type
     ;
 ```
 
-Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution ([§7.8.1](basic-concepts.md#781-general)) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
 
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
@@ -755,7 +755,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A type parameter cannot be used anywhere within an attribute ([§23.2.1](attributes.md#2321-general)).
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
 > - A type parameter can only be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) if the type parameter is constrained by the unmanaged constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-> - Nullable annotations (`?`) aren’t allowed on an instance of a type parameter unless that type parameter is constrained to be either a reference type or a value type ([§15.2.5](classes.md#1525-type-parameter-constraints)).  
+> - Except when a type parameter is explicitly constrained to value types, the nullable type annotation (`?`) can only be applied to an instance of a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive), [§15.2.5](classes.md#1525-type-parameter-constraints)).  
 >
 > *end note*
 
