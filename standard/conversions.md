@@ -83,6 +83,7 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+- Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
@@ -115,22 +116,26 @@ All identity conversions are symmetric. If an identity conversion exists from `T
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.8](expressions.md#1298-cast-expressions)).
 
+There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
+
 ### 10.2.3 Implicit numeric conversions
 
 The implicit numeric conversions are:
 
-- From `sbyte` to `short`, `int`, `long`, `float`, `double`, or `decimal`.
-- From `byte` to `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
-- From `short` to `int`, `long`, `float`, `double`, or `decimal`.
-- From `ushort` to `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
-- From `int` to `long`, `float`, `double`, or `decimal`.
-- From `uint` to `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `sbyte` to `short`, `int`, `nint`, `long`, `float`, `double`, or `decimal`.
+- From `byte` to `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `short` to `int`, `nint`, `long`, `float`, `double`, or `decimal`.
+- From `ushort` to `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `int` to `nint`, `long`, `float`, `double`, or `decimal`.
+- From `uint` to `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `nint` to `long`, `float`, `double`, or `decimal`.
+- From `nuint` to `ulong`, `float`, `double`, or `decimal`.
 - From `long` to `float`, `double`, or `decimal`.
 - From `ulong` to `float`, `double`, or `decimal`.
-- From `char` to `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, or `decimal`.
+- From `char` to `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `float`, `double`, or `decimal`.
 - From `float` to `double`.
 
-Conversions from `int`, `uint`, `long` or `ulong` to `float` and from `long` or `ulong` to `double` may cause a loss of precision, but will never cause a loss of magnitude. The other implicit numeric conversions never lose any information.
+Conversions from `int`, `uint`, `nint`, `nuint`, `long` or `ulong` to `float` and from `nint`, `nuint`, `long` or `ulong` to `double` may cause a loss of precision, but will never cause a loss of magnitude. The other implicit numeric conversions never lose any information.
 
 There are no predefined implicit conversions to the `char` type, so values of the other integral types do not automatically convert to the `char` type.
 
@@ -315,8 +320,12 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
+
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-constant-expressions)).
+
+> *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
 ### 10.2.12 Implicit conversions involving type parameters
 
@@ -419,18 +428,20 @@ The explicit conversions that are not implicit conversions are conversions that 
 
 The explicit numeric conversions are the conversions from a *numeric_type* to another *numeric_type* for which an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) does not already exist:
 
-- From `sbyte` to `byte`, `ushort`, `uint`, `ulong`, or `char`.
+- From `sbyte` to `byte`, `ushort`, `uint`, `ulong`, `nuint`, or `char`.
 - From `byte` to `sbyte` or `char`.
-- From `short` to `sbyte`, `byte`, `ushort`, `uint`, `ulong`, or `char`.
+- From `short` to `sbyte`, `byte`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
 - From `ushort` to `sbyte`, `byte`, `short`, or `char`.
-- From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `ulong`, or `char`.
-- From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, or `char`.
-- From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `ulong`, or `char`.
-- From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, or `char`.
+- From `int` to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, `ulong`, or `char`.
+- From `uint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `nint`, or `char`.
+- From `nint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nuint`, `ulong`, or `char`.
+- From `nuint` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `long`, or `char`.
+- From `long` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `ulong`, or `char`.
+- From `ulong` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `char`.
 - From `char` to `sbyte`, `byte`, or `short`.
-- From `float` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, or `decimal`.
-- From `double` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `decimal`.
-- From `decimal` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, or `double`.
+- From `float` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, or `decimal`.
+- From `double` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, or `decimal`.
+- From `decimal` to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, or `double`.
 
 Because the explicit conversions include all implicit and explicit numeric conversions, it is always possible to convert from any *numeric_type* to any other *numeric_type* using a cast expression ([§12.9.8](expressions.md#1298-cast-expressions)).
 
@@ -464,8 +475,8 @@ The explicit numeric conversions possibly lose information or possibly cause exc
 
 The explicit enumeration conversions are:
 
-- From `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, or `decimal` to any *enum_type*.
-- From any *enum_type* to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, or `decimal`.
+- From `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, or `decimal` to any *enum_type*.
+- From any *enum_type* to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, or `decimal`.
 - From any *enum_type* to any other *enum_type*.
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
