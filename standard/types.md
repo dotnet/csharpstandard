@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
+*pointer_type* ([§24.3.1](unsafe-code.md#2431-general)) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 Value types differ from reference types in that a variable of a value types directly contains its data, whereas a variable of a reference type stores a ***reference*** to its data, the latter being known as an ***object***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -90,7 +90,7 @@ nullable_type_annotation
 
 ```
 
-*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
+*pointer_type* ([§24.3.1](unsafe-code.md#2431-general)) is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
@@ -222,7 +222,7 @@ nullable_value_type
     ;
 ```
 
-Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution ([§7.8.1](basic-concepts.md#781-general)) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
 
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 

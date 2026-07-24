@@ -213,15 +213,14 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'select'     | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    : 'add'      | 'alias'    | 'ascending' | 'async'     | 'await'
+    | 'by'       | 'Cdecl'     | 'descending'| 'dynamic'   | 'equals'
+    | 'Fastcall' | 'from'      | 'get'       | 'global'    | 'group'
+    | 'init'     | 'into'      | 'join'      | 'let'       | 'managed'
+    | 'nameof'   | 'nint'      | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'  | 'partial'   | 'record'    | 'remove'    | 'select'
+    | 'set'      | 'Stdcall'   | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'      | 'when'      | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -2119,14 +2118,14 @@ qualified_alias_member
 
 // Source: §15.2.1 General
 class_declaration
-    : attributes? class_modifier* 'partial'? class_tag identifier
-        type_parameter_list? delimited_parameter_list? class_base?
-        type_parameter_constraints_clause* class_body
+    : non_record_class_declaration
+    | record_class_declaration
     ;
 
-class_tag
-    : 'class'
-    | 'record'
+non_record_class_declaration
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body
     ;
 
 // Source: §15.2.2.1 General
@@ -2156,10 +2155,6 @@ class_base
     : ':' class_type base_argument_list?
     | ':' interface_type_list
     | ':' class_type base_argument_list? ',' interface_type_list
-    ;
-
-base_argument_list
-    : '(' argument_list? ')'
     ;
 
 interface_type_list
@@ -2202,7 +2197,6 @@ constructor_constraint
 // Source: §15.2.6 Class body
 class_body
     : '{' class_member_declaration* '}' ';'?
-    | ';'
     ;
 
 // Source: §15.3.1 General
@@ -2260,13 +2254,13 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2640,6 +2634,24 @@ finalizer_declaration
 finalizer_body
     : block
     | '=>' expression ';'
+    | ';'
+    ;
+
+// Source: §15.16.1 General
+record_class_declaration
+    : attributes? class_modifier* 'partial'? 'record' identifier 
+      type_parameter_list? delimited_parameter_list? class_base? 
+      type_parameter_constraints_clause* record_class_body
+    ;
+
+// Source: §15.16.2 Class base specification
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+
+// Source: §15.16.3 Record class body
+record_class_body
+    : class_body
     | ';'
     ;
 
