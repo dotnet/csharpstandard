@@ -14,13 +14,20 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
+    : non_record_class_declaration
+    | record_class_declaration
+    ;
+
+non_record_class_declaration
     : attributes? class_modifier* 'partial'? 'class' identifier
         type_parameter_list? class_base? type_parameter_constraints_clause*
-        class_body ';'?
+        class_body
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in §rec-class. The differences between the two kinds are discussed in §rec-class-diffs.
+
+A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -172,15 +179,21 @@ A class declaration may include a *class_base* specification, which defines the 
 
 ```ANTLR
 class_base
-    : ':' class_type
+    : ':' class_type base_argument_list?
     | ':' interface_type_list
-    | ':' class_type ',' interface_type_list
+    | ':' class_type base_argument_list? ',' interface_type_list
     ;
 
 interface_type_list
     : interface_type (',' interface_type)*
     ;
 ```
+
+*base_argument_list* is discussed in §rec-class-class-base-specification.
+
+A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
+
+It is an error for *class_base* to have a *base_argument_list* if the corresponding *class_declaration* does not contain a *delimited_parameter_list*.
 
 #### 15.2.4.2 Base classes
 
@@ -749,13 +762,15 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-    : '{' class_member_declaration* '}'
+    : '{' class_member_declaration* '}' ';'?
     ;
 ```
 
+The *class_body*s `{…}` and `{…};` are equivalent.
+
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning immediately before the keywords `class`, `struct`, and `interface`. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -2200,6 +2215,10 @@ All parameters and type parameters shall have different names.
 The parameters of a method, if any, are declared by the method’s *parameter_list*.
 
 ```ANTLR
+delimited_parameter_list
+    : '(' parameter_list? ')'
+    ;
+
 parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
@@ -5645,3 +5664,616 @@ An enumerable object may implement more interfaces than those specified above.
 An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
 
 An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
+
+## §rec-class Record classes
+
+### §rec-class-general General
+
+A record class is a specialized reference type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record class, such as value-based equality and easy immutability.
+
+```ANTLR
+record_class_declaration
+    : attributes? class_modifier* 'partial'? 'record' identifier 
+      type_parameter_list? delimited_parameter_list? class_base? 
+      type_parameter_constraints_clause* record_class_body
+    ;
+```
+
+A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
+
+*class_modifier* shall not be `static`.
+
+A *record_class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
+
+At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
+
+Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
+
+### §rec-class-class-base-specification Class base specification
+
+```ANTLR
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+```
+
+*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
+
+### §rec-class-record-class-body Record class body
+
+The *record_class_body* of a record class identifies the explicitly declared members of that class.
+
+```ANTLR
+record_class_body
+    : class_body
+    | ';'
+    ;
+```
+
+The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation (§implicit-members).
+
+### §rec-class-class-members Class members
+
+For a record class, the member set also includes the members implicitly provided by the implementation (§implicit-members).
+
+It is an error for a member of a record class to be named `Clone`.
+
+It is an error for an instance field of a record class to have an unsafe type.
+
+### §rec-class-instance-constructors Instance constructors
+
+A positional record class (§rec-class-general) has a primary constructor; see §rec-class-pos-mem-pricon for more information.
+
+### §implicit-members Implicit record class members
+
+#### §synth-members-general General
+
+Certain members are provided by the implementation unless a member with a matching signature is declared in the *record_class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+
+The members provided by the implementation are described in the following subclauses.
+
+#### §copy-constructor Copy constructors
+
+A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
+> ```csharp
+> class Person
+> {
+>     public int Age { get; set; }
+>     public string Name { get; set; }
+>     public Person(Person aPerson)
+>     {
+>         Name = aPerson.Name;
+>         Age = aPerson.Age;
+>     }
+> }
+> ````
+>
+> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
+>
+> In the following case,
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
+> ```csharp
+> record Person(int Age, string Name);
+> ````
+>
+> the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
+
+In certain circumstances (§rec-class-copyclone), a copy constructor may be provided by the compiler, and called by provided code.
+
+#### §rec-class-equalmem Equality members
+
+If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
+
+```csharp
+System.Type EqualityContract { get; };
+```
+
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+
+If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
+
+```csharp
+protected override System.Type EqualityContract { get; };
+```
+
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
+
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+
+If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
+
+```csharp
+public virtual bool Equals(R? other);
+```
+
+The provided `Equals(R?)` returns `true` if and only if each of the following are `true`:
+
+- `other` is not `null`, and
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
+- If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise the value of `EqualityContract == other.EqualityContract`.
+
+The record class type includes provided `==` and `!=` operators declared as follows:
+
+```csharp
+public static bool operator==(R? left, R? right) =>
+    (object)left == right || (left?.Equals(right) ?? false);
+public static bool operator!=(R? left, R? right) => !(left == right);
+```
+
+The `Equals` method called by the `==` operator is the `Equals(R? other)` method specified above. The `!=` operator delegates to the `==` operator. It is an error if these operators are declared explicitly.
+
+If the record class type is derived from some base record class type, `Base`, the record class type includes a provided override equivalent to a method declared as follows:
+
+```csharp
+public sealed override bool Equals(Base? other);
+```
+
+It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
+
+The record class type includes a provided override declared as follows:
+
+```csharp
+public override bool Equals(object? obj);
+```
+
+It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
+
+The record class type includes a provided override method declared as follows:
+
+```csharp
+public override int GetHashCode();
+```
+
+The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+
+A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
+
+The provided override of `GetHashCode()` returns an `int` result of combining the following values:
+
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
+- If there is a base record class type, the value of `base.GetHashCode()`; otherwise the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
+
+> *Example*: Consider the following record class types:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordEqualityMembers1", additionalFiles:["T1T2T3.cs"]} -->
+> <!-- FIX: create and add file T1T2T3.cs. These are really placeholders for 3 arbitrary types. -->
+> ```csharp
+> record R1(T1 P1);
+> record R2(T1 P1, T2 P2) : R1(P1);
+> record R3(T1 P1, T2 P2, T3 P3) : R2(P1, P2);
+> ```
+>
+> For those record class types, the provided equality members would be something like the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"RecordEqualityMembers2", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"]} -->
+> <!-- FIX: requires template to enable nullable references. -->
+> <!-- NOTE: T1T2T3.cs declares T1, T2, and T3 as classes although they really represent 3 arbitrary types. As they are classes, and nullable checking is enabled, the compiler issues warnings CS8618 and CS8600, which for this purpose are superfluous, so they are ignored. -->
+> ```csharp
+> class R1 : IEquatable<R1>
+> {
+>     public T1 P1 { get; init; }
+>     protected virtual Type EqualityContract => typeof(R1);
+>     public override bool Equals(object? obj) => Equals(obj as R1);
+> 
+>     public virtual bool Equals(R1? other)
+>     {
+>         return !(other is null) &&
+>             EqualityContract == other.EqualityContract &&
+>             EqualityComparer<T1>.Default.Equals(P1, other.P1);
+>     }
+> 
+>     public static bool operator==(R1? left, R1? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R1? left, R1? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(EqualityComparer<Type>.Default.GetHashCode(EqualityContract),
+>             EqualityComparer<T1>.Default.GetHashCode(P1));
+>     }
+> }
+> 
+> class R2 : R1, IEquatable<R2>
+> {
+>     public T2 P2 { get; init; }
+>     protected override Type EqualityContract => typeof(R2);
+>     public override bool Equals(object? obj) => Equals(obj as R2);
+>     public sealed override bool Equals(R1? other) => Equals((object?)other);
+> 
+>     public virtual bool Equals(R2? other)
+>     {
+>         return base.Equals((R1?)other) &&
+>             EqualityComparer<T2>.Default.Equals(P2, other.P2);
+>     }
+> 
+>     public static bool operator==(R2? left, R2? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R2? left, R2? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(base.GetHashCode(),
+>             EqualityComparer<T2>.Default.GetHashCode(P2));
+>     }
+> }
+> 
+> class R3 : R2, IEquatable<R3>
+> {
+>     public T3 P3 { get; init; }
+>     protected override Type EqualityContract => typeof(R3);
+>     public override bool Equals(object? obj) => Equals(obj as R3);
+>     public sealed override bool Equals(R2? other) => Equals((object?)other);
+> 
+>     public virtual bool Equals(R3? other)
+>     {
+>         return base.Equals((R2?)other) &&
+>             EqualityComparer<T3>.Default.Equals(P3, other.P3);
+>     }
+> 
+>     public static bool operator==(R3? left, R3? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R3? left, R3? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(base.GetHashCode(),
+>             EqualityComparer<T3>.Default.GetHashCode(P3));
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §rec-class-copyclone Copy and clone members
+
+A record class type contains two copying members:
+
+- A copy constructor (§copy-constructor)
+- A provided public, parameter-less, instance clone method having an unspecified reserved name
+
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+
+If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
+
+#### §rec-class-prtmem Printing members
+
+If a record class is derived directly from `object`, the class includes a provided method declared as follows:
+
+```csharp
+bool PrintMembers(System.Text.StringBuilder builder);
+```
+
+The method is `private` if the record class type is sealed. Otherwise, the method is virtual and protected.
+
+The ***printable members of a class*** are the instance public field and readable property members.
+
+The method performs the following tasks:
+
+1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
+2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
+3. Returns `true` if the record class has printable members; otherwise, `false`.
+
+For a member that has a value type, its value is converted to a string representation.
+
+If the record class type is derived from some base record class, `Base`, the record class shall include a provided override method declared as follows:
+
+```csharp
+protected override bool PrintMembers(System.Text.StringBuilder builder);
+```
+
+If the record class has no printable members, the method shall call the base `PrintMembers` method with one argument (its `builder` parameter) and return the result. Otherwise, the method:
+
+1. Calls the base `PrintMembers` method with one argument (its `builder` parameter),
+2. If the `PrintMembers` method returned `true`, append `,` and a space to the builder,
+3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
+4. Returns `true`.
+
+The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
+
+The record class shall include a provided method method declared as follows:
+
+```csharp
+public override string ToString();
+```
+
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either provided, or explicitly declared, method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+
+The provided method:
+
+1. Creates a `StringBuilder` instance,
+1. Appends the record class name to the builder, followed by ` { `,
+1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
+1. Appends `}`,
+1. Returns the builder's contents with `builder.ToString()`.
+
+> *Example*: Given the following:
+>
+> <!-- Example: {template:"standalone-console", name:"PrintingMembers1", inferOutput:true} -->
+> ```csharp
+> public record Base
+> {
+>     public string FirstName { get; set; }
+>     public string LastName { get; set; }
+> 
+>     public Base(string firstName, string lastName)
+>     {
+>         FirstName = firstName;
+>         LastName = lastName;
+>     }
+> }
+> 
+> public record R2 : Base
+> {
+>     public int Age { get; set; }
+>     public R2(string firstName, string lastName, int age) :
+>         base(firstName, lastName) { Age = age; }
+> }
+> 
+> class Program
+> {
+>     static void Main()
+>     {
+>         Console.WriteLine(new Base("Martin", "Jane"));
+>         Console.WriteLine(new R2("Wilson", "Peter", 34));
+>     }
+> }
+> ```
+>
+> the output produced is
+>
+> ```console
+> Base { FirstName = Martin, LastName = Jane }
+> R2 { FirstName = Wilson, LastName = Peter, Age = 34 }
+> ```
+>
+> Consider the following record class types:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PrintingMembers2", additionalFiles:["T1T2T3.cs"]} -->
+> ```csharp
+> record R1(T1 P1);
+> record R2(T1 P1, T2 P2, T3 P3) : R1(P1);
+> ```
+>
+> For these record class types, the provided printing members would be something like the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"PrintingMembers3", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"], expectedErrors:["CS0535","CS0535"]} -->
+> <!-- NOTE: In reality, classes R1 and R2 will also have provided implementations of interface member 'IEquatable<R1>.Equals(R1?)', but as those are not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
+> ```csharp
+> class R1 : IEquatable<R1>
+> {
+>     public T1 P1 { get; init; }
+> 
+>     protected virtual bool PrintMembers(StringBuilder builder)
+>     {
+>         builder.Append(nameof(P1));
+>         builder.Append(" = ");
+>         builder.Append(this.P1); // or builder.Append(this.P1.ToString()); if P1 has a value type
+>         return true;
+>     }
+> 
+>     public override string ToString()
+>     {
+>         var builder = new StringBuilder();
+>         builder.Append(nameof(R1));
+>         builder.Append(" { ");
+>         if (PrintMembers(builder))
+>         {
+>            builder.Append(" ");
+>         }
+>         builder.Append("}");
+>         return builder.ToString();
+>     }
+> }
+> 
+> class R2 : R1, IEquatable<R2>
+> {
+>     public T2 P2 { get; init; }
+>     public T3 P3 { get; init; }
+>     
+>     protected override bool PrintMembers(StringBuilder builder)
+>     {
+>         if (base.PrintMembers(builder))
+>         {
+>             builder.Append(", ");
+>         }
+>         builder.Append(nameof(P2));
+>         builder.Append(" = ");
+>         builder.Append(this.P2); // or builder.Append(this.P2); if P2 has a value type
+>         builder.Append(", ");
+>         builder.Append(nameof(P3));
+>         builder.Append(" = ");
+>         builder.Append(this.P3); // or builder.Append(this.P3); if P3 has a value type
+>         return true;
+>     }
+>     
+>     public override string ToString()
+>     {
+>         var builder = new StringBuilder();
+>         builder.Append(nameof(R2));
+>         builder.Append(" { ");
+>         if (PrintMembers(builder))
+>         {
+>             builder.Append(" ");
+>         }
+>         builder.Append("}");
+>         return builder.ToString();
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §rec-class-pos-mem Positional record class members
+
+##### §rec-class-pos-mem-gen General
+
+As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
+
+##### §rec-class-pos-mem-pricon Primary constructor
+
+For a record class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
+
+Consider the following:
+
+<!-- Example: {template:"standalone-console", name:"RecordClassPrimaryConstructor", inferOutput:true} -->
+```csharp
+public record Person(string FirstName, string LastName)
+{
+    public string? Title { get; set; }
+    public Person(string title, string fName, string lName) : this(fName, lName)
+    {
+        Title = title;
+    }
+    public override string ToString()
+    {
+        return (Title != null ? Title + " " : "") + FirstName + " " + LastName;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(new Person("Jane", "Wilson"));
+        Console.WriteLine(new Person("Dr.", "Jane", "Wilson"));
+    }
+}
+```
+
+The output produced is:
+
+```console
+Jane Wilson
+Dr. Jane Wilson
+```
+
+Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
+
+```csharp
+public Person(string firstName, string lastName);
+```
+
+As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor, as is required by all user-defined constructors.
+
+At runtime the primary constructor
+
+1. Stores the value of each parameter in the corresponding provided private field (see §rec-class-pos-mem-props).
+1. Executes the instance initializers appearing in *record_class_body*.
+1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
+
+Each reference to a parameter in user code is replaced with a reference to the corresponding provided field.
+
+It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
+
+- a `nameof` argument.
+- an initializer of an instance field, property or event of the declaring type.
+- the `argument_list` of `class_base` of the declaring type.
+- the body of an instance method of the declaring type.
+- the body of an instance accessor of the declaring type.
+
+In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
+
+```csharp
+record class C(int i)
+{
+    protected int i = i;
+    public int I => i;
+}
+```
+
+the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
+
+A warning shall be produced if a parameter of the primary constructor is not read.
+
+Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
+
+All instance member initializers in *record_class_body* become assignments in the primary constructor.
+
+A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
+
+A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
+
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
+- The argument is not part of an expanded `params` argument;
+
+If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+
+##### §rec-class-pos-mem-props Properties
+
+For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
+
+For each parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
+
+For a record class:
+
+- A public auto-property is created with get and init accessors.
+- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
+- The auto-property is initialized to the value of the corresponding primary constructor parameter.
+- Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record class parameter.
+
+> *Example*: Given the following record class declaration:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordProperties1"} -->
+> ```csharp
+> public record R(string FirstName, string LastName);
+> ```
+>
+> based on the *parameter_list*, the following properties are provided:
+>
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"RecordProperties2"} -->
+> ```csharp
+> public string FirstName { get; init; }
+> public string LastName  { get; init; }
+> ```
+>
+> *end example*
+
+##### §rec-class-pos-mem-decon Deconstruct
+
+A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
+
+> *Example*: Consider the following record class having a user-defined `Deconstruct`:
+>
+> <!-- Example: {template:"standalone-console", name:"RecordDeconstruct", expectedOutput:["p1: 12, p2: xyz"]} -->
+> ```csharp
+> public record R(int P1, string P2 = "xyz")
+> {
+>     public void Deconstruct(out int P1, out string P2)
+>     {
+>         P1 = this.P1;
+>         P2 = this.P2;
+>     }
+> }
+>
+> class Program
+> {
+>     static void Main()
+>     {
+>         R r = new R(12);
+>         (int p1, string p2) = r;
+>         Console.WriteLine($"p1: {p1}, p2: {p2}");
+>     }
+> }
+> ```
+>
+> *end example*
+
+## §rec-class-diffs Record class and non-record class differences
+
+A record class differs from a non-record class in several important ways:
+
+- It is declared using the keyword `record` instead of `class`.
+- It has a number of members provided for it by the implementation, including a copy constructor.
+- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
+- If it is derived from other than `object`, it may pass arguments to its base type.
+- Its class body may be omitted.
+- It shall not have a member called `Clone`.
+- It shall not have an instance field with an unsafe type.
