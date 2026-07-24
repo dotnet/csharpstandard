@@ -5,7 +5,7 @@
 This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
 
 - The types introduced in this clause, `System.Index` ([§18.2](ranges.md#182-the-index-type)) and `System.Range` ([§18.3](ranges.md#183-the-range-type));
-- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) and binary `..` (§12.11) operators; and
+- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) and binary `..` ([§12.11](expressions.md#1211-range-operator)) operators; and
 - The *element_access* expression.
 
 Under the model a type is classified as:
@@ -184,7 +184,7 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 >
 > *end example*
 
-The language-defined operator `..` (§12.11) creates a `Range` value from `Index` values.
+The language-defined operator `..` ([§12.11](expressions.md#1211-range-operator)) creates a `Range` value from `Index` values.
 
 > *Example*
 >
