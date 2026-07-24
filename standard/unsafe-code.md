@@ -410,7 +410,7 @@ The `&` operator ([§24.6.5](unsafe-code.md#2465-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function (§12.21.6.2).
+- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function ([§12.22.6.2](expressions.md#122262-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§24.6.2](unsafe-code.md#2462-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§24.6.3](unsafe-code.md#2463-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§24.6.4](unsafe-code.md#2464-pointer-element-access)) of the form `P[E]`.
 
@@ -782,7 +782,7 @@ If a pointer increment or decrement operation overflows the domain of the pointe
 
 ### 24.6.7 Pointer arithmetic
 
-In an unsafe context, the `+` operator (§12.12.5) and `-` operator (§12.12.6) can be applied to values of all data pointer types. It is a compile-time error for these operators to be applied to a value of type *funcptr_type* or *voidptr_type*. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `+` operator ([§12.13.5](expressions.md#12135-addition-operator)) and `-` operator ([§12.13.6](expressions.md#12136-subtraction-operator)) can be applied to values of all data pointer types. It is a compile-time error for these operators to be applied to a value of type *funcptr_type* or *voidptr_type*. Thus, for every pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator +(T* x, int y);

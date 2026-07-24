@@ -40,8 +40,8 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The reason a conversion to a compatible delegate type may fail at compile-time. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The value returned when a stack allocation of size zero is made. ([§12.8.22](expressions.md#12822-stack-allocation))
-1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. (§12.12.3)
-1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. (§12.12.4)
+1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. ([§12.13.3](expressions.md#12133-division-operator))
+1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. ([§12.13.4](expressions.md#12134-remainder-operator))
 1. The mechanism for distinguishing a property’s set accessor signature from that of an init accessor ([§15.3.10.2](classes.md#153102-member-names-reserved-for-properties)).
 1. The mechanism for distinguishing an indexer’s set accessor signature from that of an init accessor ([§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated. ([§13.10.6](statements.md#13106-the-throw-statement))
