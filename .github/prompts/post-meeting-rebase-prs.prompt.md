@@ -1,18 +1,42 @@
 ---
 mode: agent
-description: Rebase same-repo feature PRs and notify fork PR authors after propagation.
+description: Phase A — rebase same-repo feature PRs onto their own base, produce a fresh per-PR patch for Phase B, and notify fork PR authors.
 ---
 
-# Post-meeting: rebase / notify feature PRs
+# Phase A — rebase feature PRs & produce per-PR patches (+ notify authors)
 
-After `post-meeting-propagate.prompt.md` has updated all draft/alpha branches, every open feature PR is now stale relative to its base. Update each PR according to whether its head branch is in this repo or on a fork.
+This is **Phase A** of the two-phase post-meeting workflow (see
+`post-meeting-propagate.prompt.md` for **Phase B**, the serial per-version
+sweep). Phase A **runs first, or in parallel with nothing blocking it**: the
+per-PR rebases are independent per PR/version, so this phase is embarrassingly
+parallel across all ~54 open feature PRs.
 
-This prompt also consumes two artifacts from the propagate run:
+Phase A does two things:
+
+1. **Rebase every open feature PR onto its own current base `draft-vN`**
+   (update each PR per whether its head is in this repo or on a fork), and
+2. **Produce a fresh `.patch` per PR** — this is the artifact **Phase B
+   consumes** in its `alpha-vN` rebuild (Step D of the propagate prompt).
+   Make the patch explicit: without it Phase B cannot surgically apply the
+   fresh feature content onto the existing alpha structure (Option 1).
+
+> **Ordering note.** After Phase B propagates the committee changes into
+> `draft-vN`, it does a *cheap re-rebase* of only the vN PRs whose base moved
+> and **refreshes their patches** (propagate prompt, Step B.8). So the patches
+> Phase B ultimately applies are the freshest post-propagation ones; the
+> patches produced here are the starting point.
+
+### Notification / routing steps depend on Phase B output
+
+Steps 0 and 0.5 below (alpha-drift detection and vNext-comment routing)
+consume artifacts that **Phase B produces**:
 
 - the **future-version comment inventory** (Step B.6 of the propagate prompt) — used by Step 0.5 below to route those notes to the appropriate feature PRs;
 - the deletion inventory — used as context when judging rebase conflicts.
 
-Ask the user for the propagate report (or its location) before starting.
+Run the rebase + patch core (Steps 1–2) up front; run Steps 0 and 0.5 as a
+**follow-up notification pass once Phase B has produced its report.** Ask the
+user for the propagate report (or its location) before running Steps 0 and 0.5.
 
 ## Procedure
 
@@ -121,9 +145,28 @@ For each PR returned:
      the push.
   7. Otherwise: `git push --force-with-lease upstream <headRefName>`.
      Record success with the new SHA.
+  8. **Produce the per-PR patch (Phase B input).** Capture the PR's commits
+     relative to its base as a patch file so Phase B can surgically apply them
+     onto `alpha-vN`:
+
+     ```bash
+     mkdir -p patches/<base>
+     git format-patch "upstream/<base>..<headRefName>" \
+       --stdout > "patches/<base>/pr-<num>.patch"
+     ```
+
+     Record the patch path alongside the new SHA. This is the fresh vN patch
+     Phase B's `alpha-vN` rebuild consumes; if Phase B later moves `<base>`
+     via committee propagation, its cheap re-rebase regenerates this patch
+     (propagate prompt, Step B.8).
 
 - If the head is on a fork, **do not attempt to rebase.** Post the
-  **please-rebase** comment below. Avoid duplicate comments: skip if any existing comment on the PR already contains the marker `<!-- post-meeting-rebase-notice -->`.
+  **please-rebase** comment below. Avoid duplicate comments: skip if any existing comment on the PR already contains the marker `<!-- post-meeting-rebase-notice -->`. Then capture a **best-effort patch** from the PR's current head so Phase B still has an input for the `alpha-vN` rebuild — note it may need refreshing once the author rebases:
+
+  ```bash
+  mkdir -p patches/<base>
+  gh pr diff <num> --patch > "patches/<base>/pr-<num>.patch"
+  ```
 
 ## Comment templates
 
@@ -170,6 +213,7 @@ Post via `gh pr comment <num> --body-file <tempfile>`.
 At the end, output a table grouped by base branch:
 
 - PRs successfully rebased + force-pushed (with new SHA)
+- **Per-PR patches produced** (path `patches/<base>/pr-<num>.patch` per PR) — the Phase B input set the `alpha-vN` rebuild consumes; flag any fork PRs whose patch is best-effort/stale pending author rebase
 - PRs left for manual rebase (with reason — including any failing `TOC002` references from the post-rebase cross-reference check)
 - Fork PRs commented on
 - PRs that already had the notice (skipped)

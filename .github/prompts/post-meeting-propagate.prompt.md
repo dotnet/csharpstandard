@@ -1,11 +1,44 @@
 ---
 mode: agent
-description: Propagate post-meeting changes through all draft and alpha branches.
+description: Phase B — serial per-version sweep that propagates committee changes and finalizes each alpha (committee changes + fresh patches) before advancing.
 ---
 
-# Post-meeting: propagate changes through draft & alpha branches
+# Post-meeting: propagate changes through draft & alpha branches (Phase B)
 
 You are propagating the changes merged into the current "starting" draft branch (after a TC49-TG2 committee meeting) forward through every future draft and alpha branch. See `admin/branch-diagram.md` for the rationale.
+
+## Phase B of the two-phase post-meeting workflow
+
+The monthly post-meeting work is split into two phases (see
+`post-meeting-rebase-prs.prompt.md` for **Phase A**):
+
+- **Phase A — parallel PR rebase (runs first / in parallel).** Rebase all
+  ~54 open feature PRs onto their own base `draft-vN`. Independent per
+  PR/version → embarrassingly parallel. Produces a **fresh `.patch` per PR**
+  that this phase consumes.
+- **Phase B — this prompt: a single serial sweep up the chain, atomic per
+  version.** For each version N in chain order, (1) propagate the
+  committee-merged changes into `draft-vN`, (2) real-renumber `draft-vN`
+  (watch the concept-drift trap), (3) cheap re-rebase only the vN PRs whose
+  base moved in step 1, (4) **rebuild `alpha-vN`** by surgically applying the
+  fresh vN patches onto the EXISTING alpha structure (Option 1 — never a
+  from-scratch structural reorg), dry-run-validate, then (5) advance so
+  `draft-v(N+1)` is based on the now-finalized `alpha-vN`.
+
+### ⚠️ Ordering invariant (the crux — do not violate)
+
+**Never propagate or build anything downstream of `alpha-vN` until
+`alpha-vN` is finalized with BOTH the committee-merged changes AND the fresh
+feature-PR patches.** In one sentence: `alpha-vN` = finalized `draft-vN` +
+fresh vN patches, constructed in **ONE pass**, before `draft-v(N+1)` is built
+on it.
+
+This is what eliminates the second (double) propagation cascade hit in the
+2026-07 cycle: propagating across the whole chain first builds
+`draft-v10..v12` on alphas whose feature-PR content is still **stale**, so
+refreshing the patches later (e.g. the #1458 records rebase) invalidates
+everything downstream and forces a second full cascade. Finalizing each alpha
+before building on it removes that second pass.
 
 ## Assumptions
 
@@ -26,6 +59,14 @@ Walk these branches in order. Each step merges the previous branch into the next
 6. `draft-v11`  ← merges `alpha-v10`
 7. `v11-alpha`  ← merges `draft-v11`
 8. `draft-v12`  ← merges `v11-alpha`
+
+> **Walk this chain as a per-version, atomic-per-version sweep.** For each
+> version N, finish `draft-vN` (propagate committee changes + renumber +
+> cheap re-rebase of moved vN PRs) **and** finalize `alpha-vN` (rebuild it
+> from the fresh vN patches — Step D) BEFORE advancing to `draft-v(N+1)`. The
+> alpha branch (`alpha-vN` / `vN-alpha`) is never just a plain merge of its
+> draft: it must also receive the fresh feature-PR patches in the same pass,
+> per the ordering invariant above.
 
 > **Branch-naming is inconsistent across versions** (e.g. `alpha-v9` vs
 > `v11-alpha`). Always verify actual branch
@@ -83,6 +124,12 @@ for the duration of the run.
 ## Procedure
 
 Before starting, confirm the chain with the user and show which branches will be touched. Confirm the pre-flight artifacts above are captured. Then for each branch in order:
+
+> **Per-version sweep.** Although the steps below are written per *branch*,
+> execute them as a serial sweep that is **atomic per version**: for version
+> N, finish `draft-vN` (Steps A–B.8) **and** finalize `alpha-vN` (Step D)
+> before touching `draft-v(N+1)`. Do not run ahead down the chain — the
+> ordering invariant above forbids building on an unfinalized alpha.
 
 ### Step A — Process auto-PR on the current branch
 
@@ -187,15 +234,73 @@ Persist the accumulated list across the whole run. Include it in the final repor
 1. Push: `git push origin <branch>`.
 2. The push triggers `update-on-merge.yaml`, which will open a fresh auto-PR. Loop back to Step A for this branch before moving on.
 
+### Step B.8 — Cheap re-rebase of moved `draft-vN` feature PRs (draft branches with open feature PRs)
+
+This implements step (3) of the per-version sweep. If Step B moved
+`draft-vN` (committee changes landed on it this cycle), the vN feature PRs
+that **Phase A** (`post-meeting-rebase-prs.prompt.md`) already rebased now
+have a stale base.
+
+- Do the **cheap re-rebase of ONLY the vN PRs whose base moved** and
+  regenerate their `.patch` (Phase A machinery — `git rebase upstream/draft-vN`
+  then `git format-patch upstream/draft-vN..<headRefName>`). Do **not**
+  re-rebase PRs whose base did not move.
+- These refreshed patches are the input to Step D's `alpha-vN` rebuild. The
+  patches Phase B applies to the alpha are always the freshest
+  post-propagation ones, not the Phase-A starting patches.
+
+### Step D — Rebuild `alpha-vN` from the fresh feature patches (alpha branches only — Option 1, surgical)
+
+**This is the step that was previously unprompted — its absence is what let
+the ordering slip and produced the 2026-07 double-propagation cascade.** Run
+it whenever `<branch>` is an alpha branch (`alpha-vN` / `vN-alpha`), after
+Step B has propagated the committee changes into it and **BEFORE** the chain
+advances to the next draft.
+
+`alpha-vN` must equal **finalized `draft-vN` + the fresh vN feature-PR
+patches**, built in ONE pass:
+
+1. **Confirm the fresh per-PR patches for version N are current.** Phase A
+   produced them and Step B.8 refreshed any whose base moved. If in doubt,
+   regenerate them (`git format-patch upstream/draft-vN..<headRefName>`).
+2. **Apply each fresh vN patch surgically onto the EXISTING `alpha-vN`
+   structure** — wording-only / subtractive hunks. **Never** rebuild
+   `alpha-vN` from scratch or reorganize its structure (Option 1; see the
+   v10→v11 structural-divergence trap). A from-scratch structural reorg
+   amplifies churn into every downstream branch.
+3. **Watch the renumber concept-drift trap.** The renumber tool keeps a
+   `§NUMBER` and rewrites the ANCHOR to whatever concept now sits at that
+   number, silently corrupting cross-refs while the dry-run reports **no**
+   error. For each drifted ref, read the intended concept from the merged
+   anchor slug, find that concept's actual number on this branch, and set
+   BOTH the number and the anchor manually.
+4. **Dry-run validate** (alpha branches get no auto-PR, so do NOT commit
+   renumber/grammar output — revert it after validating):
+
+   ```bash
+   ( cd tools && dotnet run --project StandardAnchorTags -- \
+       --owner dotnet --repo csharpstandard --dryrun )
+   ```
+
+   Any *new* `TOC002` diagnostic relative to the pre-rebuild baseline is a
+   **hard stop**.
+5. **Finalize before advancing.** Only when `alpha-vN` carries BOTH the
+   committee changes AND the fresh vN patches may the sweep proceed to
+   `draft-v(N+1)` (whose Step B merges from this now-finalized `alpha-vN`).
+
 ### Step C — Move to the next branch
 
-Repeat A–B for the next branch in the chain. Continue until the chain is done.
+Advance the per-version sweep. Before starting `draft-v(N+1)`, confirm
+`alpha-vN` is finalized per Step D — **the ordering invariant forbids building
+`draft-v(N+1)` on an unfinalized alpha.** Repeat A–D for the next branch in
+the chain. Continue until the chain is done.
 
 ## Reporting
 
 When finished (or when stopped on a conflict), produce a short report:
 
 - For each branch: action taken (auto-PR merged, propagation merge SHA, skipped).
+- For each version N: whether `alpha-vN` was **finalized** (committee changes + fresh vN patches applied surgically, dry-run clean) before `draft-v(N+1)` was started, and the list of vN patches applied (Step D / Step B.8).
 - Any branches where you stopped and why.
 - The deletion inventory captured in Pre-flight (file list + originating PR numbers).
 - The accumulated future-version comment inventory from Step B.6 (file:line, comment text, source branch, best-guess target version). Hand this to `post-meeting-rebase-prs.prompt.md`.
