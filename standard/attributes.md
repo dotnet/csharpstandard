@@ -1510,7 +1510,7 @@ If an `out bool` parameter is also declared to allow the handler to be inhibited
 
 #### 23.5.11.1 The SetsRequiredMembers attribute
 
-This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn't verify that the constructor actually initializes all required members.
+This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn’t verify that the constructor actually initializes all required members.
 
 > *Example*:
 >

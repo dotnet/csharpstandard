@@ -5463,7 +5463,7 @@ local_variable_type
     ;
 ```
 
-'scoped' shall only be permitted with *local_variable_type* if *local_variable_type* is 'var' or a ref struct type, and *identifer* is not a discard.
+‘scoped’ shall only be permitted with *local_variable_type* if *local_variable_type* is ‘var’ or a ref struct type, and *identifer* is not a discard.
 
 The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§12.8.4](expressions.md#1284-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
@@ -5746,7 +5746,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
-- Only *lambda_expression* parameters may contain 'scoped'.
+- Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 
 The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.

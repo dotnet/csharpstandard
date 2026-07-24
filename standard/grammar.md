@@ -959,6 +959,7 @@ argument_value
     : expression
     | 'in' 'scoped'? variable_reference
     | 'ref' 'scoped'? variable_reference
+    | 'out' 'scoped'? declaration_expression
     | 'out' 'scoped'? variable_reference
     ;
 
@@ -1804,7 +1805,6 @@ compound_assignment
 compound_assignment_operator
     : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
-    | unsigned_right_shift_assignment
     ;
 
 // Source: §12.25 Expression
