@@ -1595,11 +1595,13 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
 - If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
-  - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
+  - If the declaration of `T` includes a primary constructor parameter `I` and the reference occurs within the `argument_list` of `T`’s `class_base` or within an initializer of a field, property or event of `T`, the result is the primary constructor parameter `I`.
+  - Otherwise, if `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
     - If `T` is the instance type of the immediately enclosing class or struct type and the lookup identifies one or more methods, the result is a method group with an associated instance expression of `this`. If a type argument list was specified, it is used in calling a generic method ([§12.8.10.2](expressions.md#128102-method-invocations)).
     - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
+  - Otherwise, if the declaration of `T` includes a primary constructor parameter `I`, the result is the primary constructor parameter `I`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
   - If `e` is zero and `I` is the name of a namespace in `N`, then:
     - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
@@ -3884,6 +3886,48 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
+## §with-expressions With expressions
+
+A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified.
+
+```ANTLR
+with_expression
+    : switch_expression
+    | switch_expression 'with' '{' member_initializer_list? '}'
+    ;
+```
+
+A *with_expression* is not permitted as a statement.
+
+The receiver type shall be non-`void` and of some record class type.
+
+*identifier* shall be an accessible instance field or property of the receiver's type.
+
+All non-positional properties being changed shall have both set and init accessors.
+
+This expression is evaluated as follows:
+
+- The receiver's clone method (§rec-class-copyclone) is invoked, and its result is converted to the receiver’s type.
+- Each `member_initializer` is processed the same way as an assignment to
+a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"WithExpression"} -->
+> ```csharp
+> Person person1 = new("Mary", "Smith") { Age = 35 };    // create an immutable record
+> Person person2 = person1 with { FirstName = "Jane" };  // copy with FirstName changed
+> person2 = person1 with { Age = 40 };                   // copy with Age changed
+> person2 = person1 with { };                            // copy with no changes
+>
+> public record Person(string FirstName, string LastName)
+> {
+>     public int Age { get; init; }
+> }
+> ```
+>
+> *end example*
+
 ## 12.10 Range operator
 
 The `..` operator is called the *range* operator.
@@ -4661,7 +4705,13 @@ bool operator !=(C x, C y);
 
 unless predefined equality operators otherwise exist for `C` (for example, when `C` is `string` or `System.Delegate`).
 
-The operators return the result of comparing the two references for equality or non-equality. `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+Both operands shall be record classes, or both shall be non-record classes.
+
+The operators return the result of comparing the two references for equality or non-equality.
+
+In the case of non-record class operands, `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+
+In the case of record class operands, `operator ==` returns `true` if and only if the values of all the corresponding instance fields in the two record classes and their base record classes are equal, or both references are `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
 
 In addition to normal applicability rules ([§12.6.4.2](expressions.md#12642-applicable-function-member)), the predefined reference type equality operators require one of the following in order to be applicable:
 
