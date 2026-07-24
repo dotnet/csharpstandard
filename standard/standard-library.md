@@ -779,6 +779,31 @@ namespace System.Linq.Expressions
 
 namespace System.Runtime.CompilerServices
 {
+    public ref struct DefaultInterpolatedStringHandler
+    {
+        public DefaultInterpolatedStringHandler(int literalLength,
+            int formattedCount);
+        public DefaultInterpolatedStringHandler(int literalLength,
+            int formattedCount, IFormatProvider? provider);
+        public DefaultInterpolatedStringHandler(int literalLength,
+            int formattedCount, IFormatProvider? provider, Span<char> initialBuffer);
+        public void AppendFormatted(scoped ReadOnlySpan<char> value);
+        public void AppendFormatted(string? value);
+        public void AppendFormatted(object? value, int alignment = 0,
+            string? format = default);
+        public void AppendFormatted(scoped ReadOnlySpan<char> value,
+            int alignment = 0, string? format = default);
+        public void AppendFormatted(string? value, int alignment = 0,
+            string? format = default);
+        public void AppendFormatted<T>(T value);
+        public void AppendFormatted<T>(T value, int alignment);
+        public void AppendFormatted<T>(T value, string? format);
+        public void AppendFormatted<T>(T value, int alignment, string? format);
+        public void AppendLiteral(string value);
+        public override string ToString();
+        public string ToStringAndClear();
+    }
+
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
         AttributeTargets.Interface, 
         Inherited = false, AllowMultiple = false)]
@@ -827,6 +852,21 @@ namespace System.Runtime.CompilerServices
     public interface INotifyCompletion
     {
         void OnCompleted(Action continuation);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter,
+        AllowMultiple=false, Inherited=false)]
+    public sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
+    {
+        public InterpolatedStringHandlerArgumentAttribute(string argument);
+        public InterpolatedStringHandlerArgumentAttribute(params string[] arguments);
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Class |
+        System.AttributeTargets.Struct, AllowMultiple=false, Inherited=false)]
+    public sealed class InterpolatedStringHandlerAttribute : Attribute
+    {
+        public InterpolatedStringHandlerAttribute (); 
     }
 
     /// <summary>
@@ -1428,10 +1468,13 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`
 - `global::System.Runtime.CompilerServices.FormattableStringFactory`
 - `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`
+- `global::System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`
 - `global::System.Runtime.CompilerServices.ITuple`
 - `global::System.Runtime.CompilerServices.ModuleInitializerAttribute`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
