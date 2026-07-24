@@ -788,7 +788,7 @@ class_body
 
 A non-record class shall not have a *class_body* of `;`.
 
-For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those synthesized by the compiler ([§15.16](classes.md#1516-synthesized-record-class-members)).
+For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§15.16](classes.md#1516-synthesized-record-class-members)).
 
 ### 15.2.7 Partial type declarations
 
@@ -6213,43 +6213,43 @@ An asynchronous enumerable object provides an implementation of the `GetAsyncEnu
 
 ### 15.16.1 General
 
-Certain members are synthesized by the compiler unless a member with a matching signature is declared in the class body, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the compiler from generating that member only, not any other synthesized members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+Certain members are provided by the implementation unless a member with a matching signature is declared in the class body, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
-The synthesized members are described in the following subclauses.
+The members provided by the implementation are described in the following subclauses.
 
 ### 15.16.2 Equality members
 
-If a record class is derived directly from `object`, the record class type has a synthesized, readonly property equivalent to a property declared as follows:
+If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
 ```csharp
 System.Type EqualityContract { get; };
 ```
 
-The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
 
-If the record class type is derived from some base record class type `Base`, the record class type includes a synthesized readonly, property equivalent to a property declared as follows:
+If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
 
 ```csharp
 protected override System.Type EqualityContract { get; };
 ```
 
-The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`. It is an error if either synthesized, or explicitly declared, property doesn’t override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The synthesized property returns `typeof(R)` where `R` is the record class type.
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
 
-The record class type implements `System.IEquatable<R>` and includes a synthesized, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
 
-If `Equals(R? other)` is user-defined (that is, not synthesized) but `GetHashCode` is not, a warning shall be issued.
+If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
 ```csharp
 public virtual bool Equals(R? other);
 ```
 
-The synthesized `Equals(R?)` returns `true` if and only if each of the following are `true`:
+The provided `Equals(R?)` returns `true` if and only if each of the following are `true`:
 
 - `other` is not `null`, and
 - For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
 - If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise the value of `EqualityContract == other.EqualityContract`.
 
-The record class type includes synthesized `==` and `!=` operators equivalent to operators declared as follows:
+The record class type includes provided `==` and `!=` operators declared as follows:
 
 ```csharp
 public static bool operator==(R? left, R? right) =>
@@ -6259,33 +6259,33 @@ public static bool operator!=(R? left, R? right) => !(left == right);
 
 The `Equals` method called by the `==` operator is the `Equals(R? other)` method specified above. The `!=` operator delegates to the `==` operator. It is an error if these operators are declared explicitly.
 
-If the record class type is derived from some base record class type, `Base`, the record class type includes a synthesized override equivalent to a method declared as follows:
+If the record class type is derived from some base record class type, `Base`, the record class type includes a provided override equivalent to a method declared as follows:
 
 ```csharp
 public sealed override bool Equals(Base? other);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn’t override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The synthesized override returns `Equals((object?)other)`.
+It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
 
-The record class type includes a synthesized override equivalent to a method declared as follows:
+The record class type includes a provided override declared as follows:
 
 ```csharp
 public override bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn’t override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The synthesized override returns `Equals(other as R)` where `R` is the record class type.
+It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
 
-The record class type includes a synthesized override equivalent to a method declared as follows:
+The record class type includes a provided override method declared as follows:
 
 ```csharp
 public override int GetHashCode();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the synthesized, or the explicitly declared, method doesn’t override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
 
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
-The synthesized override of `GetHashCode()` returns an `int` result of combining the following values:
+The provided override of `GetHashCode()` returns an `int` result of combining the following values:
 
 - For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
 - If there is a base record class type, the value of `base.GetHashCode()`; otherwise the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
@@ -6300,7 +6300,7 @@ The synthesized override of `GetHashCode()` returns an `int` result of combining
 > record R3(T1 P1, T2 P2, T3 P3) : R2(P1, P2);
 > ```
 >
-> For those record class types, the synthesized equality members would be something like the following:
+> For those record class types, the provided equality members would be something like the following:
 >
 > <!-- Example: {template:"standalone-lib", name:"RecordEqualityMembers2", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"]} -->
 > <!-- FIX: requires template to enable nullable references. -->
@@ -6389,15 +6389,15 @@ The synthesized override of `GetHashCode()` returns an `int` result of combining
 A record class type contains two copying members:
 
 - A copy constructor ([§15.11.6](classes.md#15116-copy-constructors))
-- A synthesized public, parameter-less, instance clone method having an unspecified reserved name
+- A provided public, parameter-less, instance clone method having an unspecified reserved name
 
-The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be synthesized by the compiler. If the synthesized record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a synthesized copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
-If a virtual clone method is present in the base record class, the synthesized clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the synthesized clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
+If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
 ### 15.16.4 Printing members
 
-If a record class is derived directly from `object`, the class includes a synthesized method equivalent to a method declared as follows:
+If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
 ```csharp
 bool PrintMembers(System.Text.StringBuilder builder);
@@ -6415,7 +6415,7 @@ The method performs the following tasks:
 
 For a member that has a value type, its value is converted to a string representation.
 
-If the record class type is derived from some base record class, `Base`, the record class shall include a synthesized override equivalent to a method declared as follows:
+If the record class type is derived from some base record class, `Base`, the record class shall include a provided override method declared as follows:
 
 ```csharp
 protected override bool PrintMembers(System.Text.StringBuilder builder);
@@ -6430,17 +6430,17 @@ If the record class has no printable members, the method shall call the base `Pr
 
 The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed.
 
-The record class shall include a synthesized method equivalent to a method declared as follows:
+The record class shall include a provided method method declared as follows:
 
 ```csharp
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility. It is an error if either synthesized, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility. It is an error if either provided, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
 Sealing an explicitly declared `ToString` method prevents the compiler from synthesizing a `ToString` method for any derived record types. However, this does not prevent the compiler from synthesizing `PrintMembers`.
 
-The synthesized method:
+The provided method:
 
 1. Creates a `StringBuilder` instance,
 1. Appends the record class name to the builder, followed by ` { `,
@@ -6496,10 +6496,10 @@ The synthesized method:
 > record R2(T1 P1, T2 P2, T3 P3) : R1(P1);
 > ```
 >
-> For these record class types, the synthesized printing members would be something like the following:
+> For these record class types, the provided printing members would be something like the following:
 >
 > <!-- Example: {template:"standalone-lib", name:"PrintingMembers3", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"], expectedErrors:["CS0535","CS0535"]} -->
-> <!-- NOTE: In reality, classes R1 and R2 will also have synthesized implementations of interface member 'IEquatable<R1>.Equals(R1?)', but as those are not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
+> <!-- NOTE: In reality, classes R1 and R2 will also have provided implementations of interface member 'IEquatable<R1>.Equals(R1?)', but as those are not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
 > ```csharp
 > class R1 : IEquatable<R1>
 > {
@@ -6569,7 +6569,7 @@ The synthesized method:
 
 #### 15.16.5.1 General
 
-As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) synthesize additional members with the same conditions as the other members, as described in the following subclauses.
+As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) provide additional members with the same conditions as the other provided members, as described in the following subclauses.
 
 #### 15.16.5.2 Primary constructor
 
@@ -6611,7 +6611,7 @@ Expression variables declared in *argument_list* are in scope within the *argume
 > }
 > ```
 >
-> Based on the *parameter_list*, a primary constructor with the following signature is synthesized (the parameter names are for expository purposes only):
+> Based on the *parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
 >
 > ```csharp
 > public R1(string firstName, string lastName);
@@ -6630,7 +6630,7 @@ For a record class:
 - A public auto-property is created with get and init accessors.
 - An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
-- Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter.
+- Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter.
 
 > *Example*: Given the following record class declaration:
 >
@@ -6639,7 +6639,7 @@ For a record class:
 > public record R(string FirstName, string LastName);
 > ```
 >
-> based on the *parameter_list*, the following properties are synthesized:
+> based on the *parameter_list*, the following properties are provided:
 >
 > <!-- Example: {template:"code-in-class-lib-without-using", name:"RecordProperties2"} -->
 > ```csharp
@@ -6651,7 +6651,7 @@ For a record class:
 
 #### 15.16.5.4 Deconstruct
 
-A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be synthesized a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
+A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
 > *Example*: Consider the following record class having a user-defined `Deconstruct`:
 >
