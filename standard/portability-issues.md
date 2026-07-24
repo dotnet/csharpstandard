@@ -11,7 +11,7 @@ This annex collects some information about portability that appears in this spec
 The behavior is undefined in the following circumstances:
 
 1. The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.9.4](expressions.md#12994-run-time-evaluation-of-await-expressions)).
-1. Passing pointers as `ref` or `out` parameters (§data-pointers).
+1. Passing pointers as `ref` or `out` parameters ([§24.3.2](unsafe-code.md#2432-data-pointers)).
 1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§24.5.1](unsafe-code.md#2451-general)).
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§24.6.2](unsafe-code.md#2462-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§24.6.4](unsafe-code.md#2464-pointer-element-access)).
@@ -40,15 +40,15 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The reason a conversion to a compatible delegate type may fail at compile-time. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The value returned when a stack allocation of size zero is made. ([§12.8.22](expressions.md#12822-stack-allocation))
-1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. ([§12.12.3](expressions.md#12123-division-operator))
-1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. ([§12.12.4](expressions.md#12124-remainder-operator))
+1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. ([§12.13.3](expressions.md#12133-division-operator))
+1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. ([§12.13.4](expressions.md#12134-remainder-operator))
 1. The mechanism for distinguishing a property’s set accessor signature from that of an init accessor ([§15.3.10.2](classes.md#153102-member-names-reserved-for-properties)).
 1. The mechanism for distinguishing an indexer’s set accessor signature from that of an init accessor ([§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated. ([§13.10.6](statements.md#13106-the-throw-statement))
 1. The mechanism by which linkage to an external method is achieved. ([§15.6.8](classes.md#1568-external-methods))
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
-1. The token name mapping and semantics of unmanaged calling conventions beyond those required by this specification, and the set of valid combinations of those tokens (§function-pointers).
-1. The order of execution of module initializers in a module (§module-init-attr).
+1. The token name mapping and semantics of unmanaged calling conventions beyond those required by this specification, and the set of valid combinations of those tokens ([§24.3.3](unsafe-code.md#2433-function-pointers)).
+1. The order of execution of module initializers in a module ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)).
 1. An execution environment may provide additional attributes that affect the execution of a C# program. ([§23.5.1](attributes.md#2351-general))
 1. The mappings between pointers and integers. ([§24.5.1](unsafe-code.md#2451-general))
 1. The effect of applying the unary `*` operator to a `null` pointer. ([§24.6.2](unsafe-code.md#2462-pointer-indirection))
@@ -61,13 +61,13 @@ A conforming implementation is required to document its choice of behavior in ea
 
 ## B.4 Unspecified behavior
 
-1. The name of the entry-point method generated to contain top-level statements (§top-level-statements).
+1. The name of the entry-point method generated to contain top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)).
 1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
 1. The layout of arrays, except in an unsafe context ([§12.8.17.4](expressions.md#128174-array-creation-expressions)).
-1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.21.3](expressions.md#12213-anonymous-function-bodies)).
+1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.22.3](expressions.md#12223-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
 1. The result of invoking `MoveNext` when an enumerator object is running ([§15.15.5.2](classes.md#151552-advance-the-enumerator)).
 1. The result of accessing `Current` when an enumerator object is in the before, running, or after states ([§15.15.5.3](classes.md#151553-retrieve-the-current-value)).

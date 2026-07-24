@@ -64,7 +64,7 @@ The following conversions are classified as implicit conversions:
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 
-Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.23](expressions.md#1223-assignment-operators)).
+Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
 The pre-defined implicit conversions always succeed and never cause exceptions to be thrown.
 
@@ -141,7 +141,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 10.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
+An implicit enumeration conversion permits a *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.12](types.md#8312-nullable-value-types)).
 
 ### 10.2.5 Implicit interpolated string conversions
 
@@ -320,10 +320,10 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
-The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-constant-expressions)).
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.26](expressions.md#1226-constant-expressions)).
 
 > *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
@@ -397,15 +397,15 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### 10.2.18 Switch expression conversion
 
-There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
+There is an implicit conversion from a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
 
-### §imp-obj-creation-conv Implicit object-creation conversions
+### 10.2.19 Implicit object-creation conversions
 
 There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
 
-Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
-### §imp-cond-expr-conv Implicit conditional expression conversions
+### 10.2.20 Implicit conditional expression conversions
 
 For a *conditional_expression* `c ? e1 : e2`, when
 
@@ -870,7 +870,7 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 ### 10.7.1 General
 
-An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.21](expressions.md#1221-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
+An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.22](expressions.md#1222-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
 Specifically, an anonymous function `F` is compatible with a delegate type `D` provided:
 

@@ -115,9 +115,9 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ## 24.3 Pointer types
 
-### §pointer-types-general General
+### 24.3.1 General
 
-A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer’s target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
 
 In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type*. A *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
@@ -177,9 +177,9 @@ A method can return a value of some type, and that type can be a pointer.
 >
 > *end example*
 
-### §data-pointers Data pointers
+### 24.3.2 Data pointers
 
-A ***data pointer*** is a pointer capable of containing the address of a variable having *value_type* ([§8.3.1](types.md#831-general)), *funcptr_type* (§function-pointers), or *voidptr_type* (§void-pointers).
+A ***data pointer*** is a pointer capable of containing the address of a variable having *value_type* ([§8.3.1](types.md#831-general)), *funcptr_type* ([§24.3.3](unsafe-code.md#2433-function-pointers)), or *voidptr_type* ([§24.3.4](unsafe-code.md#2434-void-pointers)).
 
 ```ANTLR
 dataptr_type
@@ -270,7 +270,7 @@ In an unsafe context, several constructs are available for operating on data poi
 - The `stackalloc` operator may be used to allocate memory from the call stack ([§24.9](unsafe-code.md#249-stack-allocation)).
 - The `fixed` statement may be used to temporarily fix a variable so its address can be obtained ([§24.7](unsafe-code.md#247-the-fixed-statement)).
 
-### §function-pointers Function pointers
+### 24.3.3 Function pointers
 
 A ***function pointer*** is a pointer capable of containing the address of a static method.
 
@@ -377,7 +377,7 @@ In an unsafe context, the following constructs are available for operating on fu
 - The `==`, `!=`, `<`, `>`, `<=`, and `=>` operators may be used to compare pointers ([§24.6.8](unsafe-code.md#2468-pointer-comparison)).
 - The invocation_expression operator, `()`, may be used to call the method being pointed to ([§12.8.9.1](expressions.md#12891-general)).
 
-### §void-pointers Void pointers
+### 24.3.4 Void pointers
 
 A ***void pointer*** is a pointer capable of containing the value of a data pointer or a function pointer.
 
@@ -410,7 +410,7 @@ The `&` operator ([§24.6.5](unsafe-code.md#2465-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function ([§12.21.6.2](expressions.md#122162-captured-outer-variables)).
+- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function ([§12.22.6.2](expressions.md#122262-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§24.6.2](unsafe-code.md#2462-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§24.6.3](unsafe-code.md#2463-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§24.6.4](unsafe-code.md#2464-pointer-element-access)) of the form `P[E]`.
 
@@ -782,7 +782,7 @@ If a pointer increment or decrement operation overflows the domain of the pointe
 
 ### 24.6.7 Pointer arithmetic
 
-In an unsafe context, the `+` operator ([§12.12.5](expressions.md#12125-addition-operator)) and `-` operator ([§12.12.6](expressions.md#12126-subtraction-operator)) can be applied to values of all data pointer types. It is a compile-time error for these operators to be applied to a value of type *funcptr_type* or *voidptr_type*. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `+` operator ([§12.13.5](expressions.md#12135-addition-operator)) and `-` operator ([§12.13.6](expressions.md#12136-subtraction-operator)) can be applied to values of all data pointer types. It is a compile-time error for these operators to be applied to a value of type *funcptr_type* or *voidptr_type*. Thus, for every pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator +(T* x, int y);
@@ -839,7 +839,7 @@ If a pointer arithmetic operation overflows the domain of the pointer type, the 
 
 ### 24.6.8 Pointer comparison
 
-In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.14](expressions.md#1214-relational-and-type-testing-operators)) can be safely applied to values of all *dataptr_type*s and to values of all *voidptr_types* that are copies of *dataptr_type* values. The pointer comparison operators are:
+In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.15](expressions.md#1215-relational-and-type-testing-operators)) can be safely applied to values of all *dataptr_type*s and to values of all *voidptr_types* that are copies of *dataptr_type* values. The pointer comparison operators are:
 
 ```csharp
 bool operator ==(void* x, void* y);
@@ -889,7 +889,7 @@ fixed_pointer_initializer
 
 Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. *pointer_type* shall not be *funcptr_type*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-It is an error to use a captured local variable ([§12.21.6.2](expressions.md#122162-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
+It is an error to use a captured local variable ([§12.22.6.2](expressions.md#122262-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
 - The token “`&`” followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) to a moveable variable ([§24.4](unsafe-code.md#244-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
 - An expression of an *array_type* with elements of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero.

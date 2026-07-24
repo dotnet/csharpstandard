@@ -78,7 +78,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.25](expressions.md#1225-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.26](expressions.md#1226-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 >
 > In the example
 >
@@ -428,7 +428,7 @@ local_variable_initializer
 
 An *explicitly_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.23.2](expressions.md#12232-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
 #### 13.6.2.4 Explicitly typed ref local variable declarations
 
@@ -446,7 +446,7 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.23.4](expressions.md#12234-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.24.4](expressions.md#12244-ref-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
@@ -470,7 +470,7 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.25](expressions.md#1225-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
@@ -576,7 +576,7 @@ When the type of `this` is a struct type, it is a compile-time error for the bod
 
 It is a compile-time error for the body of the local function to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body of the local function.
 
-> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.21.3](expressions.md#12213-anonymous-function-bodies). *end note*
+> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.22.3](expressions.md#12223-anonymous-function-bodies). *end note*
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
@@ -701,7 +701,7 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 An `if` statement is executed as follows:
 
-- The *boolean_expression* ([§12.26](expressions.md#1226-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.27](expressions.md#1227-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the first embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is present, control is transferred to the second embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is not present, control is transferred to the end point of the `if` statement.
@@ -746,7 +746,7 @@ case_guard
 
 A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-A *switch_label* or *switch_expression_arm* ([§12.11](expressions.md#1211-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with the value `true`.
+A *switch_label* or *switch_expression_arm* ([§12.12](expressions.md#1212-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with the value `true`.
 
 > *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
@@ -942,7 +942,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Like the string equality operators ([§12.14.8](expressions.md#12148-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch’s *selector_expression* string exactly matches a `case` label constant. *end note*
+> *Note*: Like the string equality operators ([§12.15.8](expressions.md#12158-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch’s *selector_expression* string exactly matches a `case` label constant. *end note*
 
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
@@ -1017,7 +1017,7 @@ while_statement
 
 A `while` statement is executed as follows:
 
-- The *boolean_expression* ([§12.26](expressions.md#1226-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§12.27](expressions.md#1227-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), control is transferred to the beginning of the `while` statement.
 - If the Boolean expression yields `false`, control is transferred to the end point of the `while` statement.
 
@@ -1043,7 +1043,7 @@ do_statement
 A `do` statement is executed as follows:
 
 - Control is transferred to the embedded statement.
-- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.26](expressions.md#1226-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
+- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.27](expressions.md#1227-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
 
 Within the embedded statement of a `do` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
 
@@ -1084,7 +1084,7 @@ statement_expression_list
 
 The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement*.
 
-The *for_condition*, if present, shall be a *boolean_expression* ([§12.26](expressions.md#1226-boolean-expressions)).
+The *for_condition*, if present, shall be a *boolean_expression* ([§12.27](expressions.md#1227-boolean-expressions)).
 
 The *for_iterator*, if present, consists of a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas.
 
@@ -1176,7 +1176,7 @@ Before the process described in [§13.9.5.1](statements.md#13951-general), the f
 If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
 - If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-- Otherwise, determine whether the type 'X' has an appropriate `GetEnumerator` extension method:
+- Otherwise, determine whether the type ‘X’ has an appropriate `GetEnumerator` extension method:
   - Perform extension method lookup on the type `X` with identifier `GetEnumerator`. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match which is not a method group, an error is produced, and no further steps are taken. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and a single argument of type `X`. If overload resolution produces no applicable methods, results in an ambiguity, or results in a single best method but that method is not accessible, an error is produced an no further steps are taken.
   - This resolution permits the first argument to be passed by ref if `X` is a struct type, and the ref kind is `in`.
@@ -1241,11 +1241,11 @@ is semantically equivalent to:
 }
 ```
 
-The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.23.4](expressions.md#12234-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.24.4](expressions.md#12244-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 
-The placement of `v` inside the `while` loop is important for how it is captured ([§12.21.6.2](expressions.md#122162-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
+The placement of `v` inside the `while` loop is important for how it is captured ([§12.22.6.2](expressions.md#122262-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
 > *Example*:
 >
@@ -1457,7 +1457,7 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 #### 13.9.5.4 Deconstructing foreach
 
-A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.24.3](expressions.md#12243-deconstructing-assignment)) of a *deconstructing_assignment*.
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
@@ -1732,7 +1732,7 @@ A function member is said to ***compute a value*** if it is a method with a retu
 
 For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and the effective return type of the containing function member.
 
-`return` statements can also be used in the body of anonymous function expressions ([§12.21](expressions.md#1221-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
+`return` statements can also be used in the body of anonymous function expressions ([§12.22](expressions.md#1222-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
 It is a compile-time error for a `return` statement to appear in a `finally` block ([§13.11](statements.md#1311-the-try-statement)).
 
