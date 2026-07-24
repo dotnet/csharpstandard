@@ -892,6 +892,14 @@ namespace System.Runtime.CompilerServices
         void UnsafeOnCompleted(Action continuation);
     }
 
+    [AttributeUsage(AttributeTargets.Struct, AllowMultiple=false)]
+    public sealed class InlineArrayAttribute : Attribute
+    {
+        public InlineArrayAttribute(int length);
+
+        public int Length { get; }
+    }
+
     public interface INotifyCompletion
     {
         void OnCompleted(Action continuation);
@@ -1528,6 +1536,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.FormattableStringFactory`
 - `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
+- `global::System.Runtime.CompilerServices.InlineArrayAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
 - `global::System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`
 - `global::System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`
