@@ -6225,7 +6225,7 @@ If a record class is derived directly from `object`, the record class type has a
 System.Type EqualityContract { get; };
 ```
 
-The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
 
@@ -6233,9 +6233,9 @@ If the record class type is derived from some base record class type `Base`, the
 protected override System.Type EqualityContract { get; };
 ```
 
-The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn’t override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
 
-The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
@@ -6265,7 +6265,7 @@ If the record class type is derived from some base record class type, `Base`, th
 public sealed override bool Equals(Base? other);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
 
 The record class type includes a provided override declared as follows:
 
@@ -6273,7 +6273,7 @@ The record class type includes a provided override declared as follows:
 public override bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
 
 The record class type includes a provided override method declared as follows:
 
@@ -6281,7 +6281,7 @@ The record class type includes a provided override method declared as follows:
 public override int GetHashCode();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn’t override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
 
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
@@ -6391,7 +6391,7 @@ A record class type contains two copying members:
 - A copy constructor ([§15.11.6](classes.md#15116-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
-The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
