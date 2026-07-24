@@ -236,7 +236,7 @@ Note that `System.ValueType` is not itself a *value_type*. Rather, it is a *clas
 
 ### 8.3.3 Default constructors
 
-All value types implicitly declare a public parameterless instance constructor called the ***default constructor***. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
+All value types have a public parameterless instance constructor called the ***default constructor***. For struct types that do not explicitly declare a parameterless instance constructor, the default constructor is synthesized by the compiler. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
 
 - For all *simple_type*s, the default value is the value produced by a bit pattern of all zeros:
   - For `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, and `ulong`, the default value is `0`.
@@ -251,7 +251,7 @@ All value types implicitly declare a public parameterless instance constructor c
 
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. *end note*
+> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types that do not have an explicitly declared parameterless instance constructor, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. For struct types that declare an explicit parameterless instance constructor, `default` produces the zero-initialized default value, while `new S()` invokes the declared constructor, and the results may differ. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -272,7 +272,7 @@ Like any other instance constructor, the default constructor of a value type is 
 >
 > *end example*
 
-Because every value type implicitly has a public parameterless instance constructor, it is not possible for a struct type to contain an explicit declaration of a parameterless constructor. A struct type is however permitted to declare parameterized instance constructors ([§16.4.9](structs.md#1649-constructors)).
+A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.4.9](structs.md#1649-constructors)).
 
 ### 8.3.4 Struct types
 
