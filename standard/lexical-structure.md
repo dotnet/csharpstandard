@@ -359,7 +359,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, keyword or contextual keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
