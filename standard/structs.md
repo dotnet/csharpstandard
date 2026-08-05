@@ -253,7 +253,7 @@ The members provided by the implementation are described in the following subcla
 
 #### §prim-constr Primary constructors
 
-As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§xx](classes.md#xx)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
+As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
 
 In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
 
@@ -434,7 +434,7 @@ As well as providing the members described in the preceding subclauses, position
 
 ##### §rec-struct-pos-mem-pricon Primary constructor
 
-As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor ([§xx](classes.md#xx)) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
+As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
 
 In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
 
