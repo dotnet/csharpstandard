@@ -779,7 +779,7 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 #### 12.6.3.2 The first phase
 
-For each of the method arguments `Eᵢ`, an input type inference ([§12.6.3.7](expressions.md#12637-input-type-inferences)) is made from `Eᵢ` to the corresponding parameter type `Tⱼ`.
+For each of the method arguments `Eᵢ`, an input type inference ([§12.6.3.7](expressions.md#12637-input-type-inferences)) is made from `Eᵢ` to the corresponding parameter type `Tᵢ`.
 
 #### 12.6.3.3 The second phase
 
@@ -819,8 +819,11 @@ An *unfixed* type variable `Xᵢ` *depends directly on* an *unfixed* type varia
 
 An *input type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
-- If `E` is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
-- If `E` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T`
+- If `E` is a *collection_expression* with elements `Eᵢ`, and `T` is a type with an element type `Tₑ` or `T` is a *nullable_value_type* `T0?` and `T0` has an element type `Tₑ`, then for each `Eᵢ`:
+  - If `Eᵢ` is an *expression_element*, then an *input type inference* is made *from* `Eᵢ` *to* `Tₑ`.
+  - If `Eᵢ` is a *spread_element* with an iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) `Sᵢ`, then a lower-bound inference([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `Sᵢ` *to* `Tₑ`.
+- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-expressions)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
+- If `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T` and an *explicit return type inference* is made from `E` to `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `E` is an input argument, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
@@ -831,8 +834,11 @@ An *input type inference* is made *from* an expression `E` *to* a type `T` in th
 
 An *output type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
-- If `E` is a tuple literal with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
-- If `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
+- If `E` is a *collection_expression* with elements `Eᵢ`, and `T` is a type with an element type `Tₑ` or `T` is a *nullable_value_type* `T0?` and `T0` has an element type `Tₑ`, then for each `Eᵢ`:
+  - If `Eᵢ` is an *expression_element*, then an *output type inference* is made from `Eᵢ` to `Tₑ`.
+  - If `Eᵢ` is a *spread_element*, no inference is made from `Eᵢ`.
+- Otherwise, if `E` is a tuple expression with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
+- **TBD** Otherwise, if `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
 - If `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then with parameter types `T1..Tk` and return type `Tb`, and overload resolution of `E` with the types `T1..Tk` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tb`.
   > *Note*: This is only applicable in unsafe code. *end note*
@@ -1176,15 +1182,47 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
-- `C₁` is not an anonymous function type conversion and `C₂` is an anonymous function type conversion, or
-- `E` is a non-constant *interpolated_string_expression*, `C₁` is an implicit interpolated string handler conversion, `T₁` is an applicable interpolated string handler type, and `C₂` is not an implicit interpolated string handler conversion.
-- `E` does not exactly match `T₂` and at least one of the following holds:
-  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
-    - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
-      > *Note*: This is only applicable in unsafe code. *end note*
-  - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+- `E` is a *collection_expression* and one of the following holds:
+  - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, and an implicit conversion exists from `E₁` to `E₂`.
+  - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_type*, or one of the following interface types implemented by an *array_type*: `System.Collections.Generic.IEnumerable<T>`, `System.Collections.Generic.IReadOnlyCollection<T>`,  `System.Collections.Generic.IReadOnlyList<T>`, `System.Collections.Generic.ICollection<T>`, or `System.Collections.Generic.IList<T>` with element type `E₂`, and an implicit conversion exists from `E₁` to `E₂`.
+  - `T₁` and `T₂` are not `System.ReadOnlySpan<T>` or `System.Span<T>`, and an implicit conversion exists from `T₁` to `T₂`.
+- `E` is not a *collection_expression* and one of the following holds:
+- `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
+- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+  - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+    > *Note*: This is only applicable in unsafe code. *end note*
+- `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+
+> *Example*: The following example shows the differences with overload resolution between array initializers and collection expressions:
+>
+> <!-- Example: {template:"standalone-lib", name:"CollectionExpressionsOverRes", expectedErrors:["CS0121","CS0121"], ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> class C
+> {
+>     static void Generic<T>(Span<T> value) { }
+>     static void Generic<T>(T[] value) { }
+>     static void SpanDerived(Span<string> value) { }
+>     static void SpanDerived(object[] value) { }
+>     static void ArrayDerived(Span<object> value) { }
+>     static void ArrayDerived(string[] value) { }
+>     static void M()
+>     {
+>         // Array initializers
+>             Generic(new[] { "" });      // string[]
+>             SpanDerived(new[] { "" });  // ambiguous
+>             ArrayDerived(new[] { "" }); // string[]
+>
+>             // Collection expressions
+>             Generic([""]);              // Span<string>
+>             SpanDerived([""]);          // Span<string>
+>             ArrayDerived([""]);         // ambiguous
+>         }
+>     }
+> ```
+>
+> *end example*
 
 #### 12.6.4.6 Exactly matching expression
 
@@ -1390,6 +1428,7 @@ primary_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
     | stackalloc_expression
+    | collection_expression
     ;
 ```
 
@@ -3772,6 +3811,69 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 ### 12.8.24 Anonymous method expressions
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.22](expressions.md#1222-anonymous-function-expressions).
+
+### §collection-expressions Collection expressions
+
+A ***collection expression*** is a `[]`-delimited, comma-separated set of zero or more *collection_element*s that together represent a collection.
+
+```ANTLR
+collection_expression
+    : '[' (collection_element (',' collection_element)*)? ']'
+    ;
+
+collection_element
+    : expression_element
+    | spread_element
+    ;
+
+expression_element
+    : expression
+    ;
+
+spread_element
+    : '..' expression
+    ;
+```
+
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) may be a target type for a *collection_expression*. A type designated with the `CollectionBuilder` attribute may also be a target type (§declaring-a-collection-type-general).
+
+The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"CollectionExpressions1"} -->
+> ```csharp
+> string[] colors = ["red", "white", "blue"];  // initialization
+> List<int> counts = [10, 25, 45, 67];
+> Span<double> list = [5.4, 3.9F, 123, 'x'];
+> ReadOnlySpan<object> items = [counts[2], 19.5, 'X', colors[1]];
+> int v = ((int[])[10, 20])[1];  // explicit target type cast
+> ```
+>
+> In the case of `colors`, the collection expression is converted to a `string[]` having `Length` 3. For `counts`, the collection expression is converted to a `List<int>` having `Count` 4. For `list`, the collection expression is converted to a `Span<double>` having `Length` 4, with the *expression*s being converted implicitly to `double`, as necessary. For `items`, the collection expression is converted to a `ReadOnlySpan<object>` having `Length` 4, with the *expression*s being boxed. *end example*
+
+The *collection_expression* `[]` represents an empty collection. The conversion of such an expression results in a collection having a `Count` or `Length` of 0, with any property `isEmpty` returning `true`.
+
+A *spread_element* causes the set of *collection_element*s designated by *expression* to be copied to the new collection starting at the location of that *spread_element*. *expression* shall designate an entity that is enumerable using a `foreach` statement.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"CollectionExpressions2"} -->
+> ```csharp
+> string[] colors1 = ["red", "white", "blue"];
+> string[] colors2 = ["black", .. colors1, "yellow"];
+> List<string> directions = ["north", "south", "east", "west"];
+> Span<string> words = ["March", .. colors1, "Hello",.. directions];
+> ReadOnlySpan<object> things = [123, 10.5, .. directions];
+>
+> int[] counts = [10, 20, 30];
+> List<double> values = [1.2, 3.5];
+> Span<ValueType> numbers = [.. counts, .. values];
+> ```
+>
+> `colors2` contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
+
+If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.  
 
 ## 12.9 Unary operators
 
