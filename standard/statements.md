@@ -746,7 +746,7 @@ case_guard
 
 A *switch_statement* consists of the keyword `switch`, followed by a *tuple_literal* or parenthesized expression (each of which is called the *selector_expression*), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch’s *selector_expression* is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-A *switch_label* or *switch_expression_arm* ([§12.11](expressions.md#1211-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.25](expressions.md#1225-constant-expressions)) with the value `true`.
+A *switch_label* or *switch_expression_arm* ([§12.12](expressions.md#1212-switch-expression)) is said to be ***unguarded*** if it has no *case_guard*, or if its *case_guard*’s expression is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with the value `true`.
 
 > *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the *selector_expression* is a *tuple_literal*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
@@ -760,7 +760,7 @@ There can be at most one `default` label in a `switch` statement.
 
 It is an error if the pattern of any switch label is not *applicable* ([§11.2.1](patterns.md#1121-general)) to the type of the input expression.
 
-It is an error if the pattern of any switch label is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of earlier *unguarded* switch labels of the switch statement.
+It is an error if the pattern of any switch label is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* switch labels of the switch statement.
 
 > *Example*:
 >
@@ -956,7 +956,7 @@ A switch label is reachable if at least one of the following is true:
 - The switch’s *selector_expression* is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
   - it is a `default` label and
-    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type; or
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.1](patterns.md#111-general)) for the switch governing type; or
     - the switch governing type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
 - The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
@@ -966,7 +966,7 @@ The end point of a `switch` statement is reachable if the switch statement is re
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
 - No `default` label is present and either
-  - The switch’s *selector_expression* is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type.
+  - The switch’s *selector_expression* is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.1](patterns.md#111-general)) for the switch governing type.
   - The switch’s *selector_expression* is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null`.
   - The switch’s *selector_expression* is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
 
@@ -1176,7 +1176,7 @@ Before the process described in [§13.9.5.1](statements.md#13951-general), the f
 If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
 - If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-- Otherwise, determine whether the type 'X' has an appropriate `GetEnumerator` extension method:
+- Otherwise, determine whether the type ‘X’ has an appropriate `GetEnumerator` extension method:
   - Perform extension method lookup on the type `X` with identifier `GetEnumerator`. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match which is not a method group, an error is produced, and no further steps are taken. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and a single argument of type `X`. If overload resolution produces no applicable methods, results in an ambiguity, or results in a single best method but that method is not accessible, an error is produced an no further steps are taken.
   - This resolution permits the first argument to be passed by ref if `X` is a struct type, and the ref kind is `in`.
@@ -1457,7 +1457,7 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 #### 13.9.5.4 Deconstructing foreach
 
-A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.23.3](expressions.md#12233-deconstructing-assignment)) of a *deconstructing_assignment*.
+A deconstructing foreach replaces the declaration and initialisation of a single iteration variable per iteration, in the synchronous and asynchronous foreach statements, with a collection of zero or more iteration variables declared per iteration within the *deconstructor*([§12.24.3](expressions.md#12243-deconstructing-assignment)) of a *deconstructing_assignment*.
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 

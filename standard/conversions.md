@@ -118,8 +118,6 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
-
 ### 10.2.3 Implicit numeric conversions
 
 The implicit numeric conversions are:
@@ -322,10 +320,10 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§12.26](expressions.md#1226-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§12.25](expressions.md#1225-expression)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
-The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.26](expressions.md#1226-constant-expressions)).
+The range for constants of type `nint` is the same range as `int`, and the range for constants of type `nuint` is the same range as `uint` ([§12.25](expressions.md#1225-expression)).
 
 > *Note*: This is a consequence of `nint`/`nuint` being the same size as, or larger than, `int`/`uint` ([§8.3.6](types.md#836-integral-types)). *end note*
 
@@ -405,9 +403,24 @@ There is an implicit conversion from a *switch_expression* ([§12.12](expression
 
 There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
 
-Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
 ### 10.2.20 Implicit conditional expression conversions
+
+For a *conditional_expression* `c ? e1 : e2`, when
+
+1. there is no common type for `e1` and `e2`, or
+1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
+
+an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+
+### 10.2.21 Implicit object-creation conversions
+
+There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
+
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+
+### 10.2.22 Implicit conditional expression conversions
 
 For a *conditional_expression* `c ? e1 : e2`, when
 
@@ -986,7 +999,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-array-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 

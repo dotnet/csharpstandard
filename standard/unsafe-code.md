@@ -117,7 +117,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ### 24.3.1 General
 
-A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer’s target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
 
 In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type*. A *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
@@ -189,7 +189,7 @@ dataptr_type
     ;
 ```
 
-A *dataptr_type* is written as an *value_type* that is an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)), *funcptr_type*, or *voidptr_type*, followed by one or more `*` tokens.
+A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)), *funcptr_type*, or *voidptr_type*, followed by one or more `*` tokens.
 
 > *Example*: Some examples of data pointer types are given in the table below:
 >
@@ -558,7 +558,7 @@ pointer_indirection_expression
     ;
 ```
 
-The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a data pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an operand having type *funcptr_type* or *voidptr_type*.
+The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a data pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an operand having type *funcptr_type* or *voidptr_type* or an expression that is not a pointer type.
 
 > *Note*: In C/C++, a function pointer can be dereferenced to get at the underlying function to call it, as in `(*fp)()`. Such explicit dereferencing is not permitted in C#. *end note*
 
@@ -839,7 +839,7 @@ If a pointer arithmetic operation overflows the domain of the pointer type, the 
 
 ### 24.6.8 Pointer comparison
 
-In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.15](expressions.md#1215-relational-and-type-testing-operators)) can be safely applied to values of all *dataptr_type*s and to values of all *voidptr_types* that are copies of *dataptr_type* values. The pointer comparison operators are:
+In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.14](expressions.md#1214-shift-operators)) can be safely applied to values of all *dataptr_type*s and to values of all *voidptr_types* that are copies of *dataptr_type* values. The pointer comparison operators are:
 
 ```csharp
 bool operator ==(void* x, void* y);
@@ -856,7 +856,7 @@ Because an implicit conversion exists from any pointer type to the `void*` type,
 
 ### 24.6.9 The sizeof operator
 
-For certain predefined types ([§12.8.19](expressions.md#12819-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
+For certain types ([§12.8.19](expressions.md#12819-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
 
 The order in which members are packed into a struct is unspecified.
 

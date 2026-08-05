@@ -755,7 +755,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A type parameter cannot be used anywhere within an attribute ([§23.2.1](attributes.md#2321-general)).
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
 > - A type parameter can only be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) if the type parameter is constrained by the unmanaged constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-> - Nullable annotations (`?`) aren’t allowed on an instance of a type parameter unless that type parameter is constrained to be either a reference type or a value type ([§15.2.5](classes.md#1525-type-parameter-constraints)).  
+> - Except when a type parameter is explicitly constrained to value types, the nullable type annotation (`?`) can only be applied to an instance of a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive), [§15.2.5](classes.md#1525-type-parameter-constraints)).  
 >
 > *end note*
 

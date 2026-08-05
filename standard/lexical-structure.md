@@ -605,15 +605,14 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'select'     | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    : 'add'      | 'alias'    | 'ascending' | 'async'     | 'await'
+    | 'by'       | 'Cdecl'     | 'descending'| 'dynamic'   | 'equals'
+    | 'Fastcall' | 'from'      | 'get'       | 'global'    | 'group'
+    | 'init'     | 'into'      | 'join'      | 'let'       | 'managed'
+    | 'nameof'   | 'nint'      | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'  | 'partial'   | 'record'    | 'remove'    | 'select'
+    | 'set'      | 'Stdcall'   | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'      | 'when'      | 'where'     | 'yield'
     ;
 ```
 

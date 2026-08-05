@@ -159,7 +159,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### 9.2.9.2 Discards
 
-A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
+A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.19](expressions.md#1219-the-throw-expression-operator)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   

@@ -228,6 +228,8 @@
     - [§10.2.18](conversions.md#10218-switch-expression-conversion)  Switch expression conversion
     - [§10.2.19](conversions.md#10219-implicit-object-creation-conversions)  Implicit object-creation conversions
     - [§10.2.20](conversions.md#10220-implicit-conditional-expression-conversions)  Implicit conditional expression conversions
+    - [§10.2.21](conversions.md#10221-implicit-object-creation-conversions)  Implicit object-creation conversions
+    - [§10.2.22](conversions.md#10222-implicit-conditional-expression-conversions)  Implicit conditional expression conversions
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
@@ -269,8 +271,6 @@
     - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
     - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
     - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
-  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
-  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
@@ -663,16 +663,24 @@
     - [§15.15.6](classes.md#15156-enumerable-objects)  Enumerable objects
       - [§15.15.6.1](classes.md#151561-general)  General
       - [§15.15.6.2](classes.md#151562-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
-  - [§15.16](classes.md#1516-synthesized-record-class-members)  Synthesized record class members
+  - [§15.16](classes.md#1516-record-classes)  Record classes
     - [§15.16.1](classes.md#15161-general)  General
-    - [§15.16.2](classes.md#15162-equality-members)  Equality members
-    - [§15.16.3](classes.md#15163-copy-and-clone-members)  Copy and clone members
-    - [§15.16.4](classes.md#15164-printing-members)  Printing members
-    - [§15.16.5](classes.md#15165-positional-record-class-members)  Positional record class members
-      - [§15.16.5.1](classes.md#151651-general)  General
-      - [§15.16.5.2](classes.md#151652-primary-constructor)  Primary constructor
-      - [§15.16.5.3](classes.md#151653-properties)  Properties
-      - [§15.16.5.4](classes.md#151654-deconstruct)  Deconstruct
+    - [§15.16.2](classes.md#15162-class-base-specification)  Class base specification
+    - [§15.16.3](classes.md#15163-record-class-body)  Record class body
+    - [§15.16.4](classes.md#15164-class-members)  Class members
+    - [§15.16.5](classes.md#15165-instance-constructors)  Instance constructors
+    - [§15.16.6](classes.md#15166-implicit-record-class-members)  Implicit record class members
+      - [§15.16.6.1](classes.md#151661-general)  General
+      - [§15.16.6.2](classes.md#151662-copy-constructors)  Copy constructors
+      - [§15.16.6.3](classes.md#151663-equality-members)  Equality members
+      - [§15.16.6.4](classes.md#151664-copy-and-clone-members)  Copy and clone members
+      - [§15.16.6.5](classes.md#151665-printing-members)  Printing members
+      - [§15.16.6.6](classes.md#151666-positional-record-class-members)  Positional record class members
+        - [§15.16.6.6.1](classes.md#1516661-general)  General
+        - [§15.16.6.6.2](classes.md#1516662-primary-constructor)  Primary constructor
+        - [§15.16.6.6.3](classes.md#1516663-properties)  Properties
+        - [§15.16.6.6.4](classes.md#1516664-deconstruct)  Deconstruct
+  - [§15.17](classes.md#1517-record-class-and-non-record-class-differences)  Record class and non-record class differences
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations

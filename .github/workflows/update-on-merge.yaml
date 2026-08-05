@@ -9,7 +9,7 @@ on:
       - standard-v7
       - draft-v8
       - draft-v9
-      - draft-v11
+      - draft-v10
       - draft-v11
       - draft-v12
   workflow_dispatch:
@@ -32,10 +32,10 @@ jobs:
 
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v6.0.3
+      uses: actions/checkout@v7.0.1
 
     - name: Setup .NET 10.0
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
 
@@ -65,6 +65,7 @@ jobs:
       with:
         title: "Automated Section renumber and grammar extraction"
         body: "renumber sections. Add grammar"
+        branch: ${{ github.ref_name }}-renumber-sections-and-grammar
 
     - name: Run converter
       id: run-converter

@@ -252,7 +252,7 @@ The standardized *attribute_target* names are `event`, `field`, `method`, `param
 
 - `event` — an event.
 - `field` — a field. A field-like event (i.e., one without accessors) ([§15.8.2](classes.md#1582-field-like-events)) and an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)) can also have an attribute with this target.
-- `method` — a constructor, finalizer, method, local function, operator, property get, set, and init accessors, indexer get, set, and init accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `method` — a constructor; finalizer; method; local function; operator; property get, set, and init accessors; indexer get, set, and init accessors; and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
 - `param` — property set and init accessors, indexer set and init accessors, event add and remove accessors, and a parameter in a constructor, method, local function, and operator.
 - `property` — a property and an indexer.
 - `return` — a delegate, method, local function, operator, property get accessor, and indexer get accessor.
@@ -857,6 +857,8 @@ For an invocation that occurs within a local function or an anonymous function, 
 >     static void Main()
 >     {
 >         F1();
+>         Action anonymousFunction = () => F2();
+>         anonymousFunction();
 >
 >         void F1([CallerMemberName] string? name = null)
 >         {
@@ -877,9 +879,10 @@ For an invocation that occurs within a local function or an anonymous function, 
 > ```console
 > F1 MemberName: |Main|
 > F2 MemberName: |Main|
+> F2 MemberName: |Main|
 > ```
 >
-> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
+> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of that invocation of `F2` is also `Main`. Similarly, when `F2` is called by the anonymous function assigned to `anonymousFunction`, the reported caller is the method `Main`, which calls that anonymous function. *end example*
 
 ### 23.5.7 Code analysis attributes
 
@@ -1048,7 +1051,7 @@ Specifies that a non-nullable argument may be `null` when the method returns the
 
 #### 23.5.7.8 The MemberNotNull attribute
 
-Specifies that the given member won't be ``null`` when the method returns.
+Specifies that the given member won’t be ``null`` when the method returns.
 
 > *Example*: A helper method may include the ``MemberNotNull`` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
 >
@@ -1079,11 +1082,11 @@ Specifies that the given member won't be ``null`` when the method returns.
 > }
 > ``````
 >
-> Multiple field names may be given as arguments to the attribute's constructor. *end example*
+> Multiple field names may be given as arguments to the attribute’s constructor. *end example*
 
 #### 23.5.7.9 The MemberNotNullWhen attribute
 
-Specifies that the listed member won't be ``null`` when the method returns the specified ``bool`` value.
+Specifies that the listed member won’t be ``null`` when the method returns the specified ``bool`` value.
 
 > *Example*: This attribute is like `MemberNotNull` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
@@ -1228,5 +1231,3 @@ For interoperation with other languages, an indexer may be implemented using ind
 > Now, the indexer’s name is `TheItem`.
 >
 > *end example*
-
-
