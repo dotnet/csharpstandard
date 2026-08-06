@@ -27,6 +27,8 @@ class_tag
 
 A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
+A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
+
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
@@ -1070,7 +1072,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 ### 15.3.5 The new modifier
 
-A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
+A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. However, it is an error to hide a required member ([§15.7.1](classes.md#1571-general)). See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
 An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
@@ -1691,6 +1693,7 @@ field_modifier
     | 'static'
     | 'readonly'
     | 'volatile'
+    | 'required'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -1705,7 +1708,7 @@ variable_declarator
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *field_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
+A *field_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. A *field_declaration* may also include a `required` modifier ([§15.7.1](classes.md#1571-general)), provided it does not have a `readonly`, `ref`, or `fixed` modifier, and provided the field is not a `ref readonly` field or a constant. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
 The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an “`=`” token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
 
@@ -3435,6 +3438,7 @@ property_modifier
     | 'abstract'
     | 'extern'
     | 'readonly'        // struct members only
+    | 'required'
     | unsafe_modifier   // unsafe code support
     ;
     
@@ -3481,6 +3485,25 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 > *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a variable reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
+
+The modifier `required` indicates the instance member being declared is required to be set during object initialization, which forces the instance creator to provide an initial value for the member in an object initializer at the creation site. (See [§12.8.21](expressions.md#12821-default-value-expressions) and §SetsRequiredMembers for exemptions to this requirement.) A required member shall not be static. A required member shall be at least as accessible as its containing type.
+
+> *Note*: Although a required member declaration may include an initializer (*property_initializer* for a property, *variable_initializer* for a field), ordinarily, that initializer serves no purpose, as the instance creator is required to provide an initial value for that member anyway. However, if a constructor is decorated with the `SetsRequiredMembers` attribute the compiler assumes that member has been initialized correctly, and will not require an explicit initializer by the instance creator, resulting in the member’s initial value being that of its initializer, if one is present. *end note*
+
+A ***required member list*** is a list of all the members of a type that are required. A type automatically inherits this list from its base type.
+To build the required member list `R` for a type `T`, the following steps are used:
+
+1. For every type `Tb`, starting with `T` and working through the base type chain until `object` is reached.
+1. If `Tb` is decorated with the `RequiredMember` attribute (§RequiredMember), then all members of `Tb` marked with that attribute are gathered into `Rb`
+
+    1. For every `Ri` in `Rb`, if `Ri` is overridden by any member of `R`, it is skipped.
+    1. Otherwise, if any `Ri` is hidden by a member of `R`, then the lookup of required members fails, and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` is an error.
+    1. Otherwise, `Ri` is added to `R`.
+
+A required member shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
+With regard to nullable reference type analysis ([§8.9](types.md#89-reference-types-and-nullability)), a required member need not be initialized to a valid nullable state when any of its instance constructors returns. Any required member in a type and its base types is considered by nullable analysis to have its default value at the beginning of any instance constructor in that type, unless it chains to a `this` or `base` constructor that is decorated with the `SetsRequiredMembersAttribute` attribute.
+
+Nullable analysis shall warn about all required members from the current and base types that do not have a valid nullable state at the end of a constructor decorated with the `SetsRequiredMembersAttribute` attribute.
 
 ### 15.7.2 Static and instance properties
 
@@ -4277,6 +4300,8 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 >
 > *end example*
 
+The set or init accessor of a required property ([§15.7.1](classes.md#1571-general)) shall be at least as accessible as that property’s containing type.
+
 ### 15.7.6 Virtual, sealed, override, and abstract accessors
 
 *Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
@@ -4284,6 +4309,10 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
 An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
+
+A property that overrides a base property that is required ([§15.7.1](classes.md#1571-general)) shall itself be required. A property that overrides a base property that is not required may itself be required, in which case, the derived type member is added to that type’s required member list.
+
+> *Note*: A type is permitted to override a required virtual property. This means that if the base virtual property has storage, and the derived type tries to access the base implementation of that property, it could observe uninitialized storage. *end note*
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
@@ -5254,6 +5283,15 @@ Each of the types referenced in the *parameter_list* of an instance constructor 
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
+All instance constructors on a type that has a required member list ([§15.7.1](classes.md#1571-general)) automatically advertise a contract that consumers of the type shall initialize all of the members in the list. It is an error for an instance constructor to advertise a contract that requires a member that is not at least as accessible as the constructor itself.
+An instance constructor whose *constructor_initializer* chains to another constructor decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), shall also be decorated with that attribute.
+For every instance constructor `Ci` in type `T` with required members `R`, unless `Ci` is decorated with the attribute `SetsRequiredMembers`, consumers calling `Ci` shall do one of the following:
+
+- Set all members of `R` in an *object_initializer* on the *object_creation_expression*,
+- Or set all members of `R` via the *named_argument_list* of an *attribute*.
+
+If the current context does not permit an *object_initializer* or is not an *attribute* with *named_argument_list*, and `Ci` is not decorated with `SetsRequiredMembers`, then it is an error to call `Ci`.
+
 When a constructor declaration includes an `extern` modifier, the constructor is said to be an ***external constructor***. Because an external constructor declaration provides no actual implementation, its *constructor_body* consists of a semicolon. For all other constructors, the *constructor_body* consists of either
 
 - a *block*, which specifies the statements to initialize a new instance of the class; or
@@ -5523,6 +5561,8 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 > the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
 
 In certain circumstances ([§15.16.3](classes.md#15163-copy-and-clone-members)), a copy constructor may be synthesized by the compiler, and called by synthesized code.
+
+A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers).
 
 ## 15.12 Static constructors
 

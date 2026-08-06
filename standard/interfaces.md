@@ -299,7 +299,7 @@ This clause augments the description of fields in classes [§15.5](classes.md#15
 
 Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#1551-general)) with the following additional rules:
 
-- It is a compile-time error for *field_declaration* to declare an instance field.
+- It is a compile-time error for *field_declaration* to declare an instance field. (As such, an interface field cannot be marked `required`.)
 
 > *Example*: The following program contains static members of various kinds:
 >
@@ -442,6 +442,8 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
 - An interface property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
 - An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+
+It is a compile-time error for an interface property to be marked `required`.
 
 ### 19.4.5 Interface events
 
@@ -950,6 +952,8 @@ The qualified interface member name of an explicit interface member implementati
 > the explicit interface member implementation of Paint must be written as `IControl.Paint`, not `ITextBox.Paint`.
 >
 > *end example*
+
+It is a compile-time error for an explicit interface implementation of a member to have the modifier `required`.
 
 ### 19.6.3 Uniqueness of implemented interfaces
 
