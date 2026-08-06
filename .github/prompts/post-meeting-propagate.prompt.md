@@ -63,6 +63,29 @@ head-movement checks defined below.
 - Auto-PRs may show a `BLOCKED` merge state due to branch protection rules requiring review approval — this is normal and not a CI failure. Wait for checks to pass, then merge.
 - You have `git` and `gh` available, and push permission to this repo.
 
+## Authoritative remote (set and validate once)
+
+Use one remote for discovery, baselines, merges, comparisons, and pushes.
+This workflow intentionally does not support separate read and write remotes.
+
+```bash
+REMOTE="${REMOTE:-upstream}"
+REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+FETCH_REPO="$(gh repo view "$(git remote get-url "$REMOTE")" \
+  --json nameWithOwner -q .nameWithOwner)"
+PUSH_REPO="$(gh repo view "$(git remote get-url --push "$REMOTE")" \
+  --json nameWithOwner -q .nameWithOwner)"
+printf 'Authoritative remote: %s (fetch=%s, push=%s, gh=%s)\n' \
+  "$REMOTE" "$FETCH_REPO" "$PUSH_REPO" "$REPO"
+test "$FETCH_REPO" = "$REPO" && test "$PUSH_REPO" = "$REPO"
+```
+
+The final `test` is mandatory. Stop if it fails, if either URL cannot be
+resolved, or if the selected remote does not expose every branch in the
+propagation chain. Keep `REMOTE` unchanged for the entire A1 → B → A2 run.
+The Phase A manifest must record the same remote name and repository; stop
+if it does not match.
+
 ## Discover the propagation chain
 
 Do not rely on a fixed list or assume every alpha is named `alpha-vN`.
@@ -70,8 +93,8 @@ Do not rely on a fixed list or assume every alpha is named `alpha-vN`.
 1. Fetch and list the actual remote branch names:
 
    ```bash
-   git fetch upstream --prune
-   git for-each-ref refs/remotes/upstream \
+   git fetch "$REMOTE" --prune
+   git for-each-ref "refs/remotes/$REMOTE" \
      --format='%(refname:strip=3)' \
      | grep -E '^(draft-v[0-9]+|alpha-v[0-9]+|v[0-9]+-alpha)$' \
      | sort -V
@@ -121,24 +144,29 @@ for the duration of the run.
 
    Load Phase A1's feature-PR manifest. Require one record per dynamically
    enumerated feature PR, including PR number, base branch, head SHA, patch
-   path, and UTC cutoff time. Report the manifest's resulting PR count. Stop
-   if the manifest is missing, has duplicate PR numbers, or its count differs
-   from a fresh enumeration of open PRs on the discovered target draft
-   branches.
+   path, UTC cutoff time, and the authoritative remote name and repository.
+   Report the manifest's resulting PR count. Stop if the manifest is missing,
+   has duplicate PR numbers, names a different remote or repository, or its
+   count differs from a fresh enumeration of open PRs on the discovered
+   target draft branches.
 
 2. **Baseline.** Determine the SHA on each branch in the chain at the
-   *previous* propagation. A reliable proxy is the most recent merge commit whose subject begins with `Post-meeting propagation:` on that branch (`git log --grep '^Post-meeting propagation:' -1 --format=%H origin/<branch>`). Record `BASE_<branch>` for each branch. If a branch has no such commit yet, fall back to the branch point and warn the user.
+   *previous* propagation. A reliable proxy is the most recent merge commit
+   whose subject begins with `Post-meeting propagation:` on that branch
+   (`git log --grep '^Post-meeting propagation:' -1 --format=%H "$REMOTE/<branch>"`).
+   Record `BASE_<branch>` for each branch. If a branch has no such commit
+   yet, fall back to the branch point and warn the user.
 
 3. **Deletion inventory** for the starting branch. Identify text the
    committee removed in this cycle so Step B can recognize resurrection:
 
    ```bash
    # Files where lines were removed since the previous propagation:
-   git log "$BASE_<starting>"..origin/<starting> --diff-filter=MD \
+   git log "$BASE_<starting>".."$REMOTE/<starting>" --diff-filter=MD \
      --name-only --pretty=format: -- standard/ | sort -u
 
    # Hunks (negative lines) for review:
-   git log "$BASE_<starting>"..origin/<starting> -p -- standard/ \
+   git log "$BASE_<starting>".."$REMOTE/<starting>" -p -- standard/ \
      > "$RUN_DIR/starting-deletions.patch"
    ```
 
@@ -149,7 +177,7 @@ for the duration of the run.
    ```bash
    for b in <chain>; do
      git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
-       "origin/$b" -- 'standard/*.md' | sed "s|^origin/$b:||" \
+       "$REMOTE/$b" -- 'standard/*.md' | sed "s|^$REMOTE/$b:||" \
        > "$RUN_DIR/vnext-baseline-$b.txt" || true
    done
    ```
@@ -170,8 +198,10 @@ Before starting, confirm the chain with the user and show which branches will be
 
 ### Step A — Process auto-PR on the current branch
 
-1. `git fetch --all --prune`
-2. `git checkout <branch>` and `git pull --ff-only`
+1. `git fetch "$REMOTE" --prune`
+2. `git checkout <branch>` (or create it from `"$REMOTE/<branch>"` if it
+   does not exist), then `git pull --ff-only "$REMOTE" <branch>`. Require
+   local `HEAD` to equal `"$REMOTE/<branch>"` before continuing.
 3. Find the auto-PR opened by `update-on-merge.yaml`:
 
    ```bash
@@ -184,7 +214,8 @@ Before starting, confirm the chain with the user and show which branches will be
    - Wait until checks pass (`gh pr checks <num> --watch` is acceptable, with a reasonable timeout — if it doesn't go green within a few minutes, stop and ask the user).
    - The auto-PR's checks include the `StandardAnchorTags` job. If that job reports any `TOC002` ("`<ref>` not found") diagnostic, **stop** even if `gh pr checks` reports the PR overall as mergeable — broken cross-references must be resolved before merging.
    - Merge it with a **merge commit**: `gh pr merge <num> --merge --delete-branch`.
-   - `git pull --ff-only` on the branch.
+   - `git fetch "$REMOTE" <branch>` and
+     `git pull --ff-only "$REMOTE" <branch>` on the branch.
 5. If not found and this is the starting branch, ask the user whether to wait, run the tools locally (`tools/run-smarten.sh`, `tools/run-section-renumber.sh`), or proceed without them. Do not run tools locally without explicit consent.
 6. If not found on a downstream branch (it should appear after the merge in step B below), continue.
 
@@ -193,7 +224,7 @@ Before starting, confirm the chain with the user and show which branches will be
 1. Still on `<branch>`, run:
 
    ```bash
-   git merge --no-ff origin/<previous-branch> \
+   git merge --no-ff "$REMOTE/<previous-branch>" \
      -m "Post-meeting propagation: merge <previous-branch> into <branch>"
    ```
 
@@ -210,7 +241,7 @@ Before starting, confirm the chain with the user and show which branches will be
      run `checkout --theirs/--ours`, recover with `git checkout -m <file>`
      to restore the conflict markers.
    - For each conflicted hunk in `standard/*.md`:
-     a. Cross-check the hunk's file and line range against the deletion inventory captured in Pre-flight (`$RUN_DIR/starting-deletions.patch`) **and** against any prior `Post-meeting propagation:` merges on the downstream branch (`git log --grep '^Post-meeting propagation:' -p origin/<branch> -- <file>`).
+     a. Cross-check the hunk's file and line range against the deletion inventory captured in Pre-flight (`$RUN_DIR/starting-deletions.patch`) **and** against any prior `Post-meeting propagation:` merges on the downstream branch (`git log --grep '^Post-meeting propagation:' -p "$REMOTE/<branch>" -- <file>`).
      b. If the downstream side intentionally removed the text, keep the deletion and re-apply only non-overlapping upstream edits to the surrounding region.
      c. If unclear, **abort the merge** (`git merge --abort`) and report to the user with the file, line range, and both sides of the hunk.
    - Mechanical "take upstream" is acceptable **only** for:
@@ -237,7 +268,12 @@ Run the section-renumber tool in dry-run mode against the post-merge working tre
     --owner dotnet --repo csharpstandard --dryrun )
 ```
 
-1. **Broken references.** Any *new* `TOC002` ("`<ref>` not found") diagnostic that was not already present on `upstream/<branch>` before the merge is a **hard stop**. Compare the tool output against a pre-merge run (or `git stash && run && git stash pop`) to distinguish new from pre-existing. Pre-existing TOC002s from incomplete feature PRs on alpha branches are expected and should be reported but do not block the merge.
+1. **Broken references.** Any *new* `TOC002` ("`<ref>` not found")
+   diagnostic that was not already present on `"$REMOTE/<branch>"` before
+   the merge is a **hard stop**. Compare the tool output against a pre-merge
+   run (or `git stash && run && git stash pop`) to distinguish new from
+   pre-existing. Pre-existing TOC002s from incomplete feature PRs on alpha
+   branches are expected and should be reported but do not block the merge.
 2. **Mandatory raw symbolic-reference audit.** Run this independently of
    the tool and save the output:
 
@@ -268,9 +304,8 @@ diff "$RUN_DIR/vnext-baseline-<branch>.txt" "$RUN_DIR/vnext-current-<branch>.txt
   > "$RUN_DIR/vnext-delta-<branch>.txt" || true
 ```
 
-> Strip the `HEAD:` prefix with `sed` so diffs against the baseline
-> (which uses `upstream/<branch>:` as prefix) don't produce false
-> positives on every line.
+> Strip the `HEAD:` prefix with `sed`; the baseline command likewise strips
+> `"$REMOTE/<branch>:"`, preventing false positives on every line.
 
 For each *new* comment in the delta, record:
 
@@ -281,10 +316,35 @@ For each *new* comment in the delta, record:
 
 Persist the accumulated list across the whole run. Include it in the final report so `post-meeting-rebase-prs.prompt.md` can consume it. **Do not edit `standard/*.md` to remove or apply these comments.**
 
-### Step B.7 — Push
+### Step B.7 — Finalize, push, and verify
 
-1. Push: `git push origin <branch>`.
-2. The push triggers `update-on-merge.yaml`, which will open a fresh auto-PR. Loop back to Step A for this branch before moving on.
+For a draft branch, run this step after B.6. For an alpha branch, **defer
+this entire step until Step D has applied, validated, and committed every
+fresh feature delta**. An alpha's first and only propagation push must
+already contain its committee merge and fresh feature content.
+
+1. Require a clean working tree. For an alpha, also require the Step D
+   finalization commit and record it as `ALPHA_FINAL_SHA`.
+2. Push the exact local head:
+
+   ```bash
+   git push "$REMOTE" HEAD:<branch>
+   git fetch "$REMOTE" <branch>
+   test "$(git rev-parse HEAD)" = "$(git rev-parse "$REMOTE/<branch>")"
+   ```
+
+   A failed equality check is a hard stop: the remote branch is not the
+   validated local result.
+3. If `update-on-merge.yaml` covers this branch, the push opens a fresh
+   auto-PR. Loop back to Step A for this branch. After merging that PR,
+   fetch again and require `ALPHA_FINAL_SHA` (for an alpha) to be an ancestor
+   of `"$REMOTE/<branch>"`:
+
+   ```bash
+   git merge-base --is-ancestor "$ALPHA_FINAL_SHA" "$REMOTE/<branch>"
+   ```
+
+4. Do not advance to another branch until the remote verification succeeds.
 
 ### Step B.8 — Cheap re-rebase of moved `draft-vN` feature PRs (draft branches with open feature PRs)
 
@@ -296,8 +356,9 @@ created by Step B.7, so the feature PRs rebase onto the final draft head for
 this version.
 
 - Do the **cheap re-rebase of ONLY the vN PRs whose base moved** and
-  regenerate their `.patch` (Phase A machinery — `git rebase upstream/draft-vN`
-  then `git format-patch upstream/draft-vN..<headRefName>`). Do **not**
+  regenerate their `.patch` (Phase A machinery —
+  `git rebase "$REMOTE/draft-vN"` then
+  `git format-patch "$REMOTE/draft-vN..$REMOTE/<headRefName>"`). Do **not**
   re-rebase PRs whose base did not move.
 - Immediately before rebasing each PR, query `headRefOid` again and compare
   it with the manifest pin. If it moved after the recorded cutoff, stop for
@@ -349,8 +410,10 @@ feature deltas**, built in ONE pass:
    error. For each drifted ref, read the intended concept from the merged
    anchor slug, find that concept's actual number on this branch, and set
    BOTH the number and the anchor manually.
-5. **Dry-run and raw-reference validate** (alpha branches get no auto-PR, so do NOT commit
-   renumber/grammar output — revert it after validating):
+5. **Dry-run and raw-reference validate.** Alpha branches commonly get no
+   auto-PR, so do **not** commit renumber/grammar output; revert only that
+   generated validation output after checking it, without reverting the
+   surgical feature-delta edits:
 
    ```bash
    ( cd tools && dotnet run --project StandardAnchorTags -- \
@@ -361,10 +424,26 @@ feature deltas**, built in ONE pass:
    **hard stop**. Also repeat the mandatory raw `rg` audit from Step B.5
    across all `standard/*.md`; any unexplained `§[a-z][a-z0-9-]*`, `§xx`,
    or `#xx` match is a hard stop.
-6. **Finalize before advancing.** Only when the discovered alpha carries BOTH the
+6. **Commit the complete alpha delta before any alpha push.** Review
+   `git status --short`, `git diff --check`, and the full diff. Stage only
+   the intentional surgical feature-delta files, inspect
+   `git diff --cached`, and create a normal commit:
+
+   ```bash
+   git commit -m "Post-meeting propagation: finalize <alpha-branch> feature deltas"
+   ALPHA_FINAL_SHA="$(git rev-parse HEAD)"
+   ```
+
+   If the manifest has no applicable feature delta and the tree is already
+   clean, record that no separate delta commit was required and use the
+   committee merge commit as `ALPHA_FINAL_SHA`. Then run Step B.7. Never
+   leave alpha delta edits only in the working tree or only in a local
+   commit.
+7. **Finalize before advancing.** Only when the discovered alpha carries BOTH the
    committee changes AND the fresh vN patches may the sweep proceed to
-   `draft-v(N+1)`. This reduces propagation risk; it does not replace
-   downstream semantic and reference verification.
+   `draft-v(N+1)`. Require the verified authoritative remote head from
+   Step B.7 to contain `ALPHA_FINAL_SHA`. This reduces propagation risk; it
+   does not replace downstream semantic and reference verification.
 
 ### Step C — Move to the next branch
 
@@ -378,6 +457,8 @@ next branch in the chain. Continue until the chain is done.
 When finished (or when stopped on a conflict), produce a short report:
 
 - For each branch: action taken (auto-PR merged, propagation merge SHA, skipped).
+- The validated authoritative remote name and repository used for every
+  discovery, baseline, merge, comparison, and push.
 - The dynamically enumerated feature-PR count and the manifest cutoff time.
 - For each version N: whether its discovered alpha branch was **finalized** (committee changes + fresh vN deltas applied surgically, semantic comparison complete, dry-run and raw-reference audits clean) before `draft-v(N+1)` was started, and the list of vN PR numbers, pinned SHAs, and patches applied (Step D / Step B.8).
 - Any PR head that moved after cutoff and how it was refreshed or why work stopped.
@@ -394,4 +475,7 @@ When finished (or when stopped on a conflict), produce a short report:
 - Never force-push to any `draft-v*`, `alpha-v*`, or `v*-alpha` branch.
 - Never use `git reset --hard` on a tracked branch.
 - Never merge any PR other than the automated renumber/grammar PR.
+- Never change `REMOTE` or substitute another remote during the run.
+- Never advance past an alpha until its `ALPHA_FINAL_SHA` is present on the
+  verified authoritative remote branch.
 - If `gh` shows the auto-PR's checks failing, stop and ask the user.

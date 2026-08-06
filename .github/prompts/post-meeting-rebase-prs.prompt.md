@@ -40,7 +40,7 @@ Phase A does two things:
 > Phase B ultimately applies are the freshest post-propagation ones; the
 > patches produced here are the starting point.
 
-### Phase A2 notification and routing depend on Phase B output
+## Phase A2 notification and routing depend on Phase B output
 
 Steps 4 and 5 below (alpha-drift detection and vNext-comment routing)
 consume artifacts that **Phase B produces**:
@@ -54,6 +54,31 @@ user for the propagate report (or its location) before running A2.
 
 ## Phase A1 — prepare pinned feature-PR inputs
 
+### Authoritative remote (set and validate once)
+
+Use one remote for every read and write against the repository that owns the
+draft, alpha, and same-repository feature branches. Do not discover from one
+remote and rebase, compare, or push through another.
+
+```bash
+REMOTE="${REMOTE:-upstream}"
+REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+REPO_OWNER="${REPO%%/*}"
+FETCH_REPO="$(gh repo view "$(git remote get-url "$REMOTE")" \
+  --json nameWithOwner -q .nameWithOwner)"
+PUSH_REPO="$(gh repo view "$(git remote get-url --push "$REMOTE")" \
+  --json nameWithOwner -q .nameWithOwner)"
+printf 'Authoritative remote: %s (fetch=%s, push=%s, gh=%s)\n' \
+  "$REMOTE" "$FETCH_REPO" "$PUSH_REPO" "$REPO"
+test "$FETCH_REPO" = "$REPO" && test "$PUSH_REPO" = "$REPO"
+```
+
+The final `test` is mandatory. Stop if it fails, if either URL cannot be
+resolved, or if the selected remote does not expose both the discovered base
+branches and same-repository PR heads. This workflow intentionally does not
+support separate read and write remotes. Keep `REMOTE` unchanged for the
+entire A1 → B → A2 run and record its name and repository in the manifest.
+
 ### Step 1 — Discover branches and enumerate target PRs
 
 Do not use a fixed branch list or PR count.
@@ -61,8 +86,8 @@ Do not use a fixed branch list or PR count.
 1. Fetch and list the actual remote branch names:
 
    ```bash
-   git fetch upstream --prune
-   git for-each-ref refs/remotes/upstream \
+   git fetch "$REMOTE" --prune
+   git for-each-ref "refs/remotes/$REMOTE" \
      --format='%(refname:strip=3)' \
      | grep -E '^(draft-v[0-9]+|alpha-v[0-9]+|v[0-9]+-alpha)$' \
      | sort -V
@@ -109,8 +134,9 @@ must contain at least:
 
 Before Phase B starts, recheck every head and set each record's `cutoffTime`
 to the time of that successful check. Finalize the manifest with a top-level
-UTC `finalizedAt`, the total PR count, and the exact discovered branch
-chain. Phase B must reject a missing, duplicate, or count-mismatched
+UTC `finalizedAt`, the total PR count, the exact discovered branch chain, and
+the validated authoritative remote name and repository. Phase B must
+reject a missing, duplicate, count-mismatched, or remote-mismatched
 manifest.
 
 ### Step 3 — Process each enumerated PR
@@ -123,14 +149,16 @@ For each manifest PR:
    preparation; do not continue from a stale snapshot.
 2. Process the PR according to its head repository:
 
-- If `headRepositoryOwner.login` matches this repo's owner (`dotnet`), the head is in this repo. **Rebase it:**
+- If `headRepositoryOwner.login` matches `REPO_OWNER`, the head is in the
+  authoritative repository. **Rebase it:**
   1. `gh pr checkout <num>` — if this fails to fast-forward (branch has
-     diverged from upstream), run `git reset --hard upstream/<headRefName>`
-     to sync to the upstream version of the PR branch before proceeding.
+     diverged from the authoritative remote), run
+     `git reset --hard "$REMOTE/<headRefName>"` to sync to the authoritative
+     version of the PR branch before proceeding.
   2. **Capture the pre-rebase SHA** so we can recover if the post-rebase cross-reference check fails: `PRE=$(git rev-parse HEAD)`.
-  3. `git fetch upstream <base>`
-  4. `git rebase upstream/<base>` — **use `upstream/`** (the main repo
-     remote), not `origin/`. The PR branches track `upstream`.
+  3. `git fetch "$REMOTE" <base> <headRefName>`
+  4. `git rebase "$REMOTE/<base>"`. The base, PR head, comparisons, and
+     push must all use the validated authoritative remote.
   5. **If the rebase has conflicts:**
      - **Binary conflicts** in `.github/workflows/dependencies/` (e.g.
        `GrammarTestingEnv.tgz`): resolve by taking the PR's version
@@ -164,21 +192,28 @@ For each manifest PR:
      cross-references. Recover with `git reset --hard "$PRE"`, record
      the PR as "needs manual rebase", and move on. To distinguish new
      from pre-existing: check the same ref against
-     `upstream/<headRefName>` (the pre-rebase state). Pre-existing
+     `"$REMOTE/<headRefName>"` (the pre-rebase state). Pre-existing
      TOC002s from incomplete feature work are expected and do not block
      the push.
   7. Immediately before push, query `headRefOid` again. If it differs from
      the remote SHA captured immediately before checkout, stop and restart
      this PR; the author moved it during the run. Otherwise:
-     `git push --force-with-lease upstream <headRefName>`. Record success
-     with the new SHA.
+     `git push --force-with-lease "$REMOTE" HEAD:<headRefName>`. Then verify:
+
+     ```bash
+     git fetch "$REMOTE" <headRefName>
+     test "$(git rev-parse HEAD)" = \
+       "$(git rev-parse "$REMOTE/<headRefName>")"
+     ```
+
+     Record success with that verified SHA.
   8. **Produce the per-PR patch (Phase B input).** Capture the PR's commits
      relative to its base as a patch file so Phase B can surgically apply them
      onto `alpha-vN`:
 
      ```bash
      mkdir -p "$RUN_DIR/patches/<base>"
-     git format-patch "upstream/<base>..<headRefName>" \
+     git format-patch "$REMOTE/<base>..$REMOTE/<headRefName>" \
        --stdout > "$RUN_DIR/patches/<base>/pr-<num>.patch"
      ```
 
@@ -222,7 +257,7 @@ For every open PR P with base `draft-vN`:
    touching the same files:
 
    ```bash
-   git log upstream/<alpha-for-vN> --author='<login>' -- <files…>
+   git log "$REMOTE/<alpha-for-vN>" --author='<login>' -- <files…>
    ```
 
 3. If prior commits exist and the current PR head SHA introduces changes to
@@ -311,7 +346,8 @@ At the end, output a table grouped by base branch:
 
 - PRs successfully rebased + force-pushed (with new SHA)
 - The dynamically discovered branch chain, exact feature-PR count, manifest
-  path, per-PR UTC cutoffs, and manifest finalization time
+  path, authoritative remote/repository, per-PR UTC cutoffs, and manifest
+  finalization time
 - **Per-PR patches produced** (path `$RUN_DIR/patches/<base>/pr-<num>.patch`
   per PR, with pinned head SHA) — the Phase B input set the alpha rebuild
   consumes; flag any fork PRs whose patch is best-effort/stale pending author
@@ -329,4 +365,5 @@ At the end, output a table grouped by base branch:
 - Never close or merge a feature PR.
 - Never push to a fork.
 - Always use `--force-with-lease`, never `--force`.
+- Never change `REMOTE` or substitute another remote during the run.
 - If `gh pr checkout` fails (e.g. permissions), record and skip.
