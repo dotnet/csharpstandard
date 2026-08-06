@@ -761,9 +761,14 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
-
-- Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` to a type encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the set of applicable user-defined and lifted conversion operators, `U`.
+  - Find the set of types, `D₁`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` is a class or struct), the base classes of `S₀` (if `S₀` is a class), and `T₀` (if `T₀` is a class or struct).
+  - Find the set of applicable user-defined and lifted conversion operators, `U₁`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D₁` that convert from a type encompassing `S` to a type encompassed by `T`.
+  - If `U₁` is not empty, then `U` is `U₁`. Otherwise,
+    - Find the set of types, `D₂`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* (if `Tᵢ` is a type parameter).
+    - Find the set of applicable user-defined and lifted conversion operators, `U₂`. This set consists of the user-defined and lifted implicit conversion operators declared by the interfaces in `D₂` that convert from a type encompassing `S` to a type encompassed by `T`.
+    - If `U₂` is not empty, then `U` is `U₂`.
+- If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, `Sₓ` is the most-encompassed type in the combined set of source types of the operators in `U`. If exactly one most-encompassed type cannot be found, then the conversion is ambiguous and a compile-time error occurs.
@@ -789,8 +794,14 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
-- Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the set of applicable user-defined and lifted conversion operators, `U`.
+  - Find the set of types, `D₁`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` is a class or struct), the base classes of `S₀` (if `S₀` is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class).
+  - Find the set of applicable user-defined and lifted conversion operators, `U₁`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D₁` that convert from a type encompassing or encompassed by `S` to a type encompassing or encompassed by `T`.
+  - If `U₁` is not empty, then `U` is `U₁`. Otherwise,
+    - Find the set of types, `D₂`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* and their base interfaces (if `Tᵢ` is a type parameter).
+    - Find the set of applicable user-defined and lifted conversion operators, `U₂`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the interfaces in `D₂` that convert from a type encompassing or encompassed by `S` to a type encompassing or encompassed by `T`.
+    - If `U₂` is not empty, then `U` is `U₂`.
+- If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, if any of the operators in `U` convert from types that encompass `E`, then `Sₓ` is the most-encompassed type in the combined set of source types of those operators. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
