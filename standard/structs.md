@@ -133,7 +133,7 @@ The members of a struct consist of the members introduced by its *struct_member_
 ```ANTLR
 struct_member_declaration
     : constant_declaration
-    | field_declaration
+    | struct_field_declaration
     | method_declaration
     | property_declaration
     | event_declaration
@@ -148,7 +148,9 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields ([§16.6.8.2](structs.md#16682-ref-fields)). *end note*
+
+Fields in structs support capabilities not supported in classes. See [§16.6.8.2](structs.md#16682-ref-fields) for details.
 
 Except for the differences noted in [§16.6](structs.md#166-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
