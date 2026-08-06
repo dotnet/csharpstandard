@@ -2176,7 +2176,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
-- If the declaration is for an optional partial method (§optional-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
+- If the declaration is for an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2417,7 +2417,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as an optional partial method (§optional-partial-methods) shall not have output parameters.
+A method declared as an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3102,7 +3102,7 @@ Across the parts of a type declaration, there shall be exactly one defining part
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
 - Corresponding type parameters in the declarations, by ordinal position, shall have equivalent constraints after substituting each type parameter of one declaration with the corresponding type parameter of the other declaration.
 
-There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
+There are two variations of partial methods: required and optional. A ***required partial method*** ([§15.6.9.3](classes.md#15693-required-partial-methods)) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** ([§15.6.9.2](classes.md#15692-optional-partial-methods)) has no explicit access modifiers, and is implicitly private.
 
 For a required partial method both the definition and implementation shall exist.
 
@@ -3588,17 +3588,17 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.23](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object (§init-accessors), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
 Based on the presence or absence of get, set, and init accessors, a property is classified as follows:
 
 - A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
-- A property that includes both a get accessor and an init accessor is said to be a ***read-init property***. It is a compile-time error for a read-init property to be the target of an assignment except during the construction phase of an object (§init-accessors).
+- A property that includes both a get accessor and an init accessor is said to be a ***read-init property***. It is a compile-time error for a read-init property to be the target of an assignment except during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 - A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
 - A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
-- A property that has only an init accessor is said to be an ***init-only property***. Except as the target of an assignment during the construction phase of an object (§init-accessors), it is a compile-time error to reference an init-only property in an expression.
+- A property that has only an init accessor is said to be an ***init-only property***. Except as the target of an assignment during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), it is a compile-time error to reference an init-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3646,7 +3646,7 @@ Based on the presence or absence of get, set, and init accessors, a property is 
 >
 > *end example*
 
-For more information about set and get accessors, see §set-and-get-accessors.
+For more information about set and get accessors, see [§15.7.3.2](classes.md#15732-set-and-get-accessors).
 
 > *Example*: Consider the following, immutable type, which has auto-implemented properties:
 >
@@ -3669,7 +3669,7 @@ For more information about set and get accessors, see §set-and-get-accessors.
 >
 > *end example*
 
-For more information about init accessors, see §init-accessors.
+For more information about init accessors, see [§15.7.3.3](classes.md#15733-init-accessors).
 
 #### 15.7.3.2 Set and get accessors
 
@@ -4063,7 +4063,7 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object (§init-accessors).
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
@@ -6021,7 +6021,7 @@ record_class_declaration
     ;
 ```
 
-A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
+A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* ([§15.16.3](classes.md#15163-record-class-body)).
 
 *class_modifier* shall not be `static`.
 
@@ -6052,11 +6052,11 @@ record_class_body
     ;
 ```
 
-The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation (§implicit-members).
+The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 ### 15.16.4 Class members
 
-For a record class, the member set also includes the members implicitly provided by the implementation (§implicit-members).
+For a record class, the member set also includes the members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 It is an error for a member of a record class to be named `Clone`.
 
@@ -6064,7 +6064,7 @@ It is an error for an instance field of a record class to have an unsafe type.
 
 ### 15.16.5 Instance constructors
 
-A positional record class (§rec-class-general) has a primary constructor; see §rec-class-pos-mem-pricon for more information.
+A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.6.6.2](classes.md#1516662-primary-constructor) for more information.
 
 ### 15.16.6 Implicit record class members
 
@@ -6105,7 +6105,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >
 > the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
 
-In certain circumstances (§rec-class-copyclone), a copy constructor may be provided by the compiler, and called by provided code.
+In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
 #### 15.16.6.3 Equality members
 
@@ -6278,7 +6278,7 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 
 A record class type contains two copying members:
 
-- A copy constructor (§copy-constructor)
+- A copy constructor ([§15.16.6.2](classes.md#151662-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
@@ -6507,7 +6507,7 @@ As shown, the *constructor_initializer* of the explicit constructor is a call to
 
 At runtime the primary constructor
 
-1. Stores the value of each parameter in the corresponding provided private field (see §rec-class-pos-mem-props).
+1. Stores the value of each parameter in the corresponding provided private field (see [§15.16.6.6.3](classes.md#1516663-properties)).
 1. Executes the instance initializers appearing in *record_class_body*.
 1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
 
