@@ -150,7 +150,7 @@ The members of a struct consist of the members introduced by its *struct_member_
 ```ANTLR
 struct_member_declaration
     : constant_declaration
-    | field_declaration
+    | struct_field_declaration
     | method_declaration
     | property_declaration
     | event_declaration
@@ -165,7 +165,9 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields (§Ref-Fields). *end note*
+
+Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
 
 Except for the differences noted in [§16.5](structs.md#165-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
@@ -505,7 +507,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 
 With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of by-reference parameters), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
-> *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
+> *Note*: If a struct contains a field of reference type or that is a reference variable then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -560,7 +562,7 @@ When a property or indexer of a struct is the target of an assignment, the insta
 
 ### 16.5.5 Default values
 
-As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
+As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, as well as reference variable fields, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference variable fields and reference type fields to `null`.
 
 > *Example*: Referring to the `Point` struct declared above, the example
 >
@@ -701,9 +703,11 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > *end example*
 
-### 16.5.8 Field initializers
+### 16.5.8 Fields
 
-As described in [§16.5.5](structs.md#1655-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
+#### 16.5.8.1 Field initializers
+
+As described in [§16.5.5](structs.md#1655-default-values), the default value of a struct consists of the value that results from setting all value type and reference variable fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
 > *Example*:
 >
@@ -737,9 +741,67 @@ When a struct instance constructor has a `this()` constructor initializer that r
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
+#### §Ref-Fields Ref fields
+
+```ANTLR
+struct_field_declaration
+    : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
+      variable_declarators ';'
+    ;
+```
+
+*field_modifier* is described in [§15.5.1](classes.md#1551-general).
+
+A *struct_field_declaration* without `ref`, `readonly ref`, or `ref readonly` is as described in [§15.5](classes.md#155-fields).
+
+A `ref` or `readonly ref` field is a reference variable and is subject to the following constraints:
+
+- It shall only be declared in a `ref struct`.
+- It shall not be declared `static`, `volatile`, or `const`.
+- Its type shall not itself be a `ref struct` type.
+- In a `readonly ref struct`, every `ref` field shall be declared `readonly ref` (it may additionally be declared `readonly ref readonly`).
+
+Consider the following ref struct declaration:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"refFields1"} -->
+
+```csharp
+ref struct RwS
+{
+    public static int rwField = 100;
+
+    public ref int                   rwRefToRwData = ref rwField;
+    public ref readonly int          rwRefToRoData = ref rwField;
+    public readonly ref int          roRefToRwData = ref rwField;
+    public readonly ref readonly int roRefToRoData = ref rwField;
+    public RwS() { /*…*/ }
+}
+```
+
+`rwRefToRwData` is a writable reference variable, whose referent is seen as a writable `int`. `rwRefToRoData` is a writable reference variable, whose referent is seen as a read-only `int`. `roRefToRwData` is a read-only reference variable, whose referent is seen as a writable `int`. `roRefToRoData` is a read-only reference variable, whose referent is seen as a read-only `int`. The read/write field `rwField` can be written directly, and via the reference variables `rwRefToRwData` and `roRefToRwData`.
+
+A readonly reference variable may take on a value via an initializer, or via an assignment inside a constructor or an init-only setter.
+
+Consider the following readonly ref struct declaration:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"refFields2"} -->
+
+```csharp
+readonly ref struct RoS
+{
+    public static int rwField = 200;
+
+    public readonly ref int          roRefToRwData = ref rwField;
+    public readonly ref readonly int roRefToRoData = ref rwField;
+    public RoS() { /*...*/ }
+}
+```
+
+`roRefToRwData` is a read-only reference variable, whose referent is seen as a writable `int`. `roRefToRoData` is a read-only reference variable, whose referent is seen as a read-only `int`. The read/write field `rwField` can be written directly, and via the reference variable `roRefToRwData`.
+
 ### 16.5.9 Constructors
 
-A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
+A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value, all reference variable fields to null references, and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
 
 An explicitly declared parameterless instance constructor shall have public accessibility.
 
@@ -915,16 +977,19 @@ For any non-default expression whose compile-time type is a ref struct has a saf
 
 The safe-context records which context a value may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. The safe-context of an expression constrains its use as follows:
+There are four different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, **return-only**, and **caller-context**. The safe-context of an expression constrains its use as follows:
 
-- For a return statement `return e1`, the safe-context of `e1` shall be caller-context.
+- For a return statement `return e1`, the safe-context of `e1` shall be at least return-only.
 - For an assignment `e1 = e2` the safe-context of `e2` shall be at least as wide a context as the safe-context of `e1`.
-
-For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
+- For an assignment to an `out` parameter, the safe-context of the right-hand side shall be at least return-only.
 
 #### 16.5.15.2 Parameter safe context
 
 A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
+
+An `out` parameter of a ref struct type has a safe-context of return-only.
+
+A `this` parameter in a struct constructor has a safe-context of return-only.
 
 #### 16.5.15.3 Local variable safe context
 
@@ -933,6 +998,8 @@ A local variable of a ref struct type has a safe-context as follows:
 - If the variable is an iteration variable of a `foreach` loop, then the variable’s safe-context is the same as the safe-context of the `foreach` loop’s expression.
 - Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
+
+See [§9.7.2.1](variables.md#9721-general) and [§9.7.2.2](variables.md#9722-local-variable-ref-safe-context).
 
 #### 16.5.15.4 Field safe context
 
@@ -948,12 +1015,178 @@ For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the saf
 
 #### 16.5.15.6 Method and property invocation
 
-A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P` has safe-context of the smallest of the following contexts:
+A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P`, where `M()` does not return ref-to-ref-struct, has safe-context of the smallest of the following contexts:
 
-- caller-context.
-- The safe-context of all argument expressions (including the receiver).
+- The caller-context.
+- When the return is a `ref struct`, the safe-context contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
+- When the return is a `ref struct`, the ref-safe-context contributed by all `ref` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+
+If `M()` does return ref-to-ref-struct, the safe-context is the same as the safe-context of all arguments which are ref-to-ref-struct. It is an error if there are multiple such arguments with different safe-contexts.
+
+For the purpose of these rules, a given argument `expr` passed to parameter `p`:
+
+1. If `p` is `scoped ref`, then `expr` does not contribute ref-safe-context.
+2. If `p` is `scoped`, then `expr` does not contribute safe-context.
+3. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
+
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public ref int RefField;
+>     public RS(ref int i) { RefField = ref i; }
+> }
+>
+> class C
+> {
+>     static RS CreateAndCapture(ref int value)
+>     {
+>         // OK: ref-safe-context of `ref value` is caller-context,
+>         // safe-context contributed is caller-context.
+>         return new RS(ref value);
+>     }
+>
+>     static RS CreateWithoutCapture(scoped ref int value)
+>     {
+>         // Error: `value` is scoped ref so it does not contribute
+>         // ref-safe-context. The constructor needs ref-safe-context
+>         // of caller-context but `value` only has function-member.
+>         return new RS(ref value);
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §method-arguments-must-match Method arguments must match
+
+For any method invocation `e.M(a1, a2, ... aN)`:
+
+1. Calculate the narrowest safe-context from:
+   - caller-context.
+   - The safe-context of all arguments.
+   - The ref-safe-context of all `ref` arguments whose corresponding parameters have a ref-safe-context of caller-context.
+
+2. All `ref` arguments of `ref struct` types shall be assignable by a value with that safe-context. In this rule, `ref` does **not** generalize to include `in` and `out`.
+
+For any method invocation `e.M(a1, a2, ... aN)`:
+
+1. Calculate the narrowest safe-context from:
+   - caller-context.
+   - The safe-context of all arguments.
+   - The ref-safe-context of all `ref` arguments whose corresponding parameters are not `scoped`.
+
+2. All `out` arguments of `ref struct` types shall be assignable by a value with that safe-context.
+
+The presence of `scoped` allows developers to reduce the friction this rule creates by marking parameters which are not returned as `scoped`. This removes their arguments from (1) in both cases above and provides greater flexibility to callers.
+
+> *Example*: The following illustrates how the method-arguments-must-match rule prevents a value with a narrower safe-context from being stored into a `ref` argument with a wider safe-context:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350"]} -->
+> ```csharp
+> ref struct R { }
+>
+> class C
+> {
+>     static void F0(ref R a, scoped ref R b) { }
+>
+>     static void F1(ref R x, scoped R y)
+>     {
+>         // Error: The narrowest safe-context is function-member (from `y`)
+>         // but `x` is a ref argument of a ref struct type whose
+>         // safe-context is caller-context. It must be assignable by
+>         // a value with that narrowest safe-context, which fails.
+>         F0(ref x, ref y);
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §declaration-expression-safe-context Infer safe-context of declaration expressions
+
+The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
+
+- caller-context.
+- If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
+- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+  - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
+  - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
+
+> *Example*: The following illustrates how the safe-context of an `out` declaration variable is inferred from the other arguments to the invocation:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeclarationExprSafeContext", expectedErrors:["CS8352"], ignoredWarnings:["CS0168"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public RS(ref int x) { }
+>
+>     static void M0(RS input, out RS output) => output = input;
+>
+>     static RS M1()
+>     {
+>         var i = 0;
+>         var rs1 = new RS(ref i);  // safe-context of rs1 is function-member
+>         M0(rs1, out var rs2);     // safe-context of rs2 is function-member
+>         return rs2;               // Error: rs2 cannot escape function-member
+>     }
+>
+>     static void M2(RS rs1)
+>     {
+>         M0(rs1, out scoped var rs2); // scoped forces safe-context to
+>                                      // declaration-block
+>     }
+> }
+> ```
+>
+> In `M1`, the safe-context of `rs2` is the narrowest of *caller-context* and the safe-context of `rs1` (*function-member*), which is *function-member*. Therefore `rs2` cannot be returned. In `M2`, the `scoped` modifier forces the safe-context of `rs2` to *declaration-block*.
+>
+> *end example*
+
+#### §object-initializer-safe-context Object initializer safe context
+
+The safe-context of an object initializer expression is the narrowest of:
+
+1. The safe-context of the constructor invocation.
+2. The safe-context and ref-safe-context of arguments to member initializer indexers that can escape to the receiver.
+3. The safe-context of the RHS of assignments in member initializers to non-readonly setters, or the ref-safe-context in the case of ref assignment.
+
+> *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
+
+> *Example*: The following illustrates how an object initializer narrows the safe-context of the resulting value:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ObjectInitializerSafeContext", expectedErrors:["CS8352"]} -->
+> ```csharp
+> using System;
+>
+> ref struct S
+> {
+>     public Span<int> Field;
+>     public S(ref int i) { }
+> }
+>
+> class C
+> {
+>     static S Example()
+>     {
+>         Span<int> stackSpan = stackalloc int[42];
+>         int i = 0;
+>
+>         // safe-context is narrowest of:
+>         //   constructor safe-context (caller-context) and
+>         //   RHS of Field assignment (stackSpan: function-member)
+>         // = function-member
+>         var x = new S(ref i) { Field = stackSpan };
+>         return x; // Error: x has safe-context of function-member
+>     }
+> }
+> ```
+>
+> *end example*
 
 #### 16.5.15.7 stackalloc
 
@@ -963,12 +1196,4 @@ The result of a stackalloc expression has safe-context of function-member.
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
-
-> *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
->
-> ```csharp
-> public Span<T>(ref T p)
-> ```
->
-> Such a constructor makes instances of `Span<T>` used as fields indistinguishable from a `ref` field. The safety rules described in this document depend on `ref` fields not being a valid construct in C# or .NET. *end note*
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.

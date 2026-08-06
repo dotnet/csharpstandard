@@ -1715,6 +1715,8 @@ The value of a field is obtained in an expression using a *simple_name* ([§12.8
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
+> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see §Ref-Fields. *end note*
+
 > *Example*:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Fields1", ignoredWarnings:["CS0649"]} -->
@@ -2270,8 +2272,9 @@ default_argument
 
 parameter_modifier
     : parameter_mode_modifier
-    | 'this' parameter_mode_modifier?
-    | parameter_mode_modifier? 'this'
+    | 'this' 'scoped'? parameter_mode_modifier?
+    | 'scoped'? parameter_mode_modifier? 'this'
+    | 'scoped' parameter_mode_modifier?
     ;
 
 parameter_mode_modifier
@@ -2287,7 +2290,11 @@ parameter_array
 
 The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+
+An output parameter implicitly has the `scoped` modifier.
+
+For a discussion of `scoped`, see §scoped-modifier.
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
@@ -2335,7 +2342,7 @@ The following kinds of parameters exist:
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
 - Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
 
 #### 15.6.2.2 Value parameters
 
@@ -2368,6 +2375,8 @@ A parameter declared with an `in` modifier is an ***input parameter***. The argu
 It is a compile-time error to modify the value of an input parameter.
 
 > *Note*: The primary purpose of input parameters is for efficiency. When the type of a method parameter is a large struct (in terms of memory requirements), it is useful to be able to avoid copying the whole value of the argument when calling the method. Input parameters allow methods to refer to existing values in memory, while providing protection against unwanted changes to those values. *end note*
+
+An input parameter may carry the `scoped` modifier (§scoped-modifier) or the `[UnscopedRef]` attribute (§UnscopedRefAttribute).
 
 ##### 15.6.2.3.3 Reference parameters
 
@@ -2432,13 +2441,17 @@ A parameter declared with a `ref` modifier is a ***reference parameter***. For d
 >
 > *end example*
 
-For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.14](expressions.md#12814-this-access)).
+For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.14](expressions.md#12814-this-access)). The `this` parameter of a struct instance method is implicitly `scoped ref` (§scoped-modifier).
+
+A reference parameter may carry the `scoped` modifier (§scoped-modifier) or the `[UnscopedRef]` attribute (§UnscopedRefAttribute).
 
 ##### 15.6.2.3.4 Output parameters
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
 A method declared as an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) shall not have output parameters.
+
+An output parameter is implicitly `scoped` (§scoped-modifier); the `[UnscopedRef]` attribute (§UnscopedRefAttribute) may be applied to widen its ref-safe-context.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
