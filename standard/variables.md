@@ -1233,7 +1233,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-> *Note*: The related notion of a *safe-context* is defined in ([§16.5.15](structs.md#16515-safe-context-constraint)), along with associated constraints. *end note*
+> *Note*: The related notion of a *safe-context* is defined in ([§16.6.15](structs.md#16615-safe-context-constraint)), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
@@ -1373,7 +1373,7 @@ For a variable `c` resulting from a ref-returning function invocation, its ref-s
 - The caller-context.
 - The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
 - For each input parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
-- The safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of all argument expressions (including the receiver).
+- The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
 >
