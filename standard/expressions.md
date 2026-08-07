@@ -253,7 +253,7 @@ An operation of the form `«op» x` or `x «op»`, where «op» is an overloada
 
 An operation of the form `x «op» y`, where «op» is an overloadable binary operator, `x` is an expression of type `X`, and `y` is an expression of type `Y`, is processed as follows:
 
-- The set of candidate user-defined operators provided by `X` and `Y` for the operation `operator «op»(x, y)` is determined. The set consists of the union of the candidate operators provided by `X` and the candidate operators provided by `Y`, each determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators). For the combined set, candidates are merged as follows:
+- The set of candidate user-defined operators provided by `X` and `Y` for the operation `operator «op»(x, y)` is determined. The set consists of the union of the candidate operators provided by `X` and, unless the operator is a shift operator, the candidate operators provided by `Y`, each determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators). For the combined set, candidates are merged as follows:
   - If `X` and `Y` are identity convertible, or if `X` and `Y` are derived from a common base type, then shared candidate operators only occur in the combined set once.
   - If there is an identity conversion between `X` and `Y`, an operator `«op»Y` provided by `Y` has the same return type as an `«op»X` provided by `X` and the operand types of `«op»Y` have an identity conversion to the corresponding operand types of `«op»X` then only `«op»X` occurs in the set.
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. For predefined enum and delegate operators, the only operators considered are those provided by an enum or delegate type that is the binding-time type of one of the operands.
@@ -4515,7 +4515,7 @@ If an operand of a *shift_expression* has the compile-time type `dynamic`, then 
 
 For an operation of the form `x << count` or `x >> count`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator.
 
-When declaring an overloaded shift operator, the type of the first operand shall always be the class or struct containing the operator declaration, and the type of the second operand shall always be `int`.
+When declaring an overloaded shift operator, the type of the first operand shall always be the class or struct containing the operator declaration.
 
 The predefined shift operators are listed below.
 
