@@ -8,24 +8,30 @@ Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to 
 
 ## 14.2 Compilation units
 
-A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by zero or more *statement_list*s followed by zero or more *namespace_member_declaration*s. The *compilation_unit* defines the overall structure of the input.
+A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by a *compilation_unit_body*. A *compilation_unit_body* can either be zero or more *statement_list*s followed by zero or more *namespace_member_declaration*s, or a *file_scoped_namespace_declaration*. The *compilation_unit* defines the overall structure of the input.
 
 ```ANTLR
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes?
-      statement_list* namespace_member_declaration*
+    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    ;
+
+compilation_unit_body
+    : statement_list* namespace_member_declaration*
+    | file_scoped_namespace_declaration
     ;
 ```
 
 A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-The *using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
-The *namespace_member_declaration*s of each compilation unit of a program contribute members to a single declaration space called the global namespace.
+The *namespace_member_declaration*s or *file_scoped_namespace_declaration* of each compilation unit of a program contribute members to a single declaration space called the global namespace.
+
+A *file_scoped_namespace_declaration* contributes members corresponding to the *namespace_declaration* to which it is semantically equivalent ([§14.3](namespaces.md#143-namespace-declarations)).
 
 > *Example*:
 >
@@ -43,11 +49,16 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 
 ## 14.3 Namespace declarations
 
-A *namespace_declaration* consists of the keyword namespace, followed by a namespace name and body, optionally followed by a semicolon.
+A *namespace_declaration* consists of the keyword namespace, followed by a namespace name and body, optionally followed by a semicolon. A *file_scoped_namespace_declaration* consists of the keyword `namespace`, followed by a namespace name, a semicolon, and an optional list of *extern_alias_directive*s, *using_directive*s and *type_declaration*s.
 
 ```ANTLR
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
+    ;
+
+file_scoped_namespace_declaration
+    : 'namespace' qualified_identifier ';' extern_alias_directive* using_directive*
+      type_declaration*
     ;
 
 qualified_identifier
@@ -62,11 +73,15 @@ namespace_body
 
 A *namespace_declaration* may occur as a top-level declaration in a *compilation_unit* or as a member declaration within another *namespace_declaration*. When a *namespace_declaration* occurs as a top-level declaration in a *compilation_unit*, the namespace becomes a member of the global namespace. When a *namespace_declaration* occurs within another *namespace_declaration*, the inner namespace becomes a member of the outer namespace. In either case, the name of a namespace shall be unique within the containing namespace.
 
+A *file_scoped_namespace_declaration* may only occur as a top-level declaration in a *compilation_unit*. As such, the declared namespace becomes a member of the global namespace.
+
 Namespaces are implicitly `public` and the declaration of a namespace cannot include any access modifiers.
 
 Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace. Note that all *using_directive*s shall appear before any member declarations.
 
-The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by “`.`” tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
+Within a *file_scoped_namespace_declaration*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *type_declaration*s contribute members to the declaration space of the namespace. Note that all *using_directive*s shall appear before any type declarations.
+
+The *qualified_identifier* of a *namespace_declaration* and *file_scoped_namespace_declaration* may be a single identifier or a sequence of identifiers separated by “`.`” tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
 
 > *Example*:
 >
@@ -116,6 +131,40 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 >
 > *end example*
 
+A *file_scoped_namespace_declaration* permits a namespace declaration to be written without an accompanying `{ … }` block.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
+> ```csharp
+> namespace Name;
+> using System;
+> class C
+> {
+> }
+> ```
+>
+> is semantically equivalent to
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
+> ```csharp
+> namespace Name
+> {
+>     using System;
+>     class C
+>     {
+>     }
+> }
+> ```
+>
+> *end example*
+
+A *file_scoped_namespace_declaration* is treated the same as a *namespace_declaration* at the same location in the *compilation_unit* with the same *qualified_identifier*.  The *extern_alias_directive*s, *using_directive*s and *type_declaration*s of that *file_scoped_namespace_declaration* act as if they were declared in the same order inside the *namespace_body* of that *namespace_declaration*.
+
+> *Note*: As determined by the grammar, a compilation unit cannot contain both a *file_scoped_namespace_declaration* and a *namespace_declaration*. It cannot contain multiple *file_scoped_namespace_declaration*s. It cannot contain both a *file_scoped_namespace_declaration* and any top level *statement*s. *type_declaration*s cannot precede a *file_scoped_namespace_declaration*. *end note*
+
+Different compilation units may contribute to the same namespace using either or both of the *namespace_member_declaration* or *file_scoped_namespace_declaration* syntax.
+
 ## 14.4 Extern alias directives
 
 An *extern_alias_directive* introduces an identifier that serves as an alias for a namespace. The specification of the aliased namespace is external to the source code of the program and applies also to nested namespaces of the aliased namespace.
@@ -126,7 +175,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* extends over the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*.
+The scope of an *extern_alias_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
@@ -175,7 +224,7 @@ A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-dir
 
 A *using_static_directive* ([§14.5.4](namespaces.md#1454-using-static-directives)) imports the nested types and static members of a type.
 
-The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
+The scope of a *using_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
 
 ### 14.5.2 Using alias directives
 
