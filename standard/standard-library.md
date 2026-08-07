@@ -789,6 +789,13 @@ namespace System.Runtime.CompilerServices
         public Type BuilderType { get; }
     }
 
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false,
+        Inherited = false)]
+    public sealed class CallerArgumentExpressionAttribute : Attribute
+    {
+        public CallerArgumentExpressionAttribute(string parameterName);
+    }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
@@ -1425,6 +1432,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
+- `global::System.Runtime.CompilerServices.CallerArgumentExpressionAttribute`
 - `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
