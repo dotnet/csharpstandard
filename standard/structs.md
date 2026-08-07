@@ -25,37 +25,17 @@ non_record_struct_declaration
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
-
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
 ```
 
-A *struct_declaration* is for either a ***non-record struct*** or a ***record struct***.
+There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in [§16.4](structs.md#164-record-structs). The differences between the two kinds are discussed in [§16.5](structs.md#165-record-struct-and-non-record-struct-differences).
 
 A *non_record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
-
-A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.2.1](classes.md#1521-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
 
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A *struct_declaration* that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
 A *non_record_struct_declaration* that includes a `ref` modifier shall not have a *struct_interfaces* part.
-
-A *record_struct_declaration* having a *delimited_parameter_list* declares a ***positional record struct***.
-
-At most only one *record_struct_declaration* containing `partial` may provide a *delimited_parameter_list*.
-
-The parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
-For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those synthesized by the compiler ([§16.4](structs.md#164-synthesized-record-struct-members)).
 
 ### 16.2.2 Struct modifiers
 
@@ -90,7 +70,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### 16.2.3 Ref modifier
 
-The `ref` modifier indicates that the *non_record_struct_declaration* declares a type whose instances are allocated on the execution stack. These types are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and shall not be copied out of its safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.5.15](structs.md#16515-safe-context-constraint).
+The `ref` modifier indicates that the *non_record_struct_declaration* declares a type whose instances are allocated on the execution stack. These types are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and shall not be copied out of its safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.6.15](structs.md#16615-safe-context-constraint).
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -145,7 +125,7 @@ struct_body
 
 ### 16.3.1 General
 
-The members of a struct consist of the members introduced by its *struct_member_declaration*s and the members inherited from the type `System.ValueType`. For a record struct, the member set also includes the synthesized members generated by the compiler ([§16.4](structs.md#164-synthesized-record-struct-members)).
+The members of a struct consist of the members introduced by its *struct_member_declaration*s and the members inherited from the type `System.ValueType`.
 
 ```ANTLR
 struct_member_declaration
@@ -167,9 +147,7 @@ struct_member_declaration
 
 > *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
 
-Except for the differences noted in [§16.5](structs.md#165-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
-
-It is an error for an instance field of a record struct to have an unsafe type.
+Except for the differences noted in [§16.6](structs.md#166-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
 ### 16.3.2 Readonly members
 
@@ -211,17 +189,68 @@ An instance member definition or accessor of an instance property, indexer, or e
 >
 > The `readonly` method `AddMessage` can change the state of a message list. The `InitializeMessages` member can clear and re-initialize the list of messages. In the case of `AddMessage`, the `readonly` modifier is valid. In the case of `InitializeMessages`, adding the `readonly` modifier is invalid. *end example*
 
-## 16.4 Synthesized record struct members
+## 16.4 Record structs
 
 ### 16.4.1 General
 
-In the case of a record struct, members are synthesized unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+A record struct is a specialized value type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record struct, such as value-based equality and easy immutability.
 
-The synthesized members are described in the following subclauses.
+```ANTLR
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+```
 
-### 16.4.2 Equality members
+A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
 
-The synthesized equality members are similar to those for a record class ([§15.16.2](classes.md#15162-equality-members)), except for the lack of `EqualityContract`, null checks, or inheritance.
+A *record_struct_declaration* having a *delimited_parameter_list* declares a ***positional record struct***.
+
+At most only one *record_struct_declaration* containing `partial` may provide a *delimited_parameter_list*.
+
+The parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
+
+### 16.4.2 Struct members
+
+For a record struct, as well as those members identified by [§16.3](structs.md#163-struct-members), the member set includes the members implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
+
+It is an error for a member of a record struct to be named `Clone`.
+
+It is an error for an instance field of a record struct to have an unsafe type.
+
+### 16.4.3 Record struct body
+
+The *record_struct_body* of a record struct identifies the explicitly declared members of that struct.
+
+```ANTLR
+record_struct_body
+    : struct_body ';'?
+    | ';'
+    ;
+```
+
+For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
+
+### 16.4.4 Implicit record struct members
+
+#### 16.4.4.1 General
+
+In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+
+The members provided by the implementation are described in the following subclauses.
+
+#### 16.4.4.2 Primary constructors
+
+As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
+
+In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
+
+Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
+
+#### 16.4.4.3 Equality members
+
+The provided equality members are similar to those for a record class ([§15.16.6.3](classes.md#151663-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
 A record struct `R` implements `System.IEquatable<R>` and includes a synthesized strongly-typed overload of `Equals(R other)`, which is public, as follows:
 
@@ -231,11 +260,11 @@ public readonly bool Equals(R other);
 
 This method can be declared explicitly. However, it is an error if the explicit declaration does not match the expected signature or accessibility.
 
-If `Equals(R other)` is user-defined (that is, not synthesized) but `GetHashCode` is not, a warning shall be produced.
+If `Equals(R other)` is user-defined but `GetHashCode` is not, a warning shall be produced.
 
-The synthesized `Equals(R)` shall return `true` if and only if for each instance field `fieldN` in the record struct the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)`,  where `TN` is the field type, is `true`.
+The provided `Equals(R)` shall return `true` if and only if for each instance field `fieldN` in the record struct the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)`,  where `TN` is the field type, is `true`.
 
-The record struct includes synthesized `==` and `!=` operators equivalent to operators declared as follows:
+The record struct includes provided `==` and `!=` operators equivalent to operators declared as follows:
 
 ```csharp
 public static bool operator==(R r1, R r2) => r1.Equals(r2);
@@ -244,15 +273,15 @@ public static bool operator!=(R r1, R r2) => !(r1 == r2);
 
 The `Equals` method called by the `==` operator is the `Equals(R other)` method specified above. The `!=` operator delegates to the `==` operator. It is an error if the operators are declared explicitly.
 
-The record struct includes a synthesized override equivalent to a method declared as follows:
+The record struct includes a provided override method declared as follows:
 
 ```csharp
 public override readonly bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. The synthesized override shall return `other is R temp && Equals(temp)` where `R` is the record struct.
+It is an error if the override is declared explicitly. The provided override shall return `other is R temp && Equals(temp)` where `R` is the record struct.
 
-The record struct includes a synthesized override equivalent to a method declared as follows:
+The record struct includes a provided override method declared as follows:
 
 ```csharp
 public override readonly int GetHashCode();
@@ -262,7 +291,7 @@ This method may be declared explicitly.
 
 A warning shall be reported if one of `Equals(R)` and `GetHashCode()` is explicitly declared but the other method is not.
 
-The synthesized override of `GetHashCode()` shall return an `int` result of combining the values of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` for each instance field `fieldN` with `TN` being the type of `fieldN`.
+The provided override of `GetHashCode()` shall return an `int` result of combining the values of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` for each instance field `fieldN` with `TN` being the type of `fieldN`.
 
 > *Example*: Consider the following record struct:
 >
@@ -271,7 +300,7 @@ The synthesized override of `GetHashCode()` shall return an `int` result of comb
 > record struct R1(T1 P1, T2 P2);
 > ```
 >
-> For this, the synthesized equality members would be something like:
+> For this, the provided equality members would be something like:
 >
 > <!-- Example: {template:"standalone-lib", name:"RecordStructEqualityMembers2", additionalFiles:["T1T2T3.cs"]} -->
 > ```csharp
@@ -293,13 +322,15 @@ The synthesized override of `GetHashCode()` shall return an `int` result of comb
 >         return HashCode.Combine(
 >             EqualityComparer<T1>.Default.GetHashCode(P1),
 >             EqualityComparer<T2>.Default.GetHashCode(P2));
+>     }
+> }
 > ```
 >
 > *end example*
 
-### 16.4.3 Printing members
+#### 16.4.4.4 Printing members
 
-A record struct includes a synthesized method equivalent to the following:
+A record struct includes a provided method, declared as follows:
 
 ```csharp
 private bool PrintMembers(System.Text.StringBuilder builder);
@@ -316,13 +347,13 @@ If the record’s printable members do not include a readable property with a no
 
 The `PrintMembers` method can be declared explicitly. However, it is an error if the explicit declaration does not match the expected signature or accessibility.
 
-The record struct includes a synthesized method equivalent to the following:
+The record struct includes a provided method, declared as follows:
 
 ```csharp
 public override string ToString();
 ```
 
-If the record struct’s `PrintMembers` method is `readonly`, then the synthesized `ToString()` method shall be `readonly`.
+If the record struct’s `PrintMembers` method is `readonly`, then the provided `ToString()` method shall be `readonly`.
 
 This method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility.
 
@@ -341,7 +372,7 @@ This method performs the following tasks:
 > record struct R1(T1 P1, T2 P2);
 > ```
 >
-> For this record struct, the synthesized printing members would be something like:
+> For this record struct, the provided printing members would be something like:
 >
 > <!-- Example: {template:"standalone-lib", name:"RecordStructPrintingMembers2", additionalFiles:["T1T2T3.cs"], expectedErrors:["CS0535"]} -->
 > <!-- NOTE: In reality, class R1 will also have a synthesized implementation of interface member 'IEquatable<R1>.Equals(R1?)', but as that is not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
@@ -384,41 +415,23 @@ This method performs the following tasks:
 >
 > *end example*
 
-### 16.4.4 Positional record struct members
+#### 16.4.4.5 Positional record struct members
 
-#### 16.4.4.1 General
+##### 16.4.4.5.1 General
 
-As well as providing the members described in the preceding subclauses, positional record structs ([§16.2.1](structs.md#1621-general)) synthesize additional members with the same conditions as the other members, as described in the following subclauses.
+As well as providing the members described in the preceding subclauses, positional record structs ([§16.2.1](structs.md#1621-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-#### 16.4.4.2 Primary constructor
+##### 16.4.4.5.2 Primary constructor
 
-A record struct has a public constructor whose signature corresponds to the value parameters of the type declaration. This is called the primary constructor for the type. It is an error to have a primary constructor and a constructor with the same signature already present in the struct. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is generated.
+As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
 
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor1", expectedErrors:["CS0111","CS8862"]} -->
-> ```csharp
-> record struct R1
-> {
->     public R1() { } // OK
-> }
->
-> record struct R2()
-> {
->     public R2() { } // error: 'R2' already defines
->                     // a constructor with the same parameter types
-> }
-> ```
+In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
 
-Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the record-struct-body.
-
-If a record struct has a primary constructor, any user-defined constructor shall have an explicit `this` constructor initializer that calls the primary constructor or an explicitly declared constructor.
-
-Parameters of the primary constructor as well as members of the record struct are in scope within initializers of instance fields or properties. Instance members would be an error in these locations, but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
-
-A warning shall be produced if a parameter of the primary constructor is not read.
+Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
 
 The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
 
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS0171","CS8050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS8050"]} -->
 > ```csharp
 > record struct Pos(int X) // def assignment error in primary constructor
 > {
@@ -429,15 +442,15 @@ The definite assignment rules for struct instance constructors apply to the prim
 > }
 > ```
 
-#### 16.4.4.3 Properties
+##### 16.4.4.5.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
-For each record struct parameter of a *delimited_parameter_list* there is a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each record struct parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
 
 For a record struct:
 
-- a public `get` and `init` auto-property is created if the record struct has a `readonly` modifier, `get` and `set` otherwise. Both kinds of set accessors (`set` and `init`) are considered “matching.” So, the user may declare an init-only property in place of a synthesized mutable one.
+- a public `get` and `init` auto-property is created if the record struct has a `readonly` modifier, `get` and `set` otherwise. Both kinds of set accessors (`set` and `init`) are considered “matching.” So, the user may declare an init-only property in place of a provided mutable one.
 
 - An inherited `abstract` property with matching type is overridden.
 
@@ -449,31 +462,42 @@ For a record struct:
 
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
 
-- Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record struct parameter.
+- Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record struct parameter.
 
-#### 16.4.4.4 Deconstruct
+##### 16.4.4.5.4 Deconstruct
 
-A positional record struct with at least one parameter synthesizes a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary
+A positional record struct with at least one parameter provides a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary
 constructor declaration. The body of the method assigns each parameter of the Deconstruct method to the value from an instance member access to a member of the same name.
 If the instance members accessed in the body do not include a property with a non-`readonly` `get` accessor, then the synthesized `Deconstruct` method is `readonly`.
 The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
-## 16.5 Class and struct differences
+## 16.5 Record struct and non-record struct differences
 
-### 16.5.1 General
+A record struct differs from a non-record struct in several important ways:
+
+- It is declared using the keywords `record struct` instead of just `struct`.
+- It has a number of members provided for it by the implementation.
+- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
+- Its record struct body may be omitted.
+- It shall not have a member called `Clone`.
+- It shall not have an instance field with an unsafe type.
+
+## 16.6 Class and struct differences
+
+### 16.6.1 General
 
 Structs differ from classes in several important ways:
 
-- Structs are value types ([§16.5.2](structs.md#1652-value-semantics)).
-- All struct types implicitly inherit from the class `System.ValueType` ([§16.5.3](structs.md#1653-inheritance)).
-- Assignment to a variable of a struct type creates a *copy* of the value being assigned ([§16.5.4](structs.md#1654-assignment)).
-- The default value of a struct is the value produced by setting all fields to their default value ([§16.5.5](structs.md#1655-default-values)).
-- Boxing and unboxing operations are used to convert between a struct type and certain reference types ([§16.5.6](structs.md#1656-boxing-and-unboxing)).
-- The meaning of `this` is different within struct members ([§16.5.7](structs.md#1657-meaning-of-this)).
+- Structs are value types ([§16.6.2](structs.md#1662-value-semantics)).
+- All struct types implicitly inherit from the class `System.ValueType` ([§16.6.3](structs.md#1663-inheritance)).
+- Assignment to a variable of a struct type creates a *copy* of the value being assigned ([§16.6.4](structs.md#1664-assignment)).
+- The default value of a struct is the value produced by setting all fields to their default value ([§16.6.5](structs.md#1665-default-values)).
+- Boxing and unboxing operations are used to convert between a struct type and certain reference types ([§16.6.6](structs.md#1666-boxing-and-unboxing)).
+- The meaning of `this` is different within struct members ([§16.6.7](structs.md#1667-meaning-of-this)).
 - A struct is not permitted to declare a finalizer.
 - Event declarations, property declarations, property accessors, indexer declarations, and method declarations are permitted to have the modifier `readonly` while that is not generally permitted for those same member kinds in classes.
 
-### 16.5.2 Value semantics
+### 16.6.2 Value semantics
 
 Structs are value types ([§8.3](types.md#83-value-types)) and are said to have value semantics. Classes, on the other hand, are reference types ([§8.2](types.md#82-reference-types)) and are said to have reference semantics.
 
@@ -540,7 +564,7 @@ With classes, it is possible for two variables to reference the same object, and
 >
 > *end example*
 
-### 16.5.3 Inheritance
+### 16.6.3 Inheritance
 
 All struct types implicitly inherit from the class `System.ValueType`, which, in turn, inherits from class `object`. A struct declaration may specify a list of implemented interfaces, but it is not possible for a struct declaration to specify a base class.
 
@@ -550,7 +574,7 @@ Since inheritance is not supported for structs, the declared accessibility of a 
 
 Function members in a struct cannot be abstract or virtual, and the `override` modifier is allowed only to override methods inherited from `System.ValueType`.
 
-### 16.5.4 Assignment
+### 16.6.4 Assignment
 
 Assignment to a variable of a struct type creates a *copy* of the value being assigned. This differs from assignment to a variable of a class type, which copies the reference but not the object identified by the reference.
 
@@ -558,7 +582,7 @@ Similar to an assignment, when a struct is passed as a value parameter or return
 
 When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.24.2](expressions.md#12242-simple-assignment).
 
-### 16.5.5 Default values
+### 16.6.5 Default values
 
 As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
 
@@ -573,7 +597,7 @@ As described in [§9.3](variables.md#93-default-values), several kinds of variab
 >
 > *end example*
 
-The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). When a struct does not declare an explicit parameterless instance constructor, the default constructor is synthesized and always returns the value that results from setting all fields to their default values. The `default` expression always produces the zero-initialized default value, even when a struct declares an explicit parameterless instance constructor ([§16.5.9](structs.md#1659-constructors)).
+The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). When a struct does not declare an explicit parameterless instance constructor, the default constructor is synthesized and always returns the value that results from setting all fields to their default values. The `default` expression always produces the zero-initialized default value, even when a struct declares an explicit parameterless instance constructor ([§16.6.9](structs.md#1669-constructors)).
 
 > *Note*: Structs should be designed to consider the default initialization state a valid state. In the example
 >
@@ -601,7 +625,7 @@ The default value of a struct corresponds to the value returned by the default c
 >
 > *end note*
 
-### 16.5.6 Boxing and unboxing
+### 16.6.6 Boxing and unboxing
 
 A value of a class type can be converted to type `object` or to an interface type that is implemented by the class simply by treating the reference as another type at compile-time. Likewise, a value of type `object` or a value of an interface type can be converted back to a class type without changing the reference (but, of course, a run-time type check is required in this case).
 
@@ -611,7 +635,7 @@ Since structs are not reference types, these operations are implemented differen
 
 For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-boxing-conversions) and [§10.3.7](conversions.md#1037-unboxing-conversions).
 
-### 16.5.7 Meaning of this
+### 16.6.7 Meaning of this
 
 The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.8.14](expressions.md#12814-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
 
@@ -701,9 +725,9 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > *end example*
 
-### 16.5.8 Field initializers
+### 16.6.8 Field initializers
 
-As described in [§16.5.5](structs.md#1655-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
+As described in [§16.6.5](structs.md#1665-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
 > *Example*:
 >
@@ -737,7 +761,7 @@ When a struct instance constructor has a `this()` constructor initializer that r
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
-### 16.5.9 Constructors
+### 16.6.9 Constructors
 
 A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
 
@@ -837,16 +861,16 @@ Instance fields (other than `fixed` fields) shall be definitely assigned in stru
 >
 > *end example*]
 
-### 16.5.10 Static constructors
+### 16.6.10 Static constructors
 
 Static constructors for structs follow most of the same rules as for classes. The execution of a static constructor for a struct type is triggered by the first of the following events to occur within an application domain:
 
 - A static member of the struct type is referenced.
 - An explicitly declared constructor of the struct type is called.
 
-> *Note*: The creation of default values ([§16.5.5](structs.md#1655-default-values)) of struct types does not trigger the static constructor. (An example of this is the initial value of elements in an array.) *end note*
+> *Note*: The creation of default values ([§16.6.5](structs.md#1665-default-values)) of struct types does not trigger the static constructor. (An example of this is the initial value of elements in an array.) *end note*
 
-### 16.5.11 Properties
+### 16.6.11 Properties
 
 A *property_declaration* ([§15.7.1](classes.md#1571-general)) for an instance property in a *struct_declaration* may contain the *property_modifier* `readonly`. However, a static property shall not contain that modifier.
 
@@ -873,7 +897,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### 16.5.12 Methods
+### 16.6.12 Methods
 
 A *method_declaration* ([§15.6.1](classes.md#1561-general)) for an instance method in a *struct_declaration* may contain the *method_modifier* `readonly`. However, a static method shall not contain that modifier.
 
@@ -885,7 +909,7 @@ A readonly method may call a sibling property or indexer set accessor that is re
 
 All *method_declaration*s of a partial method shall have a `readonly` modifier, or none of them shall have it.
 
-### 16.5.13 Indexers
+### 16.6.13 Indexers
 
 An *indexer_declaration* ([§15.9](classes.md#159-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
 
@@ -897,13 +921,13 @@ It is a compile-time error for an indexer to have a readonly modifier on all of 
 
 > *Note*: To correct the error, move the modifier from the accessors to the indexer itself. *end note*
 
-### 16.5.14 Events
+### 16.6.14 Events
 
 An *event_declaration* ([§15.8.1](classes.md#1581-general)) for an instance, non-field-like event in a *struct_declaration* may contain the *event_modifier* `readonly`. However, a static event shall not contain that modifier.
 
-### 16.5.15 Safe context constraint
+### 16.6.15 Safe context constraint
 
-#### 16.5.15.1 General
+#### 16.6.15.1 General
 
 At compile-time, each expression is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
 
@@ -922,11 +946,11 @@ There are three different safe-context values, the same as the ref-safe-context 
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
-#### 16.5.15.2 Parameter safe context
+#### 16.6.15.2 Parameter safe context
 
 A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
-#### 16.5.15.3 Local variable safe context
+#### 16.6.15.3 Local variable safe context
 
 A local variable of a ref struct type has a safe-context as follows:
 
@@ -934,19 +958,19 @@ A local variable of a ref struct type has a safe-context as follows:
 - Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
 
-#### 16.5.15.4 Field safe context
+#### 16.6.15.4 Field safe context
 
 A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-context that is the same as the safe-context of `e`.
 
-#### 16.5.15.5 Operators
+#### 16.6.15.5 Operators
 
-The application of a user-defined operator is treated as a method invocation ([§16.5.15.6](structs.md#165156-method-and-property-invocation)).
+The application of a user-defined operator is treated as a method invocation ([§16.6.15.6](structs.md#166156-method-and-property-invocation)).
 
 For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-context of the result is the narrowest context among the safe-contexts of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-context of the result is the safe-context of the operand.
 
 > *Note*: The first operand of a conditional operator is a `bool`, so its safe-context is caller-context. It follows that the resulting safe-context is the narrowest safe-context of the second and third operand. *end note*
 
-#### 16.5.15.6 Method and property invocation
+#### 16.6.15.6 Method and property invocation
 
 A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P` has safe-context of the smallest of the following contexts:
 
@@ -955,11 +979,11 @@ A value resulting from a method invocation `e1.M(e2, ...)` or property invocatio
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-#### 16.5.15.7 stackalloc
+#### 16.6.15.7 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
 
-#### 16.5.15.8 Constructor invocations
+#### 16.6.15.8 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
