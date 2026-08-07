@@ -1294,7 +1294,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.5.12](structs.md#16512-methods)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.6.12](structs.md#16612-methods)), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
@@ -1988,7 +1988,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 #### 12.8.9.1 General
 
 A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
-and safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
+and safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
@@ -3603,7 +3603,7 @@ A reference variable field `rv` of type `T` shall not have an explicit initializ
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.5.15.10](structs.md#1651510-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.6.15.10](structs.md#1661510-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -4073,7 +4073,7 @@ All non-positional properties being changed shall have both set and init accesso
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver’s clone method ([§15.16.3](classes.md#15163-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.

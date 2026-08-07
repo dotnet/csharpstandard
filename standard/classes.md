@@ -14,40 +14,26 @@ A *class_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-type-d
 
 ```ANTLR
 class_declaration
-    : attributes? class_modifier* 'partial'? class_tag identifier
-        type_parameter_list? delimited_parameter_list? class_base?
-        type_parameter_constraints_clause* class_body
+    : non_record_class_declaration
+    | record_class_declaration
     ;
 
-class_tag
-    : 'record'? 'class'
-    | 'record'
+non_record_class_declaration
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
+
+A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
 A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)).
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
-
-If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***. `record` and `record class` are equivalent.
-
-The *class_tag*s `record` and `record class` are equivalent.
-
-The *class_tag*s `record` and `record class` are equivalent.
-
-For a record class, *class_modifier* shall not be `static`.
-
-*delimited_parameter_list* shall not be present in a non-record class.
-
-A *class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
-
-At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
-
-Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### 15.2.2 Class modifiers
 
@@ -213,14 +199,12 @@ class_base
     | ':' class_type base_argument_list? ',' interface_type_list
     ;
 
-base_argument_list
-    : '(' argument_list? ')'
-    ;
-
 interface_type_list
     : interface_type (',' interface_type)*
     ;
 ```
+
+*base_argument_list* is discussed in [§15.16.2](classes.md#15162-class-base-specification).
 
 A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
 
@@ -799,13 +783,10 @@ The *class_body* of a class defines the members of that class.
 ```ANTLR
 class_body
     : '{' class_member_declaration* '}' ';'?
-    | ';'
     ;
 ```
 
-A non-record class shall not have a *class_body* of `;`.
-
-For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§15.16](classes.md#1516-synthesized-record-class-members)).
+The *class_body*s `{…}` and `{…};` are equivalent.
 
 ### 15.2.7 Partial type declarations
 
@@ -873,7 +854,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class. For a record class, the member set also includes the synthesized members generated by the compiler ([§15.16](classes.md#1516-synthesized-record-class-members)).
+The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
 
 ```ANTLR
 class_member_declaration
@@ -2118,7 +2099,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.5](structs.md#165-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.6](structs.md#166-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2204,7 +2185,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a  *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.5.12](structs.md#16512-methods)).
+A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a  *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 A *method_declaration* has a valid combination of modifiers if all of the following are true. (These rules are modified slightly in the context of an interface; see [§19.4.1](interfaces.md#1941-general).):
 
@@ -3481,7 +3462,7 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.5.11](structs.md#16511-properties)).
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.11](structs.md#16611-properties)).
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
@@ -3600,7 +3581,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an explicit interface member implementation.
-- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.5.11](structs.md#16511-properties), [§16.5.13](structs.md#16513-indexers)).
+- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.6.11](structs.md#16611-properties), [§16.6.13](structs.md#16613-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set or init accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
@@ -4509,7 +4490,7 @@ remove_accessor_declaration
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.5.12](structs.md#16512-methods)).
+An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
@@ -4792,7 +4773,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.5.12](structs.md#16512-methods)).
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5336,8 +5317,6 @@ Instance constructors are not inherited. Thus, a class has no instance construct
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) and through *constructor_initializer*s.
 
-A positional record class ([§15.2.1](classes.md#1521-general)) has a synthesized primary constructor; see [§15.16.5.2](classes.md#151652-primary-constructor) for more information.
-
 ### 15.11.2 Constructor initializers
 
 All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
@@ -5561,41 +5540,6 @@ If overload resolution is unable to determine a unique best candidate for the ba
 > ```
 >
 > *end example*
-
-### 15.11.6 Copy constructors
-
-A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
-
-> *Example*: Consider the following:
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
-> ```csharp
-> class Person
-> {
->     public int Age { get; set; }
->     public string Name { get; set; }
->     public Person(Person aPerson)
->     {
->         Name = aPerson.Name;
->         Age = aPerson.Age;
->     }
-> }
-> ````
->
-> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
->
-> In the following case,
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
-> ```csharp
-> record Person(int Age, string Name);
-> ````
->
-> the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
-
-In certain circumstances ([§15.16.3](classes.md#15163-copy-and-clone-members)), a copy constructor may be synthesized by the compiler, and called by synthesized code.
-
-A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with the `SetsRequiredMembers` attribute ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)).
 
 ## 15.12 Static constructors
 
@@ -6282,15 +6226,111 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.9](attributes.md#2359-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
 
-## 15.16 Synthesized record class members
+## 15.16 Record classes
 
 ### 15.16.1 General
 
-Certain members are provided by the implementation unless a member with a matching signature is declared in the class body, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+A record class is a specialized reference type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record class, such as value-based equality and easy immutability.
+
+```ANTLR
+record_class_declaration
+    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
+      type_parameter_list? delimited_parameter_list? class_base?
+      type_parameter_constraints_clause* record_class_body
+    ;
+```
+
+A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, optionally followed by the keyword `class`, and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* ([§15.16.3](classes.md#15163-record-class-body)).
+
+`record` and `record class` are equivalent.
+
+*class_modifier* shall not be `static`.
+
+A *record_class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
+
+At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
+
+Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
+
+### 15.16.2 Class base specification
+
+```ANTLR
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+```
+
+*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
+
+### 15.16.3 Record class body
+
+The *record_class_body* of a record class identifies the explicitly declared members of that class.
+
+```ANTLR
+record_class_body
+    : class_body
+    | ';'
+    ;
+```
+
+The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
+
+### 15.16.4 Class members
+
+For a record class, the member set also includes the members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
+
+It is an error for a member of a record class to be named `Clone`.
+
+It is an error for an instance field of a record class to have an unsafe type.
+
+### 15.16.5 Instance constructors
+
+A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.6.6.2](classes.md#1516662-primary-constructor) for more information.
+
+### 15.16.6 Implicit record class members
+
+#### 15.16.6.1 General
+
+Certain members are provided by the implementation unless a member with a matching signature is declared in the *record_class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-### 15.16.2 Equality members
+#### 15.16.6.2 Copy constructors
+
+A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
+> ```csharp
+> class Person
+> {
+>     public int Age { get; set; }
+>     public string Name { get; set; }
+>     public Person(Person aPerson)
+>     {
+>         Name = aPerson.Name;
+>         Age = aPerson.Age;
+>     }
+> }
+> ````
+>
+> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
+>
+> In the following case,
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
+> ```csharp
+> record Person(int Age, string Name);
+> ````
+>
+> the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
+
+In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
+
+A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with the `SetsRequiredMembers` attribute ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)).
+
+#### 15.16.6.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6457,18 +6497,18 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-### 15.16.3 Copy and clone members
+#### 15.16.6.4 Copy and clone members
 
 A record class type contains two copying members:
 
-- A copy constructor ([§15.11.6](classes.md#15116-copy-constructors))
+- A copy constructor ([§15.16.6.2](classes.md#151662-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-### 15.16.4 Printing members
+#### 15.16.6.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -6494,7 +6534,7 @@ If the record class type is derived from some base record class, `Base`, the rec
 protected override bool PrintMembers(System.Text.StringBuilder builder);
 ```
 
-If the record class has no printable members, the method shall call the base `PrintMembers` method with one argument (its `builder` parameter) and returns the result. Otherwise, the method:
+If the record class has no printable members, the method shall call the base `PrintMembers` method with one argument (its `builder` parameter) and return the result. Otherwise, the method:
 
 1. Calls the base `PrintMembers` method with one argument (its `builder` parameter),
 2. If the `PrintMembers` method returned `true`, append `,` and a space to the builder,
@@ -6509,7 +6549,7 @@ The record class shall include a provided method method declared as follows:
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility. It is an error if either provided, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either provided, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
 Sealing an explicitly declared `ToString` method prevents the compiler from synthesizing a `ToString` method for any derived record types. However, this does not prevent the compiler from synthesizing `PrintMembers`.
 
@@ -6638,72 +6678,115 @@ The provided method:
 >
 > *end example*
 
-### 15.16.5 Positional record class members
+#### 15.16.6.6 Positional record class members
 
-#### 15.16.5.1 General
+##### 15.16.6.6.1 General
 
-As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) provide additional members with the same conditions as the other provided members, as described in the following subclauses.
+As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-#### 15.16.5.2 Primary constructor
+##### 15.16.6.6.2 Primary constructor
 
-A record class type shall have a public constructor whose signature corresponds to the value parameters of the type declaration. This is called the ***primary constructor*** for the type, and causes the implicitly declared default constructor, if present, to be suppressed. It is an error to have a primary constructor and a constructor with the same signature already present in the class.
+For a record class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
+
+Consider the following:
+
+<!-- Example: {template:"standalone-console", name:"RecordClassPrimaryConstructor", inferOutput:true} -->
+```csharp
+public record Person(string FirstName, string LastName)
+{
+    public string? Title { get; set; }
+    public Person(string title, string fName, string lName) : this(fName, lName)
+    {
+        Title = title;
+    }
+    public override string ToString()
+    {
+        return (Title != null ? Title + " " : "") + FirstName + " " + LastName;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(new Person("Jane", "Wilson"));
+        Console.WriteLine(new Person("Dr.", "Jane", "Wilson"));
+    }
+}
+```
+
+The output produced is:
+
+```console
+Jane Wilson
+Dr. Jane Wilson
+```
+
+Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
+
+```csharp
+public Person(string firstName, string lastName);
+```
+
+As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor, as is required by all user-defined constructors.
 
 At runtime the primary constructor
 
-1. Executes the instance initializers appearing in *record_body*
-1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present
+1. Stores the value of each parameter in the corresponding provided private field (see [§15.16.6.6.3](classes.md#1516663-properties)).
+1. Executes the instance initializers appearing in *record_class_body*.
+1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
 
-If a record class has a primary constructor, any user-defined constructor, except the copy constructor, shall have an explicit `this` *constructor_initializer*.
+Each reference to a parameter in user code is replaced with a reference to the corresponding provided field.
 
-Parameters of the primary constructor as well as members of the record class are in scope within the *argument_list* of the *record_base* clause and within initializers of instance fields or properties. Instance members would be an error in these locations, but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
+It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
+
+- a `nameof` argument.
+- an initializer of an instance field, property or event of the declaring type.
+- the `argument_list` of `class_base` of the declaring type.
+- the body of an instance method of the declaring type.
+- the body of an instance accessor of the declaring type.
+
+In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
+
+```csharp
+record class C(int i)
+{
+    protected int i = i;
+    public int I => i;
+}
+```
+
+the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
 
 A warning shall be produced if a parameter of the primary constructor is not read.
 
 Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
 
-> *Example*: Consider the following
->
-> <!-- Example: {template:"standalone-console", name:"PrimaryConstructor", expectedOutput:["R1 { FirstName = Wilson, LastName = Peter, Title =  }", "R1 { FirstName = Wilson, LastName = Peter, Title = Dr. }"]} -->
-> ```csharp
-> public record R1(string FirstName, string LastName)
-> {
->     public string? Title { get; set; }
->     public R1(string title, string fName, string lName) : this(fName, lName)
->     {
->         Title = title;
->     }
-> }
-> 
-> class Program
-> {
->     static void Main()
->     {
->         Console.WriteLine(new R1("Wilson", "Peter"));
->         Console.WriteLine(new R1("Dr.", "Wilson", "Peter"));
->     }
-> }
-> ```
->
-> Based on the *parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
->
-> ```csharp
-> public R1(string firstName, string lastName);
-> ```
->
-> As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor. *end example*
+All instance member initializers in *record_class_body* become assignments in the primary constructor.
 
-#### 15.16.5.3 Properties
+A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
+
+A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
+
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
+- The argument is not part of an expanded `params` argument;
+
+If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+
+##### 15.16.6.6.3 Properties
+
+For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
 For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) that has the same name and type as an inherited or explicitly declared instance field, the remainder of this subclause does not apply.
 
-For each parameter of a positional *record_declaration* there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
 
 For a record class:
 
 - A public auto-property is created with get and init accessors.
 - An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
-- Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter.
+- Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record class parameter.
 
 > *Example*: Given the following record class declaration:
 >
@@ -6722,7 +6805,7 @@ For a record class:
 >
 > *end example*
 
-#### 15.16.5.4 Deconstruct
+##### 15.16.6.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6751,3 +6834,15 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
+
+## 15.17 Record class and non-record class differences
+
+A record class differs from a non-record class in several important ways:
+
+- It is declared using the keyword `record` instead of `class`.
+- It has a number of members provided for it by the implementation, including a copy constructor.
+- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
+- If it is derived from other than `object`, it may pass arguments to its base type.
+- Its class body may be omitted.
+- It shall not have a member called `Clone`.
+- It shall not have an instance field with an unsafe type.

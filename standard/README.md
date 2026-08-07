@@ -656,7 +656,6 @@
     - [§15.11.3](classes.md#15113-instance-variable-initializers)  Instance variable initializers
     - [§15.11.4](classes.md#15114-constructor-execution)  Constructor execution
     - [§15.11.5](classes.md#15115-default-constructors)  Default constructors
-    - [§15.11.6](classes.md#15116-copy-constructors)  Copy constructors
   - [§15.12](classes.md#1512-static-constructors)  Static constructors
   - [§15.13](classes.md#1513-finalizers)  Finalizers
   - [§15.14](classes.md#1514-async-functions)  Async Functions
@@ -677,16 +676,24 @@
     - [§15.15.6](classes.md#15156-enumerable-objects)  Enumerable objects
       - [§15.15.6.1](classes.md#151561-general)  General
       - [§15.15.6.2](classes.md#151562-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
-  - [§15.16](classes.md#1516-synthesized-record-class-members)  Synthesized record class members
+  - [§15.16](classes.md#1516-record-classes)  Record classes
     - [§15.16.1](classes.md#15161-general)  General
-    - [§15.16.2](classes.md#15162-equality-members)  Equality members
-    - [§15.16.3](classes.md#15163-copy-and-clone-members)  Copy and clone members
-    - [§15.16.4](classes.md#15164-printing-members)  Printing members
-    - [§15.16.5](classes.md#15165-positional-record-class-members)  Positional record class members
-      - [§15.16.5.1](classes.md#151651-general)  General
-      - [§15.16.5.2](classes.md#151652-primary-constructor)  Primary constructor
-      - [§15.16.5.3](classes.md#151653-properties)  Properties
-      - [§15.16.5.4](classes.md#151654-deconstruct)  Deconstruct
+    - [§15.16.2](classes.md#15162-class-base-specification)  Class base specification
+    - [§15.16.3](classes.md#15163-record-class-body)  Record class body
+    - [§15.16.4](classes.md#15164-class-members)  Class members
+    - [§15.16.5](classes.md#15165-instance-constructors)  Instance constructors
+    - [§15.16.6](classes.md#15166-implicit-record-class-members)  Implicit record class members
+      - [§15.16.6.1](classes.md#151661-general)  General
+      - [§15.16.6.2](classes.md#151662-copy-constructors)  Copy constructors
+      - [§15.16.6.3](classes.md#151663-equality-members)  Equality members
+      - [§15.16.6.4](classes.md#151664-copy-and-clone-members)  Copy and clone members
+      - [§15.16.6.5](classes.md#151665-printing-members)  Printing members
+      - [§15.16.6.6](classes.md#151666-positional-record-class-members)  Positional record class members
+        - [§15.16.6.6.1](classes.md#1516661-general)  General
+        - [§15.16.6.6.2](classes.md#1516662-primary-constructor)  Primary constructor
+        - [§15.16.6.6.3](classes.md#1516663-properties)  Properties
+        - [§15.16.6.6.4](classes.md#1516664-deconstruct)  Deconstruct
+  - [§15.17](classes.md#1517-record-class-and-non-record-class-differences)  Record class and non-record class differences
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations
@@ -699,44 +706,50 @@
   - [§16.3](structs.md#163-struct-members)  Struct members
     - [§16.3.1](structs.md#1631-general)  General
     - [§16.3.2](structs.md#1632-readonly-members)  Readonly members
-  - [§16.4](structs.md#164-synthesized-record-struct-members)  Synthesized record struct members
+  - [§16.4](structs.md#164-record-structs)  Record structs
     - [§16.4.1](structs.md#1641-general)  General
-    - [§16.4.2](structs.md#1642-equality-members)  Equality members
-    - [§16.4.3](structs.md#1643-printing-members)  Printing members
-    - [§16.4.4](structs.md#1644-positional-record-struct-members)  Positional record struct members
+    - [§16.4.2](structs.md#1642-struct-members)  Struct members
+    - [§16.4.3](structs.md#1643-record-struct-body)  Record struct body
+    - [§16.4.4](structs.md#1644-implicit-record-struct-members)  Implicit record struct members
       - [§16.4.4.1](structs.md#16441-general)  General
-      - [§16.4.4.2](structs.md#16442-primary-constructor)  Primary constructor
-      - [§16.4.4.3](structs.md#16443-properties)  Properties
-      - [§16.4.4.4](structs.md#16444-deconstruct)  Deconstruct
-  - [§16.5](structs.md#165-class-and-struct-differences)  Class and struct differences
-    - [§16.5.1](structs.md#1651-general)  General
-    - [§16.5.2](structs.md#1652-value-semantics)  Value semantics
-    - [§16.5.3](structs.md#1653-inheritance)  Inheritance
-    - [§16.5.4](structs.md#1654-assignment)  Assignment
-    - [§16.5.5](structs.md#1655-default-values)  Default values
-    - [§16.5.6](structs.md#1656-boxing-and-unboxing)  Boxing and unboxing
-    - [§16.5.7](structs.md#1657-meaning-of-this)  Meaning of this
-    - [§16.5.8](structs.md#1658-fields)  Fields
-      - [§16.5.8.1](structs.md#16581-field-initializers)  Field initializers
-      - [§16.5.8.2](structs.md#16582-ref-fields)  Ref fields
-    - [§16.5.9](structs.md#1659-constructors)  Constructors
-    - [§16.5.10](structs.md#16510-static-constructors)  Static constructors
-    - [§16.5.11](structs.md#16511-properties)  Properties
-    - [§16.5.12](structs.md#16512-methods)  Methods
-    - [§16.5.13](structs.md#16513-indexers)  Indexers
-    - [§16.5.14](structs.md#16514-events)  Events
-    - [§16.5.15](structs.md#16515-safe-context-constraint)  Safe context constraint
-      - [§16.5.15.1](structs.md#165151-general)  General
-      - [§16.5.15.2](structs.md#165152-parameter-safe-context)  Parameter safe context
-      - [§16.5.15.3](structs.md#165153-local-variable-safe-context)  Local variable safe context
-      - [§16.5.15.4](structs.md#165154-field-safe-context)  Field safe context
-      - [§16.5.15.5](structs.md#165155-operators)  Operators
-      - [§16.5.15.6](structs.md#165156-method-and-property-invocation)  Method and property invocation
-      - [§16.5.15.7](structs.md#165157-method-arguments-must-match)  Method arguments must match
-      - [§16.5.15.8](structs.md#165158-infer-safe-context-of-declaration-expressions)  Infer safe-context of declaration expressions
-      - [§16.5.15.9](structs.md#165159-object-initializer-safe-context)  Object initializer safe context
-      - [§16.5.15.10](structs.md#1651510-stackalloc)  stackalloc
-      - [§16.5.15.11](structs.md#1651511-constructor-invocations)  Constructor invocations
+      - [§16.4.4.2](structs.md#16442-primary-constructors)  Primary constructors
+      - [§16.4.4.3](structs.md#16443-equality-members)  Equality members
+      - [§16.4.4.4](structs.md#16444-printing-members)  Printing members
+      - [§16.4.4.5](structs.md#16445-positional-record-struct-members)  Positional record struct members
+        - [§16.4.4.5.1](structs.md#164451-general)  General
+        - [§16.4.4.5.2](structs.md#164452-primary-constructor)  Primary constructor
+        - [§16.4.4.5.3](structs.md#164453-properties)  Properties
+        - [§16.4.4.5.4](structs.md#164454-deconstruct)  Deconstruct
+  - [§16.5](structs.md#165-record-struct-and-non-record-struct-differences)  Record struct and non-record struct differences
+  - [§16.6](structs.md#166-class-and-struct-differences)  Class and struct differences
+    - [§16.6.1](structs.md#1661-general)  General
+    - [§16.6.2](structs.md#1662-value-semantics)  Value semantics
+    - [§16.6.3](structs.md#1663-inheritance)  Inheritance
+    - [§16.6.4](structs.md#1664-assignment)  Assignment
+    - [§16.6.5](structs.md#1665-default-values)  Default values
+    - [§16.6.6](structs.md#1666-boxing-and-unboxing)  Boxing and unboxing
+    - [§16.6.7](structs.md#1667-meaning-of-this)  Meaning of this
+    - [§16.6.8](structs.md#1668-fields)  Fields
+      - [§16.6.8.1](structs.md#16681-field-initializers)  Field initializers
+      - [§16.6.8.2](structs.md#16682-ref-fields)  Ref fields
+    - [§16.6.9](structs.md#1669-constructors)  Constructors
+    - [§16.6.10](structs.md#16610-static-constructors)  Static constructors
+    - [§16.6.11](structs.md#16611-properties)  Properties
+    - [§16.6.12](structs.md#16612-methods)  Methods
+    - [§16.6.13](structs.md#16613-indexers)  Indexers
+    - [§16.6.14](structs.md#16614-events)  Events
+    - [§16.6.15](structs.md#16615-safe-context-constraint)  Safe context constraint
+      - [§16.6.15.1](structs.md#166151-general)  General
+      - [§16.6.15.2](structs.md#166152-parameter-safe-context)  Parameter safe context
+      - [§16.6.15.3](structs.md#166153-local-variable-safe-context)  Local variable safe context
+      - [§16.6.15.4](structs.md#166154-field-safe-context)  Field safe context
+      - [§16.6.15.5](structs.md#166155-operators)  Operators
+      - [§16.6.15.6](structs.md#166156-method-and-property-invocation)  Method and property invocation
+      - [§16.6.15.7](structs.md#166157-method-arguments-must-match)  Method arguments must match
+      - [§16.6.15.8](structs.md#166158-infer-safe-context-of-declaration-expressions)  Infer safe-context of declaration expressions
+      - [§16.6.15.9](structs.md#166159-object-initializer-safe-context)  Object initializer safe context
+      - [§16.6.15.10](structs.md#1661510-stackalloc)  stackalloc
+      - [§16.6.15.11](structs.md#1661511-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types
