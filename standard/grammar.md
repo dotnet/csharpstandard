@@ -2187,14 +2187,14 @@ qualified_alias_member
 
 // Source: §15.2.1 General
 class_declaration
-    : attributes? class_modifier* 'partial'? class_tag identifier
-        type_parameter_list? delimited_parameter_list? class_base?
-        type_parameter_constraints_clause* class_body
+    : non_record_class_declaration
+    | record_class_declaration
     ;
 
-class_tag
-    : 'record'? 'class'
-    | 'record'
+non_record_class_declaration
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body
     ;
 
 // Source: §15.2.2.1 General
@@ -2224,10 +2224,6 @@ class_base
     : ':' class_type base_argument_list?
     | ':' interface_type_list
     | ':' class_type base_argument_list? ',' interface_type_list
-    ;
-
-base_argument_list
-    : '(' argument_list? ')'
     ;
 
 interface_type_list
@@ -2270,7 +2266,6 @@ constructor_constraint
 // Source: §15.2.6 Class body
 class_body
     : '{' class_member_declaration* '}' ';'?
-    | ';'
     ;
 
 // Source: §15.3.1 General
@@ -2711,6 +2706,24 @@ finalizer_body
     | ';'
     ;
 
+// Source: §15.16.1 General
+record_class_declaration
+    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
+      type_parameter_list? delimited_parameter_list? class_base?
+      type_parameter_constraints_clause* record_class_body
+    ;
+
+// Source: §15.16.2 Class base specification
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+
+// Source: §15.16.3 Record class body
+record_class_body
+    : class_body
+    | ';'
+    ;
+
 // Source: §16.2.1 General
 struct_declaration
     : non_record_struct_declaration
@@ -2721,17 +2734,6 @@ non_record_struct_declaration
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
-    ;
-
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers
@@ -2768,6 +2770,19 @@ struct_member_declaration
     | static_constructor_declaration
     | type_declaration
     | fixed_size_buffer_declaration   // unsafe code support
+    ;
+
+// Source: §16.4.1 General
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+// Source: §16.4.3 Record struct body
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §17.7 Array initializers
