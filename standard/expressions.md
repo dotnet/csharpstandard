@@ -3903,7 +3903,7 @@ An awaiter’s implementation of the interface methods `INotifyCompletion.OnComp
 
 ## 12.10 With expressions
 
-A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified.
+A *with_expression* allows for ***non-destructive mutation*** by making a new record class, record struct, or non-record struct instance that is a copy of an existing record class, record struct, or non-record struct instance, respectively, optionally with specified properties and fields modified.
 
 ```ANTLR
 with_expression
@@ -3914,7 +3914,7 @@ with_expression
 
 A *with_expression* is not permitted as a statement.
 
-The receiver type shall be non-`void` and of some record class type.
+The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
 
 *identifier* shall be an accessible instance field or property of the receiver’s type.
 
@@ -3922,7 +3922,8 @@ All non-positional properties being changed shall have both set and init accesso
 
 This expression is evaluated as follows:
 
-- The receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver's clone method ([§15.16.3](classes.md#15163-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
 

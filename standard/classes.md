@@ -33,7 +33,7 @@ A class declaration shall not supply *type_parameter_constraints_clause*s unless
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***.
+If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***. `record` and `record class` are equivalent.
 
 For a record class, *class_modifier* shall not be `static`.
 
@@ -477,7 +477,9 @@ Except when a type parameter is explicitly constrained to value types, the nulla
 For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
 > *Note*: On a type parameter, a return type `T?` has the same nullability effect as `[MaybeNull] T`, and a parameter type `T?` has the same nullability effect as `[AllowNull] T`. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"RepeatedNullable"} -->
@@ -6603,7 +6605,9 @@ If the class being declared has a *class_base* containing *base_argument_list*, 
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
-For each parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) that has the same name and type as an inherited or explicitly declared instance field, the remainder of this subclause does not apply.
+
+For each parameter of a positional *record_declaration* there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
 
 For a record class:
 
