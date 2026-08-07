@@ -145,8 +145,9 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 ### 10.2.5 Implicit interpolated string conversions
 
-An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
-When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
+An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
+
+For any type `T` that is an applicable interpolated string handler type (§custInterpStrExpCustHandling), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 

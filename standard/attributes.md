@@ -500,6 +500,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializer` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
+- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler (§custInterpStrExpHandler) and to call one of its constructors, respectively.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1211,6 +1212,187 @@ A module initializer shall have the following characteristics:
 - Not be declared inside a *class_declaration* having a *type_parameter_list*.
 - Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
 - Not be a local function.
+
+#### §custInterpStrExpHandler Custom interpolated string expression handlers
+
+##### §custInterpStrExpCustHandling Declaring a custom handler
+
+Consider the following program, which implements a simple message logger:
+
+<!-- Example: {template:"standalone-console", name:"DeclCustomHandler1", inferOutput:true} -->
+```csharp
+using System;
+public class Logger
+{
+    public void LogMessage(string msg)
+    {
+        Console.WriteLine(msg);
+    }
+}
+public class Program
+{
+    static void Main()
+    {
+        var logger = new Logger();
+        int val = 255;
+        logger.LogMessage($"val = {{{val,4:X}}}; 2 * val = {2 * val}.");
+    }
+}
+```
+
+The output produced is, as follows:
+
+```console
+val = {  FF}; 2 * val = 510.
+```
+
+In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As such, according to [§12.8.3](expressions.md#1283-interpolated-string-expressions), the default interpolated string expression handler is invoked. The following subclause (§custInterpStrExpCustHandling) shows how to use a custom handler.
+
+In order to provide custom processing to the program above, a *custom interpolated string expression handler* is needed. Here then is the message logger with a custom handler added (which although it does nothing more than behave like the default handler, it provides the hooks for customization):
+
+<!-- Example: {template:"standalone-console-without-using", name:"DeclCustomHandler2", inferOutput:true} -->
+```csharp
+using System;
+using System.Text;
+using System.Runtime.CompilerServices;
+
+[InterpolatedStringHandler]
+public ref struct LogInterpolatedStringHandler
+{
+    StringBuilder builder; // Storage for the built-up string
+    public LogInterpolatedStringHandler(int literalLength, int formattedCount)
+    {
+        builder = new StringBuilder(literalLength);
+    }
+    public void AppendLiteral(string s)
+    {
+        builder.Append(s);
+    }
+    public void AppendFormatted<T>(T t)
+    {
+        builder.Append(t?.ToString());
+    }
+    public void AppendFormatted<T>(T t, string format) where T : IFormattable
+    {
+        builder.Append(t?.ToString(format, null));
+    }
+    public void AppendFormatted<T>(T t, int alignment, string format)
+        where T : IFormattable
+    {
+        builder.Append(String.Format("{0" + "," + alignment + ":" + format + "}", t));
+    }
+    public override string ToString() => builder.ToString();
+}
+
+public class Logger
+{
+    public void LogMessage(string msg)
+    {
+        Console.WriteLine(msg);
+    }
+    public void LogMessage(LogInterpolatedStringHandler builder)
+    {
+        Console.WriteLine(builder.ToString());
+    }
+}
+
+public class Program
+{
+    static void Main()
+    {
+        var logger = new Logger();
+        int val = 255;
+        logger.LogMessage($"val = {{{val,4:X}}}; 2 * val = {2 * val}.");
+    }
+}
+```
+
+The output produced is, as follows:
+
+```console
+val = {  FF}; 2 * val = 510.
+```
+
+A type having the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*.
+
+To qualify as a custom interpolated string expression handler, a class or struct type shall have the following characteristics:
+
+- Be marked with the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`.
+- Have an accessible constructor whose first two parameters have type `int`. (Other parameters may follow, which are used to pass information to/from the handler. These are discussed in §custInterpStrExpPassInfo. An optional final parameter may be declared to inhibit the handler from processing the interpolated string. This is discussed in §custInterpStrExpInhibCustHandler).
+
+When the compiler-generated code calls the constructor, the first parameter is set to the sum of the lengths of the interpolated string expression segments ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) in the interpolated string expression, and the second parameter is set to the number of interpolations. (For `($"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.)
+
+- Have an accessible method with the signature `void AppendLiteral(string s)`, which is called to process a single interpolated string expression literal segment.
+- Have a set of accessible overloaded methods called `AppendFormatted`, one of which is called to process a single interpolation, based on that interpolation’s content. Their signatures are, as follows:
+  - `void AppendFormatted<T>(T t)`, which deals with interpolations having no explicit format or alignment, as in the case of `{2 * val}`.
+  - `void AppendFormatted<T>(T t, string format) where T : System.IFormattable`, which deals with interpolations having an explicit format, but no alignment, as in the case of `{val:X4}`.
+  - `void AppendFormatted<T>(T t, int alignment, string format) where T : System.IFormattable`, which deals with interpolations having an explicit format and alignment, as in the case of `{val,4:X}`.
+- Have a public method with the signature `override string ToString()`, which returns the built string.
+
+> *Note*: It is not a compile-time error to omit any of the `AppendFormatted` overloads, but if the handler is to be maximally robust, it should support all the formats recognized by the default handler. *end note*
+
+The new overload of `LogMessage` takes a custom handler instead of `string`, and retrieves the string as formatted by that handler. When such overloads exist, if a corresponding handler exists and the interpolated string expression is not a constant ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), the compiler generates code to call the one taking a handler. In such cases, the compiler generates code to
+
+- call the handler constructor
+- in lexical order within the interpolated string expression
+  - pass each interpolated string expression segment to `AppendLiteral`
+  - pass each interpolation to the appropriate `AppendFormatted` method.
+- return the final string as the value of the interpolated string expression.
+- execute the body of `LogMessage`.
+
+##### §custInterpStrExpInhibCustHandler Inhibiting a custom handler
+
+If a handler constructor has a final parameter of type `bool` that is an out parameter, when that constructor is called that parameter’s value is tested. If it is true, the behavior is as if that parameter were omitted. However, if it is false, the interpolated string expression is not processed further; that is, the handler is *inhibited*. Specifically, the interpolation expressions are not evaluated, and the methods `AppendLiteral` and `AppendFormatted` are not called.
+
+``` csharp
+public LogInterpolatedStringHandler(int literalLength, int formattedCount,
+    out bool processString)
+{
+    if (some_condition)
+    {
+        processString = false;
+        return;
+    }
+    else 
+    {
+        processString = true;
+        // continue construction
+    }
+}
+```
+
+*Note*: The interpolations in an interpolated string expression may contain side effects (as result from `++`, `--`,  assignment, and some method calls). If a handler is inhibited, none of the side effects in the interpolated string expression are evaluated. If a handler is not inhibited, all of the side effects in the interpolated string expression are evaluated. *end note*
+
+##### §custInterpStrExpPassInfo Passing information to/from a custom handler
+
+It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
+
+```csharp
+public class Logger
+{
+    // …
+    public void LogMessage(bool flag, int count,
+        [InterpolatedStringHandlerArgument("count","flag","")] 
+        LogInterpolatedStringHandler builder)
+    {
+        // …
+    }
+}
+
+public ref struct LogInterpolatedStringHandler
+{
+    // …
+    public LogInterpolatedStringHandler(int literalLength, int formattedCount,
+        int count, bool flag, Logger logger)
+    {
+        // …
+    }
+}
+```
+
+Attribute `InterpolatedStringHandlerArgument` is applied to the handler parameter, which shall follow the declarations of the parameters that are to be passed to the handler. The attribute constructor argument shall be a comma-separated list of zero or more strings that name the parameters to be passed, along with their order. An empty string designates the instance from which the handler is being invoked. As such, the attribute constructor call above containing `"count","flag",""` requires a matching handler constructor. If the attribute constructor argument list is empty, the behavior is as if the attribute was omitted.
+
+If an `out bool` parameter is also declared to allow the handler to be inhibited (§custInterpStrExpInhibCustHandler) that parameter shall be the final one.
 
 ## 23.6 Attributes for interoperation
 
