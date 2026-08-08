@@ -21,15 +21,30 @@ struct_declaration
     ;
 
 non_record_struct_declaration
+    : non_record_struct_without_positional_members
+    | non_record_struct_with_positional_members
+    ;
+
+non_record_struct_without_positional_members
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* struct_body ';'?
+      type_parameter_constraints_clause* struct_body
+    ;
+
+non_record_struct_with_positional_members
+    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
+      identifier type_parameter_list? delimited_parameter_list struct_interfaces?
+      type_parameter_constraints_clause* struct_body
     ;
 ```
 
 There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in [§16.4](structs.md#164-record-structs). The differences between the two kinds are discussed in [§16.5](structs.md#165-record-struct-and-non-record-struct-differences).
 
-A *non_record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
+A *non_record_struct_declaration* can have one of two almost identical forms: *non_record_struct_without_positional_members* and *non_record_struct_with_positional_members*.
+
+A *non_record_struct_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
+
+A *non_record_struct_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -120,15 +135,18 @@ The *struct_body* of a struct defines the members of the struct.
 
 ```ANTLR
 struct_body
-    : '{' struct_member_declaration* '}'
+    : '{' struct_member_declaration* '}' ';'?
+    | ';'
     ;
 ```
+
+The *struct_body*s `{}`, `{};`, and `;` are equivalent, and the *struct_body*s `{…}` and `{…};` are equivalent.
 
 ## 16.3 Struct members
 
 ### 16.3.1 General
 
-The members of a struct consist of the members introduced by its *struct_member_declaration*s and the members inherited from the type `System.ValueType`.
+The members of a struct consist of the members introduced by its *struct_member_declaration*s, the members inherited from the type `System.ValueType``, and any members implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
 
 ```ANTLR
 struct_member_declaration
@@ -194,6 +212,14 @@ An instance member definition or accessor of an instance property, indexer, or e
 >
 > The `readonly` method `AddMessage` can change the state of a message list. The `InitializeMessages` member can clear and re-initialize the list of messages. In the case of `AddMessage`, the `readonly` modifier is valid. In the case of `InitializeMessages`, adding the `readonly` modifier is invalid. *end example*
 
+## §struct-prim-constructors Primary constructors
+
+As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor (§prim-constructor) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
+
+In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
+
+Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
+
 ## 16.4 Record structs
 
 ### 16.4.1 General
@@ -204,11 +230,11 @@ A record struct is a specialized value type that is optimized for storing data r
 record_struct_declaration
     : attributes? struct_modifier* 'partial'? 'record' 'struct'
       identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
+      type_parameter_constraints_clause* struct_body
     ;
 ```
 
-A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
+A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)).
 
 A *record_struct_declaration* having a *delimited_parameter_list* declares a ***positional record struct***.
 
@@ -218,38 +244,21 @@ The parameters in *delimited_parameter_list* shall not have `ref`, `out` or `thi
 
 ### 16.4.2 Struct members
 
-For a record struct, as well as those members identified by [§16.3](structs.md#163-struct-members), the member set includes the members implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
-
 It is an error for a member of a record struct to be named `Clone`.
 
 It is an error for an instance field of a record struct to have an unsafe type.
-
-### 16.4.3 Record struct body
-
-The *record_struct_body* of a record struct identifies the explicitly declared members of that struct.
-
-```ANTLR
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
-```
-
-For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
 
 ### 16.4.4 Implicit record struct members
 
 #### 16.4.4.1 General
 
-In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+In the case of a record struct, members are provided by the implementation unless a member with a “matching” signature is declared in the *struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
 
 The members provided by the implementation are described in the following subclauses.
 
 #### 16.4.4.2 Primary constructors
 
-As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
-
-In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
+The primary constructor of a record struct is like that of a non-record struct (§struct-prim-constructors), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
 Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
 
