@@ -19,11 +19,11 @@ An *interface_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-t
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface'
       identifier variant_type_parameter_list? interface_base?
-      type_parameter_constraints_clause* interface_body ';'?
+      type_parameter_constraints_clause* interface_body
     ;
 ```
 
-An *interface_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *interface_modifier*s ([§19.2.2](interfaces.md#1922-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§19.2.3](interfaces.md#1923-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§19.2.4](interfaces.md#1924-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§19.3](interfaces.md#193-interface-body)), optionally followed by a semicolon.
+An *interface_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *interface_modifier*s ([§19.2.2](interfaces.md#1922-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§19.2.3](interfaces.md#1923-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§19.2.4](interfaces.md#1924-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§19.3](interfaces.md#193-interface-body)).
 
 An interface declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
@@ -214,9 +214,12 @@ The *interface_body* of an interface defines the members of the interface.
 
 ```ANTLR
 interface_body
-    : '{' interface_member_declaration* '}'
+    : '{' interface_member_declaration* '}' ';'?
+    | ';'
     ;
 ```
+
+The *interface_body*s `{}`, `{};`, and `;` are equivalent, and the *interface_body*s `{…}` and `{…};` are equivalent.
 
 ## 19.4 Interface members
 
