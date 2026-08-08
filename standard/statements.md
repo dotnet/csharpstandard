@@ -398,8 +398,26 @@ An *implicitly_typed_local_variable_declaration* introduces a single local varia
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
 > var z = null;           // Error, null does not have a type
-> var u = x => x + 1;     // Error, anonymous functions do not have a type
+> var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
+> ```
+>
+> *end example*
+
+Anonymous functions and method groups with anonymous function types may be used as initializers in an *implicitly_typed_local_variable_declaration*.
+
+Anonymous functions and method groups with anonymous function types may not be used in contexts in which the target is a discard.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "LocalVariableDecls7", ignoredWarnings:["CS8974"], expectedErrors:["CS8917","CS8917","CS8183"]} -->
+> ```csharp
+> var f1 = () => default;           // error: cannot infer type
+> var f2 = x => x;                  // error: cannot infer type
+> var f3 = () => 1;                 // Func<int>
+> var f4 = string () => "xx";       // Func<string>
+> var f5 = delegate (object o) { }; // Action<object>
+> _ = () => 1;                      // error
 > ```
 >
 > *end example*
