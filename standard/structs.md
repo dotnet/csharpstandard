@@ -1187,7 +1187,9 @@ The safe-context of an object initializer expression is the narrowest of:
 3. The safe-context of the RHS of assignments in member initializers to non-readonly setters, or the ref-safe-context in the case of ref assignment.
 
 > *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following illustrates how an object initializer narrows the safe-context of the resulting value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ObjectInitializerSafeContext", expectedErrors:["CS8352"]} -->
