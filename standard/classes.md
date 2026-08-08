@@ -5606,7 +5606,7 @@ Dr. Jane Wilson
 ```
 
 Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
- 
+
 ```csharp
 public Person(string firstName, string lastName);
 ```
@@ -5656,7 +5656,7 @@ A primary constructor parameter is considered to be passed to the base type via 
 
 If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
 
-A parameter in a *delimited_parameter_list* can be declared `ref`, `in`, or `out`. 
+A parameter in a *delimited_parameter_list* can be declared `ref`, `in`, or `out`.
 
 If a primary constructor parameter is referenced from within an instance member, and the reference is not a `nameof` argument, it shall be captured into the state of the enclosing type, so that it remains accessible after the termination of the constructor. Access to captured parameters within a readonly member have similar restrictions as access to instance fields in the same context.
 Capturing is not permitted for a parameter that has ref-like type, and capturing is not permitted for ref, in, or out parameters.
