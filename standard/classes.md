@@ -19,15 +19,30 @@ class_declaration
     ;
 
 non_record_class_declaration
+    : non_record_class_without_positional_members
+    | non_record_class_with_positional_members
+    ;
+
+non_record_class_without_positional_members
     : attributes? class_modifier* 'partial'? 'class' identifier
-        type_parameter_list? class_base? type_parameter_constraints_clause*
-        class_body
+        type_parameter_list? class_base?
+        type_parameter_constraints_clause* class_body
+    ;
+
+non_record_class_with_positional_members
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? delimited_parameter_list class_base?
+        type_parameter_constraints_clause* class_body
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences.
 
-A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
+A *non_record_class_declaration* can have one of two almost identical forms: *non_record_class_without_positional_members* and *non_record_class_with_positional_members*.
+
+A *non_record_class_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
+
+A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
 A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)).
 
@@ -199,12 +214,22 @@ class_base
     | ':' class_type base_argument_list? ',' interface_type_list
     ;
 
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+
 interface_type_list
     : interface_type (',' interface_type)*
     ;
 ```
 
-*base_argument_list* is discussed in [§15.16.2](classes.md#15162-class-base-specification).
+*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
+
+A warning shall be produced for an in or by-value argument in a *base_argument_list* when all the following conditions are true:
+
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
+- The argument is not part of an expanded params argument;
+- The primary constructor parameter is captured into the state of the enclosing type.
 
 A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
 
@@ -783,10 +808,11 @@ The *class_body* of a class defines the members of that class.
 ```ANTLR
 class_body
     : '{' class_member_declaration* '}' ';'?
+    | ';'
     ;
 ```
 
-The *class_body*s `{…}` and `{…};` are equivalent.
+The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{…}` and `{…};` are equivalent.
 
 ### 15.2.7 Partial type declarations
 
@@ -854,7 +880,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
+The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 ```ANTLR
 class_member_declaration
@@ -5541,6 +5567,106 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
+### §prim-constructor Primary constructors
+
+For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
+
+Consider the following:
+
+<!-- Example: {template:"standalone-console", name:"NonRecordClassPrimaryConstructor", inferOutput:true} -->
+```csharp
+public class Person(string FirstName, string LastName)
+{
+    public string? Title { get; set; }
+    public Person(string title, string fName, string lName) : this(fName, lName)
+    {
+        Title = title;
+    }
+    public override string ToString()
+    {
+        return (Title != null ? Title + " " : "") + FirstName + " " + LastName;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(new Person("Jane", "Wilson");
+        Console.WriteLine(new Person("Dr.", "Jane", "Wilson");
+    }
+}
+```
+
+The output produced is:
+
+```console
+Jane Wilson
+Dr. Jane Wilson
+```
+
+Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
+ 
+```csharp
+public Person(string firstName, string lastName);
+```
+
+As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor, as is required by all user-defined constructors.
+
+At runtime the primary constructor
+
+1. Stores the value of each parameter in some unspecified manner.
+1. Executes the instance initializers appearing in *class_body*.
+1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
+
+Each reference to a parameter in user code is replaced with a reference to the corresponding storage place.
+
+It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
+
+- a `nameof` argument.
+- an initializer of an instance field, property or event of the declaring type.
+- the `argument_list` of `class_base` of the declaring type.
+- the body of an instance method of the declaring type.
+- the body of an instance accessor of the declaring type.
+
+In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
+
+```csharp
+class C(int i)
+{
+    protected int i = i;
+    public int I => i;
+}
+```
+
+the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
+
+A warning shall be produced if a parameter of the primary constructor is not read.
+
+Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
+
+All instance member initializers in *class_body* become assignments in the primary constructor.
+
+A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
+
+A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
+
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
+- The argument is not part of an expanded `params` argument;
+
+If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+
+A parameter in a *delimited_parameter_list* can be declared `ref`, `in`, or `out`. 
+
+If a primary constructor parameter is referenced from within an instance member, and the reference is not a `nameof` argument, it shall be captured into the state of the enclosing type, so that it remains accessible after the termination of the constructor. Access to captured parameters within a readonly member have similar restrictions as access to instance fields in the same context.
+Capturing is not permitted for a parameter that has ref-like type, and capturing is not permitted for ref, in, or out parameters.
+A warning shall be issued for primary constructor parameters under the following circumstances:
+
+- For a by-value parameter, if the parameter is not captured and is not read within any instance initializers or base initializer.
+- For an in parameter, if the parameter is not read within any instance initializers or base initializer.
+- For a ref parameter, if the parameter is not read or written to within any instance initializers or base initializer.
+A *class_declaration* may have a `method:` attribute target, which shall apply to the corresponding primary constructor, if any. If the class has no *delimited_parameter_list*, this attribute shall be ignored and a warning produced.
+
 ## 15.12 Static constructors
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
@@ -6236,11 +6362,11 @@ A record class is a specialized reference type that is optimized for storing dat
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
+      type_parameter_constraints_clause* class_body
     ;
 ```
 
-A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, optionally followed by the keyword `class`, and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* ([§15.16.3](classes.md#15163-record-class-body)).
+A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, optionally followed by the keyword `class`, and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
 `record` and `record class` are equivalent.
 
@@ -6252,32 +6378,7 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### 15.16.2 Class base specification
-
-```ANTLR
-base_argument_list
-    : '(' argument_list? ')'
-    ;
-```
-
-*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
-
-### 15.16.3 Record class body
-
-The *record_class_body* of a record class identifies the explicitly declared members of that class.
-
-```ANTLR
-record_class_body
-    : class_body
-    | ';'
-    ;
-```
-
-The *record_class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
-
 ### 15.16.4 Class members
-
-For a record class, the member set also includes the members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 It is an error for a member of a record class to be named `Clone`.
 
@@ -6291,7 +6392,7 @@ A positional record class ([§15.16.1](classes.md#15161-general)) has a primary 
 
 #### 15.16.6.1 General
 
-Certain members are provided by the implementation unless a member with a matching signature is declared in the *record_class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+Certain members are provided by the implementation unless a member with a matching signature is declared in the *class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
@@ -6686,92 +6787,7 @@ As well as providing the members described in the preceding subclauses, position
 
 ##### 15.16.6.6.2 Primary constructor
 
-For a record class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
-
-Consider the following:
-
-<!-- Example: {template:"standalone-console", name:"RecordClassPrimaryConstructor", inferOutput:true} -->
-```csharp
-public record Person(string FirstName, string LastName)
-{
-    public string? Title { get; set; }
-    public Person(string title, string fName, string lName) : this(fName, lName)
-    {
-        Title = title;
-    }
-    public override string ToString()
-    {
-        return (Title != null ? Title + " " : "") + FirstName + " " + LastName;
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        Console.WriteLine(new Person("Jane", "Wilson"));
-        Console.WriteLine(new Person("Dr.", "Jane", "Wilson"));
-    }
-}
-```
-
-The output produced is:
-
-```console
-Jane Wilson
-Dr. Jane Wilson
-```
-
-Based on the class’s *delimited_parameter_list*, a primary constructor with the following signature is provided (the parameter names are for expository purposes only):
-
-```csharp
-public Person(string firstName, string lastName);
-```
-
-As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor, as is required by all user-defined constructors.
-
-At runtime the primary constructor
-
-1. Stores the value of each parameter in the corresponding provided private field (see [§15.16.6.6.3](classes.md#1516663-properties)).
-1. Executes the instance initializers appearing in *record_class_body*.
-1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
-
-Each reference to a parameter in user code is replaced with a reference to the corresponding provided field.
-
-It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
-
-- a `nameof` argument.
-- an initializer of an instance field, property or event of the declaring type.
-- the `argument_list` of `class_base` of the declaring type.
-- the body of an instance method of the declaring type.
-- the body of an instance accessor of the declaring type.
-
-In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
-
-```csharp
-record class C(int i)
-{
-    protected int i = i;
-    public int I => i;
-}
-```
-
-the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
-
-A warning shall be produced if a parameter of the primary constructor is not read.
-
-Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
-
-All instance member initializers in *record_class_body* become assignments in the primary constructor.
-
-A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
-
-A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
-
-- The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
-- The argument is not part of an expanded `params` argument;
-
-If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+The primary constructor of a record class is like that of a non-record class (§prim-constructor), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
 ##### 15.16.6.6.3 Properties
 
