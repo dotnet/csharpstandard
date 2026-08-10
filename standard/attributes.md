@@ -506,8 +506,8 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.10.1](attributes.md#235101-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
 - System.Diagnostics.CodeAnalysis.UnscopedRefAttribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
 - `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)) and `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
-- `System.Runtime.CompilerServices.CollectionBuilderAttribute` (§collection-builder-attr), which designates a collection type as having a collection-creation method.
-- `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute), which marks a struct type as an inline array type (§InlineArray).
+- `System.Runtime.CompilerServices.CollectionBuilderAttribute` ([§23.5.12](attributes.md#23512-the-collectionbuilder-attribute)), which designates a collection type as having a collection-creation method.
+- `System.Runtime.CompilerServices.InlineArrayAttribute` ([§23.5.13](attributes.md#23513-the-inlinearray-attribute)), which marks a struct type as an inline array type ([§16.6](structs.md#166-inline-arrays)).
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1567,18 +1567,18 @@ This attribute indicates that the constructor it decorates sets all required mem
 
 This attribute indicates that the current type has one or more required members ([§15.7.1](classes.md#1571-general)), or that a specific member of that type is required. However, it is an error for this attribute to be used explicitly. Instead, the presence of the modifier `required` results in the type or member being treated as if it were decorated with this attribute.
 
-### §collection-builder-attr The CollectionBuilder attribute
+### 23.5.12 The CollectionBuilder attribute
 
-This attribute designates a collection type as having a collection-creation method (§declaring-a-collection-type-general).
+This attribute designates a collection type as having a collection-creation method ([§15.17.1](classes.md#15171-general)).
 
 The constructor takes a builder type and the name of the method to be invoked to construct an instance of the collection type.
 
 The attribute can be applied to a class, struct, ref struct, or interface. The attribute is not inherited although it can be applied to a base class or an abstract class.
 
 The builder type shall be a non-generic class or struct.
-### §InlineArrayAttribute The InlineArray attribute
+### 23.5.13 The InlineArray attribute
 
-The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see §InlineArray.
+The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see [§16.6](structs.md#166-inline-arrays).
 
 ## 23.6 Attributes for interoperation
 

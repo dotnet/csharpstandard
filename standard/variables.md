@@ -1235,7 +1235,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-> *Note*: The related notion of a *safe-context* is defined in ([§16.6.15](structs.md#16615-safe-context-constraint)), along with associated constraints. *end note*
+> *Note*: The related notion of a *safe-context* is defined in ([§16.8.15](structs.md#16815-safe-context-constraint)), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
@@ -1427,7 +1427,7 @@ The conditional operator ([§12.21](expressions.md#1221-conditional-operator)), 
 For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, where `M()` does not return ref-to-ref-struct, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
+- The safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
 - The ref-safe-context contributed by all `ref` and `ref readonly` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
 
 If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
@@ -1481,7 +1481,7 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 
 ### 9.7.3 The scoped modifier
 
-The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
 
 `scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type. `scoped` shall not be applied to fields, array elements, or return types.
 

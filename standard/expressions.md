@@ -821,8 +821,8 @@ An *input type inference* is made *from* an expression `E` *to* a type `T` in th
 
 - If `E` is a *collection_expression* with elements `Eᵢ`, and `T` is a type with an element type `Tₑ` or `T` is a *nullable_value_type* `T0?` and `T0` has an element type `Tₑ`, then for each `Eᵢ`:
   - If `Eᵢ` is an *expression_element*, then an *input type inference* is made *from* `Eᵢ` *to* `Tₑ`.
-  - If `Eᵢ` is a *spread_element* with an iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) `Sᵢ`, then a lower-bound inference([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `Sᵢ` *to* `Tₑ`.
-- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-expressions)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
+  - If `Eᵢ` is a *spread_element* with an iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) `Sᵢ`, then a lower-bound inference([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `Sᵢ` *to* `Tₑ`.
+- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-literals)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
 - If `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T` and an *explicit return type inference* is made from `E` to `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
@@ -1298,7 +1298,7 @@ Even though overload resolution of a dynamically bound operation takes place at 
 - For a delegate invocation ([§12.8.10.4](expressions.md#128104-delegate-invocations)), the list is a single function member with the same parameter list as the *delegate_type* of the invocation
 - For a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) on a type, or on a value whose static type is not dynamic, the set of accessible methods in the method group is known at compile-time.
 - For an object creation expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) the set of accessible constructors in the type is known at compile-time.
-- For an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
+- For an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
 
 In these cases a limited compile-time check is performed on each member in the known set of function members, to see if it can be known for certain never to be invoked at run-time. For each function member `F` a modified parameter and argument list are constructed:
 
@@ -1333,7 +1333,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.6.12](structs.md#16612-methods)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.8.12](structs.md#16812-methods)), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
@@ -1946,7 +1946,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >
 > *end example*
 
-With respect to primary constructors (§prim-constructor), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
+With respect to primary constructors ([§15.11.6](classes.md#15116-primary-constructors)), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
 
 An ambiguity error shall result for a member access `E.I` when all the following conditions are met:
 
@@ -2035,7 +2035,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 #### 12.8.9.1 General
 
 A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
-and safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
+and safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
@@ -2462,7 +2462,7 @@ The *primary_expression* of an *element_access* shall not be an *array_creation_
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
 - The *primary_expression* has compile-time type `dynamic`.
-- At least one expression of the *argument_list* has compile-time type `dynamic`, and the *primary_no_array_creation_expression* does not have an inline array type (§InlineArray) or there is more than one *argument* in the *argument_list*.
+- At least one expression of the *argument_list* has compile-time type `dynamic`, and the *primary_no_array_creation_expression* does not have an inline array type ([§16.6](structs.md#166-inline-arrays)) or there is more than one *argument* in the *argument_list*.
 
 In this case the compile-time type of the *element_access* depends on the compile-time type of its *primary_expression*: if it has an array type then the compile-time type is the element type of that array type; otherwise the compile-time type is `dynamic` and the *element_access* is classified as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
@@ -2478,15 +2478,15 @@ In this case the compile-time type of the *element_access* depends on the compil
 >
 > *end example*
 
-If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access (§InlineArrayElementAccess). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
+If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access ([§12.8.12.3](expressions.md#128123-inline-array-element-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)).
 
 - a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
-- a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
-- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
+- a value of `string` type, the *element_access* is a string access ([§12.8.12.4](expressions.md#128124-string-access));
+- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)).
 
 #### 12.8.12.2 Array access
 
-For access to elements in an inline array (§InlineArray) see §InlineArrayElementAccess.
+For access to elements in an inline array ([§16.6](structs.md#166-inline-arrays)) see [§12.8.12.3](expressions.md#128123-inline-array-element-access).
 
 For an array access the *argument_list* shall not contain named arguments or by-reference arguments ([§15.6.2.3](classes.md#15623-by-reference-parameters)).
 
@@ -2514,16 +2514,16 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> > > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses ([§12.8.12.4](expressions.md#128124-indexer-access)) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
+> > > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses ([§12.8.12.5](expressions.md#128125-indexer-access)) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
 
 - Otherwise:
   - The result of evaluating the array access is a variable reference ([§9.5](variables.md#95-variable-references)) of the element type of the array.
   - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
   - The variable reference of the array element given by the index expressions is computed, and this becomes the result of the array access.
 
-#### §InlineArrayElementAccess  Inline array element access
+#### 12.8.12.3 Inline array element access
 
-For access to an element in an inline array (§InlineArray), the *primary_no_array_creation_expression* of the *element_access* shall designate an inline array. Furthermore, the *argument_list* shall contain a single *argument*, which is not a named argument ([§12.6.2.1](expressions.md#12621-general)). That *argument* shall be of type `int`, or be implicitly convertible to type `int`, `System.Index`, or `System.Range`.
+For access to an element in an inline array ([§16.6](structs.md#166-inline-arrays)), the *primary_no_array_creation_expression* of the *element_access* shall designate an inline array. Furthermore, the *argument_list* shall contain a single *argument*, which is not a named argument ([§12.6.2.1](expressions.md#12621-general)). That *argument* shall be of type `int`, or be implicitly convertible to type `int`, `System.Index`, or `System.Range`.
 
 It is a compile-time error if *argument* is a constant expression whose value results in an index outside the bounds of the inline array. If at runtime the value of *argument* results in an index outside the bounds of the inline array, a `System.IndexOutOfRangeException` is thrown.
 
@@ -2609,7 +2609,7 @@ The value of *argument* is converted to `int` and the element access is interpre
 
 *argument* is converted to `System.Index` and then to an `int`-based index value indicating the element position relative to the start of the inline array. Then, the element access is interpreted as described when *argument*’s type is `int`.
 
-Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See §InlineArray for more information.
+Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See [§16.6](structs.md#166-inline-arrays) for more information.
 
 **When *argument*’s type is implicitly convertible to `System.Range`**
 
@@ -2637,7 +2637,7 @@ passing the `int` equivalents of the Range’s start and end Indexes, respective
 static System.ReadOnlySpan<T> GetSlice(in «InlineArrayType» array)
 ```
 
-Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See §InlineArray for more information.
+Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See [§16.6](structs.md#166-inline-arrays) for more information.
 
 If *primary_no_array_creation_expression* is a value, an error is reported.
 
@@ -2672,7 +2672,7 @@ If *primary_no_array_creation_expression* is a value, an error is reported.
 >
 > *end example*
 
-#### 12.8.12.3 String access
+#### 12.8.12.4 String access
 
 For a string access the *argument_list* of the *element_access* shall contain a single unnamed value argument ([§15.6.2.2](classes.md#15622-value-parameters)) which shall be:
 
@@ -2700,7 +2700,7 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
   - The value of the converted index expression is checked against the actual bounds of the string instance referenced by `P`. If the value is out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
   - The value of character at the offset of the converted index expression with the string `P` becomes the result of the string access.
 
-#### 12.8.12.4 Indexer access
+#### 12.8.12.5 Indexer access
 
 For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not contain `out` or `ref` arguments.
 
@@ -3803,7 +3803,7 @@ A reference variable field `rv` of type `T` shall not have an explicit initializ
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.6.15.10](structs.md#1661510-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.8.15.10](structs.md#1681510-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -3973,7 +3973,7 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.22](expressions.md#1222-anonymous-function-expressions).
 
-### §collection-expressions Collection expressions
+### 12.8.25 Collection expressions
 
 A ***collection expression*** is a `[]`-delimited, comma-separated set of zero or more *collection_element*s that together represent a collection.
 
@@ -3996,7 +3996,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) may be a target type for a *collection_expression*. A type designated with the `CollectionBuilder` attribute may also be a target type (§declaring-a-collection-type-general).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) may be a target type for a *collection_expression*. A type designated with the `CollectionBuilder` attribute may also be a target type ([§15.17.1](classes.md#15171-general)).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
@@ -4336,7 +4336,7 @@ All non-positional properties being changed shall have both set and init accesso
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.

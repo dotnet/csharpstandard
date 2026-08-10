@@ -36,13 +36,13 @@ non_record_class_with_positional_members
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.18](classes.md#1518-record-class-and-non-record-class-differences).
 
 A *non_record_class_declaration* can have one of two almost identical forms: *non_record_class_without_positional_members* and *non_record_class_with_positional_members*.
 
 A *non_record_class_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
-A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
+A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see [§15.11.6](classes.md#15116-primary-constructors).
 
 A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)).
 
@@ -227,7 +227,7 @@ interface_type_list
 
 A warning shall be produced for an in or by-value argument in a *base_argument_list* when all the following conditions are true:
 
-- The argument represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter ([§15.11.6](classes.md#15116-primary-constructors));
 - The argument is not part of an expanded params argument;
 - The primary constructor parameter is captured into the state of the enclosing type.
 
@@ -880,7 +880,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
+The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.4](classes.md#15164-implicit-record-class-members)).
 
 ```ANTLR
 class_member_declaration
@@ -5590,7 +5590,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
-### §prim-constructor Primary constructors
+### 15.11.6 Primary constructors
 
 For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
 
@@ -6401,25 +6401,25 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### 15.16.4 Class members
+### 15.16.2 Class members
 
 It is an error for a member of a record class to be named `Clone`.
 
 It is an error for an instance field of a record class to have an unsafe type.
 
-### 15.16.5 Instance constructors
+### 15.16.3 Instance constructors
 
 A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.6.6.2](classes.md#1516662-primary-constructor) for more information.
 
-### 15.16.6 Implicit record class members
+### 15.16.4 Implicit record class members
 
-#### 15.16.6.1 General
+#### 15.16.4.1 General
 
 Certain members are provided by the implementation unless a member with a matching signature is declared in the *class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-#### 15.16.6.2 Copy constructors
+#### 15.16.4.2 Copy constructors
 
 A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
 
@@ -6454,7 +6454,7 @@ In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members
 
 A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with the `SetsRequiredMembers` attribute ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)).
 
-#### 15.16.6.3 Equality members
+#### 15.16.4.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6621,7 +6621,7 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-#### 15.16.6.4 Copy and clone members
+#### 15.16.4.4 Copy and clone members
 
 A record class type contains two copying members:
 
@@ -6632,7 +6632,7 @@ The copy constructor shall not execute any instance field/property initializers 
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-#### 15.16.6.5 Printing members
+#### 15.16.4.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -6802,17 +6802,17 @@ The provided method:
 >
 > *end example*
 
-#### 15.16.6.6 Positional record class members
+#### 15.16.4.6 Positional record class members
 
-##### 15.16.6.6.1 General
+##### 15.16.4.6.1 General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-##### 15.16.6.6.2 Primary constructor
+##### 15.16.4.6.2 Primary constructor
 
-The primary constructor of a record class is like that of a non-record class (§prim-constructor), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
+The primary constructor of a record class is like that of a non-record class ([§15.11.6](classes.md#15116-primary-constructors)), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
-##### 15.16.6.6.3 Properties
+##### 15.16.4.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
@@ -6844,7 +6844,7 @@ For a record class:
 >
 > *end example*
 
-##### 15.16.6.6.4 Deconstruct
+##### 15.16.4.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6874,11 +6874,11 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 >
 > *end example*
 
-## §declaring-a-collection-type Declaring a collection type
+## 15.17 Declaring a collection type
 
-### §declaring-a-collection-type-general General
+### 15.17.1 General
 
-There are a number of contexts in which a collection expression (§collection-expressions) may be converted to a collection type (§imp-collection-expression-conv). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
+There are a number of contexts in which a collection expression ([§12.8.25](expressions.md#12825-collection-expressions)) may be converted to a collection type ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
 
 Here is a simple user-defined collection type and its associated builder type:
 
@@ -6923,7 +6923,7 @@ internal static class MyCollectionBuilder
 }
 ```
 
-The collection type shall be annotated with a  `CollectionBuilder` attribute (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
+The collection type shall be annotated with a  `CollectionBuilder` attribute ([§23.5.12](attributes.md#23512-the-collectionbuilder-attribute)) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
 
 The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type.
 
@@ -6949,9 +6949,9 @@ For a *collection_expression* with a target type `C<S₀, S₁, …>` where the 
 
 The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
-The construction of an instance of a collection type is described in §collection-construction.
+The construction of an instance of a collection type is described in [§15.17.2](classes.md#15172-collection-construction).
 
-### §collection-construction Collection construction
+### 15.17.2 Collection construction
 
 The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
 
@@ -6961,7 +6961,7 @@ An unhandled exception thrown from any of the methods used during construction s
 
 `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
 
-If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method (§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§15.17.1](classes.md#15171-general)), the construction of the collection instance steps are, as follows:
 
 - The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
 - The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
@@ -7024,7 +7024,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 > ```
 >
 > *end note*
-## 15.17 Record class and non-record class differences
+## 15.18 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
 
