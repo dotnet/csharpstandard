@@ -732,21 +732,22 @@ Signatures are the enabling mechanism for ***overloading*** of members in classe
 - Overloading of indexers permits a class, struct, or interface to declare multiple indexers, provided their signatures are unique within that class, struct, or interface.
 - Overloading of operators permits a class or struct to declare multiple operators with the same name, provided their signatures are unique within that class or struct.
 
-Although `in`, `out`, and `ref` parameter modifiers are considered part of a signature, members declared in a single type cannot differ in signature solely by `in`, `out`, and `ref`. A compile-time error occurs if two members are declared in the same type with signatures that would be the same if all parameters in both methods with `out` or `in` modifiers were changed to `ref` modifiers. For other purposes of signature matching (e.g., hiding or overriding), `in`, `out`, and `ref` are considered part of the signature and do not match each other.
+Although *parameter_mode_modifier*s are considered part of a signature, members declared in a single type cannot differ in signature solely by those modifiers. A compile-time error occurs if two members are declared in the same type with signatures that would be the same if all parameters in both methods with `out` or `in` modifiers were changed to `ref` modifiers. For other purposes of signature matching (e.g., hiding or overriding), *parameter_mode_modifier*s are considered part of the signature and do not match each other.
 
-> *Note*: This restriction is to allow C# programs to be easily translated to run on a platform that does not provide a way to define methods that differ solely in `in`, `out`, and `ref`. *end note*
+> *Note*: This restriction is to allow C# programs to be easily translated to run on a platform that does not provide a way to define methods that differ solely in their *parameter_mode_modifier*s. *end note*
 
 The types `object` and `dynamic` are not distinguished when comparing signatures. Therefore members declared in a single type whose signatures differ only by replacing `object` with `dynamic` are not allowed.
 
 > *Example*: The following example shows a set of overloaded method declarations along with their signatures.
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"SignatureOverloading", expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"SignatureOverloading", expectedErrors:["CS0663","CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
 > ```csharp
 > interface ITest
 > {
 >     void F();                   // F()
 >     void F(int x);              // F(int)
 >     void F(ref int x);          // F(ref int)
+>     void F(ref readonly int x); // F(ref int) error
 >     void F(out int x);          // F(out int) error
 >     void F(object o);           // F(object)
 >     void F(dynamic d);          // error.
@@ -762,7 +763,7 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 > }
 > ```
 >
-> Note that any `in`, `out`, and `ref` parameter modifiers ([§15.6.2](classes.md#1562-method-parameters)) are part of a signature. Thus, `F(int)`, `F(in int)`, `F(out int)` , and `F(ref int)` are all unique signatures. However, `F(in int)`, `F(out int)` , and `F(ref int)` cannot be declared within the same interface because their signatures differ solely by `in`, `out`, and `ref`. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error. *end example*
+> Note that any *parameter_mode_modifier*s ([§15.6.2](classes.md#1562-method-parameters)) are part of a signature. Thus, `F(int)`, `F(in int)`, `F(out int)` , `F(ref int)`, and `F(ref readonly int)` are all unique signatures. However, `F(in int)`, `F(out int)`, `F(ref int)`, and `F(ref readonly int)` cannot be declared within the same interface because their signatures differ solely by their *parameter_mode_modifier*s. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error. *end example*
 
 ## 7.7 Scopes
 

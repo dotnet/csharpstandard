@@ -2303,7 +2303,7 @@ parameter_modifier
     ;
 
 parameter_mode_modifier
-    : 'ref'
+    : ref_kind
     | 'out'
     | 'in'
     ;
@@ -2315,13 +2315,13 @@ parameter_array
 
 The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
 An output parameter implicitly has the `scoped` modifier.
 
 For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
-A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
+A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `ref readonly` or `in` modifier may have a *default_argument*; however, in the `ref readonly` case, a warning shall be issued. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
 - an expression of the form `new S()` where `S` is a value type
@@ -2365,9 +2365,10 @@ The following kinds of parameters exist:
 - Input parameters ([§15.6.2.3.2](classes.md#156232-input-parameters)).
 - Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
+- Reference readonly parameters, which are reference parameters that also have the `readonly` modifier.
 - Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, `ref`, and `ref readonly` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
 
 #### 15.6.2.2 Value parameters
 
@@ -2387,11 +2388,11 @@ Input, output, and reference parameters are ***by-reference parameter***s. A by-
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
-When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. However, when the parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. However, when the parameter is a `ref readonly` or `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
 
 By-reference parameters are not allowed on functions declared as an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)).
 
-In a method that takes multiple by-reference parameters, it is possible for multiple names to represent the same storage location.
+In a method that has multiple by-reference parameters, it is possible for multiple parameter names to represent the same storage location.
 
 ##### 15.6.2.3.2 Input parameters
 
@@ -2403,7 +2404,11 @@ It is a compile-time error to modify the value of an input parameter.
 
 ##### 15.6.2.3.3 Reference parameters
 
-A parameter declared with a `ref` modifier is a ***reference parameter***. For definite-assignment rules, see [§9.2.6](variables.md#926-reference-parameters).
+A parameter declared with a `ref` or `ref readonly` modifier is a ***reference parameter***. For definite-assignment rules, see [§9.2.6](variables.md#926-reference-parameters).
+
+It is a compile-time error to modify the value of a `ref readonly` parameter.
+
+The argument corresponding to a `ref readonly` parameter may be a value, in which case, a variable having that value is created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
 
 > *Example*: The example
 >
@@ -2463,6 +2468,20 @@ A parameter declared with a `ref` modifier is a ***reference parameter***. For d
 > the invocation of `F` in `G` passes a reference to `s` for both `a` and `b`. Thus, for that invocation, the names `s`, `a`, and `b` all refer to the same storage location, and the three assignments all modify the instance field `s`.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following example
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"ReferenceParameters2"} -->
+> ```csharp
+> LargeStruct ls /* init somehow */;
+> M(ref ls);
+> static void M(ref readonly LargeStruct p) { /* ... */ }
+> struct LargeStruct { /* ... */ }
+> ```
+>
+> shows a large struct being passed by reference for efficiency, but without the called method having the ability to modify that that struct. *end example*
 
 For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.14](expressions.md#12814-this-access)).
 

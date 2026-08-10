@@ -553,7 +553,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), or parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)). Output and reference parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), reference parameters of kind `ref readonly` ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)). Output and reference parameters of kind `ref` are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -583,12 +583,12 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 
 The *argument_value* can take one of the following forms:
 
-- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
-- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input or `ref readonly` reference parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
+- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) or is transformed into a `ref readonly` reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) and then passed as that. A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 - The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 - The keyword `out` optionally followed by `scoped`, optionally followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
-The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
+The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input or `ref readonly` reference passing mode.
 
 Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field cannot be treated as volatile by the invoked method.
 
@@ -623,19 +623,19 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 
 - For a value argument, if the parameter’s passing mode is value
   - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
-  - otherwise, the parameter’s passing mode is input. If the argument is a variable reference and there exists an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between the argument’s type and the parameter’s type, the resulting storage location becomes the storage location represented by the parameter in the function member invocation. Otherwise, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
+  - otherwise, the parameter’s passing mode is input or ref readonly. If the argument is a variable reference and there exists an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between the argument’s type and the parameter’s type, the resulting storage location becomes the storage location represented by the parameter in the function member invocation. Otherwise, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
 
      > *Example*: Given the following declarations and method calls:
      >
-     > <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists3", replaceEllipsis:true} -->
+     > <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists3", replaceEllipsis:true, expectedWarnings:["CS9192","CS9193"]} -->
      > ```csharp
-     > static void M1(in int p1) { ... }
+     > static void M1(in int p1, ref readonly int p2) { ... }
      > int i = 10;
-     > M1(i);         // i is passed as an input argument
-     > M1(i + 5);     // transformed to a temporary input argument
+     > M1(i, i);         // i is passed as input and reference arguments
+     > M1(i + 5, i + 7); // both transformed to temporary arguments
      > ```
      >
-     > In the `M1(i)` method call, `i` itself is passed as an input argument, because it is classified as a variable and has the same type `int` as the input parameter. In the `M1(i + 5)` method call, an unnamed `int` variable is created, initialized with the argument’s value, and then passed as an input argument. See [§12.6.4.2](expressions.md#12642-applicable-function-member) and [§12.6.4.4](expressions.md#12644-better-parameter-passing-mode).
+     > In the `M1(i, i)` method call, `i` itself is passed as an input and a reference argument, respectively, because it is classified as a variable and has the same type `int` as the corresponding input and reference parameters. In the `M1(i + 5, i + 7)` method call, two unnamed `int` variables are created, initialized with the corresponding argument’s value, and then passed as an input and reference argument, respectively. See [§12.6.4.2](expressions.md#12642-applicable-function-member) and [§12.6.4.4](expressions.md#12644-better-parameter-passing-mode).
      >
      > *end example*
 
@@ -1082,6 +1082,7 @@ A function member is said to be an ***applicable function member*** with respect
   - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
+  - for a `ref readonly` parameter when the corresponding argument omits the `ref` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
@@ -1090,7 +1091,7 @@ For a function member that includes a parameter array, if the function member is
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and:
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
-  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input or `ref readonly`, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
