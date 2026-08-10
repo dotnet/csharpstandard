@@ -2473,7 +2473,7 @@ The argument corresponding to a `ref readonly` parameter may be a value, in whic
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ReferenceParameters2"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ReferenceParameters3"} -->
 > ```csharp
 > LargeStruct ls /* init somehow */;
 > M(ref ls);
