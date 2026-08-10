@@ -1906,6 +1906,13 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >
 > *end example*
 
+With respect to primary constructors (§prim-constructor), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
+
+An ambiguity error shall result for a member access `E.I` when all the following conditions are met:
+
+- Member lookup of `E.I` yields a member group containing instance and static members at the same time. Extension methods applicable to the receiver type are treated as instance methods for the purpose of this check.
+- If `E` is treated as a simple name, rather than a type name, it would refer to a primary constructor parameter and would capture the parameter into the state of the enclosing type.
+
 ### 12.8.8 Null Conditional Member Access
 
 A *null_conditional_member_access* is a conditional version of *member_access* ([§12.8.7](expressions.md#1287-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.11](expressions.md#12811-null-conditional-invocation-expression)).
