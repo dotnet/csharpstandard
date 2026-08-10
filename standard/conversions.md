@@ -499,7 +499,8 @@ The following additional implicit conversions exist from a collection expression
 
 - To an interface type `I` where there is a collection-creation method associated with `I` that returns a type `V` and there is an implicit boxing conversion from `V` to `I`. The conversion is a collection expression conversion to `V` followed by an implicit boxing conversion from `V` to `I`.
 
-When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.5.15](structs.md#16412-safe-context-constraint)) shall be met.
+When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.6.15](structs.md#16615-safe-context-constraint)) shall be met.
+
 ### §ImplicitInlineArrayConversions Implicit inline array conversions
 
 The implicit inline array (§InlineArray) conversions are:
