@@ -455,6 +455,52 @@ Although an implicit conversion to `object` is permitted, a warning shall be iss
 >
 > *end example*
 
+### §imp-collection-expression-conv Implicit collection expression conversions
+
+An implicit collection expression conversion exists from a collection expression to the following types:
+
+- A single-dimensional array type `T[]`, in which case, the element type is `T`.
+- `System.Span<T>` and `System.ReadOnlySpan<T>`, in which cases, the element type is `T`.
+- A type with an appropriate collection-creation method (§declaring-a-collection-type-general), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
+- A struct or class type that implements `System.Collections.IEnumerable` where:
+
+  - The type has an applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) constructor that can be invoked with no arguments, and the constructor is accessible at the location of the collection expression.
+  - If the collection expression has any elements, the type has an instance or extension method `Add` where:
+
+    - The method can be invoked with a single value argument.
+    - If the method is generic, the type arguments can be inferred from the collection and argument.
+    - The method is accessible at the location of the collection expression.
+
+    In which case, the element type is the iteration type of the type.
+- Any of the following interface types:
+
+  - `System.Collections.Generic.IEnumerable<T>`
+  - `System.Collections.Generic.IReadOnlyCollection<T>`
+  - `System.Collections.Generic.IReadOnlyList<T>`
+  - `System.Collections.Generic.ICollection<T>`
+  - `System.Collections.Generic.IList<T>`
+  
+  in which case, the element type is `T`
+
+The implicit conversion exists if the type has an element type `U` where for each element `Eᵢ` in the collection expression:
+
+- If `Eᵢ` is an *expression_element*, there is an implicit conversion from `Eᵢ` to `U`.
+- If `Eᵢ` is a *spread_element* `..Sᵢ`, there is an implicit conversion from the *iteration type* of `Sᵢ` to `U`.
+
+There is no collection expression conversion from a collection expression to a multi-dimensional array type.
+
+Types for which there is an implicit collection expression conversion from a collection expression are the valid target types for that collection expression.
+
+The following additional implicit conversions exist from a collection expression:
+
+- To a nullable value type `T?` where there is a collection expression conversion from the collection expression to the value type `T`. The conversion is a collection expression conversion to `T` followed by an implicit nullable conversion from `T` to `T?`.
+
+- To a reference type `T` where there is a collection-creation method associated with `T` that returns a type `U` and there is an implicit reference conversion from `U` to `T`. The conversion is a collection expression conversion to `U` followed by an implicit reference conversion from `U` to `T`.
+
+- To an interface type `I` where there is a collection-creation method associated with `I` that returns a type `V` and there is an implicit boxing conversion from `V` to `I`. The conversion is a collection expression conversion to `V` followed by an implicit boxing conversion from `V` to `I`.
+
+When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.5.15](structs.md#16412-safe-context-constraint)) shall be met.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
