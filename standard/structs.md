@@ -935,6 +935,8 @@ Any expression whose compile-time type is not a ref struct has a safe-context of
 
 A `default` expression, for any type, has safe-context of caller-context.
 
+A UTF-8 string literal ([§6.4.5.6](lexical-structure.md#6456-string-literals)) has a safe-context of caller-context.
+
 For any non-default expression whose compile-time type is a ref struct has a safe-context defined by the following sections.
 
 The safe-context records which context a value may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
