@@ -49,6 +49,7 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
+    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -61,9 +62,21 @@ The `new` modifier is permitted on nested classes. It specifies that the class h
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
+It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
+
 When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
+
+The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier. (`file` is a contextual keyword (§6.4.4) that has special meaning when used as a top-level type modifier.)
+
+The `file` modifier shall only appear in a type declaration for a top-level type.
+
+When a type declaration contains the `file` modifier, that type is said to be a ***file-local type***.
+
+The implementation shall guarantee that two type declarations are distinct at runtime when either both are file-local types with the same name declared in different compilation units, or one is a file-local type and the other is a non-file-local type with the same name.
+
+A file-local class that is an attribute type may be used as an attribute within both file-local types and non-file-local types, just as if the attribute type were a non-file-local class.
 
 #### 15.2.2.2 Abstract classes
 
@@ -248,6 +261,8 @@ The base class specified in a class declaration can be a constructed class type 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
 The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§23.2.1](attributes.md#2321-general)).
+
+A file-local class shall not be used as a base type of a non-file-local class.
 
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself. Given this definition, the complete set of types upon which a class depends is the transitive closure of the *directly depends on* relationship.
 
@@ -777,6 +792,8 @@ The modifier `partial` is used when defining a class, struct, or interface type 
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
+For a partial type, either all parts shall include the `file` modifier and be declared in the same compilation unit, or no part shall include the `file` modifier.
+
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
 
 Nested types may be declared in multiple parts by using the `partial` modifier. Typically, the containing type is declared using `partial` as well, and each part of the nested type is declared in a different part of the containing type.
@@ -854,6 +871,8 @@ class_member_declaration
     | type_declaration
     ;
 ```
+
+The signature of a member in a non-file-local type shall not contain a file-local type.
 
 The members of a class are divided into the following categories:
 

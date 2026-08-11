@@ -49,6 +49,7 @@ struct_modifier
     | 'internal'
     | 'private'
     | 'readonly'
+    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -56,6 +57,8 @@ struct_modifier
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
+
+It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
 
 Except for `readonly`, the modifiers of a struct declaration have the same meaning as those of a class declaration ([§15.2.2](classes.md#1522-class-modifiers)).
 
