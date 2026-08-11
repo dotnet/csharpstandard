@@ -67,8 +67,8 @@ The following operations in C# are subject to binding:
 - Element access: `e[e₁,...,eᵥ]`
 - Object creation: new `C(e₁,...,eᵥ)`
 - Overloaded unary operators: `+`, `-`, `!` (logical negation only), `~`, `++`, `--`, `true`, `false`
-- Overloaded binary operators: `+`, `-`, `*`, `/`, `%`, `&`, `&&`, `|`, `||`, `??`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, `<=`
-- Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `??=`
+- Overloaded binary operators: `+`, `-`, `*`, `/`, `%`, `&`, `&&`, `|`, `||`, `??`, `^`, `<<`, `>>`, `>>>` (static binding only), `==`, `!=`, `>`, `<`, `>=`, `<=`
+- Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `>>>=` (static binding only), `??=`
 - Implicit and explicit conversions
 
 When no dynamic expressions are involved, C# defaults to static binding, which means that the compile-time types of subexpressions are used in the selection process. However, when one of the subexpressions in the operations listed above is a dynamic expression, the operation is instead dynamically bound.
@@ -160,7 +160,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.12](expressions.md#1212-switch-expression)                                   | Switch                           | `switch { … }` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Additive                         | `+` `-` |
-> |  [§12.14](expressions.md#1214-shift-operators)             | Shift                            | `<<` `>>` |
+> |  [§12.14](expressions.md#1214-shift-operators)             | Shift                            | `<<` `>>` `>>>` |
 > |  [§12.15](expressions.md#1215-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as` |
 > |  [§12.15](expressions.md#1215-relational-and-type-testing-operators)             | Equality                         | `==` `!=` |
 > |  [§12.16](expressions.md#1216-logical-operators)             | Logical AND                      | `&`  |
@@ -170,7 +170,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.17](expressions.md#1217-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.18](expressions.md#1218-the-null-coalescing-operator) and [§12.19](expressions.md#1219-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.21](expressions.md#1221-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.24](expressions.md#1224-assignment-operators) and [§12.22](expressions.md#1222-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`  `??=` |
+> |  [§12.24](expressions.md#1224-assignment-operators) and [§12.22](expressions.md#1222-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `>>>=` `&=` `^=` `\|=` `=>`  `??=` |
 >
 > *end note*
 
@@ -201,7 +201,7 @@ Only the operators listed above can be overloaded. In particular, it is not poss
 
 The ***overloadable binary operator***s are:
 
-> `+  -  *  /  %  &  |  ^  <<  >>  ==  !=  >  <  <=  >=`
+> `+  -  *  /  %  &  |  ^  <<  >>  >>>  ==  !=  >  <  <=  >=`
 
 Only the operators listed above can be overloaded. In particular, it is not possible to overload member access, method invocation, or the `..`, `=`, `&&`, `||`, `??`, `?:`, `=>`, `checked`, `unchecked`, `new`, `typeof`, `default`, `as`, and `is` operators.
 
@@ -358,7 +358,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 A ***lifted operator*** permits predefined and user-defined operators that operate on a non-nullable value type to also be used with the nullable form of that type. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
 - For the unary operators `+`, `++`, `-`, `--`, `!` (logical negation), `^`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
-- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `..`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.16.5](expressions.md#12165-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
+- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `..`, `<<`, `>>`, and `>>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.16.5](expressions.md#12165-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
 - For the equality operators `==` and `!=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 - For the relational operators `<`, `>`, `<=`, and `>=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 
@@ -4501,21 +4501,28 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 ## 12.14 Shift operators
 
-The `<<` and `>>` operators are used to perform bit-shifting operations.
+The `<<`, `>>`, and `>>>` operators are used to perform bit-shifting operations.
 
 ```ANTLR
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
+    | shift_expression unsigned_right_shift additive_expression
     ;
 ```
 
 If an operand of a *shift_expression* has the compile-time type `dynamic`, then the expression is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the expression is `dynamic`, and the resolution described below will take place at run-time using the run-time type of those operands that have the compile-time type `dynamic`.
 
-For an operation of the form `x << count` or `x >> count`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator.
+Dynamic binding uses values of type `enum System.Linq.Expressions.ExpressionType` to communicate binary operator kind to the runtime binder. As there is no enum member specifically representing an unsigned right shift operator, dynamic binding for `>>>` is not supported.
+
+For an operation of the form `x << count`, `x >> count`, or `x >>> count`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The left operand is converted to type `T`, where `T` is the first of `int`, `uint`, `long`, and `ulong` that can fully represent all possible values of the operand. The operation is then performed using the precision of type `T`, and the type of the result is `T`.
 
 When declaring an overloaded shift operator, the type of the first operand shall always be the class or struct containing the operator declaration, and the type of the second operand shall always be `int`.
+
+The *unsigned_right_shift* operator (`>>>`) shall not be present in an expression tree.
+
+> *Note*: The semantics of the predefined `>>>` operator on signed types cannot be accurately represented without adding conversions to an unsigned type and back. *end note*
 
 The predefined shift operators are listed below.
 
@@ -4542,6 +4549,12 @@ The predefined shift operators are listed below.
   nuint operator >>(nuint x, int count);
   long operator >>(long x, int count);
   ulong operator >>(ulong x, int count);
+  int operator >>>(int x, int count);
+  uint operator >>>(uint x, int count);
+  nint operator >>>(nint x, int count);
+  nuint operator >>>(nuint x, int count);
+  long operator >>>(long x, int count);
+  ulong operator >>>(ulong x, int count);
   ```
 
   The `>>` operator shifts `x` right by a number of bits computed as described below.
@@ -4549,6 +4562,8 @@ The predefined shift operators are listed below.
   When `x` is of type `int`, `nint`, or `long`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero if `x` is non-negative and set to one if `x` is negative.
 
   When `x` is of type `uint`, `nuint`, or `ulong`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero.
+
+  The `>>>` operator shifts `x` right by a number of bits computed as follows: The low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero.
 
 For the predefined operators, the number of bits to shift is computed as follows:
 
@@ -7393,6 +7408,7 @@ compound_assignment
 compound_assignment_operator
     : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
+    | unsigned_right_shift_assignment
     ;
 ```
 
@@ -7503,7 +7519,7 @@ Only the following constructs are permitted in constant expressions:
 - `checked` and `unchecked` expressions.
 - `nameof` expressions.
 - The predefined `+`, `-`, `!` (logical negation) and `~` unary operators.
-- The predefined `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
+- The predefined `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 - The `?:` conditional operator.
 - The `!` null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)).
 - `sizeof` expressions, provided the unmanaged-type is one of the types specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator) for which `sizeof` returns a constant value.

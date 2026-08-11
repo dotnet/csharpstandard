@@ -4950,7 +4950,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
     : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -5045,9 +5045,9 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<`, `>>`, or `>>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
 
-The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
+The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `>>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
 
