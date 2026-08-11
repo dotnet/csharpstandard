@@ -83,7 +83,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
               </PropertyGroup>
 
             </Project>
@@ -105,7 +105,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
               </PropertyGroup>
 
             </Project>
@@ -119,7 +119,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <OutputType>{outputType}</OutputType>
               </PropertyGroup>
 
@@ -139,7 +139,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <Nullable>{nullable}</Nullable>
               </PropertyGroup>
 
@@ -160,7 +160,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <AssemblyName>Xyz</AssemblyName>
               </PropertyGroup>
 
@@ -175,7 +175,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <AllowUnsafeBlocks>{allowUnsafeBlocks}</AllowUnsafeBlocks>
               </PropertyGroup>
 
@@ -200,7 +200,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net6.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <ImplicitUsings>{implicitUsings}</ImplicitUsings>
               </PropertyGroup>
 
