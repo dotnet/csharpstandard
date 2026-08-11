@@ -1207,8 +1207,8 @@ If there is an identity conversion from `E₁` to `E₂`, then the element conve
 - For every `ELᵢ`, `CE₁ᵢ` is at least as good as `CE₂ᵢ`, and
 - There is at least one i where `CE₁ᵢ` is better than `CE₂ᵢ`
 
-Otherwise, neither set of element conversions is better than the other, and they are also not as good as each other. 
- 
+Otherwise, neither set of element conversions is better than the other, and they are also not as good as each other.
+
 Conversion comparisons are made using better conversion from expression if `ELᵢ` is not a spread element. If `ELᵢ` is a spread element, use better conversion from the element type of the spread collection to `E₁` or `E₂`, respectively.
 
 `C₁` is a ***better collection conversion from expression*** than `C₂` if:
@@ -1216,8 +1216,8 @@ Conversion comparisons are made using better conversion from expression if `EL�
 - Both `T₁` and `T₂` are not *span types*, and `T₁` is implicitly convertible to `T₂`, and `T₂` is not implicitly convertible to `T₁`, or
 - `E₁` does not have an identity conversion to `E₂`, and the element conversions to `E₁` are ***better than the element conversions*** to `E₂`, or
 - `E₁` has an identity conversion to `E₂`, and one of the following holds:
-   - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, or
-   - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_or_array_interface* with *element type* `E₂`
+  - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, or
+  - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_or_array_interface* with *element type* `E₂`
 
 Otherwise, neither collection type is better, and the result is ambiguous.
 
