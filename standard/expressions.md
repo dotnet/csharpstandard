@@ -1460,8 +1460,8 @@ fragment Interpolated_Regular_String_Element
 
 fragment Interpolated_Regular_String_Character
     // Any character except " (U+0022), \\ (U+005C),
-    // { (U+007B), } (U+007D), and New_Line_Character.
-    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
+    // { (U+007B), and } (U+007D).
+    : ~["\\{}]
     ;
 
 // interpolated verbatim string expressions
