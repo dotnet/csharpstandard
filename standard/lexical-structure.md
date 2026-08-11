@@ -846,7 +846,7 @@ fragment Single_Character
 
 fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
-      '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
+      '\\e'  | '\\f' | '\\n'  | '\\r' | '\\t' | '\\v'
     ;
 
 fragment Hexadecimal_Escape_Sequence
@@ -854,7 +854,7 @@ fragment Hexadecimal_Escape_Sequence
     ;
 ```
 
-> *Note*: A character that follows a backslash character (`\`) in a *Character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
+> *Note*: A character that follows a backslash character (`\`) in a *Character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b``, `e`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -886,6 +886,7 @@ A simple escape sequence represents a Unicode character, as described in the tab
 | `\0`                | Null               | U+0000             |
 | `\a`                | Alert              | U+0007             |
 | `\b`                | Backspace          | U+0008             |
+| `\e`                | ESC                | U+001B             |
 | `\f`                | Form feed          | U+000C             |
 | `\n`                | New line           | U+000A             |
 | `\r`                | Carriage return    | U+000D             |
