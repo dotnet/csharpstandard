@@ -16,14 +16,17 @@ Attributes are defined through the declaration of attribute classes ([§23.2](at
 
 A class that derives from the abstract class `System.Attribute`, whether directly or indirectly, is an ***attribute class***. The declaration of an attribute class defines a new kind of attribute that can be placed on program entities. By convention, attribute classes are named with a suffix of `Attribute`. Uses of an attribute may either include or omit this suffix.
 
-A generic class declaration shall not use `System.Attribute` as a direct or indirect base class.
+An attribute class may be generic. When an *attribute_name* references a generic attribute class, each type argument is subject to the same restrictions that apply to a type argument of the `typeof` operator ([§12.8.18](expressions.md#12818-the-typeof-operator)); for example, `dynamic`, a tuple type with element names, a nullable reference type, `nint`, and `nuint` are not permitted as type arguments. (In addition, a type parameter of the surrounding declaration shall not be used as a type argument; see §8.5.)
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"GenericAttribute", ignoredWarnings:["CS0169"]} -->
 > ```csharp
-> public class B : Attribute {}
-> public class C<T> : B {} // Error – generic cannot be an attribute
+> using System;
+> public class Attr<T> : Attribute { } // OK – generic attribute class
+>
+> [Attr<int>]                           // OK
+> public class C1 { }
 > ```
 >
 > *end example*
@@ -60,6 +63,8 @@ The attribute `AttributeUsage` ([§23.5.2](attributes.md#2352-the-attributeusage
 > *end example*
 
 `AttributeUsage` has a named parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)), called `AllowMultiple`, which indicates whether the attribute can be specified more than once for a given entity. If `AllowMultiple` for an attribute class is true, then that attribute class is a ***multi-use attribute class***, and can be specified more than once on an entity. If `AllowMultiple` for an attribute class is false or it is unspecified, then that attribute class is a ***single-use attribute class***, and can be specified at most once on an entity.
+
+> *Note*: For a generic attribute class, multiplicity is determined by the unbound generic attribute class definition, not by individual closed constructions. Therefore, when `AllowMultiple` is false or unspecified, two attribute applications that differ only in their type arguments shall not both appear on the same entity. *end note*
 
 > *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
 >

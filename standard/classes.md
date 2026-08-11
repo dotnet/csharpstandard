@@ -247,7 +247,7 @@ The base class specified in a class declaration can be a constructed class type 
 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
-The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§23.2.1](attributes.md#2321-general)).
+The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type.
 
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself. Given this definition, the complete set of types upon which a class depends is the transitive closure of the *directly depends on* relationship.
 
