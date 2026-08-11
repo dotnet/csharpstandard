@@ -1512,14 +1512,14 @@ The following method names are reserved. While many have corresponding operators
 | `op_BitwiseAndAssignment` | (reserved) |
 | `op_BitwiseOr` | `\|` |
 | `op_BitwiseOrAssignment` | (reserved) |
-| `op_CheckedAddition` | (reserved for future use) |
-| `op_CheckedDecrement` | (reserved for future use) |
-| `op_CheckedDivision` | (reserved for future use) |
-| `op_CheckedExplicit` | (reserved for future use) |
-| `op_CheckedIncrement` | (reserved for future use) |
-| `op_CheckedMultiply` | (reserved for future use) |
-| `op_CheckedSubtraction` | (reserved for future use) |
-| `op_CheckedUnaryNegation` | (reserved for future use) |
+| `op_CheckedAddition` | checked addition `+` |
+| `op_CheckedDecrement` | checked decrement `--` |
+| `op_CheckedDivision` | checked division `/` |
+| `op_CheckedExplicit` | checked explicit (narrowing) coercion |
+| `op_CheckedIncrement` | checked increment `++` |
+| `op_CheckedMultiply` | checked multiply `*` |
+| `op_CheckedSubtraction` | checked subtraction `-` |
+| `op_CheckedUnaryNegation` | checked unary negation `-` |
 | `op_Comma` | (reserved) |
 | `op_Decrement` | `--` (prefix and postfix) |
 | `op_Division` | `/` |
@@ -4940,7 +4940,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
+    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -4949,13 +4949,13 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+      | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
     : 'implicit' 'operator' type '(' fixed_parameter ')'
-    | 'explicit' 'operator' type '(' fixed_parameter ')'
+    | 'explicit' 'operator' 'checked'? type '(' fixed_parameter ')'
     ;
 
 operator_body
@@ -4991,6 +4991,18 @@ Additional information on unary and binary operators can be found in [§12.4](e
 
 Additional information on conversion operators can be found in [§10.5](conversions.md#105-user-defined-conversions).
 
+An *operator_declaration* containing `checked` declares a ***checked operator***. For each checked operator declared in a type there shall be a corresponding declaration of a ***regular operator*** in that same type whose signature differs only by the absence of `checked`, and whose return type is the same.
+
+> *Note*: The opposite is not required. Specifically, an *operator_declaration* without `checked` need not have a matching checked operator. When this is the case, the operator is neither a checked operator nor a regular operator. *end note*
+
+It is suggested that a user-defined checked operator throw an exception (such as `System.OverflowException`) when the result of an operation is too large to represent in the destination type, whatever that might mean for that type.
+
+It is suggested that a user-defined regular operator not throw an exception when the result of an operation is too large to represent in the destination type, whatever that might mean for that type. Instead, it should return an instance representing a truncated result, whatever that might mean for that type.
+
+A checked operator does not implement a regular operator, and vice versa.
+
+The presence of `checked` in a checked operator declaration has no effect on the checked context of that operator’s *operator_body*. That is controlled by the `checked` and `unchecked` operators or statements present in that *operator_body*, or by the default checking context provided by the runtime environment.
+
 ### 15.10.2 Unary operators
 
 The following rules apply to unary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
@@ -5002,6 +5014,8 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.27](expressions.md#1227-boolean-expressions).
+
+> *Note*: A unary `++`, `--`, or `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
@@ -5054,6 +5068,8 @@ Certain binary operators require pair-wise declaration. For every declaration of
 - operator `==` and operator `!=`
 - operator `>` and operator `<`
 - operator `>=` and operator `<=`
+
+> *Note*: A binary `+`, `-`, `*`, or `/` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 ### 15.10.4 Conversion operators
 
@@ -5155,7 +5171,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 
 User-defined conversions are not allowed to convert from or to *interface_type*s. In particular, this restriction ensures that no user-defined transformations occur when converting to an *interface_type*, and that a conversion to an *interface_type* succeeds only if the `object` being converted actually implements the specified *interface_type*.
 
-The signature of a conversion operator consists of the source type and the target type. (This is the only form of member for which the return type participates in the signature.) The implicit or explicit classification of a conversion operator is not part of the operator’s signature. Thus, a class or struct cannot declare both an implicit and an explicit conversion operator with the same source and target types.
+The signature of a conversion operator consists of the source type and the target type. (This is the only form of member for which the return type participates in the signature.) To allow a type to have both checked and regular operators with the same source- and target-type combination, the signature of a checked conversion operator also includes the fact that it is checked. The implicit or explicit classification of a conversion operator is not part of the operator’s signature. Thus, a class or struct cannot declare both an implicit and an explicit conversion operator with the same source and target types. (This restriction applies to both regular and checked explicit conversion operators.)
 
 > *Note*: In general, user-defined implicit conversions should be designed to never throw exceptions and never lose information. If a user-defined conversion can give rise to exceptions (for example, because the source argument is out of range) or loss of information (such as discarding high-order bits), then that conversion should be defined as an explicit conversion. *end note*
 <!-- markdownlint-disable MD028 -->
