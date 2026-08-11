@@ -161,9 +161,9 @@ An implicit conversion exists from the `null` literal to any reference type or n
 The implicit reference conversions are:
 
 - A null literal conversion ([§10.2.7](conversions.md#1027-null-literal-conversions)) to any *reference_type*.
-- From any *reference_type* to `object` and `dynamic`.
-- From any *class_type* `S` to any *class_type* `T`, provided `S` is derived from `T`.
-- From any *class_type* `S` to any *interface_type* `T`, provided `S` implements `T`.
+- From any *reference_type* to `object` and `dynamic`. A warning shall be issued when *reference_type* is `System.Threading.Lock`.
+- From any *class_type* `S` to any *class_type* `T`, provided `S` is derived from `T`. A warning shall be issued when `S` is `System.Threading.Lock`.
+- From any *class_type* `S` to any *interface_type* `T`, provided `S` implements `T`. A warning shall be issued when `S` is `System.Threading.Lock`.
 - From any *interface_type* `S` to any *interface_type* `T`, provided `S` is derived from `T`.
 - From an *array_type* `S` with an element type `Sᵢ` to an *array_type* `T` with an element type `Tᵢ`, provided all of the following are true:
   - `S` and `T` differ only in element type. In other words, `S` and `T` have the same number of dimensions.
