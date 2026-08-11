@@ -5912,6 +5912,80 @@ If the return type of the async function is `void`, evaluation differs from the 
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
 
+Rather than using a task builder type based on the *return_type* of an async function, the attribute `AsyncMethodBuilder` can be applied to that async function to indicate a different task builder type.
+
+It is an error to apply this attribute to a lambda with an implicit return type.
+
+The ability to provide an alternate builder type shall not be used when the synthesized entry-point for top-level statements is async (§7.1.3). For that, an explicit entry-point is needed.
+
+When an async function is compiled, the builder type is determined by:
+
+1. Using the builder type from the `AsyncMethodBuilder` attribute, if one is present;
+1. Otherwise, falling back to the builder type determined by the async function's *return_type* (§15.14.2).
+
+If an `AsyncMethodBuilder` attribute is present, the builder type specified by that attribute is constructed, if necessary.
+
+If the override type is an open generic type, take the single type argument of the async function's return type and substitute it into the override type.
+
+If the override type is a bound generic type, then an error results.
+
+If the async function's return type does not have a single type argument, an error results.
+
+To verify that the builder type is compatible with *return_type* of the async function:
+
+1. Look for the public `Create` method with no type parameters and no parameters on the constructed builder type. It is an error if the method is not found, or if the method returns a type other than the constructed builder type.
+1. Look for the public `Task` property. It is an error if the property is not found.
+1. Consider the type of that `Task` property (a task-like type). It is an error if the task-like type does not match the *return_type* of the async function. (It is not necessary for *return_type* to be a task-like type.)
+
+> *Example*: Consider the following code fragment:
+>
+> ```csharp
+> public async ValueTask<int> ExampleAsync() { … }
+> ```
+>
+> This will be compiled to something like the following:
+>
+> ```csharp
+> [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
+> [CompilerGenerated]
+> static ValueTask<int> ExampleAsync()
+> {
+>     <ExampleAsync>d__29 stateMachine;
+>     stateMachine.<>t__builder 
+>         = AsyncValueTaskMethodBuilder<int>.Create();
+>     stateMachine.<>1__state = -1;
+>     stateMachine.<>t__builder.Start(ref stateMachine);
+>     return stateMachine.<>t__builder.Task;
+> }
+> ```
+>
+> However, the following code fragment:
+>
+> ```csharp
+> [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
+> static async ValueTask<int> ExampleAsync() { … }
+> ```
+>
+> in which the attribute `AsyncMethodBuilder` is applied to that async function, would instead be compiled to something like:
+>
+> ```csharp
+> [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
+> [CompilerGenerated]
+> [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
+> static ValueTask<int> ExampleAsync()
+> {
+>     <ExampleAsync>d__29 stateMachine;
+>     stateMachine.<>t__builder 
+>         = PoolingAsyncValueTaskMethodBuilder<int>.Create();
+>         // <>t__builder now a different type
+>     stateMachine.<>1__state = -1;
+>     stateMachine.<>t__builder.Start(ref stateMachine);
+>     return stateMachine.<>t__builder.Task;
+> }
+> ```
+>
+> *end example*
+
 ## 15.15 Synchronous and asynchronous iterators
 
 ### 15.15.1 General
