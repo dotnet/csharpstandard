@@ -972,6 +972,14 @@ namespace System.Runtime.CompilerServices
         public ModuleInitializerAttribute() { }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Constructor
+    | System.AttributeTargets.Method | System.AttributeTargets.Property,
+      AllowMultiple=false, Inherited=false)]
+    public sealed class OverloadResolutionPriorityAttribute : Attribute
+    {
+        public OverloadResolutionPriorityAttribute(int priority) {}
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Class |
       System.AttributeTargets.Field | System.AttributeTargets.Property |
       System.AttributeTargets.Struct, AllowMultiple=false, Inherited=false)]
@@ -1553,6 +1561,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`
 - `global::System.Runtime.CompilerServices.ITuple`
 - `global::System.Runtime.CompilerServices.ModuleInitializerAttribute`
+- `global::System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute`
 - `global::System.Runtime.CompilerServices.RequiredMemberAttribute`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
 - `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
