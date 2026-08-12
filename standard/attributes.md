@@ -1615,31 +1615,31 @@ A library author might use this attribute to ensure that a new, better overload 
 > Certain uses of this attribute can make a member uncallable, as follows:
 >
 > ```csharp
-class Program
-{
-    static void Main()
-    {
-        var c = new C();
-        c.M1(1); // Calls C3.M1(long), not M1(int)
-        c.M2(1); // Calls C3.M2(int, string), not M2(int)
-        c.M3("abc"); // Calls C3.M3(object), not M3(string)
-    }
-}
-class C
-{
-    public void M1(int i) { }
-    [OverloadResolutionPriority(1)]
-    public void M1(long l) { }
-
-    [Conditional("DEBUG")]
-    public void M2(int i) { }
-    [OverloadResolutionPriority(1), Conditional("DEBUG")]
-    public void M2(int i, [CallerArgumentExpression(nameof(i))] string s = "") { }
-
-    public void M3(string s) { }
-    [OverloadResolutionPriority(1)]
-    public void M3(object o) { }
-}
+> class Program
+> {
+>     static void Main()
+>     {
+>         var c = new C();
+>         c.M1(1); // Calls C3.M1(long), not M1(int)
+>         c.M2(1); // Calls C3.M2(int, string), not M2(int)
+>         c.M3("abc"); // Calls C3.M3(object), not M3(string)
+>     }
+> }
+> class C
+> {
+>     public void M1(int i) { }
+>     [OverloadResolutionPriority(1)]
+>     public void M1(long l) { }
+>
+>     [Conditional("DEBUG")]
+>     public void M2(int i) { }
+>     [OverloadResolutionPriority(1), Conditional("DEBUG")]
+>     public void M2(int i, [CallerArgumentExpression(nameof(i))] string s = "") { }
+>
+>     public void M3(string s) { }
+>     [OverloadResolutionPriority(1)]
+>     public void M3(object o) { }
+> }
 > ```
 > *end example*
 
