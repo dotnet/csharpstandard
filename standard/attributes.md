@@ -1641,6 +1641,7 @@ A library author might use this attribute to ensure that a new, better overload 
 >     public void M3(object o) { }
 > }
 > ```
+>
 > *end example*
 
 ## 23.6 Attributes for interoperation
