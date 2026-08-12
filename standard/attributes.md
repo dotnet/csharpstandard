@@ -508,6 +508,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)) and `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
 - `System.Runtime.CompilerServices.CollectionBuilderAttribute` ([§23.5.12](attributes.md#23512-the-collectionbuilder-attribute)), which designates a collection type as having a collection-creation method.
 - `System.Runtime.CompilerServices.InlineArrayAttribute` ([§23.5.13](attributes.md#23513-the-inlinearray-attribute)), which marks a struct type as an inline array type ([§16.6](structs.md#166-inline-arrays)).
+- `System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute` (§OvrldResPriAttribute), which specifies the priority of a member during overload resolution.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1579,6 +1580,65 @@ The builder type shall be a non-generic class or struct.
 ### 23.5.13 The InlineArray attribute
 
 The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see [§16.6](structs.md#166-inline-arrays).
+
+###  §OvrldResPriAttribute The OverloadResolutionPriority attribute
+
+The attribute `OverloadResolutionPriority` is used to specify the priority of a member during overload resolution, as an `int` argument to the constructor. The absence of this attribute is equivalent to its presence with an argument of `0`. The higher the number, the higher the priority. All overloads with a lower priority than the highest overload priority are removed from the set of applicable matches.
+
+A library author might use this attribute to ensure that a new, better overload is preferred over an existing one, to reduce memory allocation, for example. This attribute informs the compiler which overload should be preferred.
+
+> <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority1", expectedOutput:["Span"]} -->
+> *Example*: Consider the following:
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         var c = new C();
+>         int[] arr = [1, 2, 3];
+>         c.M(arr);   // Prints "Span"
+>     }
+> }
+> class C
+> {
+>     [OverloadResolutionPriority(1)]
+>     public void M(params ReadOnlySpan<int> s) => Console.WriteLine("Span");
+>     public void M(params int[] a) => Console.WriteLine("Array");
+> }
+> ```
+>
+> The second method has an implicit priority of zero, and in the absence of the explicit attribute, the second of the overloads would be invoked. However, with the attribute present, the first is invoked instead.
+>
+> <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority2"} -->
+> Certain uses of this attribute can make a member uncallable, as follows:
+> ```csharp
+class Program
+{
+    static void Main()
+    {
+        var c = new C();
+        c.M1(1); // Calls C3.M1(long), not M1(int)
+        c.M2(1); // Calls C3.M2(int, string), not M2(int)
+        c.M3("abc"); // Calls C3.M3(object), not M3(string)
+    }
+}
+class C
+{
+    public void M1(int i) { }
+    [OverloadResolutionPriority(1)]
+    public void M1(long l) { }
+
+    [Conditional("DEBUG")]
+    public void M2(int i) { }
+    [OverloadResolutionPriority(1), Conditional("DEBUG")]
+    public void M2(int i, [CallerArgumentExpression(nameof(i))] string s = "") { }
+
+    public void M3(string s) { }
+    [OverloadResolutionPriority(1)]
+    public void M3(object o) { }
+}
+> ```
+> *end example*
 
 ## 23.6 Attributes for interoperation
 
