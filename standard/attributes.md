@@ -1577,11 +1577,12 @@ The constructor takes a builder type and the name of the method to be invoked to
 The attribute can be applied to a class, struct, ref struct, or interface. The attribute is not inherited although it can be applied to a base class or an abstract class.
 
 The builder type shall be a non-generic class or struct.
+
 ### 23.5.13 The InlineArray attribute
 
 The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see [§16.6](structs.md#166-inline-arrays).
 
-###  §OvrldResPriAttribute The OverloadResolutionPriority attribute
+### §OvrldResPriAttribute The OverloadResolutionPriority attribute
 
 The attribute `OverloadResolutionPriority` is used to specify the priority of a member during overload resolution, as an `int` argument to the constructor. The absence of this attribute is equivalent to its presence with an argument of `0`. The higher the number, the higher the priority. All overloads with a lower priority than the highest overload priority are removed from the set of applicable matches.
 
@@ -1589,6 +1590,7 @@ A library author might use this attribute to ensure that a new, better overload 
 
 > <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority1", expectedOutput:["Span"]} -->
 > *Example*: Consider the following:
+>
 > ```csharp
 > class Program
 > {
@@ -1611,6 +1613,7 @@ A library author might use this attribute to ensure that a new, better overload 
 >
 > <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority2"} -->
 > Certain uses of this attribute can make a member uncallable, as follows:
+>
 > ```csharp
 class Program
 {
