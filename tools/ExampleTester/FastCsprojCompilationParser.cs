@@ -45,10 +45,12 @@ public static class FastCsprojCompilationParser
         new("net7.0", new(Basic.Reference.Assemblies.Net70.References.All, LanguageVersion.CSharp11, DefaultWarningLevel: 7)),
         new("net8.0", new(Basic.Reference.Assemblies.Net80.References.All, LanguageVersion.CSharp12, DefaultWarningLevel: 8)),
         new("net9.0", new(Basic.Reference.Assemblies.Net90.References.All, LanguageVersion.CSharp13, DefaultWarningLevel: 9)),
+        new("net10.0", new(Basic.Reference.Assemblies.Net100.References.All, LanguageVersion.CSharp14, DefaultWarningLevel: 10)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
     private static readonly CSharpParseOptions DefaultParseOptions = new(preprocessorSymbols: [
-        "TRACE", "RELEASE", "NET", "NET6_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
+        "TRACE", "RELEASE", "NET", "NET9_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
+        "NET7_0_OR_GREATER","NET8_0_OR_GREATER","NET9_0_OR_GREATER",
         "NETCOREAPP1_0_OR_GREATER", "NETCOREAPP1_1_OR_GREATER", "NETCOREAPP2_0_OR_GREATER",
         "NETCOREAPP2_1_OR_GREATER",  "NETCOREAPP2_2_OR_GREATER", "NETCOREAPP3_0_OR_GREATER",
         "NETCOREAPP3_1_OR_GREATER"]);

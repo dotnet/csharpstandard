@@ -93,7 +93,7 @@ public static class FastCsprojCompilationParserTests
         result.CompilationOptions.NullableContextOptions.ShouldBe(NullableContextOptions.Disable);
         result.AssemblyName.ShouldBe(Path.GetFileNameWithoutExtension(CsprojFileName));
         result.CompilationOptions.AllowUnsafe.ShouldBeFalse();
-        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp10); // Due to net6.0
+        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp13); // Due to net9.0
         result.CompilationOptions.WarningLevel.ShouldBe(9); // Due to net9.0
         result.GeneratedSources.ShouldBeEmpty();
     }
