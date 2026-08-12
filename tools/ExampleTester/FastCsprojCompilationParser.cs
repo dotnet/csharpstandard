@@ -39,6 +39,9 @@ public static class FastCsprojCompilationParser
         LanguageVersion DefaultLanguageVersion,
         int DefaultWarningLevel);
 
+
+    // When we add new rows here, we need to add the corresponding NuGet package to ExampleTester.csproj. These packages provide the information used
+    // for the reference assemblies.
     private static readonly FrozenDictionary<string, TargetFrameworkInfo> SupportedTargetFrameworks = new KeyValuePair<string, TargetFrameworkInfo>[]
     {
         new("net6.0", new(Basic.Reference.Assemblies.Net60.References.All, LanguageVersion.CSharp10, DefaultWarningLevel: 6)),
@@ -48,6 +51,8 @@ public static class FastCsprojCompilationParser
         new("net10.0", new(Basic.Reference.Assemblies.Net100.References.All, LanguageVersion.CSharp14, DefaultWarningLevel: 10)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+    // When we add new versions, this list changes. You'll need to change the current release from ".NET9_0",
+    // and add necessary "NET?_0_OR_GREATER" symbols.
     private static readonly CSharpParseOptions DefaultParseOptions = new(preprocessorSymbols: [
         "TRACE", "RELEASE", "NET", "NET9_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
         "NET7_0_OR_GREATER","NET8_0_OR_GREATER","NET9_0_OR_GREATER",
