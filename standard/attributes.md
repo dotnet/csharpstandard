@@ -1576,6 +1576,7 @@ The constructor takes a builder type and the name of the method to be invoked to
 The attribute can be applied to a class, struct, ref struct, or interface. The attribute is not inherited although it can be applied to a base class or an abstract class.
 
 The builder type shall be a non-generic class or struct.
+
 ### 23.5.13 The InlineArray attribute
 
 The attribute `InlineArray` is used to identify a non-record struct as an inline array type. For further information and examples of its use, see [§16.6](structs.md#166-inline-arrays).
