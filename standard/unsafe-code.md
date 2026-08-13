@@ -767,6 +767,8 @@ An implicit conversion exists from a *unary_expression* whose target is a method
 - The selected method `M` shall be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
 - The result of the conversion is a function pointer of type `F`.
 
+In an iterator, it is a compile-time error to take the address of a local or a parameter.
+
 ### 24.6.6 Pointer increment and decrement
 
 In an unsafe context, the `++` and `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types It is a compile-time error for these operators to be applied to variables of type *funcptr_type* or *voidptr_type*. Thus, for every data pointer type `T*`, the following operators are implicitly defined:
