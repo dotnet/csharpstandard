@@ -669,13 +669,13 @@ class C<T, S>
 {}
 ```
 
-Given `where T : allows ref struct`, `T` shall not 
+Given `where T : allows ref struct`, `T` shall not
 
 - Also be constrained to a known reference type
 - Also be constrained with `class` or `class?`
 - Be used as a generic argument unless the corresponding parameter also has the anti-constraint
 
-It is a compile-time error to invoke a non-virtual instance method (or property) on a type parameter with `allows ref struct`. 
+It is a compile-time error to invoke a non-virtual instance method (or property) on a type parameter with `allows ref struct`.
 
 > *Example*: The following are examples of constraints:
 >
