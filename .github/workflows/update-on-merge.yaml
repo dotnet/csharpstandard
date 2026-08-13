@@ -65,7 +65,7 @@ jobs:
       with:
         title: "Automated Section renumber and grammar extraction"
         body: "renumber sections. Add grammar"
-        branch: ${{ github.ref_name }}-renumber-sections-and-grammar
+        branch: renumber-sections-and-grammar-${{ github.ref_name }}
 
     - name: Run converter
       id: run-converter
