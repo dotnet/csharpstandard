@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <EnableDefaultItems>false</EnableDefaultItems>
     <NoWarn>CS0169</NoWarn>
     <Nullable>annotations</Nullable>
-    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

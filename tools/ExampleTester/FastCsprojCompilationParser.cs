@@ -39,13 +39,23 @@ public static class FastCsprojCompilationParser
         LanguageVersion DefaultLanguageVersion,
         int DefaultWarningLevel);
 
+
+    // When we add new rows here, we need to add the corresponding NuGet package to ExampleTester.csproj. These packages provide the information used
+    // for the reference assemblies.
     private static readonly FrozenDictionary<string, TargetFrameworkInfo> SupportedTargetFrameworks = new KeyValuePair<string, TargetFrameworkInfo>[]
     {
         new("net6.0", new(Basic.Reference.Assemblies.Net60.References.All, LanguageVersion.CSharp10, DefaultWarningLevel: 6)),
+        new("net7.0", new(Basic.Reference.Assemblies.Net70.References.All, LanguageVersion.CSharp11, DefaultWarningLevel: 7)),
+        new("net8.0", new(Basic.Reference.Assemblies.Net80.References.All, LanguageVersion.CSharp12, DefaultWarningLevel: 8)),
+        new("net9.0", new(Basic.Reference.Assemblies.Net90.References.All, LanguageVersion.CSharp13, DefaultWarningLevel: 9)),
+        new("net10.0", new(Basic.Reference.Assemblies.Net100.References.All, LanguageVersion.CSharp14, DefaultWarningLevel: 10)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+    // When we add new versions, this list changes. You'll need to change the current release from "NET9_0",
+    // and add necessary "NET?_0_OR_GREATER" symbols.
     private static readonly CSharpParseOptions DefaultParseOptions = new(preprocessorSymbols: [
-        "TRACE", "RELEASE", "NET", "NET6_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
+        "TRACE", "RELEASE", "NET", "NET9_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
+        "NET7_0_OR_GREATER","NET8_0_OR_GREATER","NET9_0_OR_GREATER",
         "NETCOREAPP1_0_OR_GREATER", "NETCOREAPP1_1_OR_GREATER", "NETCOREAPP2_0_OR_GREATER",
         "NETCOREAPP2_1_OR_GREATER",  "NETCOREAPP2_2_OR_GREATER", "NETCOREAPP3_0_OR_GREATER",
         "NETCOREAPP3_1_OR_GREATER"]);
@@ -58,7 +68,8 @@ public static class FastCsprojCompilationParser
             new("NU1605", ReportDiagnostic.Error),
             new("CS1702", ReportDiagnostic.Suppress),
             new("CS1701", ReportDiagnostic.Suppress),
-            new("CS8002", ReportDiagnostic.Suppress)]);
+            new("CS8002", ReportDiagnostic.Suppress),
+            new("SYSLIB0011", ReportDiagnostic.Error)]);
 
     public static CsprojParseResult ParseCsproj(XDocument csprojDocument, string filePath)
     {
