@@ -51,7 +51,7 @@ public static class FastCsprojCompilationParser
         new("net10.0", new(Basic.Reference.Assemblies.Net100.References.All, LanguageVersion.CSharp14, DefaultWarningLevel: 10)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
-    // When we add new versions, this list changes. You'll need to change the current release from ".NET9_0",
+    // When we add new versions, this list changes. You'll need to change the current release from "NET9_0",
     // and add necessary "NET?_0_OR_GREATER" symbols.
     private static readonly CSharpParseOptions DefaultParseOptions = new(preprocessorSymbols: [
         "TRACE", "RELEASE", "NET", "NET9_0", "NETCOREAPP", "NET5_0_OR_GREATER", "NET6_0_OR_GREATER",
