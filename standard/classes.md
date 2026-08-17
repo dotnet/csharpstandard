@@ -2769,7 +2769,10 @@ A compile-time error occurs unless all of the following are true for an override
 - A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method's signature, where `T` is a type parameter, is interpreted as follows:
   - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
   - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
-  - If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
+  - If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
+    - If `T` is substituted with a reference type `C`, `T?` represents the nullable reference type `C?`.
+    - If `T` is substituted with an already-annotated reference type `C?`, `T?` represents `C?`, not `C??`.
+    - If `T` is substituted with a value type, `T?` represents `T` itself, not `Nullable<T>`.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
