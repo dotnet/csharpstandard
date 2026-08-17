@@ -853,9 +853,9 @@ It is not possible to access an explicit interface member implementation through
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
-An explicit interface method implementation inherits any type parameter constraints from the interface.
+An explicit interface member implementation inherits any type parameter constraints from the interface.
 
-A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
+A *type_parameter_constraints_clause* on an explicit interface member implementation may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the signature of the explicit interface member implementation, where `T` is a type parameter, is interpreted as follows:
 
 - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
 - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
