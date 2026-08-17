@@ -38,6 +38,8 @@ pattern
 
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
+> *Note*: ANTLR makes the specified choice automatically due to the ordering of *constant_pattern* before *positional_pattern* in the alternatives of *pattern*. *end note*
+
 Some *pattern*s can result in the declaration of a local variable.
 
 Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is a compile-time error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
@@ -139,6 +141,53 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 A *declaration_pattern* cannot be used to test that a value has a type named `var` unless that type is referenced using an identifier containing a unicode character escape sequence ([§6.4.2](lexical-structure.md#642-unicode-character-escape-sequences)) or represented by an *Escaped_Identifier* ([§6.4.3](lexical-structure.md#643-identifiers)).
 
+> *Example*: Given a type named `var`, the following illustrates the distinction between is-type syntax, an erroneous pattern, and valid *declaration_pattern* spellings.
+>
+> The `is var` construct (no designation) is the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)) and tests whether the operand's runtime type is `var`:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"VarTypeName1", ignoredWarnings:["CS8981"]} -->
+> ```csharp
+> #pragma warning disable CS8981
+> class var { }
+> class C
+> {
+>     static bool M(object o) => o is var; // is-type check; o is var (the type)
+> }
+> ```
+>
+> Writing `is var y` as a pattern is a compile-time error when a type named `var` is in scope:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"VarTypeName2", expectedErrors:["CS8508"], ignoredWarnings:["CS8981"]} -->
+> ```csharp
+> #pragma warning disable CS8981
+> class var { }
+> class C
+> {
+>     static void M(object o)
+>     {
+>         if (o is var y) { } // error CS8508: 'var' refers to the in-scope type
+>     }
+> }
+> ```
+>
+> Using an *Escaped_Identifier* (`@var`) or a unicode-escape spelling (`v\u0061r`) as the type in a *declaration_pattern* is valid and matches only instances of the type named `var`:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"VarTypeName3", ignoredWarnings:["CS8981"]} -->
+> ```csharp
+> #pragma warning disable CS8981
+> class var { }
+> class C
+> {
+>     static void M(object o)
+>     {
+>         if (o is @var y) { }    // declaration_pattern; matches instances of type 'var'
+>         if (o is v\u0061r z) { } // declaration_pattern; same type, unicode-escape spelling
+>     }
+> }
+> ```
+>
+> *end example*
+
 The *type* of a *declaration_pattern* cannot be `dynamic`.
 
 It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
@@ -192,6 +241,8 @@ A *var_pattern* is *applicable to* every type.
 
 A *var_pattern* cannot be used when there is an in-scope type named `var`.
 
+> *Note*: An escaped identifier such as `@var` or a unicode-escape spelling such as `v\u0061r` names the in-scope type in a *declaration_pattern* but does not spell the contextual `var` token of a *var_pattern*. The patterns `@var y` and `v\u0061r y` are therefore *declaration_pattern*s ([§11.2.2](patterns.md#1122-declaration-pattern)) that match only values whose runtime type is compatible with the in-scope type named `var`. *end note*
+
 ```ANTLR
 var_pattern
     : 'var' designation
@@ -231,7 +282,7 @@ subpattern
     ;
 ```
 
-Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstruction declaration.
+Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: A tuple literal can be matched by patterns of several different forms, which are not interchangeable:
@@ -246,7 +297,7 @@ If the input can be syntactically recognised as both a *constant_pattern* and a 
 In order to extract the values to match against the patterns in the list,
 
 1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
-2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstruction declaration, with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.2](patterns.md#1122-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
 3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
 4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
 
