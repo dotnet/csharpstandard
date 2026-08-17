@@ -70,16 +70,6 @@ Each pattern form defines the set of values for which the pattern *matches* the 
 
 The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
 
-The token `var` in a *pattern* is recognised as the contextual keyword of a *var_pattern* ([§11.2.4](patterns.md#1124-var-pattern)) only in the form `var` *designation*. The verbatim identifier `@var` and Unicode-escaped spellings of `var` are never recognised as the contextual keyword of a *var_pattern*; they are ordinary identifiers denoting whatever entity is in scope. A pattern that uses such a spelling is therefore interpreted as a *declaration_pattern*, *constant_pattern*, or other pattern form according to the entity that the identifier denotes.
-
-When a declaration of the *identifier* `var` is in scope, the following rules apply:
-
-- If `var` denotes a type, then the plain token `var` cannot be used as the *type* of a *declaration_pattern*; that type shall be named another way, such as by the verbatim identifier `@var`.
-- If `var` denotes a constant, then `var` may be the *constant_expression* of a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern)).
-- Otherwise (for example, when `var` denotes a namespace, field, property, local variable, parameter, or any other entity that is neither a type nor a constant), `var` is not valid as the first token of a *pattern* unless it is used in the form `var` *designation*.
-
-<!-- C# 9 update marker: the committee's empirical testing shows that in C# 8, when `var` names a type, `o is (var)` and `o is (@var)` fail CS8400 because type patterns are not available; in C# 9 they bind as *type_pattern*s and are valid. Draft-v9 should update this boundary for type patterns and parenthesized patterns, while preserving that bare `is T` and pattern `is (T)` are distinct grammar/binding paths. -->
-
 ### 11.2.3 Constant pattern
 
 A *constant_pattern* is used to test the value of a pattern input value ([§11.1](patterns.md#111-general)) against the given constant value.
@@ -89,8 +79,6 @@ constant_pattern
     : constant_expression
     ;
 ```
-
-When a declaration of the *identifier* `var` in scope resolves to a constant, `var` may appear as the *constant_expression* of a *constant_pattern*; the general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
 
 A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
 
@@ -149,9 +137,9 @@ When recognising a *simple_designation* if both the *discard_designation* and *s
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *simple_designation*. *end note*
 
-When a declaration of the *identifier* `var` in scope resolves to a type, the plain token `var` cannot appear as the *type* of a *declaration_pattern*; that type shall be named another way, such as by the verbatim identifier `@var`. The general rule for the *identifier* `var` in patterns is specified in [§11.2.1](patterns.md#1121-general).
+A *declaration_pattern* cannot be used to test that a value has a type named `var` unless that type is referenced using an identifier containing a unicode character escape sequence ([§6.4.2](lexical-structure.md#642-unicode-character-escape-sequences)) or represented by an *Escaped_Identifier* ([§6.4.3](lexical-structure.md#643-identifiers)).
 
-The *type* of a *declaration_pattern* cannot be `dynamic`, because the runtime type test is defined in terms of the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)), which does not permit `dynamic`.
+The *type* of a *declaration_pattern* cannot be `dynamic`.
 
 It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
 
@@ -202,7 +190,7 @@ A *var_pattern* *matches* every value. That is, a pattern-matching operation wit
 
 A *var_pattern* is *applicable to* every type.
 
-A *var_pattern* cannot be used when the plain token `var` would refer to an in-scope type named `var`. See [§11.2.1](patterns.md#1121-general) for the interpretation of `var` when it is the first token of a *pattern* in that case.
+A *var_pattern* cannot be used when there is an in-scope type named `var`.
 
 ```ANTLR
 var_pattern
@@ -244,7 +232,7 @@ subpattern
 ```
 
 Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstruction declaration.
-It is an error if a *positional_pattern* omits the type, has a single *subpattern* without an *identifier*, has no *property_subpattern* and has no *simple_designation*. This disambiguates between a *constant_pattern* that is parenthesized and a *positional_pattern*.
+If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: A tuple literal can be matched by patterns of several different forms, which are not interchangeable:
 >
