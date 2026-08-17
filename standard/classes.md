@@ -434,7 +434,7 @@ A primary constraint can be a class type, the ***reference type constraint*** `c
 
 It is a compile-time error to use a `default` constraint other than on a method override or explicit interface member implementation. It is a compile-time error to use a `default` constraint when the corresponding type parameter in the overridden or interface method is constrained to a reference type or non-nullable value type.
 
-> *Note*: A class type constraint such as `where T : Stream` constrains the type parameter to a reference type; the `default` constraint may not be used when such a constraint is inherited. *end note*
+> *Note*: A class type constraint such as `where T : Stream` constrains the type parameter to a reference type; the `default` constraint may not be used with such a constraint. *end note*
 
 A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the *nullable_type_annotation* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
