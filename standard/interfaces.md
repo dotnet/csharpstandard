@@ -859,7 +859,10 @@ A *type_parameter_constraints_clause* on an explicit interface member implementa
 
 - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
 - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
-- If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
+- If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
+  - If `T` is substituted with a reference type `C`, `T?` represents the nullable reference type `C?`.
+  - If `T` is substituted with an already-annotated reference type `C?`, `T?` represents `C?`, not `C??`.
+  - If `T` is substituted with a value type, `T?` represents `T` itself, not `Nullable<T>`.
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >
