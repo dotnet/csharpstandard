@@ -409,6 +409,7 @@ primary_constraint
     | 'struct'
     | 'notnull'
     | 'unmanaged'
+    | 'default'
     ;
 
 secondary_constraint
@@ -429,7 +430,11 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_annotation*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull`, the ***unmanaged type constraint*** `unmanaged`, or `default`. The class type and the reference type constraint can include the *nullable_type_annotation*.
+
+It is a compile-time error to use a `default` constraint other than on a method override or explicit interface member implementation. It is a compile-time error to use a `default` constraint when the corresponding type parameter in the overridden or interface method is constrained to a reference type or non-nullable value type.
+
+> *Note*: A class type constraint such as `where T : Stream` constrains the type parameter to a reference type; the `default` constraint may not be used with such a constraint. *end note*
 
 A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the *nullable_type_annotation* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
@@ -444,12 +449,14 @@ The nullability of the type argument need not match the nullability of the type 
 
 > *Note*: To specify that a type argument is a nullable reference type, do not add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
-<!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
-The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
+Except when a type parameter is explicitly constrained to value types, the nullable type annotation `?` can only be applied to a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive)).
 
-<!-- Add in C# 9, when `?` is allowed on nullable reference type parameters. -->
-<!-- For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`. -->
+For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
+> *Note*: On a type parameter, a return type `T?` has the same nullability effect as `[MaybeNull] T`, and a parameter type `T?` has the same nullability effect as `[AllowNull] T`. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"RepeatedNullable"} -->
@@ -533,6 +540,8 @@ The value type constraint specifies that a type argument used for the type param
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
+
+The `default` constraint may be used for a type parameter whose inherited constraints do not establish it as a reference type or a value type; its effect on `T?` in override methods and explicit interface member implementations is specified in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations).
 
 Pointer types are never allowed to be type arguments, and do not satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
@@ -2165,7 +2174,7 @@ The *ref_return_type* of a returns-by-ref method declaration specifies the type 
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
-A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class` and `struct`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
+A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class`, `struct`, and `default`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
@@ -2757,9 +2766,13 @@ A compile-time error occurs unless all of the following are true for an override
 - The overridden base method is not a sealed method.
 - There is an identity conversion between the return type of the overridden base method and the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- A *type_parameter_constraints_clause* may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
-  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-  - If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
+- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method's signature, where `T` is a type parameter, is interpreted as follows:
+  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
+  - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
+  - If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
+    - If `T` is substituted with a reference type `C`, `T?` represents the nullable reference type `C?`.
+    - If `T` is substituted with an already-annotated reference type `C?`, `T?` represents `C?`, not `C??`.
+    - If `T` is substituted with a value type, `T?` represents `T` itself, not `Nullable<T>`.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
@@ -2809,6 +2822,28 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the `default` constraint works when overriding a method with an unconstrained type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods6"} -->
+> ```csharp
+> #nullable enable
+> class A2
+> {
+>     public virtual void F2<T>(T? t) where T : struct { }
+>     public virtual void F2<T>(T? t) { }
+> }
+>
+> class B2 : A2
+> {
+>     public override void F2<T>(T? t) /*where T : struct*/ { }
+>     public override void F2<T>(T? t) where T : default { }
+> }
+> ```
+>
+> The `default` constraint on `B2.F2` is required to override the unconstrained `A2.F2` with a `T?` parameter. Without it, `T?` in the second override would be interpreted as a nullable value type, so the declaration would not override the unconstrained `A2.F2`. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
