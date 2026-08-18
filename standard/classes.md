@@ -816,7 +816,7 @@ The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{�
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations (§partial-properties), and partial indexer declarations (§partial-indexers)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -3473,8 +3473,8 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifier* type member_name property_body
-    | attributes? property_modifier* ref_kind type member_name ref_property_body
+    : attributes? property_modifier* 'partial'? type member_name property_body
+    | attributes? property_modifier* 'partial'? ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -3511,7 +3511,7 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.11](structs.md#16611-properties)).
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.11](structs.md#16611-properties)). However, a partial property (§partial-properties) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
@@ -4155,7 +4155,7 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 
@@ -4492,6 +4492,93 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 >
 > *end example*
 
+### §partial-properties Partial properties
+
+When a *property_declaration* includes `partial`, that property is said to be a ***partial property***. Partial properties may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+
+Partial properties may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
+
+There are two kinds of partial property declarations: If the body of each of the property’s accessors is a semicolon and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
+
+*Note*: As the syntactic form of a property with semicolon accessor bodies is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
+
+Partial properties are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialProperties1"} -->
+> ```csharp
+> // part containing defining partial declarations
+> public partial class C
+> {
+>     public partial string Prop1 { get; set; }
+>     public virtual partial string Prop2 { get; set; }
+> }
+> 
+> // part containing implementing partial declarations
+> public partial class C
+> {
+>     private string _field = "";
+>
+>     public partial string Prop1 { get => _field; set => _field = value; }
+>     virtual public partial string Prop2 { set => _field = value; get => _field; }
+> }
+> ```
+>
+> *end example*
+
+Across the parts of a type declaration, there shall be only one defining partial property declaration with a given signature, and there shall be only one implementing partial property declaration with a given signature.
+
+The signature-matching requirements are as follows:
+
+1. Type and ref-kind differences between partial property declarations result in a compile-time error.
+1. Differences in tuple element names within partial property declarations result in a compile-time error.
+1. The property declarations and their accessor declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration. In the case of private accessibility on the property, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`. Likewise, the corresponding accessors shall have the same implicit or same explicit accessibilities.
+1. All other syntactic differences in the signatures of partial property declarations result in a compile-time warning, with the following exceptions:
+
+- Attribute lists on or within partial property declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
+- Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
+
+1. Nullability differences that do not involve oblivious nullability result in warnings. When analyzing an accessor body, the implementation part signature is used. The definition part signature is used when analyzing use sites.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialProperties2", expectedErrors:["CS8799", "CS9254", "CS9253"]} -->
+> ```csharp
+> partial class C1
+> {
+>     private string _field;
+>     public partial string Prop { get; private set; }
+> 
+>     // Error: implementation set accessor modifier mismatch
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+>
+> partial class C2
+> {
+>     private string _field;
+>     public partial string Prop { get; init; }
+>
+>     // Error: implementation of 'Prop' must have an init accessor
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+>
+> partial class C3
+> {
+>     private string _field;
+>     public partial string Prop { get; }
+>
+>     // Error: implementation of 'Prop' cannot have a set accessor
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+> ```
+>
+> *end example*
+
+In *property_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the property’s type. A partial property cannot explicitly implement interface properties.
+
+Only a defining partial property participates in lookup.
+
 ## 15.8 Events
 
 ### 15.8.1 General
@@ -4785,8 +4872,8 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 
 ```ANTLR
 indexer_declaration
-    : attributes? indexer_modifier* indexer_declarator indexer_body
-    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
+    : attributes? indexer_modifier* 'partial'? indexer_declarator indexer_body
+    | attributes? indexer_modifier* 'partial'? ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
@@ -4822,7 +4909,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)). However, a partial indexer (§partial-indexers) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5006,6 +5093,60 @@ Indexers and properties are very similar in concept, but differ in the following
 Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
 This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
+
+### §partial-indexers Partial indexers
+
+When an *indexer_declaration* includes `partial`, that indexer is said to be a ***partial indexer***. Partial indexers may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+
+Partial indexers may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
+
+There are two kinds of partial indexer declarations: If the body of each of the indexer’s accessors is a semicolon and the indexer has no `extern` modifier, the declaration is said to be a ***defining partial indexer declaration***. Otherwise, the declaration is said to be an ***implementing partial indexer declaration***.
+
+Partial indexers are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialIndexers1"} -->
+> ```csharp
+> // part containing defining partial indexer declaration
+> public partial class C
+> {
+>     public partial int this[int x] { get; private set; }
+> }
+>
+> // part containing implementing partial indexer declaration
+> public partial class C
+> {
+>     private int[] _store = new int[100];
+>     public partial int this[int x = 10] // default argument value is ignored
+>     {
+>         get => this._store[x];
+>         private set => this._store[x] = value;
+>     }
+> }
+> ```
+>
+> *end example*
+
+Across the parts of a type declaration, there shall be only one defining partial indexer declaration with a given signature, and there shall be only one implementing partial indexer declaration with a given signature.
+
+The signature-matching requirements are as follows:
+
+1. Type and ref-kind differences between partial indexer declarations result in a compile-time error.
+1. Differences in tuple element names within partial indexer declarations result in a compile-time error.
+1. The property declarations and their accessor declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration. In the case of private accessibility on the indexer, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`. Likewise, the corresponding accessors shall have the same implicit or same explicit accessibilities.
+1. All other syntactic differences in the signatures of partial property declarations result in a compile-time warning, with the following exceptions:
+
+  - Attribute lists on or within partial indexer declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
+  - Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
+  - Default argument values need not match, and any default arguments values in the implementing partial indexer declaration are ignored.
+
+1. A warning is reported when parameter names differ across defining and implementing declarations. The parameter names from the definition part are used at use sites.
+1. Nullability differences that do not involve oblivious nullability result in warnings. When analyzing an accessor body, the implementation part signature is used. The definition part signature is used when analyzing use sites.
+
+In *indexer_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the indexer’s type. A partial indexer cannot explicitly implement interface indexers.
+
+Only a defining partial indexer participates in lookup.
 
 ## 15.10 Operators
 
