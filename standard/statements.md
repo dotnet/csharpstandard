@@ -162,10 +162,11 @@ The statement list of a block is reachable if the block itself is reachable.
 
 The end point of a block is reachable if the block is empty or if the end point of the statement list is reachable.
 
-A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). Some additional restrictions apply to iterator blocks:
+A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block, even if those `yield` statements are contained only indirectly in nested blocks (excluding nested lambdas and local functions). Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
-- It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
-- It is a compile-time error for an iterator block to contain an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
+It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
+
+The iterator block used to implement an iterator ([§15.14](classes.md#1514-iterators)) always defines a safe context, even when the iterator declaration is nested in an unsafe context.
 
 ### 13.3.2 Statement lists
 
@@ -477,7 +478,7 @@ The initializing *variable_reference* shall have type *type* and meet the same r
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
-It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
+It is a compile-time error to declare and use (even implicitly in compiler-synthesized code) a ref local variable, or a variable of a `ref struct` type across `await` expressions or `yield return` statements. More precisely, the error is driven by the following mechanism: after an `await` expression  or a `yield return` statement, all ref local variables and variables of a `ref struct` type in scope are considered definitely unassigned.
 
 For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
