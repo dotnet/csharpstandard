@@ -617,7 +617,7 @@
         - [§15.6.2.3.2](classes.md#156232-input-parameters)  Input parameters
         - [§15.6.2.3.3](classes.md#156233-reference-parameters)  Reference parameters
         - [§15.6.2.3.4](classes.md#156234-output-parameters)  Output parameters
-      - [§15.6.2.4](classes.md#15624-parameter-arrays)  Parameter arrays
+      - [§15.6.2.4](classes.md#15624-parameter-collections)  Parameter collections
     - [§15.6.3](classes.md#1563-static-and-instance-methods)  Static and instance methods
     - [§15.6.4](classes.md#1564-virtual-methods)  Virtual methods
     - [§15.6.5](classes.md#1565-override-methods)  Override methods
