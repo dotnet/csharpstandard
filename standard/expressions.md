@@ -553,7 +553,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), reference parameters of kind `ref readonly` ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)). Output and reference parameters of kind `ref` are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), reference parameters of kind `ref readonly` ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or parameter collections ([§15.6.2.4](classes.md#15624-parameter-collections)). Output and reference parameters of kind `ref` are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -607,14 +607,14 @@ The position of an argument or parameter is defined as the number of arguments o
 The corresponding parameters for function member arguments are established as follows:
 
 - Arguments in the *argument_list* of instance constructors, methods, indexers and delegates:
-  - A positional argument where a parameter occurs at the same position in the parameter list corresponds to that parameter, unless the parameter is a parameter array and the function member is invoked in its expanded form.
-  - A positional argument of a function member with a parameter array invoked in its expanded form, which occurs at or after the position of the parameter array in the parameter list, corresponds to an element in the parameter array.
+  - A positional argument where a parameter occurs at the same position in the parameter list corresponds to that parameter, unless the parameter is a parameter collection and the function member is invoked in its expanded form.
+  - A positional argument of a function member with a parameter collection invoked in its expanded form, which occurs at or after the position of the parameter collection in the parameter list, corresponds to an element in the parameter collection.
   - A named argument corresponds to the parameter of the same name in the parameter list.
   - For indexers, when invoking the set or init accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit `value` parameter of the set or init accessor declaration.
 - For properties, when invoking the get accessor there are no arguments. When invoking the set or init accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the set or init accessor declaration.
 - For user-defined unary operators (including conversions), the single operand corresponds to the single parameter of the operator declaration.
 - For user-defined binary operators, the left operand corresponds to the first parameter, and the right operand corresponds to the second parameter of the operator declaration.
-- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter array.
+- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter collection.
   > *Note*: This prevents `void M(bool a = true, bool b = true, bool c = true);` being invoked by `M(c: false, valueB);`. The first argument is used out-of-position (the argument is used in first position, but the parameter named `c` is in third position), so the following arguments should be named. In other words, non-trailing named arguments are only allowed when the name and the position result in finding the same corresponding parameter. *end note*
 
 #### 12.6.2.3 Run-time evaluation of argument lists
@@ -667,10 +667,10 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 >
 > *end example*
 
-Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
+Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter collection ([§15.6.2.4](classes.md#15624-parameter-collections)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
 
-- When a function member with a parameter array is invoked in its normal form, the argument given for the parameter array shall be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
-- When a function member with a parameter array is invoked in its expanded form, the invocation shall specify zero or more positional arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
+- When a function member with a parameter collection is invoked in its normal form, the argument given for the parameter collection shall be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
+- When a function member with a parameter collection is invoked in its expanded form, the invocation shall specify zero or more positional arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
 
 The expressions of an argument list are always evaluated in textual order.
 
@@ -701,7 +701,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.5](expressions.md#128175-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
+When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* ([§12.8.25](expressions.md#12825-collection-expressions)). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
 
 > *Example*: Given the declaration
 >
@@ -1077,20 +1077,20 @@ A function member is said to be an ***applicable function member*** with respect
 
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-  - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+  - for a value parameter or a parameter collection, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a reference parameter whose type is a struct type, an implicit interpolated string handler conversion exists from the argument to the type of the corresponding parameter, or
   - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
   - for a `ref readonly` parameter when the corresponding argument omits the `ref` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
-For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
+For a function member that includes a parameter collection, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter collection is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
-- The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
+- The expanded form is constructed by replacing the parameter collection in the function member declaration with zero or more value parameters of the collection's element type such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and:
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
-    - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+    - for an `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input or `ref readonly`, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
@@ -1099,9 +1099,9 @@ When the implicit conversion from the argument type to the parameter type of an 
 >
 > <!-- Example: {template:"code-in-class-lib-without-using", name:"ApplicableFunctionMember", replaceEllipsis:true, expectedErrors:["CS1615","CS1503"]} -->
 > ```csharp
-> public static void M1(int p1) { ... }
-> public static void M1(in int p1) { ... }
-> public static void M2(in int p1) { ... }
+> public static void M1(int p1) { … }
+> public static void M1(in int p1) { … }
+> public static void M2(in int p1) { … }
 > public static void Test()
 > {
 >     int i = 10; uint ui = 34U;
@@ -1138,27 +1138,32 @@ Parameter lists for each of the candidate function members are constructed in th
 - Reference and output parameters are removed from the parameter list
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
-Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
+Given an argument list `A` with a set of argument expressions `{E₁, E₂, …, Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, …, Pᵥ}` and `{Q₁, Q₂, …, Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
 - for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not an anonymous function type conversion, and
 
-  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
-  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
+  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, …, Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
+  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, …, Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
 
-- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
+- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and
+- for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
-In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
+In case the parameter type sequences `{P₁, P₂, …, Pᵥ}` and `{Q₁, Q₂, …, Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
 
 - If `Mᵢ` is a non-generic method and `Mₑ` is a generic method, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if `Mᵢ` is applicable in its normal form and `Mₑ` has a params array and is applicable only in its expanded form, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if both methods have params arrays and are applicable only in their expanded forms, and if the params array of `Mᵢ` has fewer elements than the params array of `Mₑ`, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if `Mᵥ` has more specific parameter types than `Mₓ`, then `Mᵥ` is better than `Mₓ`. Let `{R1, R2, ..., Rn}` and `{S1, S2, ..., Sn}` represent the uninstantiated and unexpanded parameter types of `Mᵥ` and `Mₓ`. `Mᵥ`’s parameter types are more specific than `Mₓ`s if, for each parameter, `Rx` is not less specific than `Sx`, and, for at least one parameter, `Rx` is more specific than `Sx`:
+- Otherwise, if `Mᵢ` is applicable in its normal form and `Mₑ` has a parameter collection and is applicable only in its expanded form, then `Mᵢ` is better than `Mₑ`.
+- Otherwise, if both methods have parameter collections and are applicable only in their expanded forms, and if the parameter collection of `Mᵢ` has fewer elements than the parameter collection of `Mₑ`, then `Mᵢ` is better than `Mₑ`.
+- Otherwise, if `Mᵥ` has more specific parameter types than `Mₓ`, then `Mᵥ` is better than `Mₓ`. Let `{R1, R2, …, Rn}` and `{S1, S2, …, Sn}` represent the uninstantiated and unexpanded parameter types of `Mᵥ` and `Mₓ`. `Mᵥ`’s parameter types are more specific than `Mₓ`s if, for each parameter, `Rx` is not less specific than `Sx`, and, for at least one parameter, `Rx` is more specific than `Sx`:
   - A type parameter is less specific than a non-type parameter.
   - Recursively, a constructed type is more specific than another constructed type (with the same number of type arguments) if at least one type argument is more specific and no type argument is less specific than the corresponding type argument in the other.
   - An array type is more specific than another array type (with the same number of dimensions) if the element type of the first is more specific than the element type of the second.
 - Otherwise if one member is a non-lifted operator and the other is a lifted operator, the non-lifted one is better.
 - If neither function member was found to be better, and all parameters of `Mᵥ` have a corresponding argument whereas default arguments need to be substituted for at least one optional parameter in `Mₓ`, then `Mᵥ` is better than `Mₓ`.
 - If for at least one parameter `Mᵥ` uses the ***better parameter-passing choice*** ([§12.6.4.4](expressions.md#12644-better-parameter-passing-mode)) than the corresponding parameter in `Mₓ` and none of the parameters in `Mₓ` use the better parameter-passing choice than `Mᵥ`, `Mᵥ` is better than `Mₓ`.
+- Otherwise, if both methods have parameter collections and are applicable only in their expanded forms then `Mᵢ` is better than `Mₑ` if the same set of arguments corresponds to the collection elements for both methods, and one of the following holds:
+  - both parameter collections are not *span_type*s, and an implicit conversion exists from the parameter collection of `Mᵢ` to the parameter collection of `Mₑ`
+  - the parameter collection of `Mᵢ` is `System.ReadOnlySpan<Eᵢ>`, and the parameter collection of `Mₑ` is `System.Span<Eₑ>`, and an identity conversion exists from `Eᵢ` to `Eₑ`
+  - the parameter collection of `Mᵢ` is `System.ReadOnlySpan<Eᵢ>` or `System.Span<Eᵢ>`, and the parameter collection of `Mₑ` is an array or array interface type with element type `Eₑ`, and an identity conversion exists from `Eᵢ` to `Eₑ`
 - Otherwise, no function member is better.
 
 A `delegate*` is more specific than `void*`.
@@ -1171,8 +1176,8 @@ It is permitted to have corresponding parameters in two overloaded methods diffe
 
 <!-- Example: {template:"code-in-class-lib-without-using", name:"BetterParmPassingMode", replaceEllipsis:true} -->
 ```csharp
-public static void M1(int p1) { ... }
-public static void M1(in int p1) { ... }
+public static void M1(int p1) { … }
+public static void M1(in int p1) { … }
 ```
 
 Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
@@ -1261,8 +1266,8 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
-> public interface I1<T> { ... }
-> public interface I2<T> { ... }
+> public interface I1<T> { … }
+> public interface I2<T> { … }
 >
 > public abstract class G1<U>
 > {
@@ -1376,12 +1381,12 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 
 - If `E` is a *tuple-literal* the result of deconstruction is the expression `E` itself.
 
-- Otherwise, if `E` has a tuple type `(T₁, ..., Tₙ)`, then the result of deconstruction is semantically equivalent to the expression `(E.Item1, ..., E.Itemn)` except `E` is evaluated only once.
+- Otherwise, if `E` has a tuple type `(T₁, …, Tₙ)`, then the result of deconstruction is semantically equivalent to the expression `(E.Item1, …, E.Itemn)` except `E` is evaluated only once.
 
 - Otherwise if there is a unique instance or extension method `S.Deconstruct`; with `n ≥ 2` output parameters, with types `T₁` to `Tₙ`, and no other parameters; then `E` can be deconstructed. The result of the deconstruction is semantically equivalent to replacing `E` with the following pseudo-code:
 
   >```csharp
-  > E.Deconstruct(out T1 v1, ..., out TN vn) andThen (v1, ..., vn);
+  > E.Deconstruct(out T1 v1, …, out TN vn) andThen (v1, …, vn);
   >```
 
   Where `andThen` is a pseudo C# operation which performs its left-hand operand and then returns its right-operand as the result.
@@ -5920,7 +5925,7 @@ A non-`static` local function or non-`static` anonymous function can capture sta
 
 A *lambda_expression* shall not contain any *parameter_modifier*s with the `this` modifier.
 
-An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_array*s.
+An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_collection*s.
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
@@ -6002,7 +6007,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 - Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
-- An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_array*s.
+- An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_collection*s.
 
 The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
 
@@ -6112,7 +6117,7 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 
 #### 12.22.6.1 General
 
-Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
+Any local variable, value parameter, or parameter collection whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 
