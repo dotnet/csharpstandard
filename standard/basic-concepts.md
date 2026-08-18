@@ -35,7 +35,7 @@ A method qualifies as a canditate entry point by satisfying the following requir
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
 - It may have the `async` modifier only if the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
-- It shall not be a partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementation.
+- It shall not be an optional partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementing declaration.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
 The declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
