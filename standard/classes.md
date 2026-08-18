@@ -453,6 +453,11 @@ type_parameter_constraints_clause
     ;
 
 type_parameter_constraints
+    : restrictive_type_parameter_constraints (',' anti_constraints_clause)?
+    | anti_constraints_clause
+    ;
+
+restrictive_type_parameter_constraints
     : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
     | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
@@ -479,11 +484,25 @@ secondary_constraints
 constructor_constraint
     : 'new' '(' ')'
     ;
+
+anti_constraints_clause
+    : 'allows' anti_constraints
+
+anti_constraints
+    : anti_constraint (',' anti_constraint)*
+
+anti_constraint
+    : ref_struct_clause
+
+ref_struct_clause
+    : 'ref' 'struct'
 ```
 
-Each *type_parameter_constraints_clause* consists of the token `where`, followed by the name of a type parameter, followed by a colon and the list of constraints for that type parameter. There can be at most one `where` clause for each type parameter, and the `where` clauses can be listed in any order. Like the `get` and `set` tokens in a property accessor, the `where` token is not a keyword.
+Each *type_parameter_constraints_clause* consists of the token `where`, followed by the name of a type parameter, followed by a colon and the list of constraints and anti-constraints (see definition below) for that type parameter. There can be at most one `where` clause for each type parameter, and the `where` clauses can be listed in any order. Like the `get` and `set` tokens in a property accessor, the `where` token is not a keyword.
 
-The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
+The list of constraints and anti-constraints given in a `where` clause can include any of the following components, in this order: a *primary_constraint*, one or more *secondary_constraint*s, a *constructor_constraint*, and an *anti_constraints_clause*.
+
+> *Note*: Although the grammar permits *anti_constraints* to contain multiple *anti_constraint*s, this is for future expansion, and in this edition of this specification the only anti-constraint is `ref struct`. *end note*
 
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull`, the ***unmanaged type constraint*** `unmanaged`, or `default`. The class type and the reference type constraint can include the *nullable_type_annotation*.
 
@@ -637,6 +656,26 @@ It is valid for `S` to have the value type constraint and `T` to have the refer
 If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.8.17.2](expressions.md#128172-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
 It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
+
+Ordinarily, a ref struct type cannot be used as a type argument for a generic type or method. However, the presence of an *anti_constraints_clause* containing `allows ref struct` permits such a use. This clause is referred to as an ***anti-constraint***, as it expands the set of allowed type arguments rather than limits them like all other constraints.
+When a type parameter has this anti-constraint, ref safety rules on all instances of that type parameter shall be enforced.
+
+The anti-constraint is not inherited from a type parameter type constraint. In the code below, `S` cannot be substituted with a ref struct:
+
+```csharp
+class C<T, S>
+    where T : allows ref struct
+    where S : T
+{}
+```
+
+Given `where T : allows ref struct`, `T` shall not
+
+- Also be constrained to a known reference type
+- Also be constrained with `class` or `class?`
+- Be used as a generic argument unless the corresponding parameter also has the anti-constraint
+
+It is a compile-time error to invoke a non-virtual instance method (or property) on a type parameter with `allows ref struct`.
 
 > *Example*: The following are examples of constraints:
 >
