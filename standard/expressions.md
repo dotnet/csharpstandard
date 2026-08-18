@@ -6444,6 +6444,16 @@ Delegate parse5 = (string s) => int.Parse(s);
 
 A method group has a natural type if all candidate methods (including extension methods) in the method group have a common signature including default values and `params` modifiers.
 
+The following steps are taken to determine if a method group has a natural type; they involve going scope-by-scope and eliminating candidates that cannot succeed as early as possible (just as with overload resolution):
+
+- For each scope, the set of all candidate methods is constructed:
+  - For the initial scope, methods on the relevant type with arity matching the provided type arguments and satisfying constraints with the provided type arguments are in the set if they are static and the receiver is a type, or if they are non-static and the receiver is a value.
+  - For subsequent scopes, extension methods in that scope that can be substituted with the provided type arguments and reduced using the value of the receiver while satisfying constraints are in the set:
+    1. If there are candidates in the given scope, proceed to the next scope.
+    1. If the signatures of all the candidates do not match, then the method group doesn't have a natural type.
+    1. Otherwise, the resulting signature is used as the natural type.
+- If the scopes are exhausted, then the method group doesn't have a natural type.
+
 ```csharp
 var read = Console.Read;   // Just one overload; Func<int> inferred
 var write = Console.Write; // error: multiple overloads, can't choose
