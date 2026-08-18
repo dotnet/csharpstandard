@@ -2336,9 +2336,9 @@ A *parameter_collection* consists of an optional set of *attributes* ([§23](att
 - A single dimensional array type `T[]`, in which case the element type is `T`
 - A span type
   - `System.Span<T>`
-  - `System.ReadOnlySpan<T>` 
+  - `System.ReadOnlySpan<T>`
   in which cases the element type is `T`
-- A type with an appropriate collection-creation method ((§15.17.1)[classes.md#15171-general]) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
+- A type with an appropriate collection-creation method ((§15.17.1](classes.md#15171-general)) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
 - A struct or class type that implements `System.Collections.IEnumerable` where:
   - The type has a constructor that can be invoked with no arguments, and the constructor is at least as accessible as the declaring member.
   - The type has an instance (not an extension) method `Add` where:
@@ -7049,6 +7049,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 > ```
 >
 > *end note*
+
 ## 15.18 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
