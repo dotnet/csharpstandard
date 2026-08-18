@@ -155,7 +155,7 @@ This definition of compatibility allows covariance in return type and contravari
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: The intuitive meaning of delegate compatibility is that a method is compatible with a delegate type if every invocation of the delegate could be replaced with an invocation of the method without violating type safety, treating optional parameters and parameter arrays as explicit parameters. For example, in the following code:
+> *Note*: The intuitive meaning of delegate compatibility is that a method is compatible with a delegate type if every invocation of the delegate could be replaced with an invocation of the method without violating type safety, treating optional parameters and parameter collections as explicit parameters. For example, in the following code:
 >
 > <!-- Example: {template:"standalone-lib", name:"DelegateCompatibility3"} -->
 > ```csharp
