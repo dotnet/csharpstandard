@@ -166,7 +166,7 @@ A *block* that contains one or more `yield` statements ([§13.15](statements.md#
 
 It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
 
-The iterator block used to implement an iterator ([§15.14](classes.md#1514-iterators)) always defines a safe context, even when the iterator declaration is nested in an unsafe context.
+The iterator block used to implement an iterator ([§15.14](classes.md#1514-async-functions)) always defines a safe context, even when the iterator declaration is nested in an unsafe context.
 
 ### 13.3.2 Statement lists
 

@@ -855,7 +855,7 @@ The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{�
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations (§partial-properties), and partial indexer declarations (§partial-indexers)).
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations ([§15.7.7](classes.md#1577-partial-properties)), and partial indexer declarations ([§15.9.3](classes.md#1593-partial-indexers))).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -4556,7 +4556,7 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 >
 > *end example*
 
-### §partial-properties Partial properties
+### 15.7.7 Partial properties
 
 When a *property_declaration* includes `partial`, that property is said to be a ***partial property***. Partial properties may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
@@ -5158,7 +5158,7 @@ Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-ac
 
 This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
 
-### §partial-indexers Partial indexers
+### 15.9.3 Partial indexers
 
 When an *indexer_declaration* includes `partial`, that indexer is said to be a ***partial indexer***. Partial indexers may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
