@@ -2279,8 +2279,8 @@ delimited_parameter_list
 
 parameter_list
     : fixed_parameters
-    | fixed_parameters ',' parameter_array
-    | parameter_array
+    | fixed_parameters ',' parameter_collection
+    | parameter_collection
     ;
 
 fixed_parameters
@@ -2308,12 +2308,12 @@ parameter_mode_modifier
     | 'in'
     ;
 
-parameter_array
-    : attributes? 'params' array_type identifier
+parameter_collection
+    : attributes? 'params' type identifier
     ;
 ```
 
-The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
+The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_collection*.
 
 A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
@@ -2331,9 +2331,32 @@ The *expression* shall be implicitly convertible by an identity or nullable conv
 
 If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
+A *parameter_collection* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), a `params` modifier, a *type*, and an *identifier*. A parameter collection declares a single parameter of the given array type with the given name. The *type* of a parameter collection shall be one of the following valid target types for a collection expression:
 
-A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
+- A single dimensional array type `T[]`, in which case the element type is `T`
+- A span type
+  - `System.Span<T>`
+  - `System.ReadOnlySpan<T>` 
+  in which cases the element type is `T`
+- A type with an appropriate collection-creation method ((§15.17.1)[classes.md#15171-general]) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
+- A struct or class type that implements `System.Collections.IEnumerable` where:
+  - The type has a constructor that can be invoked with no arguments, and the constructor is at least as accessible as the declaring member.
+  - The type has an instance (not an extension) method `Add` where:
+    - The method can be invoked with a single value argument.
+    - If the method is generic, the type arguments can be inferred from the argument.
+    - The method is at least as accessible as the declaring member.
+    In which case the element type is the iteration type ([§13.9.5.1]( statements.md#13951-general)) of *type*.
+- An interface type
+  - `System.Collections.Generic.IEnumerable<T>`
+  - `System.Collections.Generic.IReadOnlyCollection<T>`
+  - `System.Collections.Generic.IReadOnlyList<T>`
+  - `System.Collections.Generic.ICollection<T>`
+  - `System.Collections.Generic.IList<T>`  
+  in which case the element type is `T`.
+
+In a method invocation, a parameter collection permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter collections are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
+
+A *parameter_collection* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_collection* would instead result in the creation of an empty collection.
 
 > *Example*: The following illustrates different kinds of parameters:
 >
@@ -2351,7 +2374,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 > ) { }
 > ```
 >
-> In the *parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
+> In the *parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter collection.
 >
 > *end example*
 
@@ -2366,7 +2389,7 @@ The following kinds of parameters exist:
 - Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
 - Reference readonly parameters, which are reference parameters that also have the `readonly` modifier.
-- Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
+- Parameter collections ([§15.6.2.4](classes.md#15624-parameter-collections)).
 
 > *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, `ref`, and `ref readonly` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
 
@@ -2538,26 +2561,26 @@ A method declared as an optional partial method ([§15.6.9.2](classes.md#15692-o
 >
 > *end example*
 
-#### 15.6.2.4 Parameter arrays
+#### 15.6.2.4 Parameter collections
 
-A parameter declared with a `params` modifier is a parameter array. If a parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
+A parameter declared with a `params` modifier is a parameter collection.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` cannot. *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter collection, but the type `string[,]` cannot. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
-A parameter array permits arguments to be specified in one of two ways in a method invocation:
+A parameter collection permits arguments to be specified in one of two ways in a method invocation:
 
-- The argument given for a parameter array can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
-- Alternatively, the invocation can specify zero or more arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
+- The argument given for a parameter collection can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
+- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in [§12.8.25](expressions.md#12825-collection-expressions) as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
 
-Except for allowing a variable number of arguments in an invocation, a parameter array is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
+Except for allowing a variable number of arguments in an invocation, a parameter collection is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections1", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2602,11 +2625,13 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >
 > The fourth and fifth invocations pass a three-element and an empty collection expression, respectively. *end example*
 
-When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
+When performing overload resolution, a method with a parameter collection might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
+
+A potential ambiguity arises between the normal form and the expanded form of the method with a single parameter collection argument when it can be used as the parameter collection itself and as the element of the parameter collection at the same time. The ambiguity presents no problem, however, since it can be resolved by inserting a cast or using a collection expression, if needed.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections3", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2640,17 +2665,17 @@ When performing overload resolution, a method with a parameter array might be ap
 > F(object[])
 > ```
 >
-> In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked.
+> In the example, two of the possible expanded forms of the method with a parameter collection are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter collection, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of a collection instance that occurs when an expanded form of a method with a parameter collection is invoked.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> An array is a reference type, so the value passed for a parameter array can be `null`.
+> An array is a reference type, so the value passed for a parameter collection can be `null`.
 >
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections4", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2676,11 +2701,11 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > *end example*
 
-When the type of a parameter array is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
+When the type of a parameter collection is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections5", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
