@@ -2390,7 +2390,7 @@ A *parameter_collection* consists of an optional set of *attributes* ([§23](att
   - `System.Collections.Generic.IReadOnlyCollection<T>`
   - `System.Collections.Generic.IReadOnlyList<T>`
   - `System.Collections.Generic.ICollection<T>`
-  - `System.Collections.Generic.IList<T>`  
+  - `System.Collections.Generic.IList<T>`
   in which case the element type is `T`.
 
 In a method invocation, a parameter collection permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter collections are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
@@ -4578,7 +4578,7 @@ Partial properties are useful for allowing one part of a type declaration to cus
 >     public partial string Prop1 { get; set; }
 >     public virtual partial string Prop2 { get; set; }
 > }
-> 
+>
 > // part containing implementing partial declarations
 > public partial class C
 > {
@@ -4613,7 +4613,7 @@ The signature-matching requirements are as follows:
 > {
 >     private string _field;
 >     public partial string Prop { get; private set; }
-> 
+>
 >     // Error: implementation set accessor modifier mismatch
 >     public partial string Prop { get => _field; set => _field = value; }
 > }
