@@ -2059,13 +2059,13 @@ A ***method*** is a member that implements a computation or action that can be p
 
 ```ANTLR
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2151,7 +2151,8 @@ A declaration has a valid combination of modifiers if all of the following are t
 - The declaration may include the `abstract` and `override` modifiers so that an abstract member may override a virtual member.
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
-- If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
+- If the declaration includes the `partial` modifier, then it does not include the modifier `abstract`.
+- If the declaration is for an optional partial method (§optional-partial-methods), then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, or `extern`.
 
 Methods are classified according to what, if anything, they return:
 
@@ -2159,7 +2160,7 @@ Methods are classified according to what, if anything, they return:
 - Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
 - Otherwise, the method is ***returns-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
 
 The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
@@ -2183,7 +2184,7 @@ If the *method_body* consists of a semicolon, the declaration shall not include 
 
 The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
-For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
+For abstract and extern methods, the *ref_method_body* consists simply of a semicolon. For partial methods the *ref_method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *ref_method_body* is either a block body or an expression body.
 
 The name, the number of type parameters, and the parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its parameters. The return type is not part of a method’s signature, nor are the names of the parameters, the names of the type parameters, or the constraints. When a parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
@@ -2247,7 +2248,7 @@ A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argume
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
 
-If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
+If optional parameters occur in an implementing partial method declaration, a compiler should give a warning, since any default arguments are removed per §15.6.9. If optional parameters occur in an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
 A *parameter_array* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
 
@@ -2388,7 +2389,7 @@ For a `struct` type, within an instance method, instance accessor ([§12.2.1](ex
 
 A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
-A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
+A method declared as an optional partial method (§optional-partial-methods) shall not have output parameters.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3026,22 +3027,54 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)), and are subject to a number of restrictions.
+#### §partial-methods-general General
 
-Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
+When a *method declaration* includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)). Partial methods may be defined in one part of a type declaration and implemented in another.
 
-Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
+In *method_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the *return_type* or *ref_kind*. A partial method cannot explicitly implement interface methods.
 
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there shall be only one defining partial method declaration with a given signature, and there shall be at most only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+Partial method declarations are classified as follows:
+
+- A method with an *expression-body* or *block-body*, or a method declared with the `extern` modifier, is said to be an ***implementing partial method declaration***.
+- Otherwise, a method declaration where the body of the method declaration is a semicolon is said to be a ***defining partial method declaration***.
+
+Across the parts of a type declaration, there shall be exactly one defining partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same method name, number of type parameters, and number of parameters.
-- The declarations shall have the same modifiers (although not necessarily in the same order), with the exception of the `async` modifier which shall not appear on a defining part.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
-- Corresponding type parameters in the declarations shall have the same constraints (modulo differences in type parameter names).
+- The declarations shall have the same modifiers except for the `async` and `extern` modifiers. The `async` and `extern` modifiers are allowed only on the implementing partial method declaration.
+- The declarations shall have the same return type: they shall both return no value, or they shall both return by value or by reference with the same type (modulo differences in type parameter names). If they return by reference, the declarations shall have the same *ref_kind*.
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names). Tuple types (§8.3.11) used as parameters or return types shall have the same item names in both the defining and implementing partial method declarations.
+- Corresponding type parameters in the declarations, by ordinal position, shall have equivalent constraints after substituting each type parameter of one declaration with the corresponding type parameter of the other declaration.
 
-An implementing partial method declaration can appear in the same part as the corresponding defining partial method declaration.
+There are two variations of partial methods: required and optional. A ***required partial method*** (§required-partial-methods) is a partial method that includes one or more explicit access modifiers. An ***optional partial method*** (§optional-partial-methods) has no explicit access modifiers, and is implicitly private.
 
-Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
+For a required partial method both the definition and implementation shall exist.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods2", replaceEllipsis:true, customEllipsisReplacements: ["", "return true;", "i = 10;"]} -->
+> ```csharp
+> // part containing defining partial method declarations
+> partial class C
+> {
+>     partial void M1();                  // implementation optional
+>     private partial void M2();          // required, impl. required
+>     protected partial bool M3();        // required, impl. required
+>     public partial void M4(out int i);  // required, impl. required
+> }
+> 
+> // part containing implementing partial method declarations
+> partial class C
+> {
+>     private partial void M2() { ... }
+>     protected partial bool M3() { ... }
+>     public partial void M4(out int i) { ... }
+> }
+> ```
+>
+> *end example*
+
+Only a defining partial method participates in overload resolution.
 
 > *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§12.6.2.1](expressions.md#12621-general)) are used. For example, given the defining partial method declaration for `M` in one file, and the implementing partial method declaration in another file:
 >
@@ -3065,25 +3098,12 @@ Only a defining partial method participates in overload resolution. Thus, whethe
 >
 > *end note*
 
-If no part of a partial type declaration contains an implementing declaration for a given partial method, any expression statement invoking it is simply removed from the combined type declaration. Thus the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
-
 If an implementing declaration exists for a given partial method, the invocations of the partial methods are retained. The partial method gives rise to a method declaration similar to the implementing partial method declaration except for the following:
 
-- The `partial` modifier is not included.
-
+- The `partial` modifier is not included in the combined method declaration.
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
-
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
-
-If a defining declaration but not an implementing declaration is given for a partial method `M`, the following restrictions apply:
-
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
-
-- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
-
-- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
-
-- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
+- Any default arguments (§15.6.2) in the implementing declaration are removed.
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
@@ -3166,6 +3186,31 @@ class Customer
         Console.WriteLine($"Changed to {name}");
 }
 ```
+
+#### §optional-partial-methods Optional partial methods
+
+An optional partial method shall have a `void` return type, and shall not declare out parameters. There shall be zero or one implementing declaration for each defining declaration. If no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts. Whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
+
+The implementing member for an optional partial method shall not be an external method (§15.6.8).
+
+> *Note*: Because an optional partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because an optional partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
+
+If an optional partial method has no implementation, any expression statement invoking it is removed from the combined type declaration. Thus, the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
+
+If a defining declaration but not an implementing declaration is given for an optional partial method `M`, the following restrictions apply:
+
+- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
+- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
+- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
+- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup)).
+
+#### §required-partial-methods Required partial methods
+
+A required partial method declaration includes an explicit access modifier. There shall be exactly one implementing partial method declaration.
+
+The implementing declaration for a required partial method may be an external method (§15.6.8). The `extern` modifier is allowed on an implementing partial declaration. It shall not be present on a defining partial declaration.
+
+> *Note:* The `private` access modifier is required on both the ***defining partial method declaration*** and the ***implementing partial method declaration*** of a private required partial method. *end note*
 
 ### 15.6.10 Extension methods
 

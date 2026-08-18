@@ -12,7 +12,7 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
 - It may have the `async` modifier provided the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
-- It shall not be a partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementation.
+- It shall not be an optional partial method (§optional-partial-methods) without an implementing declaration.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
 > *Note*: Methods with the `async` modifier must have exactly one of the two return types specified above in order to qualify as an entry point. An `async void` method, or an `async` method returning a different awaitable type such as `ValueTask` or `ValueTask<int>` does not qualify as an entry point. *end note*
