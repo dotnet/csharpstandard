@@ -3004,7 +3004,7 @@ An object initializer consists of a sequence of member initializers, enclosed by
 
 Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
 
-In the *argument_list* of an *initializer_target* there is no implicit support for arguments of type `Index` ([§18.4.2](ranges.md#1842-implicit-index-support)) or `Range` ([§18.4.3](ranges.md#1843-implicit-range-support)).
+In the *argument_list* of an *initializer_target* there is no implicit support for arguments of type `Range` ([§18.4.3](ranges.md#1843-implicit-range-support)).
 
 A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.24.2](expressions.md#12242-simple-assignment)) to the target.
 
