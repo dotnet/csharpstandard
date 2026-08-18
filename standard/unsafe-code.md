@@ -410,7 +410,7 @@ The `&` operator ([§24.6.5](unsafe-code.md#2465-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function ([§12.22.6.2](expressions.md#122262-captured-outer-variables)).
+- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter collection, unless the variable is captured by a non-`static` anonymous function ([§12.22.6.2](expressions.md#122262-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§24.6.2](unsafe-code.md#2462-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§24.6.3](unsafe-code.md#2463-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§24.6.4](unsafe-code.md#2464-pointer-element-access)) of the form `P[E]`.
 
@@ -743,7 +743,7 @@ The `&` operator does not require its operand to be definitely assigned, but fol
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.8.24](expressions.md#12824-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§24.7](unsafe-code.md#247-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
+> *Note*: When a local variable, value parameter, or parameter collection is captured by an anonymous function ([§12.8.24](expressions.md#12824-anonymous-method-expressions)), that local variable, parameter, or parameter collection is no longer considered to be a fixed variable ([§24.7](unsafe-code.md#247-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter collection that has been captured by an anonymous function. *end note*
 
 The case of *unary_expression* designating a method group is described immediately below.
 
@@ -895,7 +895,7 @@ fixed_pointer_initializer
 
 Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. *pointer_type* shall not be *funcptr_type*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-It is an error to use a captured local variable ([§12.22.6.2](expressions.md#122262-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
+It is an error to use a captured local variable ([§12.22.6.2](expressions.md#122262-captured-outer-variables)), value parameter, or parameter collection in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
 - The token “`&`” followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) to a moveable variable ([§24.4](unsafe-code.md#244-fixed-and-moveable-variables)) of a type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement. If `T` is a managed type, a warning is produced.
 - An expression of an *array_type* with elements of a type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero. If `T` is a managed type, a warning is produced.
