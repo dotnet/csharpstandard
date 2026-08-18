@@ -2023,7 +2023,7 @@ A `lock` statement of the form
 
 `lock (x)` …
 
-where `x` is an expression of a *reference_type*, is precisely equivalent to:
+where `x` is an expression of a *reference_type* other than `System.Threading.Lock`, is precisely equivalent to:
 
 ```csharp
 bool __lockWasTaken = false;
@@ -2043,7 +2043,24 @@ finally
 
 except that `x` is only evaluated once.
 
+A `lock` statement of the form
+
+`lock (x)` …
+
+where `x` is an expression of type `System.Threading.Lock`, is precisely equivalent to:
+
+```csharp
+using (x.EnterScope())
+{
+    …
+}
+```
+
+Note carefully that when `x` is an expression of type `System.Threading.Lock`, the statements `lock (x) …` and `lock ((object)x) …` are treated quite differently. The former uses the `Lock`/`Scope` approach described above while the latter uses the `Monitor.Enter`/`Exit` approach described earlier, as the expression does not have type `System.Threading.Lock` in the latter case, and a warning to that effect is reported.
+
 While a mutual-exclusion lock is held, code executing in the same execution thread can also obtain and release the lock. However, code executing in other threads is blocked from obtaining the lock until the lock is released.
+
+It is a compile-time error to use a lock statement on a value of type 'System.Threading.Lock' in an async method or async lambda expression.
 
 ## 13.14 The using statement
 
