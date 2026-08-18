@@ -1194,10 +1194,7 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
-- `E` is a *collection_expression* and one of the following holds:
-  - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, and an implicit conversion exists from `E₁` to `E₂`.
-  - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_type*, or one of the following interface types implemented by an *array_type*: `System.Collections.Generic.IEnumerable<T>`, `System.Collections.Generic.IReadOnlyCollection<T>`,  `System.Collections.Generic.IReadOnlyList<T>`, `System.Collections.Generic.ICollection<T>`, or `System.Collections.Generic.IList<T>` with element type `E₂`, and an implicit conversion exists from `E₁` to `E₂`.
-  - `T₁` and `T₂` are not `System.ReadOnlySpan<T>` or `System.Span<T>`, and an implicit conversion exists from `T₁` to `T₂`.
+- `E` is a *collection_expression* and `C₁` is a better collection conversion from expression than `C₂` (see definition below):
 - `E` is not a *collection_expression* and one of the following holds:
 - `C1` is not a *function_type_conversion* and `C2` is a *function_type_conversion*, or
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
@@ -1206,6 +1203,34 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
   - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
     > *Note*: This is only applicable in unsafe code. *end note*
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+
+Given the following:
+
+- `E` is a collection expression with element expressions `[EL₁, EL₂, ..., ELₙ]`
+- `T₁` and `T₂` are collection types
+- `E₁` is the element type of `T₁`
+- `E₂` is the element type of `T₂`
+- `CE₁ᵢ` are the series of conversions from `ELᵢ` to `E₁`
+- `CE₂ᵢ` are the series of conversions from `ELᵢ` to `E₂`
+
+If there is an identity conversion from `E₁` to `E₂`, then the element conversions are as good as each other. Otherwise, the element conversions to `E₁` are ***better than the element conversions*** to `E₂` if:
+
+- For every `ELᵢ`, `CE₁ᵢ` is at least as good as `CE₂ᵢ`, and
+- There is at least one i where `CE₁ᵢ` is better than `CE₂ᵢ`
+
+Otherwise, neither set of element conversions is better than the other, and they are also not as good as each other.
+
+Conversion comparisons are made using better conversion from expression if `ELᵢ` is not a spread element. If `ELᵢ` is a spread element, use better conversion from the element type of the spread collection to `E₁` or `E₂`, respectively.
+
+`C₁` is a ***better collection conversion from expression*** than `C₂` if:
+
+- Both `T₁` and `T₂` are not *span types*, and `T₁` is implicitly convertible to `T₂`, and `T₂` is not implicitly convertible to `T₁`, or
+- `E₁` does not have an identity conversion to `E₂`, and the element conversions to `E₁` are ***better than the element conversions*** to `E₂`, or
+- `E₁` has an identity conversion to `E₂`, and one of the following holds:
+  - `T₁` is `System.ReadOnlySpan<E₁>`, and `T₂` is `System.Span<E₂>`, or
+  - `T₁` is `System.ReadOnlySpan<E₁>` or `System.Span<E₁>`, and `T₂` is an *array_or_array_interface* with *element type* `E₂`
+
+Otherwise, neither collection type is better, and the result is ambiguous.
 
 > *Example*: The following example shows the differences with overload resolution between array initializers and collection expressions:
 >
