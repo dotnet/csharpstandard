@@ -554,7 +554,7 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 > *Example*: Consider the following:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"InlineArays4", replaceEllipsis:true, customEllipsisReplacements: ["Console.WriteLine(\"in indexer [int]\");","return 0;"]} -->
-```csharp
+> ```csharp
 > var buffer = new Buffer();
 > int x = buffer[2];      // element access
 >
@@ -573,8 +573,6 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 > ```
 >
 > Even though the struct declares an indexer taking an `int` argument, that indexer is not used by element access `buffer[2]`. *end example*
-
-
 
 ## 16.7 Record struct and non-record struct differences
 
