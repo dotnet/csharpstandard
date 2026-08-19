@@ -6657,7 +6657,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >
 > the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
 
-In certain circumstances ([§15.16.4.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
+In certain circumstances ([§15.16.4.4](classes.md#151644-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
 A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with the `SetsRequiredMembers` attribute ([§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)).
 
