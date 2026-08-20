@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* ([§24.3](unsafe-code.md#243-pointer-types)) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
 Value types differ from reference types in that a variable of a value types directly contains its data, whereas a variable of a reference type stores a ***reference*** to its data, the latter being known as an ***object***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -90,7 +90,7 @@ nullable_type_annotation
 
 ```
 
-*pointer_type* is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§24.3](unsafe-code.md#243-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
