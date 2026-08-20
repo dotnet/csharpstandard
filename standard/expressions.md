@@ -819,7 +819,7 @@ An *output type inference* is made *from* an expression `E` *to* a type `T` in
 - If `E` is a tuple literal with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
 - If `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
-- If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then with parameter types `T1..Tk` and return type `Tb`, and overload resolution of `E` with the types `T1..Tk` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tb`.
+- If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then with parameter types `T₁..Tₖ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁..Tₖ` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tₓ`.
   > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
@@ -853,18 +853,18 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
-  - `V` is a function pointer type (§function-pointers) `delegate*<V2..Vk, V1>` and there is a function pointer type `delegate*<U2..Uk, U1>` such that `U` is identical to `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+  - `V` is a function pointer type (§function-pointers) `delegate*<V₂..Vₖ, V₁>` and there is a function pointer type `delegate*<U₂..Uₖ, U₁>` such that `U` is identical to `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
     > *Note*: This is only applicable in unsafe code. *end note*
   - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
-  - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an exact inference is made
+  - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Uᵢ` is not known to be a reference type, or if `U` is a function pointer type and `Uᵢ` is not known to be a function pointer type or a reference type, then an exact inference is made
     > *Note*: This is only applicable in unsafe code. *end note*
   - Otherwise, if `U` is an array type then a *lower-bound inference* is made
   - Otherwise, if `V` is `C<V₁...Vₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then a *lower-bound inference* is made.
     - If it is contravariant then an *upper-bound inference* is made.
     - If it is invariant then an *exact inference* is made.
-  - Otherwise, if `V` is `delegate*<V2..Vk, V1>` then inference depends on the i-th parameter of `delegate*<V2..Vk, V1>`:
+  - Otherwise, if `V` is `delegate*<V₂..Vₖ, V₁>` then inference depends on the i-th parameter of `delegate*<V₂..Vₖ, V₁>`:
     - If V1:
       - If the return is by value, then a lower-bound inference is made.
       - If the return is by reference, then an exact inference is made.
@@ -884,18 +884,18 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is one of `IEnumerable<Uₑ>`, `ICollection<Uₑ>`, `IReadOnlyList<Uₑ>`, `IReadOnlyCollection<Uₑ>` or `IList<Uₑ>` and `V` is a single-dimensional array type `Vₑ[]`
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
-  - `U` is a function pointer type (§function-pointers) then `delegate*<U2..Uk, U1>` and `V` is a function pointer type which is identical to `delegate*<V2..Vk, V1>`, and the calling convention of `U` is identical to `V`, and the refness of `Ui` is identical to `Vi`.
+  - `U` is a function pointer type (§function-pointers) then `delegate*<U₂..Uₖ, U₁>` and `V` is a function pointer type which is identical to `delegate*<V₂..Vₖ, V₁>`, and the calling convention of `U` is identical to `V`, and the refness of `Uᵢ` is identical to `Vᵢ`.
     > *Note*: This is only applicable in unsafe code. *end note*
   - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
-  - If `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an *exact inference* is made
+  - If `U` is not a function pointer type and `Uᵢ` is not known to be a reference type, or if `U` is a function pointer type and `Uᵢ` is not known to be a function pointer type or a reference type, then an *exact inference* is made
     > *Note*: Function-pointer type-related text is only applicable in unsafe code. *end note*
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
   - Otherwise, if `U` is `C<U₁...Uₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then an *upper-bound inference* is made.
     - If it is contravariant then a *lower-bound inference* is made.
     - If it is invariant then an *exact inference* is made.
-- Otherwise, if `U` is `delegate*<U2..Uk, U1>` then inference depends on the i-th parameter of `delegate*<U2..Uk, U1>`:
+- Otherwise, if `U` is `delegate*<U₂..Uₖ, U₁>` then inference depends on the i-th parameter of `delegate*<U₂..Uₖ, U₁>`:
   - If `U1`:
     - If the return is by value, then an upper-bound inference is made.
     - If the return is by reference, then an exact inference is made.
@@ -1152,7 +1152,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target))
-  - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+  - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
     > *Note*: This is only applicable in unsafe code. *end note*
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
