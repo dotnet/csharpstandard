@@ -5230,9 +5230,11 @@ The signature-matching requirements are as follows:
 1. Differences in tuple element names within partial indexer declarations result in a compile-time error.
 1. The property declarations and their accessor declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration. In the case of private accessibility on the indexer, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`. Likewise, the corresponding accessors shall have the same implicit or same explicit accessibilities.
 1. All other syntactic differences in the signatures of partial property declarations result in a compile-time warning, with the following exceptions:
-  - Attribute lists on or within partial indexer declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
-  - Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
-  - Default argument values need not match, and any default arguments values in the implementing partial indexer declaration are ignored.
+
+- Attribute lists on or within partial indexer declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
+- Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
+- Default argument values need not match, and any default arguments values in the implementing partial indexer declaration are ignored.
+
 1. A warning is reported when parameter names differ across defining and implementing declarations. The parameter names from the definition part are used at use sites.
 1. Nullability differences that do not involve oblivious nullability result in warnings. When analyzing an accessor body, the implementation part signature is used. The definition part signature is used when analyzing use sites.
 
