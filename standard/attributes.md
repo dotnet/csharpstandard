@@ -284,9 +284,9 @@ Certain contexts permit the specification of an attribute on more than one targe
 - For an attribute specified on an event declaration that omits *event_accessor_declarations* the default target is the event declaration. Otherwise when the *attribute_target* is equal to:
   - `event` — the target is the event declaration
   - `field` — the target is the field
-  - `method` — the targets are the methods
+  - `method` — the targets are the methods (however, `method` is ignored on a partial event declaration)
 - In the case of an event declaration that does not omit *event_accessor_declarations* the default target is the method.
-  - `method` — the target is the associated method
+  - `method` — the target is the associated method (however, `method` is ignored on a partial event declaration)
   - `param` — the target is the lone parameter
 - For an attribute on a *lambda_expression* the default target is the method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the method
@@ -801,7 +801,7 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 Caller-info attributes can occur on optional parameters anywhere, including in delegate declarations. However, the specific caller-info attributes have restrictions on the types of the parameters they can attribute, so that there will always be an implicit conversion from a substituted value to the parameter type.
 
-It is an error to have the same caller-info attribute on a parameter of both the defining and implementing part of a partial method or partial indexer declaration. Only caller-info attributes in the defining part are applied, whereas caller-info attributes occurring only in the implementing part are ignored.
+It is an error to have the same caller-info attribute on a parameter of both the defining and implementing part of a partial method, partial indexer, partial event, or partial constructor declaration. Only caller-info attributes in the defining part are applied, whereas caller-info attributes occurring only in the implementing part are ignored.
 
 Caller information does not affect overload resolution. As the attributed optional parameters are still omitted from the source code of the caller, overload resolution ignores those parameters in the same way it ignores other omitted optional parameters ([§12.6.4](expressions.md#1264-overload-resolution)).
 
