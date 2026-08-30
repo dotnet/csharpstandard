@@ -61,11 +61,11 @@ Although developers are free to create their own set of tags, a recommended set 
 
 Note carefully that the documentation file does not provide full information about the type and members (for example, it does not contain any type information). To get such information about a type or member, the documentation file must be used in conjunction with reflection on the type or member.
 
-A partial type, partial method, partial property, or partial indexer can be declared in multiple parts, each of which can be in one or more compilation units, and each of which can have one or more documentation comments. A partial method, partial property, or partial indexer typically has a “defining partial declaration” and an “implementing partial declaration.”
+A partial type, partial method, partial property, partial indexer, partial event, or partial constructor can be declared in multiple parts, each of which can be in one or more compilation units, and each of which can have one or more documentation comments. A partial method, partial property, partial indexer, partial event, or partial constructor typically has a “defining partial declaration” and an “implementing partial declaration.”
 
 For a partial type, the document comments that apply directly to that type, if any, from each of its parts, are all written to the documentation file in some unspecified order.
 
-For a partial method, partial property, or partial indexer:
+For a partial method, partial property, partial indexer, partial event, or partial constructor:
 
 - If a defining partial declaration has no corresponding implementing partial declaration, any documentation comments in that defining partial declaration are ignored (as that declaration will be removed).
 - Otherwise, if the implementing partial declaration has any documentation comments, they are written to the documentation file, and any documentation comments in the defining partial declaration are ignored.
