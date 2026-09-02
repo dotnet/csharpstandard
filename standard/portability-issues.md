@@ -28,11 +28,11 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The behavior when an identifier not in Normalization Form C is encountered. ([§6.4.3](lexical-structure.md#643-identifiers))
 1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator`. ([§6.5.8](lexical-structure.md#658-line-directives))
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive. ([§6.5.10](lexical-structure.md#6510-pragma-directives))
-1. The values of any application parameters passed to `Main` by the host environment prior to application startup. ([§7.1](basic-concepts.md#71-application-startup))
-1. The mechanism for determining whether a program is compiled as a class library or as an application. ([§7.1](basic-concepts.md#71-application-startup))
-1. The policy or mechanisms used by an implementation for the creation and destruction of application domains. ([§7.1](basic-concepts.md#71-application-startup))
-1. The exit code if the effective entry point method terminates due to an exception. ([§7.2](basic-concepts.md#72-application-termination))
-1. Whether or not finalizers are run as part of application termination. ([§7.2](basic-concepts.md#72-application-termination), [§7.9](basic-concepts.md#79-automatic-memory-management))
+1. The values of any application parameters passed to the application entry-point method by the host environment prior to application startup. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The mechanism for determining whether a program is compiled as a class library or as an application. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The policy or mechanisms used by an implementation for the creation and destruction of application domains. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The exit code if the application terminates due to an exception. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. Whether or not finalizers are run as part of application termination. ([§7.1](basic-concepts.md#71-application-startup-and-termination), [§7.9](basic-concepts.md#79-automatic-memory-management))
 1. Whether APIs allow a finalizer to be run more than once. ([§7.9](basic-concepts.md#79-automatic-memory-management))
 1. The API surface provided by `Expression<TDelegate>` beyond the requirement for a `Compile` method. ([§8.6](types.md#86-expression-tree-types))
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
@@ -53,6 +53,7 @@ A conforming implementation is required to document its choice of behavior in ea
 
 ## B.4 Unspecified behavior
 
+1. The name of the entry-point method generated to contain top-level statements (§using-top-level-statements).
 1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).

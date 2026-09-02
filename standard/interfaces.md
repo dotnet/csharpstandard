@@ -487,14 +487,14 @@ This clause augments the description of static constructors in classes [§15.12]
 The static constructor for a closed ([§8.4.3](types.md#843-open-and-closed-types)) interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
 - Any of the static members of the interface are referenced.
-- Before the `Main` method is called for an interface containing the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
+- Before the entry-point method is called for an interface containing the application entry-point method ([§7.1](basic-concepts.md#71-application-startup-and-termination)).
 - That interface provides an implementation for a member, and that implementation is accessed as the most specific implementation ([§19.4.10](interfaces.md#19410-most-specific-implementation)) for that member.
 
 > *Note*: In the case where none of the preceding actions take place, the static constructor for an interface may not execute for a program where instances of types that implement the interface are created and used. *end note*
 
 To initialize a new closed interface type, first a new set of static fields for that particular closed type is created. Each of the static fields is initialized to its default value. Next, the static field initializers are executed for those static fields. Finally, the static constructor is executed.
 
-> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example of using various kinds of static members (including a Main method) declared within an interface. *end note*
+> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example of using various kinds of static members (including an entry-point method) declared within an interface. *end note*
 
 ### 19.4.9 Interface nested types
 

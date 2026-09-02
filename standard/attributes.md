@@ -833,6 +833,8 @@ The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is all
 
 If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
+> *Note*: In the case of a function invocation from a top-level statement the string is a representation of the implementation provided name (§using-top-level-statements). *end note*
+
 For invocations that occur within generic methods, only the method name itself is used, without the type parameter list.
 
 For invocations that occur within explicit interface member implementations, only the method name itself is used, without the preceding interface qualification.
