@@ -1,228 +1,134 @@
 # 7 Basic concepts
 
-## 7.1 Application startup
+## 7.1 Application startup and termination
 
 ### §app-startup-general General
 
-A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-specific and external to this specification.
+A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-defined and external to this specification.
 
-The entry point of an application may be specified in either of the following ways:
+When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
+An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-defined policy or mechanisms for the creation and destruction of application domains.
 
-1. Explicitly, by declaring a method with appropriate characteristics (§named-entry-point).
-1. Implicitly, by using top-level statements (§top-level-statements).
+An application run is initiated by invoking an ***entry point*** which is selected at compile-time from  candidate entry points which are specified in any of the following ways:
 
-### §named-entry-point Using a named entry point
+1. Explicitly, by declaring a method with appropriate characteristics (§named-entry-points).
+1. Implicitly, by using top-level statements (§using-top-level-statements).
+1. Implementation-defined, by using a mechanism external to this specification to designate the entry point (§externally-defined-entry-point).
 
-A program compiled as an application shall contain at least one method qualifying as an entry point by satisfying the following requirements:
+> *Note*: With the exception of top-level statement candidates (§using-top-level-statements) all candidate entry points are standard methods; being a candidate, or the selected entry point, does not prevent these methods being invoked as normal. *end note*
+
+It is a compile-time error if there are no candidate entry points.
+
+Otherwise one candidate is selected at compile-time as the entry point following the process in §entry-point-selection.
+
+An application is run by invoking the selected entry point as described in §entry-point-invocation.
+
+The ***termination status code***, the purpose of which is to allow communication of success or failure to the host environment, is determined based on the result from the entry point invocation (§entry-point-invocation).
+
+### §named-entry-points Named entry points
+
+A method qualifies as a canditate entry point by satisfying the following requirements:
 
 - It shall have the name `Main`.
 - It shall be `static`.
 - It shall not be generic.
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
-- It may have the `async` modifier provided the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
+- It may have the `async` modifier only if the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - It shall not be a partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementation.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
-> *Note*: Methods with the `async` modifier must have exactly one of the two return types specified above in order to qualify as an entry point. An `async void` method, or an `async` method returning a different awaitable type such as `ValueTask` or `ValueTask<int>` does not qualify as an entry point. *end note*
+The declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
 
-If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. If a qualifying method having a return type of `int` or `void` is found, any qualifying method having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` is not considered an entry point method. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
+> *Note*: The requirements here do not specify that `Main` should be a class member, it can be a struct member. *end note*
 
-Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§15.3.6](classes.md#1536-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
+### §using-top-level-statements Using top-level statements
 
-When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, a compiler shall synthesize a synchronous entry-point method that calls the corresponding `Main` method. The synthesized method has parameters and return types based on the `Main` method:
-
-- The parameter list of the synthesized method is the same as the parameter list of the `Main` method
-- If the return type of the `Main` method is `System.Threading.Tasks.Task`, the return type of the synthesized method is `void`
-- If the return type of the `Main` method is `System.Threading.Tasks.Task<int>`, the return type of the synthesized method is `int`
-
-Execution of the synthesized method proceeds as follows:
-
-- The synthesized method calls the `Main` method, passing its `string[]` parameter value as an argument if the `Main` method has such a parameter.
-- If the `Main` method throws an exception, the exception is propagated by the synthesized method.
-- Otherwise, the synthesized entry point waits for the returned task to complete, calling `GetAwaiter().GetResult()` on the task, using either the parameterless instance method or the extension method described by [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271). If the task fails, `GetResult()` will throw an exception, and this exception is propagated by the synthesized method.
-- For a `Main` method with a return type of `System.Threading.Tasks.Task<int>`, if the task completes successfully, the `int` value returned by `GetResult()` is returned from the synthesized method.
-
-The ***effective entry point*** of an application is the entry point declared within the program, or the synthesized method if one is required as described above. The return type of the effective entry point is therefore always `void` or `int`.
-
-When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
-An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-defined policy or mechanisms for the creation and destruction of application domains.
-
-Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
-
-> *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
-
-If the effective entry point’s return type is `int`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
-
-Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
-
-### §top-level-statements Using top-level statements
-
-Any one compilation unit ([§14.2](namespaces.md#142-compilation-units) in an application may contain one or more *statement_list*s—collectively called ***top-level statements***—in which case, the meaning is as if those *statement_list*s were combined in the block body of a static method within a partial class called `Program` in the global namespace, as follows:
+A single compilation unit ([§14.2](namespaces.md#142-compilation-units) in an application may contain a *statement_list*; called the ***top-level statements***. The meaning of the top-level statements is semantically equivalent to declaring the following in the global namespace:
 
 ```csharp
 partial class Program
 {
     static «AsyncAndReturnType» «Main»(string[] args)
     {
-        // top-level statements
+        «statement_list»
     }
 }
 ```
 
-The class name `Program` shall be referenceable by name from within the application. However, the method name `«Main»` is used here for illustrative purposes only. The actual name generated by the implementation is unspecified, and cannot be referenced by name from within the application. It is, however, available via the attribute `System.Runtime.CompilerServices.CallerMemberName` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)).
+The class `Program` is a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) which is combined with any other partial class declarations for `Program` within the application.
 
-The method is designated as the entry point of the program. Explicitly declared methods (including static ones called `Main`) that by convention could be considered as entry point candidates (§named-entry-point) shall be ignored for that purpose.
+> *Note*: This means that a top-level statement has the same rights of access as a statement in the body of a static method defined in the class `Program` in the global namespace. *end note*
 
-The entry-point method has one parameter, `string[] args`. This parameter is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply.
+The method name `«Main»` is a placeholder for an unspecified implementation provided name which is directly accessible only to the execution environment and cannot be referenced directly from within the application. Further there is no requirement that the name used is valid as a C# method name.
 
-Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method. However, they are not required.
+> *Note*: However a representation of the name used can be obtained as a `string` during execution of a top-level statement if it invokes a method which uses the `CallerMemberName` attribute ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)). *end note*
 
-The tokens that are generated in place of `«AsyncAndReturnType»` are determined based on operations used by the top-level statements, as follows:
+The `«statement_list»` is a placeholder for *statement_list* of the *compilation-unit*.
 
-| **Top-level code contains**       | **Generated entry-point signature**
+The parameter `args` is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply. This parameter receives the application parameters (§entry-point-invocation).
+
+Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method.
+
+The replacement of the `«AsyncAndReturnType»` placeholder in the method signature is determined based on content of the top-level statements, as follows:
+
+| **Top-level statements contain**       | **Generated signature**
 |   -----------------------         |   -------------------------------
-| No `await` or `return` with value | `private static void «Main»(string[] args)`
-| `return` with value only          | `private static int «Main»(string[] args)`
-| `await` only                      | `private static async Task «Main»(string[] args)`
-| `await` and `return` with value   | `private static async Task<int> «Main»(string[] args)`
+| No `await` or `return` with value | `static void «Main»(string[] args)`
+| `return` with value only          | `static int «Main»(string[] args)`
+| `await` only                      | `static async Task «Main»(string[] args)`
+| `await` and `return` with value   | `static async Task<int> «Main»(string[] args)`
 
-This is illustrated by the following sets of top-level statements:
+These generated signatures meet the requirements for named entry points (§named-entry-points) and therefore `«Main»` is a candidate entry point.
 
-**Set 1**
+> *Note*: These signatures include no declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)). However an implementation may include declared accessibility – as accessibility is ignored for entry point methods (§named-entry-points) the method would still be semantically equivalent.
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements2A", expectedOutput:["cmd-line args length = 0"]} -->
-```csharp
-using System;
-Console.WriteLine($"cmd-line args length = {args.Length}");
-C c = new C();
-public class C {}
-```
+### §externally-defined-entry-point Externally defined entry point
 
-whose implementation-generated code is
+An implementation may provide a mechanism external to this specification to specify a candidate entry point.
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements2B", expectedOutput:["cmd-line args length = 0"]} -->
-```csharp
-using System;
-partial class Program
-{
-    static void «Main»(string[] args)
-    {
-        Console.WriteLine($"cmd-line args length = {args.Length}");
-        C c = new C();
-    }
-}
-public class C {}
-```
+If that mechanism identifies a type within the program then the candidate entry point is determined as specified for named entry points (§named-entry-points).
 
-*Note*: As required by the grammar for *compilation_unit* ([§14.2](namespaces.md#142-compilation-units)), top-level statements must come after *using_directive*s and before *namespace_member_declaration*s, such as types. *end note*
+If that mechanism identifies a method within the program then the method may have any name but otherwise must meet the requirements specified for named entry points (§named-entry-points).
 
-**Set 2**
+The external mechanism may only specify a single candidate entry point.
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements3A", expectedOutput:["Hi!"]} -->
-```csharp
-System.Console.WriteLine("Hi!");
-return 2;
-```
+A candidate entry point specified by an external mechanism takes precedence in entry point selection (§entry-point-selection).
 
-whose implementation-generated code is
+### §entry-point-selection Entry point selection
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements3B", expectedOutput:["Hi!"]} -->
-```csharp
-partial class Program
-{
-    static int «Main»(string[] args)
-    {
-        System.Console.WriteLine("Hi!");
-        return 2;
-    }
-}
-```
+It is a compile-time error if there are no candidate entry points.
 
-**Set 3**
+Otherwise the entry point is selected from the candidates:
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements4A", expectedOutput:["Hi!"]} -->
-```csharp
-using System;
-using System.Threading.Tasks;
-await Task.Delay(1000);
-Console.WriteLine("Hi!");
-```
+- If one of the candidates is specified by an external mechanism (§externally-defined-entry-point) it is selected as the entry point;
+- Otherwise, iff one of the candidates is defined by top-level statements (§using-top-level-statements) it is selected as the entry point;
+- Otherwise:
+  - If any of the candidates have a return type of `int` or `void` then any candidates having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` are removed from the candidate pool.
+  - If there is a single remaining candidate it is selected as the entry point.
+  - Otherwise the entry point cannot be determined and a compile-time error shall be reported.
 
-whose implementation-generated code is
+The entry point selected at compile-time is invoked at runtime as part of application startup (§entry-point-invocation).
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements4B", expectedOutput:["Hi!"]} -->
-```csharp
-using System;
-using System.Threading.Tasks;
-partial class Program
-{
-    static async Task «Main»(string[] args)
-    {
-        await Task.Delay(1000);
-        Console.WriteLine("Hi!");
-    }
-}
-```
+### §entry-point-invocation Entry point invocation
 
-**Set 4**
+If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of non-null references to zero or more strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup.
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements5A", expectedOutput:["Hi!"]} -->
-```csharp
-using System;
-using System.Threading.Tasks;
-await Task.Delay(1000);
-Console.WriteLine("Hi!");
-return 0;
-```
+> *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-whose implementation-generated code is
+The application startup and termination process is semantically equivalent to the following steps:
 
-<!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements5B", expectedOutput:["Hi!"]} -->
-```csharp
-using System;
-using System.Threading.Tasks;
-partial class Program
-{
-    static async Task<int> «Main»(string[] args)
-    {
-        await Task.Delay(1000);
-        Console.WriteLine("Hi!");
-        return 0;
-    }
-}
-```
+- An application run is started by either:
+  - Invoking ([§12.8.10](expressions.md#12810-invocation-expressions)) the entry-point method, if its return type is `void` or `int`; or
+  - Awaiting ([§12.9.9](expressions.md#1299-await-expressions)) the result of invoking the entry-point method, if its return type is a `Task` type.
+  - In either case if the entry point requires an argument the application parameter array is supplied as its value.
 
-The implementation-generated class `Program` can be augmented by user-written code that declares one or more partial classes called `Program`.
+> *Note*: Invoking the entry-point method will cause the static constructor, if any, of the enclosing type to be executed first ([§15.12](classes.md#1512-static-constructors), [§16.4.10](structs.md#16410-static-constructors)). *end note*
 
-> *Example*: Consider the following:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"TopLevelStatements6"} -->
-> ```csharp
-> M1();                   // call top-level static local function M1
-> M2();                   // call top-level non-static local function M2
->
-> static void M1() { }    // static local function
-> void M2() { }           // non-static local function
->
-> Program.M1();           // call static method M1
-> new Program().M2();     // call non-static method M2
-> partial class Program
-> {
->     static void M1() { }    // static method
->     void M2() { }           // non-static method
-> }
-> ```
->
-> As the first two declarations for `M1` and `M2` get wrapped inside the generated entry-point method, they are local functions. However, the second two declarations are methods, as they are declared inside a class rather than a method. *end example*
-
-## 7.2 Application termination
-
-The return of control to the execution environment is known as ***application termination***.
-
-If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
-
-If the effective entry point method terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+- The application is terminated
+  - If the run results in an `int` value it serves as the termination status code;
+  - Otherwise, if the run results in no return value the termination status code is `0`;
+  - Otherwise, if the run terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
 Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-defined.
 
@@ -879,9 +785,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > *end note*
 
-As described in §top-level-statements, top-level source tokens are enclosed by the generated entry-point method.
+As described in §using-top-level-statements, top-level source tokens are enclosed by the generated entry-point method.
 
-For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
+For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry-point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
 
 This could lead to name shadowing of namespaces and types declared within the global namespace as well as to shadowing of imported names.
 
@@ -1227,7 +1133,7 @@ C# employs automatic memory management, which frees developers from manually all
 
 The garbage collector maintains information about object usage, and uses this information to make memory management decisions, such as where in memory to locate a newly created object, when to relocate an object, and when an object is no longer in use or inaccessible.
 
-Like other languages that assume the existence of a garbage collector, C# is designed so that the garbage collector might implement a wide range of memory management policies. C# specifies neither a time constraint within that span, nor an order in which finalizers are run. Whether or not finalizers are run as part of application termination is implementation-defined ([§7.2](basic-concepts.md#72-application-termination)).
+Like other languages that assume the existence of a garbage collector, C# is designed so that the garbage collector might implement a wide range of memory management policies. C# specifies neither a time constraint within that span, nor an order in which finalizers are run. Whether or not finalizers are run as part of application termination is implementation-defined ([§7.1](basic-concepts.md#71-application-startup-and-termination)).
 
 The behavior of the garbage collector can be controlled, to some degree, via static methods on the class `System.GC`. This class can be used to request a collection to occur, finalizers to be run (or not run), and so forth.
 
