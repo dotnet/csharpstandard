@@ -6715,7 +6715,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to two or more targets.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*.
 
 The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard ([§9.2.9.2](variables.md#9292-discards)). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
@@ -6909,6 +6909,7 @@ It is a compile time error if any *variable_reference*, including any reclassifi
 -->
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
+- a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
 - a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
 - a *variable_reference* can only occur if the containing *deconstructor*:
   - **is not** at the start of a statement, or
@@ -6944,6 +6945,19 @@ The run-time processing of a deconstructing assignment, now `d = e`, proceeds as
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The construction of intermediate tuples produced by this algorithm might be elided by an implementation as specified by [§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A discard is a placeholder rather than a *variable_reference*, so it can be combined with an existing variable on the left side of a deconstructing assignment:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingAssignmentDiscard1", expectedOutput:["1"]} -->
+> ```csharp
+> int x = 0;
+> (x, _) = (1, 2); // assigns 1 to the existing variable x; the discard ignores 2
+> Console.WriteLine(x);
+> ```
+>
+> *end example*
 
 #### 12.23.3.2 Abridged deconstructors
 

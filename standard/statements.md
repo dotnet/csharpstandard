@@ -1445,6 +1445,8 @@ A deconstructing foreach replaces the declaration and initialisation of a single
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
+> *Note*: Consequently, a deconstructing `foreach` can discard ([§9.2.9.2](variables.md#9292-discards)) every component, as in `foreach ((_, _) in e)`, and therefore declare no iteration variables. This differs from an ordinary single-variable `foreach` statement, whose iteration variable is introduced by a declaration; a bare `_` in `foreach (_ in e)` is not such a declaration. The equivalent “values are not needed” intent can be written as `foreach (var _ in e)`. *end note*
+
 A foreach statement of the form:
 
 ```csharp
@@ -1471,11 +1473,11 @@ is semantically equivalent to:
 }
 ```
 
-This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* in which the *deconstructor* contains the iteration-variable declarations: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
 
 - `C` and `E` are determined as for synchronous foreach
-- `e` is not visible or accessible anywhere in the program accept as indicated in the above code
-- the variables declared by the «deconstructor» are read-only to the «embedded_statement»
+- `e` is not visible or accessible anywhere in the program except as indicated in the above code
+- the variables declared within the «deconstructor» are read-only to the «embedded_statement»
 - the code in the `finally` block is determined as for synchronous foreach
 
 An `await foreach` statement of the form:
@@ -1504,11 +1506,24 @@ is semantically equivalent to:
 }
 ```
 
-This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the delaration and initialisation of a single iteration variable with a *deconstructing_assignment* which declares and assigns zero or more initialisation variables:
+This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* in which the *deconstructor* contains the iteration-variable declarations: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
 
-- `enumerator` is not visible or accessible anywhere in the program accept as indicated in the above code
-- the variables declared by the «deconstructor» are read-only to the «embedded_statement»
+- `enumerator` is not visible or accessible anywhere in the program except as indicated in the above code
+- the variables declared within the «deconstructor» are read-only to the «embedded_statement»
 - the code in the `finally` block is determined as for asynchronous foreach
+
+> *Example*: A deconstructing foreach uses discards as placeholders for elements that are not needed. Here each element of the collection is a tuple whose second element is discarded:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingForeach1", expectedOutput:["1","3"]} -->
+> ```csharp
+> var points = new List<(int X, int Y)> { (1, 2), (3, 4) };
+> foreach (var (x, _) in points)
+> {
+>     Console.WriteLine(x);
+> }
+> ```
+>
+> *end example*
 
 ## 13.10 Jump statements
 
