@@ -388,7 +388,7 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### 10.2.18 Switch expression conversion
 
-There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
+There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) which does not have a type, to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
 
 ## 10.3 Explicit conversions
 
