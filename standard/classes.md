@@ -5876,7 +5876,7 @@ If the return type of the async function is `void`, evaluation differs from the 
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
 
-Rather than using a task builder type based on the *return_type* of an async function, the attribute `AsyncMethodBuilder` can be applied to that async function to indicate a different task builder type.
+Rather than using a task builder type based on the *return_type* of an async function, the attribute `AsyncMethodBuilderAttribute` can be applied to that async function to indicate a different task builder type.
 
 It is an error to apply this attribute to a lambda with an implicit return type.
 
@@ -5884,10 +5884,10 @@ The ability to provide an alternate builder type shall not be used when the synt
 
 When an async function is compiled, the builder type is determined by:
 
-1. Using the builder type from the `AsyncMethodBuilder` attribute, if one is present;
+1. Using the builder type from `AsyncMethodBuilderAttribute`, if one is present;
 1. Otherwise, falling back to the builder type determined by the async function's *return_type* (§15.14.2).
 
-If an `AsyncMethodBuilder` attribute is present, the builder type specified by that attribute is constructed, if necessary.
+If an `AsyncMethodBuilderAttribute` is present, the builder type specified by that attribute is constructed, if necessary.
 
 If the override type is an open generic type, take the single type argument of the async function's return type and substitute it into the override type.
 
@@ -5930,7 +5930,7 @@ To verify that the builder type is compatible with *return_type* of the async fu
 > static async ValueTask<int> ExampleAsync() { … }
 > ```
 >
-> in which the attribute `AsyncMethodBuilder` is applied to that async function, would instead be compiled to something like:
+> in which the attribute `AsyncMethodBuilderAttribute` is applied to that async function, would instead be compiled to something like:
 >
 > ```csharp
 > [AsyncStateMachine(typeof(<ExampleAsync>d__29))]
