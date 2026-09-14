@@ -1318,11 +1318,11 @@ The output produced is, as follows:
 val = {  FF}; 2 * val = 510.
 ```
 
-A type having the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*.
+A type having the attribute `InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*.
 
 To qualify as a custom interpolated string expression handler, a class or struct type shall have the following characteristics:
 
-- Be marked with the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute`.
+- Be marked with the attribute `InterpolatedStringHandlerAttribute`.
 - Have an accessible constructor whose first two parameters have type `int`. (Other parameters may follow, which are used to pass information to/from the handler. These are discussed in §custInterpStrExpPassInfo. An optional final parameter may be declared to inhibit the handler from processing the interpolated string. This is discussed in §custInterpStrExpInhibCustHandler).
 
 When the compiler-generated code calls the constructor, the first parameter is set to the sum of the lengths of the interpolated string expression segments ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) in the interpolated string expression, and the second parameter is set to the number of interpolations. (For `($"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.)
@@ -1370,7 +1370,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
 
 ##### §custInterpStrExpPassInfo Passing information to/from a custom handler
 
-It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `System.Runtime.CompilerServices.InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
+It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
 
 ```csharp
 public class Logger
