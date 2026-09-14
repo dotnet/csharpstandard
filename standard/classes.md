@@ -3002,7 +3002,7 @@ When a method declaration includes an `extern` modifier, the method is said to b
 
 The mechanism by which linkage to an external method is achieved is implementation-defined.
 
-> *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
+> *Example*: The following example demonstrates the use of the `extern` modifier and `DllImportAttribute`:
 >
 > <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
