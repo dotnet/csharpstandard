@@ -6852,7 +6852,7 @@ internal static class MyCollectionBuilder
 }
 ```
 
-The collection type shall be annotated with a  `CollectionBuilder` attribute (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
+The collection type shall be annotated with `CollectionBuilderAttribute` (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
 
 The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type.
 
@@ -6872,7 +6872,7 @@ If the `CM` set is empty, then the collection type doesn't have an element type,
 
 If only one method among those in the `CM` set has an identity conversion from `E` to the element type of the collection type, that is the collection-creation method for the collection type. Otherwise, the collection type doesn't have a collection-creation method.
 
-It is an error if the `CollectionBuilder` attribute does not refer to an invokable method with the expected signature.
+It is an error if `CollectionBuilderAttribute` does not refer to an invokable method with the expected signature.
 
 For a *collection_expression* with a target type `C<S₀, S₁, …>` where the type declaration `C<T₀, T₁, …>` has an associated collection-creation method `B.M<U₀, U₁, …>()`, the generic type arguments from the target type are applied in order (from outermost containing type to innermost) to the collection-creation method.
 
