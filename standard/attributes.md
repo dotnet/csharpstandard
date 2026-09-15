@@ -1249,11 +1249,11 @@ This attribute may can be applied to any `ref` and it changes the ref-safe-conte
 
 When applying this attribute to an instance method of a struct it modifies the implicit `this` parameter; that is, `this` acts as an unannotated `ref` of the same type.
 
-An instance method or property annotated with `[UnscopedRef]` has the ref-safe-context of `this` set to the *caller-context*.
+An instance method or property annotated with `UnscopedRefAttribute` has the ref-safe-context of `this` set to the *caller-context*.
 
-A member annotated with `[UnscopedRef]` may not implement an interface.
+A member annotated with `UnscopedRefAttribute` may not implement an interface.
 
-It is an error to use `[UnscopedRef]` on
+It is an error to use `UnscopedRefAttribute` on
 
 - A member that is not declared on a `struct`.
 - A `static` member, `init` member, or constructor on a `struct`.
