@@ -138,7 +138,7 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces3"} -->
 > ```csharp
 > namespace Name;
 > using System;
@@ -149,7 +149,7 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 >
 > is semantically equivalent to
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces4"} -->
 > ```csharp
 > namespace Name
 > {
