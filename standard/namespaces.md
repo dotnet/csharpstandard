@@ -8,24 +8,26 @@ Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to 
 
 ## 14.2 Compilation units
 
-A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by zero or more *namespace_member_declaration*s. The *compilation_unit* defines the overall structure of the input.
+A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
+
+The structure of a single compilation unit is defined by *compilation_unit*:
 
 ```ANTLR
 compilation_unit
     : extern_alias_directive* using_directive* global_attributes?
-      namespace_member_declaration*
+      statement_list? namespace_member_declaration*
     ;
 ```
 
-A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
+The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directives)) of a compilation unit affect the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
 
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
-
-The *using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *using_directive*s ([§14.5](namespaces.md#145-using-directives)) of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
-The *namespace_member_declaration*s of each compilation unit of a program contribute members to a single declaration space called the global namespace.
+The optional *statement_list* ([§13.3.2](statements.md#1332-statement-lists)) specifies statements to be used as an application entry point (§using-top-level-statements). Only one compilation unit in a program may contain a *statement_list*.
+
+The *namespace_member_declaration*s ([§14.6](namespaces.md#146-namespace-member-declarations)) of each compilation unit of a program contribute members to a single declaration space called the global namespace.
 
 > *Example*:
 >
