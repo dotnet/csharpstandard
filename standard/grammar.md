@@ -213,15 +213,14 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'select'     | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
+    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
+    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
+    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
+    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'       | 'when'       | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -530,7 +529,7 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
-    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
       PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
@@ -601,7 +600,7 @@ fragment PP_Pragma_Text
 
 ```ANTLR
 
-// Source: §7.8.1 General
+// Source: §7.7.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -774,26 +773,20 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : logical_pattern
-    ;
-
-primary_pattern
-    : parenthesized_pattern
-    | declaration_pattern
+    : declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
-    | type_pattern
-    | relational_pattern
     ;
 
-parenthesized_pattern
-    : '(' pattern ')'
+// Source: §11.2.2 Constant pattern
+constant_pattern
+    : constant_expression
     ;
 
-// Source: §11.2.2 Declaration pattern
+// Source: §11.2.3 Declaration pattern
 declaration_pattern
     : type simple_designation
     ;
@@ -806,11 +799,6 @@ discard_designation
     ;
 single_variable_designation
     : identifier
-    ;
-
-// Source: §11.2.3 Constant pattern
-constant_pattern
-    : constant_expression
     ;
 
 // Source: §11.2.4 Var pattern
@@ -856,39 +844,6 @@ property_subpattern
 // Source: §11.2.7 Discard pattern
 discard_pattern
     : '_'
-    ;
-
-// Source: §11.2.8 Type pattern
-type_pattern
-    : type
-    ;
-
-// Source: §11.2.9 Relational pattern
-relational_pattern
-    : '<'  relational_expression
-    | '<=' relational_expression
-    | '>'  relational_expression
-    | '>=' relational_expression
-    ;
-
-// Source: §11.2.10 Logical pattern
-logical_pattern
-    : disjunctive_pattern
-    ;
-
-disjunctive_pattern
-    : disjunctive_pattern 'or' conjunctive_pattern
-    | conjunctive_pattern
-    ;
-
-conjunctive_pattern
-    : conjunctive_pattern 'and' negated_pattern
-    | negated_pattern
-    ;
-
-negated_pattern
-    : 'not' negated_pattern
-    | primary_pattern
     ;
 
 // Source: §12.6.2.1 General
@@ -1169,7 +1124,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1193,7 +1148,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.3.1 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1212,7 +1167,7 @@ expression_list
     : expression (',' expression)*
     ;
 
-// Source: §12.8.17.4 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1234,7 +1189,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.8.17.5 Array creation expressions
+// Source: §12.8.17.4 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -1242,7 +1197,7 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.8.17.6 Delegate creation expressions
+// Source: §12.8.17.5 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
@@ -2089,11 +2044,11 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
-    : statement_list* namespace_member_declaration*
+    : statement_list? namespace_member_declaration*
     | file_scoped_namespace_declaration
     ;
 
@@ -2323,13 +2278,13 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2338,7 +2293,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier* 'partial'?
+    : ref_method_modifier*
     ;
 
 method_header
@@ -2709,7 +2664,7 @@ finalizer_body
 // Source: §15.16.1 General
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
-      type_parameter_list? delimited_parameter_list? class_base?
+      type_parameter_list? delimited_parameter_list? class_base? 
       type_parameter_constraints_clause* record_class_body
     ;
 
@@ -2734,6 +2689,17 @@ non_record_struct_declaration
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
+    ;
+
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers

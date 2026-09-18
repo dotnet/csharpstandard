@@ -29,12 +29,12 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The behavior when an identifier not in Normalization Form C is encountered. ([§6.4.3](lexical-structure.md#643-identifiers))
 1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator`. ([§6.5.8](lexical-structure.md#658-line-directives))
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive. ([§6.5.10](lexical-structure.md#6510-pragma-directives))
-1. The values of any application parameters passed to `Main` by the host environment prior to application startup. ([§7.1](basic-concepts.md#71-application-startup))
-1. The mechanism for determining whether a program is compiled as a class library or as an application. ([§7.1](basic-concepts.md#71-application-startup))
-1. The policy or mechanisms used by an implementation for the creation and destruction of application domains. ([§7.1](basic-concepts.md#71-application-startup))
-1. The exit code if the effective entry point method terminates due to an exception. ([§7.2](basic-concepts.md#72-application-termination))
-1. Whether or not finalizers are run as part of application termination. ([§7.2](basic-concepts.md#72-application-termination), [§7.9](basic-concepts.md#79-automatic-memory-management))
-1. Whether APIs allow a finalizer to be run more than once. ([§7.9](basic-concepts.md#79-automatic-memory-management))
+1. The values of any application parameters passed to the application entry-point method by the host environment prior to application startup. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The mechanism for determining whether a program is compiled as a class library or as an application. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The policy or mechanisms used by an implementation for the creation and destruction of application domains. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. The exit code if the application terminates due to an exception. ([§7.1](basic-concepts.md#71-application-startup-and-termination))
+1. Whether or not finalizers are run as part of application termination. ([§7.1](basic-concepts.md#71-application-startup-and-termination), [§7.8](basic-concepts.md#78-automatic-memory-management))
+1. Whether APIs allow a finalizer to be run more than once. ([§7.8](basic-concepts.md#78-automatic-memory-management))
 1. The size and value range of the types `nint` and `nuint`. ([§8.3.6](types.md#836-integral-types))
 1. The API surface provided by `Expression<TDelegate>` beyond the requirement for a `Compile` method. ([§8.6](types.md#86-expression-tree-types))
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
@@ -62,11 +62,11 @@ A conforming implementation is required to document its choice of behavior in ea
 ## B.4 Unspecified behavior
 
 1. The name of the entry-point method generated to contain top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)).
-1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.8](basic-concepts.md#78-automatic-memory-management)).
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
-1. The layout of arrays, except in an unsafe context ([§12.8.17.5](expressions.md#128175-array-creation-expressions)).
+1. The layout of arrays, except in an unsafe context ([§12.8.17.4](expressions.md#128174-array-creation-expressions)).
 1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.22.3](expressions.md#12223-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
 1. The result of invoking `MoveNext` when an enumerator object is running ([§15.15.5.2](classes.md#151552-advance-the-enumerator)).

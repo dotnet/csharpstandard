@@ -136,7 +136,7 @@ The lifetime of a local variable is the portion of program execution during whic
 <!-- markdownlint-enable MD028 -->
 > *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, a compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
-> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.8](basic-concepts.md#78-automatic-memory-management)).
 >
 > *end note*
 
@@ -159,7 +159,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### 9.2.9.2 Discards
 
-A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
+A ***discard*** is a variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   
@@ -167,7 +167,7 @@ Because a discard has no name, the only reference to the variable it represents 
 
 > *Note*: A discard can however be passed as an output argument, allowing the corresponding output parameter to denote its associated storage location. *end note*
 
-A discard is not initially assigned, so it is always an error to access its value.
+A discard introduced by a declaration expression is not initially assigned, so it is always an error to access its value.
 
 > *Example*:
 >
@@ -211,11 +211,11 @@ At a given location in the executable code of a function member or an anonymous 
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
 >   - A simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) in which the variable is the left operand.
->   - A deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) in which the variable occurs as a *deconstructor_element* in the *deconstructor*, including in any nested *deconstructor*s.
+>   - A deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)) in which the variable occurs as a *deconstructor_element* in the *deconstructor*, including in any nested *deconstructor*s.
 >   - An invocation expression ([§12.8.10](expressions.md#12810-invocation-expressions)) or object creation expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) that passes the variable as an output parameter.
 >   - For a local variable:
 >     - a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer; or
->     - a deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) which declares the variable in its *destructor*.
+>     - a deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)) which declares the variable in its *destructor*.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
 >
@@ -667,7 +667,7 @@ The following rule applies to these kinds of expressions: literals ([§12.8.2](e
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -701,7 +701,7 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 - For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `in`, `out`, or `ref` modifiers.
 - For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§12.8.17.5](expressions.md#128175-array-creation-expressions)), object initializers ([§12.8.17.3](expressions.md#128173-object-initializers)), collection initializers ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) and anonymous object initializers ([§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§12.8.17.4](expressions.md#128174-array-creation-expressions)), object initializers ([§12.8.17.2.2](expressions.md#1281722-object-initializers)), collection initializers ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) and anonymous object initializers ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple and deconstructing assignment expressions
 
@@ -849,7 +849,7 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
-- The definite-assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* ([§9.4.4.35](variables.md#94435--expressions)), then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
@@ -1051,7 +1051,7 @@ let *E₀* be the expression obtained by textually removing the leading `?` from
 <!-- markdownlint-enable MD028 -->
 > *Note*: The concept of “directly contains” allows skipping over relatively simple “wrapper” expressions when analyzing conditional accesses that are compared to other values. For example, in general, `((a?.b(out x))!) == true` is expected to result in the same flow state as `a?.b == true`.
 >
-> The intent is to allow analysis to function in the presence of a number of possible conversions on a conditional access. Propagating out “state when not null” is not possible when the conversion is user-defined, though, since one can’t count on user-defined conversions to honor the constraint that the output is non-null only if the input is non-null. The only exception to this is when the user-defined conversion’s input is a non-nullable value type. For example:
+> The intent is to allow analysis to function in the presence of a number of possible conversions on a conditional access. Propagating out “state when not null” is not possible when the conversion is user-defined, though, since one can't count on user-defined conversions to honor the constraint that the output is non-null only if the input is non-null. The only exception to this is when the user-defined conversion’s input is a non-nullable value type. For example:
 >
 > ```csharp
 > public struct S1 { }
@@ -1090,7 +1090,7 @@ For an expression *expr*, where *expr* is a constant expression with a `bool` va
 - If *expr* is a constant expression with value *true*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when false.”
 - If *expr* is a constant expression with value *false*, and the state of *v* before *expr* is “not definitely assigned,” then the state of *v* after *expr* is “definitely assigned when true.”
 
-> *Note*: It is assumed that if an expression has a constant value bool `false`, that it’s impossible to reach any branch that requires the expression to return `true`. Therefore, variables are assumed to be definitely assigned in such branches.
+> *Note*: It is assumed that if an expression has a constant value bool `false`, that it's impossible to reach any branch that requires the expression to return `true`. Therefore, variables are assumed to be definitely assigned in such branches.
 >
 > Being in a conditional state *before* visiting a constant expression, is never expected, so there is no need to account for scenarios such as “*expr* is a constant expression with value *true* and the state of *v* before *expr* is definitely assigned when true.” *end note*
 
@@ -1132,14 +1132,14 @@ All of the above rules are commutative.
 >
 > Some consequences of these rules are:
 >
-> - `if (a?.b(out var x) == true) x() else x();` will error in the ‘else’ branch
-> - `if (a?.b(out var x) == 42) x() else x();` will error in the ‘else’ branch
-> - `if (a?.b(out var x) == false) x() else x();` will error in the ‘else’ branch
-> - `if (a?.b(out var x) == null) x() else x();` will error in the ‘then’ branch
-> - `if (a?.b(out var x) != true) x() else x();` will error in the ‘then’ branch
-> - `if (a?.b(out var x) != 42) x() else x();` will error in the ‘then’ branch
-> - `if (a?.b(out var x) != false) x() else x();` will error in the ‘then’ branch
-> - `if (a?.b(out var x) != null) x() else x();` will error in the ‘else’ branch
+> - `if (a?.b(out var x) == true) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == 42) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == false) x() else x();` will error in the 'else' branch
+> - `if (a?.b(out var x) == null) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != true) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != 42) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != false) x() else x();` will error in the 'then' branch
+> - `if (a?.b(out var x) != null) x() else x();` will error in the 'else' branch
 >
 > *end note*
 
@@ -1160,7 +1160,7 @@ where *T* is any type or pattern:
   - If *E* directly contains a null-conditional expression, and the state of *v* after the non-conditional counterpart *E₀* is “definitely assigned,” and `T` is a pattern that matches a `null` input, then the state of *v* after *expr* is “definitely assigned when false.”
   - If *E* is of type `bool` and `T` is a pattern that only matches a `true` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *E*.
   - If *E* is of type `bool` and `T` is a pattern that only matches a `false` input, then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after the logical negation expression `!`*expr*.
-  - Otherwise, if the definite-assignment state of *v* after *E* is “definitely assigned,” then the definite-assignment state of *v* after *expr* is “definitely assigned.”
+  - Otherwise, if the definite-assignment state of *v* after *E* is "definitely assigned," then the definite-assignment state of *v* after *expr* is "definitely assigned."
 
 > *Note*: This subclause addresses similar scenarios as [§9.4.4.37](variables.md#94437--expressions). It does not, however, address recursive patterns; e.g., `(a?.b(out x), c?.d(out y)) is (object, object)`. *end note*
 

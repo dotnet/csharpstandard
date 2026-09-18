@@ -83,10 +83,11 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `T` and `T?` for any reference type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
+- Between array types with the same rank ([§17.1](arrays.md#171-general)), when an identity conversion exists between the element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 - Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
-> *Example*: The following illustrates the recursive nature of the third rule:
+> *Example*: The following illustrates the recursive nature of the fourth rule:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion"} -->
 > ```csharp
@@ -119,8 +120,6 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 
 There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
 
-For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
-
 ### 10.2.3 Implicit numeric conversions
 
 The implicit numeric conversions are:
@@ -150,7 +149,7 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
 
-For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
+For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -401,13 +400,13 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### 10.2.18 Switch expression conversion
 
-There is an implicit conversion from a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
+There is an implicit conversion from a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) which does not have a type, to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression* to `T`.
 
 ### 10.2.19 Implicit object-creation conversions
 
 There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
 
-Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
 ### 10.2.20 Implicit conditional expression conversions
 
@@ -417,7 +416,6 @@ For a *conditional_expression* `c ? e1 : e2`, when
 1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
-
 ### 10.2.21 Anonymous function type conversion
 
 The following conversions are permitted from an anonymous function type `F`([§12.22.8](expressions.md#12228-anonymous-function-type)):
@@ -907,23 +905,6 @@ Evaluation of a nullable conversion based on an underlying conversion from `S` 
 - If the nullable conversion is from `S` to `T?`, the conversion is evaluated as the underlying conversion from `S` to `T` followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S?` to `T`, the conversion is evaluated as an unwrapping from `S?` to `S` followed by the underlying conversion from `S` to `T`.
 
-Conversion from `A` to `Nullable<B>` is:
-
-- an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
-- an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `B` is:
-
-- an explicit nullable conversion if there is an identity conversion or implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `Nullable<B>` is:
-
-- an identity conversion if there is an identity conversion from `A` to `B`;
-- an explicit nullable conversion if there is an implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
 ### 10.6.2 Lifted conversions
 
 Given a user-defined conversion operator that converts from a non-nullable value type `S` to a non-nullable value type `T`, a ***lifted conversion operator*** exists that converts from `S?` to `T?`. This lifted conversion operator performs an unwrapping from `S?` to `S` followed by the user-defined conversion from `S` to `T` followed by a wrapping from `T` to `T?`, except that a null valued `S?` converts directly to a null valued `T?`. A lifted conversion operator has the same implicit or explicit classification as its underlying user-defined conversion operator.
@@ -1030,7 +1011,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 

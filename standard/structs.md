@@ -25,6 +25,17 @@ non_record_struct_declaration
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
+
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
+    ;
 ```
 
 There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in [§16.4](structs.md#164-record-structs). The differences between the two kinds are discussed in [§16.5](structs.md#165-record-struct-and-non-record-struct-differences).
@@ -236,7 +247,7 @@ For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;
 
 #### 16.4.4.1 General
 
-In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-scopes).)
 
 The members provided by the implementation are described in the following subclauses.
 
@@ -250,7 +261,7 @@ Instance field declarations for a non-record struct are permitted to include var
 
 #### 16.4.4.3 Equality members
 
-The provided equality members are similar to those for a record class ([§15.16.6.3](classes.md#151663-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
+The provided equality members are similar to those for a record class ([§15.16.2](classes.md#15162-class-base-specification)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
 A record struct `R` implements `System.IEquatable<R>` and includes a synthesized strongly-typed overload of `Equals(R other)`, which is public, as follows:
 
@@ -316,7 +327,7 @@ The provided override of `GetHashCode()` shall return an `int` result of combini
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
 >     public static bool operator==(R1 r1, R1 r2) => r1.Equals(r2);
->     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);    
+>     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(
@@ -338,7 +349,7 @@ private bool PrintMembers(System.Text.StringBuilder builder);
 
 This method performs the following tasks:
 
-1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member’s name followed by “` = `“ followed by the member’s value separated with “`, “`,
+1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member's name followed by “` = `“ followed by the member's value separated with “`, “`,
 2. Returns true if the record struct has printable members.
 
 For a member that has a value type, its value shall be converted to a string representation.
@@ -361,7 +372,7 @@ This method performs the following tasks:
 
 1. Creates a `StringBuilder` instance,
 2. Appends the record struct name to the builder, followed by “` { `“,
-3. Invokes the record struct’s `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
+3. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
 4. Appends “`}`”,
 5. Returns the builder’s contents with `builder.ToString()`.
 
@@ -431,13 +442,13 @@ Instance field declarations for a record struct are permitted to include variabl
 
 The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
 
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS8050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS0171","CS8050"]} -->
 > ```csharp
 > record struct Pos(int X) // def assignment error in primary constructor
 > {
 >     private int x;
 >     public int X {
->         get { return x; } set { x = value; } 
+>         get { return x; } set { x = value; }
 >     } = X;
 > }
 > ```
