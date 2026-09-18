@@ -1241,11 +1241,11 @@ This attribute is used in those situations where the ref should be allowed to es
 
 This attribute may can be applied to any `ref` and it changes the ref-safe-context to be one level wider than its default. For example:
 
-UnscopedRef applied to | Original ref-safe-context | New ref-safe-context
---- | --- | ---
-instance member | function-member | return-only
-`in` / `ref` parameter | return-only | caller-context
-`out` parameter | function-member | return-only
+| UnscopedRef applied to | Original ref-safe-context | New ref-safe-context |
+| --- | --- | --- |
+| instance member | function-member | return-only |
+| `in` / `ref` parameter | return-only | caller-context |
+| `out` parameter | function-member | return-only |
 
 When applying this attribute to an instance method of a struct it modifies the implicit `this` parameter; that is, `this` acts as an unannotated `ref` of the same type.
 
