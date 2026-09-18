@@ -1700,6 +1700,8 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 
 > *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see §Ref-Fields. *end note*
 
+<!-- markdownlint-disable MD028 -->
+
 > *Example*:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Fields1", ignoredWarnings:["CS0649"]} -->
