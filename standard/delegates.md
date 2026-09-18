@@ -8,7 +8,7 @@ A delegate declaration defines a class that is derived from the class `System.De
 
 ## 21.2 Delegate declarations
 
-A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new delegate type.
+A *delegate_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-type-declarations)) that declares a new delegate type.
 
 ```ANTLR
 delegate_declaration
