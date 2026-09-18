@@ -280,7 +280,7 @@ A struct type is a value type that can declare constants, fields, methods, prope
 
 ### 8.3.5 Simple types
 
-Except for `nint` and `nuint`, the simple types are aliases for predefined `struct` types in the `System` namespace, as described in the table below.
+The simple types are aliases for predefined `struct` types in the `System` namespace, as described in the table below.
 
 **Keyword** | **Aliased type**
 ----------- | ------------------
@@ -290,8 +290,8 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
   `ushort`  |   `System.UInt16`
   `int`     |   `System.Int32`
   `uint`    |   `System.UInt32`
-  `nint`    |    none; see below
-  `nuint`   |    none; see below
+  `nint`    |   `System.IntPtr`
+  `nuint`   |   `System.UIntPtr`
   `long`    |   `System.Int64`
   `ulong`   |   `System.UInt64`
   `char`    |   `System.Char`
@@ -300,7 +300,7 @@ Except for `nint` and `nuint`, the simple types are aliases for predefined `stru
   `bool`    |   `System.Boolean`
   `decimal` |   `System.Decimal`
 
-Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
+Every simple type has members. Each simple type has its aliased struct type’s members.
 
 > *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:
 >
@@ -323,14 +323,6 @@ Every simple type has members. Each simple type that is an alias for a predefine
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
 > *end note*.
-
-<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
-
-The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
-
-- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
-- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
-- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
 ### 8.3.6 Integral types
 
