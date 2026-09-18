@@ -1483,7 +1483,7 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 
 ### §scoped-modifier The scoped modifier
 
-The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.5.15](structs.md#16515-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
 
 `scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type. `scoped` shall not be applied to fields, array elements, or return types.
 
