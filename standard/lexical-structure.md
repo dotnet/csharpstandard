@@ -78,10 +78,9 @@ These productions occur in contexts where a value can occur in an expression, an
 
 If a sequence of tokens can be parsed, in context, as one of the disambiguated productions including an optional *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), then the token immediately following the closing `>` token shall be examined and if it is:
 
-- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [ =>`; or
+- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
 - one of the relational operators `<  <=  >=  is as`; or
 - a contextual query keyword appearing inside a query expression.
-- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
@@ -360,7 +359,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, keyword or contextual keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -605,14 +604,14 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'      | 'alias'    | 'ascending' | 'async'     | 'await'
-    | 'by'       | 'Cdecl'     | 'descending'| 'dynamic'   | 'equals'
-    | 'Fastcall' | 'from'      | 'get'       | 'global'    | 'group'
-    | 'init'     | 'into'      | 'join'      | 'let'       | 'managed'
-    | 'nameof'   | 'nint'      | 'notnull'   | 'nuint'     | 'on'
-    | 'orderby'  | 'partial'   | 'record'    | 'remove'    | 'select'
-    | 'set'      | 'Stdcall'   | 'Thiscall'  | 'unmanaged' | 'value'
-    | 'var'      | 'when'      | 'where'     | 'yield'
+    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
+    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
+    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
+    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
+    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'       | 'when'       | 'where'     | 'yield'
     ;
 ```
 
@@ -975,7 +974,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.14.8](expressions.md#12148-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1203,7 +1202,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.26](expressions.md#1226-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.25](expressions.md#1225-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 

@@ -761,7 +761,12 @@ parenthesized_pattern
     : '(' pattern ')'
     ;
 
-// Source: §11.2.2 Declaration pattern
+// Source: §11.2.2 Constant pattern
+constant_pattern
+    : constant_expression
+    ;
+
+// Source: §11.2.3 Declaration pattern
 declaration_pattern
     : type simple_designation
     ;
@@ -774,11 +779,6 @@ discard_designation
     ;
 single_variable_designation
     : identifier
-    ;
-
-// Source: §11.2.3 Constant pattern
-constant_pattern
-    : constant_expression
     ;
 
 // Source: §11.2.4 Var pattern

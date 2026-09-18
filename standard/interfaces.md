@@ -487,14 +487,14 @@ This clause augments the description of static constructors in classes [§15.12]
 The static constructor for a closed ([§8.4.3](types.md#843-open-and-closed-types)) interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
 - Any of the static members of the interface are referenced.
-- Before the `Main` method is called for an interface containing the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
+- Before the entry-point method is called for an interface containing the application entry-point method ([§7.1](basic-concepts.md#71-application-startup-and-termination)).
 - That interface provides an implementation for a member, and that implementation is accessed as the most specific implementation ([§19.4.10](interfaces.md#19410-most-specific-implementation)) for that member.
 
 > *Note*: In the case where none of the preceding actions take place, the static constructor for an interface may not execute for a program where instances of types that implement the interface are created and used. *end note*
 
 To initialize a new closed interface type, first a new set of static fields for that particular closed type is created. Each of the static fields is initialized to its default value. Next, the static field initializers are executed for those static fields. Finally, the static constructor is executed.
 
-> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example of using various kinds of static members (including a Main method) declared within an interface. *end note*
+> *Note*: See [§19.4.2](interfaces.md#1942-interface-fields) for an example of using various kinds of static members (including an entry-point method) declared within an interface. *end note*
 
 ### 19.4.9 Interface nested types
 
@@ -853,13 +853,16 @@ It is not possible to access an explicit interface member implementation through
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
-An explicit interface method implementation inherits any type parameter constraints from the interface.
+An explicit interface member implementation inherits any type parameter constraints from the interface.
 
-A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints are applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. The `default` constraint is applied to *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
+A *type_parameter_constraints_clause* on an explicit interface member implementation may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the signature of the explicit interface member implementation, where `T` is a type parameter, is interpreted as follows:
 
 - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
 - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
-- If a `default` constraint is added for type parameter `T` then `T?` represents a nullable instance of the corresponding reference type when `T` is a reference type, and an instance of `T` when `T` is a value type. If `T` is substituted with an annotated type `U?`, then `T?` represents `U?`, not `U??`.
+- If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
+  - If `T` is substituted with a reference type `C`, `T?` represents the nullable reference type `C?`.
+  - If `T` is substituted with an already-annotated reference type `C?`, `T?` represents `C?`, not `C??`.
+  - If `T` is substituted with a value type, `T?` represents `T` itself, not `Nullable<T>`.
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >

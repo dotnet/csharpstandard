@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8773"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
@@ -30,9 +30,9 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 ### 23.2.2 Attribute usage
 
-The attribute `AttributeUsage` ([§23.5.2](attributes.md#2352-the-attributeusage-attribute)) is used to describe how an attribute class can be used.
+The attribute `AttributeUsageAttribute` ([§23.5.2](attributes.md#2352-the-attributeusage-attribute)) is used to describe how an attribute class can be used.
 
-`AttributeUsage` has a positional parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)) that enables an attribute class to specify the kinds of program entities on which it can be used.
+`AttributeUsageAttribute` has a positional parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)) that enables an attribute class to specify the kinds of program entities on which it can be used.
 
 > *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
 >
@@ -59,9 +59,9 @@ The attribute `AttributeUsage` ([§23.5.2](attributes.md#2352-the-attributeusage
 >
 > *end example*
 
-`AttributeUsage` has a named parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)), called `AllowMultiple`, which indicates whether the attribute can be specified more than once for a given entity. If `AllowMultiple` for an attribute class is true, then that attribute class is a ***multi-use attribute class***, and can be specified more than once on an entity. If `AllowMultiple` for an attribute class is false or it is unspecified, then that attribute class is a ***single-use attribute class***, and can be specified at most once on an entity.
+`AttributeUsageAttribute` has a named parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)), called `AllowMultiple`, which indicates whether the attribute can be specified more than once for a given entity. If `AllowMultiple` for an attribute class is true, then that attribute class is a ***multi-use attribute class***, and can be specified more than once on an entity. If `AllowMultiple` for an attribute class is false or it is unspecified, then that attribute class is a ***single-use attribute class***, and can be specified at most once on an entity.
 
-> *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
+> *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the attribute:
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeUsage4", replaceEllipsis:true} -->
 > <!-- Maintenance Note: A version of this type exists in additional-files as "AuthorAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
@@ -82,9 +82,9 @@ The attribute `AttributeUsage` ([§23.5.2](attributes.md#2352-the-attributeusage
 >
 > *end example*
 
-`AttributeUsage` has another named parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)), called `Inherited`, which indicates whether the attribute, when specified on a base class, is also inherited by classes that derive from that base class. If `Inherited` for an attribute class is true, then that attribute is inherited. If `Inherited` for an attribute class is false then that attribute is not inherited. If it is unspecified, its default value is true.
+`AttributeUsageAttribute` has another named parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)), called `Inherited`, which indicates whether the attribute, when specified on a base class, is also inherited by classes that derive from that base class. If `Inherited` for an attribute class is true, then that attribute is inherited. If `Inherited` for an attribute class is false then that attribute is not inherited. If it is unspecified, its default value is true.
 
-An attribute class `X` not having an `AttributeUsage` attribute attached to it, as in
+An attribute class `X` not having an `AttributeUsageAttribute` attribute attached to it, as in
 
 <!-- Example: {template:"standalone-lib", name:"AttributeUsage6", replaceEllipsis:true} -->
 ```csharp
@@ -381,7 +381,7 @@ It is a compile-time error to use a single-use attribute class more than once on
 > public class Class1 {}
 > ```
 >
-> results in a compile-time error because it attempts to use `HelpString`, which is a single-use attribute class, more than once on the declaration of `Class1`.
+> results in a compile-time error because it attempts to use `HelpStringAttribute`, which is a single-use attribute class, more than once on the declaration of `Class1`.
 >
 > *end example*
 
@@ -499,7 +499,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
-- `System.Runtime.CompilerServices.ModuleInitializer` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
+- `System.Runtime.CompilerServices.ModuleInitializerAttribute` (§module-init-attr), which is used to mark a method as a module initializer.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -507,9 +507,9 @@ An execution environment may provide additional implementation-defined attribute
 
 ### 23.5.2 The AttributeUsage attribute
 
-The attribute `AttributeUsage` is used to describe the manner in which the attribute class can be used.
+The attribute `AttributeUsageAttribute` is used to describe the manner in which the attribute class can be used.
 
-A class that is decorated with the `AttributeUsage` attribute shall derive from `System.Attribute`, either directly or indirectly. Otherwise, a compile-time error occurs.
+A class that is decorated with the `AttributeUsageAttribute` attribute shall derive from `System.Attribute`, either directly or indirectly. Otherwise, a compile-time error occurs.
 
 > *Note*: For an example of using this attribute, see [§23.2.2](attributes.md#2322-attribute-usage). *end note*
 
@@ -517,11 +517,11 @@ A class that is decorated with the `AttributeUsage` attribute shall derive from 
 
 #### 23.5.3.1 General
 
-The attribute `Conditional` enables the definition of ***conditional method***s, ***conditional local function***s, and ***conditional attribute class***es.
+The attribute `ConditionalAttribute` enables the definition of ***conditional method***s, ***conditional local function***s, and ***conditional attribute class***es.
 
 #### 23.5.3.2 Conditional methods
 
-A method decorated with the `Conditional` attribute is a conditional method. Each conditional method is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
+A method decorated with `ConditionalAttribute` is a conditional method. Each conditional method is thus associated with the conditional compilation symbols declared in its `ConditionalAttribute`s.
 
 > *Example*:
 >
@@ -546,14 +546,14 @@ A call to a conditional method is included if one or more of its associated cond
 
 A conditional method is subject to the following restrictions:
 
-- The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if the `Conditional` attribute is specified on a method in an interface declaration.
+- The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if `ConditionalAttribute` is specified on a method in an interface declaration.
 - The conditional method shall not be an accessor of a property, indexer or event.
 - The conditional method shall have a return type of `void`.
-- The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with a `Conditional` attribute.
+- The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with `ConditionalAttribute`.
 - The conditional method shall not be an implementation of an interface method. Otherwise, a compile-time error occurs.
 - The parameters of the conditional method shall not be output parameters.
 
-> *Note*: Attributes with an `AttributeUsage` ([§23.2.2](attributes.md#2322-attribute-usage))  including `AttributeTargets.Method` can normally be applied to accessors of properties, indexers and events. The restrictions above prohibit this usage of the `Conditional` attribute. *end note*
+> *Note*: Attributes with an `AttributeUsageAttribute` ([§23.2.2](attributes.md#2322-attribute-usage)) including `AttributeTargets.Method` can normally be applied to accessors of properties, indexers and events. The restrictions above prohibit this usage of `ConditionalAttribute`. *end note*
 
 In addition, a compile-time error occurs if a delegate is created from a conditional method.
 
@@ -679,7 +679,7 @@ A compile time error occurs if a non-static local function is made conditional.
 
 #### 23.5.3.4 Conditional attribute classes
 
-An attribute class ([§23.2](attributes.md#232-attribute-classes)) decorated with one or more `Conditional` attributes is a conditional attribute class. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
+An attribute class ([§23.2](attributes.md#232-attribute-classes)) decorated with `ConditionalAttribute` one or more times is a conditional attribute class. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `ConditionalAttribute`s.
 
 > *Example*:
 >
@@ -725,9 +725,9 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 ### 23.5.4 The Obsolete attribute
 
-The attribute `Obsolete` is used to mark types and members of types that should no longer be used.
+The attribute `ObsoleteAttribute` is used to mark types and members of types that should no longer be used.
 
-If a program uses a type or member that is decorated with the `Obsolete` attribute, a compiler shall issue a warning or an error. Specifically, a compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. A compiler shall issue an error if the error parameter is specified and has the value `true`.
+If a program uses a type or member that is decorated with `ObsoleteAttribute`, a compiler shall issue a warning or an error. Specifically, a compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. A compiler shall issue an error if the error parameter is specified and has the value `true`.
 
 > *Example*: In the following code
 >
@@ -754,7 +754,7 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 > }
 > ```
 >
-> the class `A` is decorated with the `Obsolete` attribute. Each use of `A` in `Main` results in a warning that includes the specified message, “This class is obsolete; use class `B` instead”.
+> the class `A` is decorated with `ObsoleteAttribute`. Each use of `A` in `Main` results in a warning that includes the specified message, “This class is obsolete; use class `B` instead”.
 >
 > *end example*
 
@@ -800,13 +800,13 @@ Caller information is only substituted when a function is explicitly invoked in 
 
 One exception is query expressions. These are considered syntactic expansions, and if the calls they expand to omit optional parameters with caller-info attributes, caller information will be substituted. The location used is the location of the query clause which the call was generated from.
 
-If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumber`, `CallerFilePath`, `CallerMemberName`. Consider the following parameter declaration:
+If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumberAttribute`, `CallerFilePathAttribute`, `CallerMemberNameAttribute`. Consider the following parameter declaration:
 
 ```csharp
 [CallerMemberName, CallerFilePath, CallerLineNumber] object p = ...
 ```
 
-`CallerLineNumber` takes precedence, and the other two attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` would be ignored. The lexical ordering of these attributes is irrelevant.
+`CallerLineNumberAttribute` takes precedence, and the other two attributes are ignored. If `CallerLineNumberAttribute` were omitted, `CallerFilePathAttribute` would take precedence, and `CallerMemberNameAttribute` would be ignored. The lexical ordering of these attributes is irrelevant.
 
 #### 23.5.6.2 The CallerLineNumber attribute
 
@@ -832,7 +832,9 @@ The file path may be affected by `#line` directives ([§6.5.8](lexical-structure
 
 The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
-If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value. (In the case of a function invocation from a top-level statement ([§7.1.3](basic-concepts.md#713-using-top-level-statements)), the member name is that generated by the implementation.)
+If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
+
+> *Note*: In the case of a function invocation from a top-level statement the string is a representation of the implementation provided name (§using-top-level-statements). *end note*
 
 For invocations that occur within generic methods, only the method name itself is used, without the type parameter list.
 
@@ -894,17 +896,17 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 
 **Attribute**  | **Meaning**
 ------------------  | ------------------
-`AllowNull` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
-`DisallowNull` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
-`MaybeNull` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
-`NotNull` ([§23.5.7.10](attributes.md#235710-the-notnull-attribute))  | A nullable return value will never be null.
-`MaybeNullWhen` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
-`NotNullWhen` ([§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
-`NotNullIfNotNull` ([§23.5.7.11](attributes.md#235711-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
-`MemberNotNull` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute))  | The listed member won’t be null when the method returns.
-`MemberNotNullWhen` ([§23.5.7.9](attributes.md#23579-the-membernotnullwhen-attribute))  | The listed member won’t be null when the method returns the specified `bool` value.
-`DoesNotReturn` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
-`DoesNotReturnIf` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
+`AllowNullAttribute` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
+`DisallowNullAttribute` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
+`MaybeNullAttribute` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
+`NotNullAttribute` ([§23.5.7.10](attributes.md#235710-the-notnull-attribute))  | A nullable return value will never be null.
+`MaybeNullWhenAttribute` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
+`NotNullWhenAttribute` ([§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute))  | A nullable argument will not be null when the method returns the specified `bool` value.
+`NotNullIfNotNullAttribute` ([§23.5.7.11](attributes.md#235711-the-notnullifnotnull-attribute))  | A return value is not null if the argument for the specified parameter is not null.
+`MemberNotNullAttribute` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute))  | The listed member will not be null when the method returns.
+`MemberNotNullWhenAttribute` ([§23.5.7.9](attributes.md#23579-the-membernotnullwhen-attribute))  | The listed member will not be null when the method returns the specified `bool` value.
+`DoesNotReturnAttribute` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
+`DoesNotReturnIfAttribute` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
 The following subclauses in [§23.5.7](attributes.md#2357-code-analysis-attributes) are conditionally normative.
 
@@ -1047,16 +1049,16 @@ Specifies that a non-nullable return value may be null.
 
 #### 23.5.7.7 The MaybeNullWhen attribute
 
-Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute)), but includes a parameter for the specified return value.
+Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to `MaybeNullAttribute` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute)), but includes a parameter for the specified return value.
 
 #### 23.5.7.8 The MemberNotNull attribute
 
-Specifies that the given member won’t be ``null`` when the method returns.
+Specifies that the given member won’t be `null` when the method returns.
 
-> *Example*: A helper method may include the ``MemberNotNull`` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
+> *Example*: A helper method may include the `MemberNotNull` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
 >
 > <!-- Example: {template:"standalone-lib", name:"MemberNotNullAttribute"} -->
-> ``````csharp
+> ```csharp
 > #nullable enable
 > public class Container
 > {
@@ -1080,13 +1082,13 @@ Specifies that the given member won’t be ``null`` when the method returns.
 >         _uniqueIdentifier = DateTime.Now.Ticks.ToString();
 >     }
 > }
-> ``````
+> ```
 >
 > Multiple field names may be given as arguments to the attribute’s constructor. *end example*
 
 #### 23.5.7.9 The MemberNotNullWhen attribute
 
-Specifies that the listed member won’t be ``null`` when the method returns the specified ``bool`` value.
+Specifies that the listed member won’t be `null` when the method returns the specified `bool` value.
 
 > *Example*: This attribute is like `MemberNotNull` ([§23.5.7.8](attributes.md#23578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
@@ -1116,7 +1118,7 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 
 Specifies that a return value is not `null` if the argument for the specified parameter is not `null`.
 
-> *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist a compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
+> *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist a compiler’s analysis when a method always returns a non-null value when certain arguments are not `null`, the method may be decorated with `NotNullIfNotNullAttribute`. Consider the following method:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
@@ -1139,7 +1141,7 @@ Specifies that a return value is not `null` if the argument for the specified pa
 
 Specifies that a nullable argument will not be `null` when the method returns the specified `bool` value.
 
-> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It is a form of null-check: Callers do not need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
+> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It is a form of null-check: Callers do not need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and decorate it with `NotNullWhenAttribute`:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullWhenAttribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
@@ -1153,11 +1155,11 @@ Specifies that a nullable argument will not be `null` when the method returns th
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.15.5.2](classes.md#151552-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) in the body of that method.
 
-It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
+It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
-- The `EnumeratorCancellation` attribute is applied to a parameter of a type other than `CancellationToken`,
-- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
-- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+- `EnumeratorCancellationAttribute` is applied to a parameter of a type other than `CancellationToken`,
+- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
+- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
 The iterator will not have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 
@@ -1196,9 +1198,9 @@ The iterator will not have access to the `CancellationToken` argument for `GetAs
 >
 > *end example*
 
-### 23.5.9 The ModuleInitializer attribute
+### §module-init-attr The ModuleInitializer attribute
 
-The attribute `ModuleInitializer` is used to mark a method as a ***module initializer***. Such a method is called during initialization of the containing module. A module may have multiple initializers, which are called in an implementation-defined order.
+The attribute `ModuleInitializerAttribute` is used to mark a method as a ***module initializer***. Such a method is called during initialization of the containing module. A module may have multiple initializers, which are called in an implementation-defined order.
 
 There are no limitations on what code is permitted in a module initializer.
 
@@ -1214,7 +1216,7 @@ A module initializer shall have the following characteristics:
 
 ## 23.6 Attributes for interoperation
 
-For interoperation with other languages, an indexer may be implemented using indexed properties. If no `IndexerName` attribute is present for an indexer, then the name `Item` is used by default. The `IndexerName` attribute enables a developer to override this default and specify a different name.
+For interoperation with other languages, an indexer may be implemented using indexed properties. If the indexer is not decorated with `IndexerNameAttribute`, then the name `Item` is used by default. `IndexerNameAttribute` enables a developer to override this default and specify a different name.
 
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 >
