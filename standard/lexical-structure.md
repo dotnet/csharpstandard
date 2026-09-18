@@ -136,7 +136,7 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 
 When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
-To differentiate a collection initializer ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
+To differentiate a collection initializer ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
 
 ```csharp
 var y = new C { [A] = x };    // OK: y[A] = x
