@@ -705,7 +705,6 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 >
 > *end example*
 
-
 ### §list-pattern-new-clause List pattern
 
 A *list_pattern* matches a sequence of elements in a list or an array.
@@ -833,4 +832,3 @@ The input type for a *slice_pattern* is the return type of the underlying `this[
 > ```
 >
 > *end example*
-
