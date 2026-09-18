@@ -1179,6 +1179,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
     - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
       > *Note*: This is only applicable in unsafe code. *end note*
   - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+
 #### 12.6.4.6 Exactly matching expression
 
 Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of the following holds:
