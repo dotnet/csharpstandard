@@ -440,18 +440,7 @@ In the case of a record class, the implementation shall provide a private, init-
 
 Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
 
-The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
-
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS0171","CS8050"]} -->
-> ```csharp
-> record struct Pos(int X) // def assignment error in primary constructor
-> {
->     private int x;
->     public int X {
->         get { return x; } set { x = value; }
->     } = X;
-> }
-> ```
+The definite assignment rules for struct instance constructors ([§16.6.9](structs.md#1669-constructors), [§12.8.14](expressions.md#12814-this-access)) apply to the primary constructor of record structs. As for any other struct instance constructor without a `this()` initializer, any instance field that is not definitely assigned by the primary constructor is implicitly initialized to its default value in the initialization phase that runs before the body of the primary constructor.
 
 ##### 16.4.4.5.3 Properties
 
@@ -820,15 +809,15 @@ An explicitly declared parameterless instance constructor shall have public acce
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional. The execution of an instance constructor shall not result in the execution of a constructor in the struct’s base type `System.ValueType`.
 
-The `this` parameter of a struct instance constructor corresponds to an output parameter of the struct type. As such, `this` shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
+The `this` parameter of a struct instance constructor behaves similarly to an output parameter of the struct type, except that when the definite assignment requirements ([§9.4.1](variables.md#941-general)) for `this` (or for instance variables within `this`) are not met at a location where they would otherwise be required, that does not result in a compile-time error. Instead, the unassigned variables are implicitly initialized to the default value ([§9.3](variables.md#93-default-values)) in an *initialization* phase before any other code in the constructor runs, as described in [§12.8.14](expressions.md#12814-this-access).
 
-If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
+If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to `this` that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 
-Instance fields (other than `fixed` fields) shall be definitely assigned in struct instance constructors that do not have a `this()` initializer.
+For a struct instance constructor that does not have a `this()` initializer, any instance field (other than a `fixed` field) that is not definitely assigned at every location where the constructor returns, or that has not yet been definitely assigned at a location where the value of `this` or of that field is read, is implicitly initialized to its default value in the *initialization* phase described in [§12.8.14](expressions.md#12814-this-access).
 
 > *Example*: Consider the instance constructor implementation below:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2", expectedErrors:["CS0188"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2"} -->
 > ```csharp
 > struct Point
 > {
@@ -846,14 +835,16 @@ Instance fields (other than `fixed` fields) shall be definitely assigned in stru
 >
 >     public Point(int x, int y) 
 >     {
->         X = x; // error, this is not yet definitely assigned
->         Y = y; // error, this is not yet definitely assigned
+>         X = x; // ok; x is implicitly initialized to its default value
+>                // before the body runs, so calling the X setter is allowed
+>         Y = y; // ok, for the same reason
 >     }
 > }
 > ```
 >
-> No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
-> There is one exception to this, and that involves automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). The definite assignment rules ([§12.24.2](expressions.md#12242-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> Because the instance fields `x` and `y` are not definitely assigned before the calls to the property setters, they are implicitly initialized to their default values in the initialization phase before the constructor body runs. The set accessors for `X` and `Y` may therefore be invoked even though the constructor body itself does not first assign `x` and `y`.
+>
+> Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) interact with these rules via the hidden backing field. The definite assignment rules ([§12.24.2](expressions.md#12242-simple-assignment)) specifically treat assignment to an auto-property of a struct type within an instance constructor of that struct type as a definite assignment of the hidden backing field of the auto-property. Thus, the following is also allowed:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Constructors3"} -->
 > ```csharp
@@ -906,7 +897,7 @@ For a property accessor expression, `s.P`:
 
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
-> *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+> *Note*: Because the backing field of an auto-property of a struct type is implicitly initialized to its default value in the initialization phase of an instance constructor that does not assign it ([§12.8.14](expressions.md#12814-this-access)), an explicit constructor initializer is not required in order to satisfy the definite-assignment rules for that backing field. *end note*
 
 ### 16.6.12 Methods
 
