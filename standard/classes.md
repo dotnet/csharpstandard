@@ -5919,7 +5919,7 @@ To verify that the builder type is compatible with *return_type* of the async fu
 > static ValueTask<int> ExampleAsync()
 > {
 >     <ExampleAsync>d__29 stateMachine;
->     stateMachine.<>t__builder 
+>     stateMachine.<>t__builder
 >         = AsyncValueTaskMethodBuilder<int>.Create();
 >     stateMachine.<>1__state = -1;
 >     stateMachine.<>t__builder.Start(ref stateMachine);
@@ -5943,7 +5943,7 @@ To verify that the builder type is compatible with *return_type* of the async fu
 > static ValueTask<int> ExampleAsync()
 > {
 >     <ExampleAsync>d__29 stateMachine;
->     stateMachine.<>t__builder 
+>     stateMachine.<>t__builder
 >         = PoolingAsyncValueTaskMethodBuilder<int>.Create();
 >         // <>t__builder now a different type
 >     stateMachine.<>1__state = -1;
@@ -6108,7 +6108,7 @@ A record class is a specialized reference type that is optimized for storing dat
 
 ```ANTLR
 record_class_declaration
-    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier 
+    : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base? 
       type_parameter_constraints_clause* record_class_body
     ;

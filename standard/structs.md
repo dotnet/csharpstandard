@@ -327,7 +327,7 @@ The provided override of `GetHashCode()` shall return an `int` result of combini
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
 >     public static bool operator==(R1 r1, R1 r2) => r1.Equals(r2);
->     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);    
+>     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(
@@ -448,7 +448,7 @@ The definite assignment rules for struct instance constructors apply to the prim
 > {
 >     private int x;
 >     public int X {
->         get { return x; } set { x = value; } 
+>         get { return x; } set { x = value; }
 >     } = X;
 > }
 > ```

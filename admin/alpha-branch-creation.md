@@ -55,7 +55,7 @@ For example, this order worked best for V9:
      - classes.md*
      - standard-library.md**
 1. *file scoped namespaces*
-   - https://github.com/dotnet/csharpstandard/pull/1540.patch 
+   - https://github.com/dotnet/csharpstandard/pull/1540.patch
    - small - 2 files
      - basic-concepts.md*
      - namespaces.md*
@@ -83,7 +83,7 @@ For example, this order worked best for V9:
 1. *forward*
    - https://github.com/dotnet/csharpstandard/pull/1537.patch
    - Small - 1 file
-     - foreword.md 
+     - foreword.md
 1. *Extended property patterns*
    - https://github.com/dotnet/csharpstandard/pull/1551.patch
    - small - 1 files
