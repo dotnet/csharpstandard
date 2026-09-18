@@ -5579,7 +5579,6 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
-
 ## 15.12 Static constructors
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
