@@ -8,17 +8,9 @@ Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to 
 
 ## 14.2 Compilation units
 
-<<<<<<< HEAD
 A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
 The structure of a single compilation unit is defined by *compilation_unit*:
-
-```ANTLR
-compilation_unit
-    : extern_alias_directive* using_directive* global_attributes?
-      statement_list? namespace_member_declaration*
-=======
-A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by a *compilation_unit_body*. A *compilation_unit_body* can either be zero or more *statement_list*s followed by zero or more *namespace_member_declaration*s, or a *file_scoped_namespace_declaration*. The *compilation_unit* defines the overall structure of the input.
 
 ```ANTLR
 compilation_unit
@@ -26,34 +18,22 @@ compilation_unit
     ;
 
 compilation_unit_body
-    : statement_list* namespace_member_declaration*
+    : statement_list? namespace_member_declaration*
     | file_scoped_namespace_declaration
->>>>>>> 5fe18c4e (Add support for file-scoped namespaces)
     ;
 ```
 
-The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directives)) of a compilation unit affect the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directives)) of a compilation unit affect the *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-<<<<<<< HEAD
-The *using_directive*s ([§14.5](namespaces.md#145-using-directives)) of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of that compilation unit, but have no effect on other compilation units.
+The *using_directive*s ([§14.5](namespaces.md#145-using-directives)) of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
 The optional *statement_list* ([§13.3.2](statements.md#1332-statement-lists)) specifies statements to be used as an application entry point ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). Only one compilation unit in a program may contain a *statement_list*.
 
-The *namespace_member_declaration*s ([§14.6](namespaces.md#146-namespace-member-declarations)) of each compilation unit of a program contribute members to a single declaration space called the global namespace.
-=======
-The *extern_alias_directive*s of a compilation unit affect the *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
-
-The *using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
-
-The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
-
 The *namespace_member_declaration*s or *file_scoped_namespace_declaration* of each compilation unit of a program contribute members to a single declaration space called the global namespace.
 
 A *file_scoped_namespace_declaration* contributes members corresponding to the *namespace_declaration* to which it is semantically equivalent ([§14.3](namespaces.md#143-namespace-declarations)).
->>>>>>> 5fe18c4e (Add support for file-scoped namespaces)
-
 > *Example*:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"CompilationUnits"} -->
