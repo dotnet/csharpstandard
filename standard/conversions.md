@@ -149,7 +149,7 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
 
-For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
+For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -406,7 +406,7 @@ There is an implicit conversion from a *switch_expression* ([§12.12](expression
 
 There is an implicit ***object-creation conversion*** from a *target_typed_new* expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) to every type.
 
-Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`'s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
+Given a target type `T`, if `T` is an instance of `System.Nullable`, the type `T0` is `T`’s underlying type. Otherwise `T0` is `T`. The meaning of a *target_typed_new* expression that is converted to the type `T` is the same as the meaning of a corresponding *object_creation_expression* that specifies `T0` as the type.
 
 ### 10.2.20 Implicit conditional expression conversions
 

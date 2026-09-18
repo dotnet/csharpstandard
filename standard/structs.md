@@ -349,7 +349,7 @@ private bool PrintMembers(System.Text.StringBuilder builder);
 
 This method performs the following tasks:
 
-1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member's name followed by “` = `“ followed by the member's value separated with “`, “`,
+1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member’s name followed by “` = `“ followed by the member’s value separated with “`, “`,
 2. Returns true if the record struct has printable members.
 
 For a member that has a value type, its value shall be converted to a string representation.
@@ -372,7 +372,7 @@ This method performs the following tasks:
 
 1. Creates a `StringBuilder` instance,
 2. Appends the record struct name to the builder, followed by “` { `“,
-3. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
+3. Invokes the record struct’s `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
 4. Appends “`}`”,
 5. Returns the builder’s contents with `builder.ToString()`.
 

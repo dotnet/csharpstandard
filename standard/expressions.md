@@ -1631,7 +1631,7 @@ A *constant interpolated string* is an *interpolated_string_expression* that con
 - no interpolations, or
 - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
 
-For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
+For example, $“Hello”, $“{cs1}, world!” (given `const string cs1 = $"Hello";`), $“{“Hello,” + $“world!"}”, and $“xxx{(true ? $“{“X”}” : $“{$“{“Y”}”}”)}yyy” are all constant interpolated strings. However, $“{123}” and $“{“abc”}{123.45}” are not.
 
 For simplicity, the term *ISE* is used throughout this specification to mean either an *interpolated_string_expression* or an *additive_expression* composed entirely of *interpolated_string_expression*s and binary `+` operators.
 
@@ -3973,13 +3973,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
 
-*identifier* shall be an accessible instance field or property of the receiver's type.
+*identifier* shall be an accessible instance field or property of the receiver’s type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver's clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
@@ -7580,7 +7580,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
