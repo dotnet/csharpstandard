@@ -66,6 +66,8 @@ The attribute `AttributeUsageAttribute` ([§23.5.2](attributes.md#2352-the-attri
 
 > *Note*: For a generic attribute class, multiplicity is determined by the unbound generic attribute class definition, not by individual closed constructions. Therefore, when `AllowMultiple` is false or unspecified, two attribute applications that differ only in their type arguments shall not both appear on the same entity. *end note*
 
+<!-- markdownlint-disable MD028 -->
+
 > *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeUsage4", replaceEllipsis:true} -->
