@@ -5099,6 +5099,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Note*: A unary `++`, `--`, or `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
+<!-- markdownlint-disable MD028 -->
+
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;",null]} -->
