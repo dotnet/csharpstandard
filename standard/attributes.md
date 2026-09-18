@@ -826,7 +826,7 @@ The line number may be affected by `#line` directives ([§6.5.8](lexical-structu
 
 The attribute `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
-If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a string literal representing that location’s file path is used as an argument to the invocation instead of the default parameter value.
+If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a UTF-16 string literal representing that location’s file path is used as an argument to the invocation instead of the default parameter value.
 
 The format of the file path is implementation-dependent.
 
@@ -836,7 +836,7 @@ The file path may be affected by `#line` directives ([§6.5.8](lexical-structure
 
 The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
-If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
+If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a UTF-16 string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
 > *Note*: In the case of a function invocation from a top-level statement the string is a representation of the implementation provided name ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). *end note*
 
