@@ -82,9 +82,10 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `T` and `T?` for any reference type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
+- Between array types with the same rank ([§17.1](arrays.md#171-general)), when an identity conversion exists between the element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
-> *Example*: The following illustrates the recursive nature of the third rule:
+> *Example*: The following illustrates the recursive nature of the fourth rule:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion"} -->
 > ```csharp
@@ -388,7 +389,7 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### 10.2.18 Switch expression conversion
 
-There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
+There is an implicit conversion from a *switch_expression* ([§12.11](expressions.md#1211-switch-expression)) which does not have a type, to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression* to `T`.
 
 ## 10.3 Explicit conversions
 

@@ -572,8 +572,9 @@ The *argument_value* can take one of the following forms:
 - The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
 - The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
 - The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `out` followed by a *declaration_expression* ([§12.19](expressions.md#1219-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation.
 
-The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
+The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
 Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field cannot be treated as volatile by the invoked method.
 
@@ -3880,7 +3881,7 @@ switch_expression_arm_expression
 ```
 
 The type of a *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and if each *switch_expression_arm_expression* can be implicitly converted to that type. Otherwise, the *switch_expression* has no type, but may still be subject to *switch expression conversions* ([§10.2.18](conversions.md#10218-switch-expression-conversion)).
-<— The best common type is the “natural type” when we add natural types for lambda expressions and other typeless expressions —>
+<!-- The best common type is the “natural type” when we add natural types for lambda expressions and other typeless expressions -->
 
 It is an error if the pattern of any *switch_expression_arm* is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) *switch_expression_arm*s of the switch expression.
 
@@ -6715,7 +6716,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to two or more targets.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.23.6](expressions.md#12236-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*.
 
 The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard ([§9.2.9.2](variables.md#9292-discards)). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
@@ -6909,6 +6910,7 @@ It is a compile time error if any *variable_reference*, including any reclassifi
 -->
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
+- a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
 - a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
 - a *variable_reference* can only occur if the containing *deconstructor*:
   - **is not** at the start of a statement, or
@@ -6944,6 +6946,19 @@ The run-time processing of a deconstructing assignment, now `d = e`, proceeds as
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The construction of intermediate tuples produced by this algorithm might be elided by an implementation as specified by [§8.3.11.2](types.md#83112-eliding-intermediate-tuple-creation). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A discard is a placeholder rather than a *variable_reference*, so it can be combined with an existing variable on the left side of a deconstructing assignment:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingAssignmentDiscard1", expectedOutput:["1"]} -->
+> ```csharp
+> int x = 0;
+> (x, _) = (1, 2); // assigns 1 to the existing variable x; the discard ignores 2
+> Console.WriteLine(x);
+> ```
+>
+> *end example*
 
 #### 12.23.3.2 Abridged deconstructors
 
@@ -7224,7 +7239,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) that includes an initializer.
 - Attributes ([§23](attributes.md#23-attributes))
-- In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
+- In a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern))
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 

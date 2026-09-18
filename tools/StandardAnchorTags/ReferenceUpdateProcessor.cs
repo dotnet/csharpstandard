@@ -32,7 +32,7 @@ internal class ReferenceUpdateProcessor
             while (await readStream.ReadLineAsync() is string line)
             {
                 // Don't add links in codefenced examples.
-                inCodeFence ^= line.Contains("```");
+                inCodeFence ^= IsCodeFenceDelimiter(line);
                 lineNumber++;
                 var updatedLine = (!inCodeFence && line.Contains(sectionReference))
                     ? ProcessSectionLinks(line, lineNumber, inputPath)
@@ -50,6 +50,17 @@ internal class ReferenceUpdateProcessor
         {
             File.Move(tmpFileName, inputPath, true);
         }
+    }
+
+    internal static bool IsCodeFenceDelimiter(string line)
+    {
+        ReadOnlySpan<char> remaining = line.AsSpan().TrimStart();
+        while (!remaining.IsEmpty && remaining[0] == '>')
+        {
+            remaining = remaining[1..].TrimStart();
+        }
+
+        return remaining.StartsWith("```", StringComparison.Ordinal);
     }
 
     private string ProcessSectionLinks(string line, int lineNumber, string path)

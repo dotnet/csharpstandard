@@ -255,8 +255,8 @@
   - [§11.1](patterns.md#111-general)  General
   - [§11.2](patterns.md#112-pattern-forms)  Pattern forms
     - [§11.2.1](patterns.md#1121-general)  General
-    - [§11.2.2](patterns.md#1122-declaration-pattern)  Declaration pattern
-    - [§11.2.3](patterns.md#1123-constant-pattern)  Constant pattern
+    - [§11.2.2](patterns.md#1122-constant-pattern)  Constant pattern
+    - [§11.2.3](patterns.md#1123-declaration-pattern)  Declaration pattern
     - [§11.2.4](patterns.md#1124-var-pattern)  Var pattern
     - [§11.2.5](patterns.md#1125-positional-pattern)  Positional pattern
     - [§11.2.6](patterns.md#1126-property-pattern)  Property pattern
