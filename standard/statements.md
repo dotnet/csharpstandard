@@ -1176,7 +1176,7 @@ Before the process described in [§13.9.5.1](statements.md#13951-general), the f
 If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
 - If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-- Otherwise, determine whether the type 'X' has an appropriate `GetEnumerator` extension method:
+- Otherwise, determine whether the type ‘X’ has an appropriate `GetEnumerator` extension method:
   - Perform extension method lookup on the type `X` with identifier `GetEnumerator`. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match which is not a method group, an error is produced, and no further steps are taken. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and a single argument of type `X`. If overload resolution produces no applicable methods, results in an ambiguity, or results in a single best method but that method is not accessible, an error is produced an no further steps are taken.
   - This resolution permits the first argument to be passed by ref if `X` is a struct type, and the ref kind is `in`.

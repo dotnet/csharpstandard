@@ -117,7 +117,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ### 24.3.1 General
 
-A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer’s target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§24.6.2](unsafe-code.md#2462-pointer-indirection) and [§24.6.4](unsafe-code.md#2464-pointer-element-access)).
 
 In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type*. A *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
