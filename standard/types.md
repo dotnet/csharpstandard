@@ -156,7 +156,7 @@ Delegate types are described in [§21](delegates.md#21-delegates).
 
 ### 8.3.1 General
 
-A value type is either a struct type or an enumeration type. C# provides a set of predefined struct types called the ***simple type***s. The simple types are identified through keywords.
+A value type is either a struct type or an enumeration type. C# provides a set of predefined struct types called the ***simple type***s. The simple types are identified through keywords and contextual keywords.
 
 ```ANTLR
 value_type
@@ -193,6 +193,8 @@ integral_type
     | 'ushort'
     | 'int'
     | 'uint'
+    | 'nint'
+    | 'nuint'
     | 'long'
     | 'ulong'
     | 'char'
@@ -220,6 +222,8 @@ nullable_value_type
     ;
 ```
 
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution (§7.8.1) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
 Assignment to a variable of a value type creates a *copy* of the value being assigned. This differs from assignment to a variable of a reference type, which copies the reference but not the object identified by the reference.
@@ -235,7 +239,7 @@ Note that `System.ValueType` is not itself a *value_type*. Rather, it is a *clas
 All value types implicitly declare a public parameterless instance constructor called the ***default constructor***. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
 
 - For all *simple_type*s, the default value is the value produced by a bit pattern of all zeros:
-  - For `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, and `ulong`, the default value is `0`.
+  - For `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, and `ulong`, the default value is `0`.
   - For `char`, the default value is `'\x0000'`.
   - For `float`, the default value is `0.0f`.
   - For `double`, the default value is `0.0d`.
@@ -276,7 +280,7 @@ A struct type is a value type that can declare constants, fields, methods, prope
 
 ### 8.3.5 Simple types
 
-C# provides a set of predefined `struct` types called the simple types. The simple types are identified through keywords, but these keywords are simply aliases for predefined `struct` types in the `System` namespace, as described in the table below.
+Except for `nint` and `nuint`, the simple types are aliases for predefined `struct` types in the `System` namespace, as described in the table below.
 
 **Keyword** | **Aliased type**
 ----------- | ------------------
@@ -286,6 +290,8 @@ C# provides a set of predefined `struct` types called the simple types. The simp
   `ushort`  |   `System.UInt16`
   `int`     |   `System.Int32`
   `uint`    |   `System.UInt32`
+  `nint`    |    none; see below
+  `nuint`   |    none; see below
   `long`    |   `System.Int64`
   `ulong`   |   `System.UInt64`
   `char`    |   `System.Char`
@@ -294,9 +300,9 @@ C# provides a set of predefined `struct` types called the simple types. The simp
   `bool`    |   `System.Boolean`
   `decimal` |   `System.Decimal`
 
-Because a simple type aliases a struct type, every simple type has members.
+Every simple type has members. Each simple type that is an alias for a predefined struct type, has that struct type’s members.
 
-> *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
+> *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes"} -->
 > ```csharp
@@ -318,9 +324,17 @@ Because a simple type aliases a struct type, every simple type has members.
 >
 > *end note*.
 
+<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
+
+The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
+
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
+- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
+
 ### 8.3.6 Integral types
 
-C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, and `char`. The integral types have the following sizes and ranges of values:
+C# supports the following integral types, with the sizes and value ranges, as shown:
 
 - The `sbyte` type represents signed 8-bit integers with values from `-128` to `127`, inclusive.
 - The `byte` type represents unsigned 8-bit integers with values from `0` to `255`, inclusive.
@@ -328,6 +342,8 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
 - The `ushort` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive.
 - The `int` type represents signed 32-bit integers with values from `-2147483648` to `2147483647`, inclusive.
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
+- The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
+- The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive, as a UTF-16 code unit.
@@ -335,7 +351,9 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
   
 All signed integral types are represented using two’s complement format.
 
-The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, unsigned 64-bit precision, native signed precision, or native unsigned precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
+
+> *Note*: Native precision means 32-bit on 32-bit platforms and 64-bit on 64-bit platforms. Operators on `nint` and `nuint` use native precision rather than being promoted to a larger type. *end note*
 
 The `char` type is classified as an integral type, but it differs from the other integral types in two ways:
 
@@ -825,7 +843,7 @@ unmanaged_type
 
 An *unmanaged_type* is any type that is neither a *reference_type* nor a *type_parameter* that is not constrained to be unmanaged, and contains no instance fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
 
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
+- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
 - Any *enum_type*.
 - Any user-defined *struct_type* that contains instance fields of *unmanaged_type*s only.
 - Any type parameter which is constrained to be unmanaged.
