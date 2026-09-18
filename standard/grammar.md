@@ -213,14 +213,14 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'    | 'ascending' | 'async'     | 'await'
-    | 'by'       | 'Cdecl'     | 'descending'| 'dynamic'   | 'equals'
-    | 'Fastcall' | 'from'      | 'get'       | 'global'    | 'group'
-    | 'init'     | 'into'      | 'join'      | 'let'       | 'managed'
-    | 'nameof'   | 'nint'      | 'notnull'   | 'nuint'     | 'on'
-    | 'orderby'  | 'partial'   | 'record'    | 'remove'    | 'select'
-    | 'set'      | 'Stdcall'   | 'Thiscall'  | 'unmanaged' | 'value'
-    | 'var'      | 'when'      | 'where'     | 'yield'
+    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
+    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
+    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
+    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
+    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'       | 'when'       | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -569,7 +569,7 @@ fragment PP_Pragma_Text
 
 ```ANTLR
 
-// Source: §7.8.1 General
+// Source: §7.7.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -742,23 +742,12 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : logical_pattern
-    ;
-
-primary_pattern
-    : parenthesized_pattern
-    | declaration_pattern
+    : declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
-    | type_pattern
-    | relational_pattern
-    ;
-
-parenthesized_pattern
-    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Constant pattern
@@ -820,39 +809,6 @@ property_subpattern
 // Source: §11.2.7 Discard pattern
 discard_pattern
     : '_'
-    ;
-
-// Source: §11.2.8 Type pattern
-type_pattern
-    : type
-    ;
-
-// Source: §11.2.9 Relational pattern
-relational_pattern
-    : '<'  relational_expression
-    | '<=' relational_expression
-    | '>'  relational_expression
-    | '>=' relational_expression
-    ;
-
-// Source: §11.2.10 Logical pattern
-logical_pattern
-    : disjunctive_pattern
-    ;
-
-disjunctive_pattern
-    : disjunctive_pattern 'or' conjunctive_pattern
-    | conjunctive_pattern
-    ;
-
-conjunctive_pattern
-    : conjunctive_pattern 'and' negated_pattern
-    | negated_pattern
-    ;
-
-negated_pattern
-    : 'not' negated_pattern
-    | primary_pattern
     ;
 
 // Source: §12.6.2.1 General
@@ -1133,7 +1089,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1157,7 +1113,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.3.1 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1176,7 +1132,7 @@ expression_list
     : expression (',' expression)*
     ;
 
-// Source: §12.8.17.4 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1198,7 +1154,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.8.17.5 Array creation expressions
+// Source: §12.8.17.4 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -1206,7 +1162,7 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.8.17.6 Delegate creation expressions
+// Source: §12.8.17.5 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
@@ -2052,7 +2008,7 @@ yield_statement
 // Source: §14.2 Compilation units
 compilation_unit
     : extern_alias_directive* using_directive* global_attributes?
-      statement_list* namespace_member_declaration*
+      statement_list? namespace_member_declaration*
     ;
 
 // Source: §14.3 Namespace declarations
@@ -2269,7 +2225,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier* 'partial'?
+    : ref_method_modifier*
     ;
 
 method_header
