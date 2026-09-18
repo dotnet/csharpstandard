@@ -804,21 +804,13 @@ Caller information is only substituted when a function is explicitly invoked in 
 
 One exception is query expressions. These are considered syntactic expansions, and if the calls they expand to omit optional parameters with caller-info attributes, caller information will be substituted. The location used is the location of the query clause which the call was generated from.
 
-<<<<<<< HEAD
-If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumberAttribute`, `CallerFilePathAttribute`, `CallerMemberNameAttribute`. Consider the following parameter declaration:
-=======
-If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumber`, `CallerFilePath`, `CallerMemberName`, `CallerArgumentExpression`. Consider the following parameter declaration:
->>>>>>> 6e659aa7 (Initial review)
+If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumberAttribute`, `CallerFilePathAttribute`, `CallerMemberNameAttribute`, `CallerArgumentExpressionAttribute`. Consider the following parameter declaration:
 
 ```csharp
 [CallerMemberName, CallerFilePath, CallerLineNumber] object p = ...
 ```
 
-<<<<<<< HEAD
-`CallerLineNumberAttribute` takes precedence, and the other two attributes are ignored. If `CallerLineNumberAttribute` were omitted, `CallerFilePathAttribute` would take precedence, and `CallerMemberNameAttribute` would be ignored. The lexical ordering of these attributes is irrelevant.
-=======
-`CallerLineNumber` takes precedence, and the other three attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` and `CallerArgumentExpression` would be ignored. The lexical ordering of these attributes is irrelevant.
->>>>>>> 6e659aa7 (Initial review)
+`CallerLineNumberAttribute` takes precedence, and the other three attributes are ignored. If `CallerLineNumberAttribute` were omitted, `CallerFilePathAttribute` would take precedence, and `CallerMemberNameAttribute` and `CallerArgumentExpressionAttribute` would be ignored. The lexical ordering of these attributes is irrelevant.
 
 #### 23.5.6.2 The CallerLineNumber attribute
 
