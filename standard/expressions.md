@@ -7243,16 +7243,10 @@ For backward compatibility if any *deconstructor_element* is a *discard_token* t
 
 It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *deconstructor_element* is not writeable.
 
-<!--
-[TODO] For C#10 the second of these restrictions is removed. This requires minor text changes here and the removal of the corresponding semantic check in the grammar checker
--->
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
 - a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
 - a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
-- a *variable_reference* can only occur if the containing *deconstructor*:
-  - **is not** at the start of a statement, or
-  - **is** at the start of a statement and contains no *declaration_expression*
 
 For these restrictions:
 
