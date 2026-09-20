@@ -1421,13 +1421,7 @@ The body of the `finally` block is constructed according to the following steps:
     ```
 
     except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
-- Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
-
-  ```csharp
-  finally {}
-  ```
-
-- Otherwise, the `finally` clause is expanded to:
+- Otherwise, if `E` is not a sealed type, the `finally` clause is expanded to:
 
   ```csharp
   finally
@@ -1440,7 +1434,13 @@ The body of the `finally` block is constructed according to the following steps:
   }
   ```
 
-The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
+  The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
+
+- Otherwise, the `finally` clause is expanded to an empty block:
+
+  ```csharp
+  finally {}
+  ```
 
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
