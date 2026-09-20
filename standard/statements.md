@@ -2173,7 +2173,7 @@ When `ResourceType` is a reference type that implements `IAsyncDisposable`. Othe
 await using (ResourceType resource = «expression») «statement»
 ```
 
-is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
+is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` is `await`ed:
 
 ```csharp
 await using (ResourceType resource = «expression») «statement»
