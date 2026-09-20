@@ -1402,6 +1402,8 @@ The body of the `finally` block is constructed according to the following steps:
     }
     ```
 
+  > *Note*: If `E` is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)), member lookup for `DisposeAsync` is performed on `E`, not on its underlying type. *end note*
+
 - Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, the `finally` clause is expanded to the semantic equivalent of:
 
   ```csharp
