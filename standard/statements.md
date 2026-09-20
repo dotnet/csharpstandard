@@ -1388,12 +1388,25 @@ In the case where the expression `enumerable` represents a method call expressio
 
 The body of the `finally` block is constructed according to the following steps:
 
-- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), the `finally` clause is expanded to the semantic equivalent of:
+- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), then
+  - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
 
     ```csharp
     finally
     {
         await e.DisposeAsync();
+    }
+    ```
+
+  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        if ((object)e != null)
+        {
+            await e.DisposeAsync();
+        }
     }
     ```
 
