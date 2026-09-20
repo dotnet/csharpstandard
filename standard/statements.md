@@ -1390,15 +1390,6 @@ The body of the `finally` block is constructed according to the following steps:
 
 - If `E` has an accessible `DisposeAsync()` method, then
   - If the return type is not awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), an error is produced and no further steps are taken.
-  - Otherwise, if `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
-
-    ```csharp
-    finally
-    {
-        await e.DisposeAsync();
-    }
-    ```
-
   - Otherwise the `finally` clause is expanded to the semantic equivalent of:
 
     ```csharp
@@ -1411,27 +1402,17 @@ The body of the `finally` block is constructed according to the following steps:
     }
     ```
 
-- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, then
-  - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
+- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, the `finally` clause is expanded to the semantic equivalent of:
 
-    ```csharp
-    finally
-    {
-        await ((System.IAsyncDisposable)e).DisposeAsync();
-    }
-    ```
-
-  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
-
-    ```csharp
-    finally
-    {
-        if ((object)e != null)
-        {
-            await ((System.IAsyncDisposable)e).DisposeAsync();
-        }
-    }
-    ```
+  ```csharp
+  finally
+  {
+      if ((object)e != null)
+      {
+          await ((System.IAsyncDisposable)e).DisposeAsync();
+      }
+  }
+  ```
 
   If `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
 
@@ -1441,6 +1422,10 @@ The body of the `finally` block is constructed according to the following steps:
   finally {}
   ```
 
+> *Note*: When `E` is a non-nullable value type, the null checks shown above are elided. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
 #### 13.9.5.4 Deconstructing foreach
