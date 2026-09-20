@@ -1421,15 +1421,6 @@ The body of the `finally` block is constructed according to the following steps:
     ```
 
     except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
-- Otherwise, if `E` is a `ref struct` type and has an accessible `Dispose()` method, the `finally` clause is expanded to the semantic equivalent of:
-
-    ```csharp
-    finally
-    {
-        e.Dispose();
-    }
-    ```
-
 - Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
 
   ```csharp
