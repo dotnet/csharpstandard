@@ -997,7 +997,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440"], additionalFiles:["MyGlobalTypes.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440","CS8981"], additionalFiles:["MyGlobalTypes.cs"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >
