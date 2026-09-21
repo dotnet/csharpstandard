@@ -83,10 +83,11 @@ An identity conversion converts from any type to the same type or a type that is
 - Between `T` and `T?` for any reference type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
+- Between array types with the same rank ([§17.1](arrays.md#171-general)), when an identity conversion exists between the element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 - Between array types containing elements of type `T` and `S`, such as `T[]` and `S[]`, where the rank of the two arrays is the same and there is an identity conversion between `T` and `S`.
 
-> *Example*: The following illustrates the recursive nature of the third rule:
+> *Example*: The following illustrates the recursive nature of the fourth rule:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion"} -->
 > ```csharp
@@ -117,6 +118,8 @@ All identity conversions are symmetric. If an identity conversion exists from `T
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.8](expressions.md#1298-cast-expressions)).
 
+There is an identity conversion between `nint` and `System.IntPtr`, and between `nuint` and `System.UIntPtr`.
+
 For the compound types array, nullable type, constructed type, and tuple, there is an identity conversion between native integers ([§8.3.6](types.md#836-integral-types)) and their underlying types.
 
 ### 10.2.3 Implicit numeric conversions
@@ -146,7 +149,9 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 ### 10.2.5 Implicit interpolated string conversions
 
-For any type `T` that is an applicable interpolated string handler type ([§23.5.10.1.1](attributes.md#2351011-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
+An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
+
+For any type `T` that is an applicable interpolated string handler type ([§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from a non-constant *ISE* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -397,7 +402,7 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### 10.2.18 Switch expression conversion
 
-There is an implicit conversion from a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression*’s to `T`.
+There is an implicit conversion from a *switch_expression* ([§12.12](expressions.md#1212-switch-expression)) which does not have a type, to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*’s *switch_expression_arm_expression* to `T`.
 
 ### 10.2.19 Implicit object-creation conversions
 
@@ -455,13 +460,13 @@ Although an implicit conversion to `object` is permitted, a warning shall be iss
 >
 > *end example*
 
-### 10.2.22 Implicit collection expression conversions
+### §imp-collection-expression-conv Implicit collection expression conversions
 
 An implicit collection expression conversion exists from a collection expression to the following types:
 
 - A single-dimensional array type `T[]`, in which case, the element type is `T`.
 - `System.Span<T>` and `System.ReadOnlySpan<T>`, in which cases, the element type is `T`.
-- A type with an appropriate collection-creation method ([§15.17.1](classes.md#15171-general)), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
+- A type with an appropriate collection-creation method (§declaring-a-collection-type-general), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
 - A struct or class type that implements `System.Collections.IEnumerable` where:
 
   - The type has an applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) constructor that can be invoked with no arguments, and the constructor is accessible at the location of the collection expression.
@@ -499,17 +504,17 @@ The following additional implicit conversions exist from a collection expression
 
 - To an interface type `I` where there is a collection-creation method associated with `I` that returns a type `V` and there is an implicit boxing conversion from `V` to `I`. The conversion is a collection expression conversion to `V` followed by an implicit boxing conversion from `V` to `I`.
 
-When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.8.15](structs.md#16815-safe-context-constraint)) shall be met.
+When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.6.15](structs.md#16615-safe-context-constraint)) shall be met.
 
-### 10.2.23 Implicit inline array conversions
+### §ImplicitInlineArrayConversions Implicit inline array conversions
 
-The implicit inline array ([§16.6](structs.md#166-inline-arrays)) conversions are:
+The implicit inline array (§InlineArray) conversions are:
 
 - From an expression designating a writable inline array with element type `T` to `System.Span<T>`
 - From an expression designating a writable inline array with element type `T` to `System.ReadonlySpan<T>`
 - From an expression designating a readonly inline array with element type `T` to `System.ReadonlySpan<T>`
 
-The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See [§16.6](structs.md#166-inline-arrays) for more information.
+The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See §InlineArray for more information.
 
 ## 10.3 Explicit conversions
 
@@ -755,7 +760,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
-- Implicit inline array conversions ([§10.2.23](conversions.md#10223-implicit-inline-array-conversions))
+- Implicit inline array conversions (§ImplicitInlineArrayConversions)
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
@@ -814,8 +819,10 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
+
 - Find the set of applicable user-defined and lifted conversion operators, `U`.
-  - Find the set of types, `D1`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` is a class or struct), the base classes of `S₀` (if `S₀` is a class), and `T₀` (if `T₀` is a class or struct).
+  - Find the set of types, `D1`, from which user-defined conversion operators will be considered. This set consists of `S0` (if `S0` is a class or struct), the base classes of `S0` (if `S0` is a class), and `T0` (if `T0` is a class or struct).
   - Find the set of applicable user-defined and lifted conversion operators, `U1`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D1` that convert from a type encompassing `S` to a type encompassed by `T`.
   - If `U1` is not empty, then `U` is `U1`. Otherwise,
     - Find the set of types, `D2`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* (if `Tᵢ` is a type parameter).
@@ -848,15 +855,16 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
 - Find the set of applicable user-defined and lifted conversion operators, `U`.
-  - Find the set of types, `D1`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` is a class or struct), the base classes of `S₀` (if `S₀` is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class).
-  - Find the set of conversion operators, `U₀`. This set consists of:
-    - In an `unchecked` evaluation context, the user-defined implicit or regular explicit conversion operators declared by the classes or structs in `D1`.
-    - In a `checked` evaluation context, the user-defined implicit or regular/checked explicit conversion operators declared by the classes or structs in `D1` except for regular explicit conversion operators that have a pair-wise matching checked operator declaration within the same declaring type.
-  - Find the set of applicable user-defined and lifted conversion operators, `U1`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D1` that convert from a type encompassing or encompassed by `S` to a type encompassing or encompassed by `T`.
-  - If `U1` is not empty, then `U` is `U1`. Otherwise,
-    - Find the set of types, `D2`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* and their base interfaces (if `Tᵢ` is a type parameter).
-    - Find the set of applicable user-defined and lifted conversion operators, `U2`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the interfaces in `D2` that convert from a type encompassing or encompassed by `S` to a type encompassing or encompassed by `T`.
-    - If `U2` is not empty, then `U` is `U2`.
+  - Find the set of types, `D₁`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to `D₁` only if an identity conversion to another type already included in the set does not exist.
+  - Find the set of conversion operators, `U₀₁` (see [§15.10.1](classes.md#15101-general), [§15.10.4](classes.md#15104-conversion-operators)):
+    - In an `unchecked` evaluation context, the user-defined implicit or regular explicit conversion operators declared by the classes or structs in `D₁`.
+    - In a `checked` evaluation context, the user-defined implicit conversion operators and the checked and regular explicit conversion operators declared by the classes or structs in `D₁`, except for regular explicit conversion operators that have a pair-wise matching checked operator declaration within the same declaring type.
+  - Find the set of applicable user-defined and lifted conversion operators, `U₁`. This set consists of the operators in `U₀₁` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`.
+  - If `U₁` is not empty, then `U` is `U₁`. Otherwise:
+    - Find the set of types, `D₂`, from which user-defined conversion operators will be considered. This set consists of the effective interface set of `Sᵢ` and their base interfaces (if `Sᵢ` is a type parameter), and the effective interface set of `Tᵢ` and their base interfaces (if `Tᵢ` is a type parameter).
+    - Find the set of conversion operators, `U₀₂`, using the same checked or unchecked evaluation-context rules as for `U₀₁`, from the interfaces in `D₂`.
+    - Find the set of applicable user-defined and lifted conversion operators, `U₂`. This set consists of the operators in `U₀₂` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`.
+    - If `U₂` is not empty, then `U` is `U₂`.
 - If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
@@ -974,23 +982,6 @@ Evaluation of a nullable conversion based on an underlying conversion from `S` 
 - If the nullable conversion is from `S` to `T?`, the conversion is evaluated as the underlying conversion from `S` to `T` followed by a wrapping from `T` to `T?`.
 - If the nullable conversion is from `S?` to `T`, the conversion is evaluated as an unwrapping from `S?` to `S` followed by the underlying conversion from `S` to `T`.
 
-Conversion from `A` to `Nullable<B>` is:
-
-- an implicit nullable conversion if there is an identity conversion or implicit conversion from `A` to `B`;
-- an explicit nullable conversion if there is an explicit conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `B` is:
-
-- an explicit nullable conversion if there is an identity conversion or implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
-Conversion from `Nullable<A>` to `Nullable<B>` is:
-
-- an identity conversion if there is an identity conversion from `A` to `B`;
-- an explicit nullable conversion if there is an implicit or explicit numeric conversion from `A` to `B`;
-- otherwise, invalid.
-
 ### 10.6.2 Lifted conversions
 
 Given a user-defined conversion operator that converts from a non-nullable value type `S` to a non-nullable value type `T`, a ***lifted conversion operator*** exists that converts from `S?` to `T?`. This lifted conversion operator performs an unwrapping from `S?` to `S` followed by the user-defined conversion from `S` to `T` followed by a wrapping from `T` to `T?`, except that a null valued `S?` converts directly to a null valued `T?`. A lifted conversion operator has the same implicit or explicit classification as its underlying user-defined conversion operator.
@@ -1097,7 +1088,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and, for non-`static` anonymous functions, the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 

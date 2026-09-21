@@ -289,7 +289,7 @@ declaration_statement
     ;
 ```
 
-Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
+Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.2](basic-concepts.md#72-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
 
 ### 13.6.2 Local variable declarations
 
@@ -340,7 +340,7 @@ If there are multiple declarators in a declaration then they are processed, incl
 
 The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained. Each local variable introduced by a *local_variable_declaration* is *initially unassigned* ([§9.4.3](variables.md#943-initially-unassigned-variables)). If a declarator has an initializing expression then the introduced local variable is classified as *assigned* at the end of the declarator ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
-The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.7](basic-concepts.md#77-scopes)):
+The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.6](basic-concepts.md#76-scopes)):
 
 - If the declaration occurs as a *for_initializer* then the scope is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* ([§13.9.4](statements.md#1394-the-for-statement));
 - If the declaration occurs as a *resource_acquisition* then the scope is the outermost block of the semantically equivalent expansion of the *using_statement* ([§13.14](statements.md#1314-the-using-statement));
@@ -365,11 +365,11 @@ implicitly_typed_local_variable_declarator
 
 An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
 
-For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+For a discussion of `scoped`, see §scoped-modifier.
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
 > ```csharp
 > var i = 5;
 > var s = "Hello";
@@ -378,12 +378,12 @@ For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier
 > var orders = new Dictionary<int,Order>();
 > ref var j = ref i;
 > ref readonly var k = ref i;
-> scoped var r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
+> scoped var r = new RS(ref i);   // ref struct RS { ref int Field; ... }
 > ```
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
 > ```csharp
 > int i = 5;
 > string s = "Hello";
@@ -392,7 +392,7 @@ For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier
 > Dictionary<int,Order> orders = new Dictionary<int,Order>();
 > ref int j = ref i;
 > ref readonly int k = ref i;
-> scoped RS r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
+> scoped RS r = new RS(ref i);   // ref struct RS { ref int Field; ... }
 > ```
 >
 > The following are incorrect implicitly typed local variable declarations:
@@ -404,7 +404,7 @@ For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier
 > var z = null;           // Error, null does not have a type
 > var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
-> scoped var i = 10;      // Error, i must be a ref or ref struct 
+> scoped var i = 10;      // Error, i must be a ref or ref struct
 > ```
 >
 > *end example*
@@ -453,7 +453,7 @@ An *explicitly_typed_local_variable_declaration* introduces one or more local va
 
 If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+For a discussion of `scoped`, see §scoped-modifier.
 
 #### 13.6.2.4 Explicitly typed ref local variable declarations
 
@@ -479,7 +479,7 @@ If *ref_kind* is `ref readonly`, the *identifier*s being declared are references
 
 It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
-For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+For a discussion of `scoped`, see §scoped-modifier.
 
 ### 13.6.3 Local constant declarations
 
@@ -607,7 +607,7 @@ It is a compile-time error for the body of the local function to contain a `goto
 
 > *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.22.3](expressions.md#12223-anonymous-function-bodies). *end note*
 
-A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
+A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.6](basic-concepts.md#76-scopes)).
 
 It is a compile-time error for a local function to declare a parameter, type parameter or local variable with the same name as one declared in any enclosing local variable declaration space.
 
@@ -1148,7 +1148,7 @@ foreach_statement
       'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // asynchronous foreach
-      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
+      'await' 'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // deconstructing foreach
       'await'? 'foreach' '(' deconstructor 'in' expression ')'
@@ -1160,6 +1160,10 @@ There are three forms of the *foreach_statement*: *synchronous*, *asynchronous* 
 
 It is a compile-time error for `scoped` to be present in a *foreach_statement* unless a *ref_kind* is also present or the *local_variable_type* denotes a ref struct type.
 
+It is a compile-time error for an *asynchronous* *foreach_statement* to omit the `scoped` modifier if *ref_kind* is present or the *local_variable_type* denotes a ref struct type.
+
+The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
+
 The deconstructing foreach supports both synchronous and asynchronous forms and is described in [§13.9.5.4](statements.md#13954-deconstructing-foreach).
 
 The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
@@ -1168,7 +1172,7 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+For a discussion of `scoped`, see §scoped-modifier.
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
@@ -1433,7 +1437,7 @@ is semantically equivalent to:
 }
 ```
 
-In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.9](attributes.md#2359-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
+In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
 The body of the `finally` block is constructed according to the following steps:
 
@@ -1848,7 +1852,7 @@ A *try_statement* consists of the keyword `try` followed by a *block*, then zero
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 
-When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable is introduced into the declaration space of the *specific_catch_clause* ([§7.3](basic-concepts.md#73-declarations)). During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
+When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable is introduced into the declaration space of the *specific_catch_clause* ([§7.2](basic-concepts.md#72-declarations)). During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
 
 Unless a `catch` clause includes an exception variable name, it is impossible to access the exception object in the filter and `catch` block.
 
@@ -1991,7 +1995,7 @@ The end point of a `try` statement is reachable if both of the following are tru
 
 ## 13.12 The checked and unchecked statements
 
-The `checked` and `unchecked` statements are used to control the ***overflow-checking context*** for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general) and [§15.10.4](classes.md#15104-conversion-operators)).
+The `checked` and `unchecked` statements are used to control the ***overflow-checking context*** for integral-type arithmetic operations and conversions. They may also be used to control the overflow-checking context for various operations and conversions involving user-defined types ([§15.10.1](classes.md#15101-general)).
 
 ```ANTLR
 checked_statement
@@ -2286,7 +2290,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.3](basic-concepts.md#73-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.2](basic-concepts.md#72-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp

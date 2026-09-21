@@ -136,7 +136,7 @@ The lifetime of a local variable is the portion of program execution during whic
 <!-- markdownlint-enable MD028 -->
 > *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, a compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
-> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.8](basic-concepts.md#78-automatic-memory-management)).
 >
 > *end note*
 
@@ -159,7 +159,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### 9.2.9.2 Discards
 
-A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
+A ***discard*** is a variable that has no name. A discard is introduced by a declaration expression ([§12.20](expressions.md#1220-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`). A discard can also be introduced as a parameter of an anonymous function ([§12.22.2](expressions.md#12222-anonymous-function-signatures)).
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   
@@ -167,7 +167,7 @@ Because a discard has no name, the only reference to the variable it represents 
 
 > *Note*: A discard can however be passed as an output argument, allowing the corresponding output parameter to denote its associated storage location. *end note*
 
-A discard is not initially assigned, so it is always an error to access its value.
+A discard introduced by a declaration expression is not initially assigned, so it is always an error to access its value.
 
 > *Example*:
 >
@@ -199,7 +199,9 @@ The default value of a variable depends on the type of the variable and is deter
 - For a variable of a *reference_type* or a reference variable, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`. One cannot test a ref variable to see if it has been assigned a referent by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
 
 ## 9.4 Definite assignment
@@ -213,11 +215,11 @@ At a given location in the executable code of a function member or an anonymous 
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
 >   - A simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) in which the variable is the left operand.
->   - A deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) in which the variable occurs as a *deconstructor_element* in the *deconstructor*, including in any nested *deconstructor*s.
+>   - A deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)) in which the variable occurs as a *deconstructor_element* in the *deconstructor*, including in any nested *deconstructor*s.
 >   - An invocation expression ([§12.8.10](expressions.md#12810-invocation-expressions)) or object creation expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) that passes the variable as an output parameter.
 >   - For a local variable:
 >     - a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer; or
->     - a deconstructing assignment ([§12.23.3](expressions.md#12233-query-expression-translation)) which declares the variable in its *destructor*.
+>     - a deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)) which declares the variable in its *destructor*.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
 >
@@ -244,7 +246,7 @@ Definite assignment is a requirement in the following contexts:
   > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling a compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
-- The `this` variable of a *struct_type* instance constructor shall be definitely assigned at each location where that instance constructor returns.
+- The `this` variable of a *struct_type* instance constructor that has a constructor initializer shall be definitely assigned at each location where that instance constructor returns. For a *struct_type* instance constructor that does not have a constructor initializer, see [§12.8.14](expressions.md#12814-this-access): unassigned instance variables of `this` do not produce a compile-time error, but are instead implicitly initialized to their default values before the body of the constructor runs.
 
 ### 9.4.2 Initially assigned variables
 
@@ -264,7 +266,7 @@ The following categories of variables are classified as initially assigned:
 The following categories of variables are classified as initially unassigned:
 
 - Instance variables of initially unassigned struct variables.
-- Output parameters, including the `this` variable of struct instance constructors without a constructor initializer.
+- Output parameters, including the `this` variable of struct instance constructors without a constructor initializer (see [§12.8.14](expressions.md#12814-this-access) for the consequences of failing to satisfy the definite-assignment requirement for such a `this` variable).
 - Local variables, except those declared in a `catch` clause or a `foreach` statement.
 
 ### 9.4.4 Precise rules for determining definite assignment
@@ -669,7 +671,7 @@ The following rule applies to these kinds of expressions: literals ([§12.8.2](e
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple literals ([§12.8.6](expressions.md#1286-tuple-literals)), element access expressions ([§12.8.12](expressions.md#12812-element-access)), base access expressions with indexing ([§12.8.15](expressions.md#12815-base-access)), increment and decrement expressions ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.13](expressions.md#1213-arithmetic-operators), [§12.14](expressions.md#1214-shift-operators), [§12.15](expressions.md#1215-relational-and-type-testing-operators), [§12.16](expressions.md#1216-logical-operators)), compound assignment expressions ([§12.24.5](expressions.md#12245-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.17](expressions.md#12817-the-new-operator)) , and `await` expressions ([§12.9.9](expressions.md#1299-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -703,7 +705,7 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 - For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any *parameter_mode_modifier*s.
 - For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§12.8.17.5](expressions.md#128175-array-creation-expressions)), object initializers ([§12.8.17.3](expressions.md#128173-object-initializers)), collection initializers ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) and anonymous object initializers ([§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§12.8.17.4](expressions.md#128174-array-creation-expressions)), object initializers ([§12.8.17.2.2](expressions.md#1281722-object-initializers)), collection initializers ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) and anonymous object initializers ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple and deconstructing assignment expressions
 
@@ -851,7 +853,7 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
-- The definite-assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§12.26](expressions.md#1226-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - If *expr_first* directly contains ([§12.1](expressions.md#121-general)) a null-conditional expression *E*, and *v* is definitely assigned after the non-conditional counterpart *E₀* ([§9.4.4.35](variables.md#94435--expressions)), then the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
@@ -1235,7 +1237,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-> *Note*: The related notion of a *safe-context* is defined in ([§16.8.15](structs.md#16815-safe-context-constraint)), along with associated constraints. *end note*
+> *Note*: The related notion of a *safe-context* is defined in ([§16.6.15](structs.md#16615-safe-context-constraint)), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
@@ -1348,7 +1350,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
-A reference variable that is a local variable or parameter can be scoped explicitly; see [§9.7.3](variables.md#973-the-scoped-modifier).
+A reference variable that is a local variable or parameter can be scoped explicitly; see §scoped-modifier.
 
 #### 9.7.2.2 Local variable ref safe context
 
@@ -1366,7 +1368,7 @@ For a parameter `p`:
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is function-member. The `this` parameter of a struct instance method is implicitly `scoped ref`.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
-When a parameter is annotated with `[UnscopedRef]` ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), its ref-safe-context is widened by one level from its default: function-member becomes return-only, and return-only becomes caller-context.
+When a parameter is annotated with `[UnscopedRef]` ([§UnscopedRefAttribute](attributes.md#unscopedrefattribute-the-unscopedref-attribute)), its ref-safe-context is widened by one level from its default: function-member becomes return-only, and return-only becomes caller-context.
 
 > *Example*: The following illustrates how the implicit `this` parameter of a struct instance method is `scoped ref` (ref-safe-context of *function-member*), and how `[UnscopedRef]` widens it to *return-only*, enabling ref returns of fields:
 >
@@ -1427,7 +1429,7 @@ The conditional operator ([§12.21](expressions.md#1221-conditional-operator)), 
 For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, where `M()` does not return ref-to-ref-struct, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
+- The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
 - The ref-safe-context contributed by all `ref` and `ref readonly` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
 
 If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
@@ -1479,9 +1481,9 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be at least return-only.
 
-### 9.7.3 The scoped modifier
+### §scoped-modifier The scoped modifier
 
-The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
 
 `scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type. `scoped` shall not be applied to fields, array elements, or return types.
 
@@ -1496,9 +1498,58 @@ Consider the following declarations and their safe contexts:
 
 In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
 
-### 9.7.4 Parameter scope variance
+> *Example*: The following illustrates how `scoped` restricts the lifetime of a local and prevents it from escaping its enclosing function:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedLocalCannotEscape", expectedErrors:["CS8352"]} -->
+> ```csharp
+> using System;
+>
+> class C
+> {
+>     static Span<int> Bad()
+>     {
+>         // Without `scoped`, the safe-context of `s` would be caller-context
+>         // because the right-hand side has safe-context of caller-context.
+>         // The `scoped` modifier forces the safe-context to function-member,
+>         // so `s` cannot be returned.
+>         scoped Span<int> s = default;
+>         return s;   // Error: s has safe-context of function-member
+>     }
+> }
+> ```
+>
+> *end example*
 
-The `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) and `[UnscopedRef]` attribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
+<!-- markdownlint-disable MD028 -->
+
+> *Example*: The following illustrates how `scoped ref` on a parameter prevents the parameter from being captured by a constructed `ref struct` value that the method returns:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedRefParameter", expectedErrors:["CS8347","CS9075"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public ref int RefField;
+>     public RS(ref int i) { RefField = ref i; }
+> }
+>
+> class C
+> {
+>     // `scoped ref` means `value` does not contribute ref-safe-context
+>     // to the return value. The `RS` constructor requires a ref argument
+>     // with ref-safe-context of caller-context, but `value` only contributes
+>     // function-member, so the call is rejected.
+>     static RS CreateWithoutCapture(scoped ref int value)
+>         => new RS(ref value);
+> }
+> ```
+>
+> *end example*
+
+In summary, two `ref` locations are implicitly `scoped`: the `this` parameter of a struct instance method, and every `out` parameter. See §9.7.2.3.
+
+### §parameter-scope-variance Parameter scope variance
+
+The `scoped` modifier (§scoped-modifier) and `[UnscopedRef]` attribute (§UnscopedRefAttribute) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
 
 - Add `scoped` to a `ref` or `in` parameter.
 - Add `scoped` to a parameter of a `ref struct` type.

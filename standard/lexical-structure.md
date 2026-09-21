@@ -85,7 +85,7 @@ If a sequence of tokens can be parsed, in context, as one of the disambiguated p
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
-> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
+> *Note*: These disambiguation rules shall not be applied when parsing other productions even if they similarly end in “`identifier type_argument_list?`”; such productions shall be parsed as normal. Examples include: *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)); *named_entity* ([§12.8.23](expressions.md#12823-the-nameof-operator)); *null_conditional_projection_initializer* ([§12.8.8](expressions.md#1288-null-conditional-member-access)); and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -586,7 +586,7 @@ keyword
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'file'      | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
@@ -607,13 +607,13 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
     | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'required'   | 'scoped'    | 'select'    | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    | 'equals'   | 'Fastcall'   | 'file'       | 'from'      | 'get'
+    | 'global'   | 'group'      | 'init'       | 'into'      | 'join'
+    | 'let'      | 'managed'    | 'nameof'     | 'nint'      | 'not'
+    | 'notnull'  | 'nuint'      | 'on'         | 'or'        | 'orderby'
+    | 'partial'  | 'record'     | 'remove'     | 'required'  | 'scoped'
+    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
+    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
     ;
 ```
 
@@ -904,9 +904,9 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
-A raw string literal consists of arbitrary text and newlines between multi-`"`-sequence delimiters (which better supports the readability of XML, JSON, and other forms of text that have some visually pleasing structure). A raw string literal may span multiple lines.
-
 All string literal forms may optionally have a trailing *Utf8_Suffix*. The representation of each form is discussed below.
+
+A raw string literal consists of arbitrary text and newlines between multi-`"`-sequence delimiters (which better supports the readability of XML, JSON, and other forms of text that have some visually pleasing structure). A raw string literal may span multiple lines.
 
 ```ANTLR
 String_Literal
@@ -954,7 +954,7 @@ fragment Raw_String_Literal
     ;
 
 fragment Single_Line_Raw_String_Literal
-    : Raw_String_Literal_Delimiter  Raw_String_Literal Content
+    : Raw_String_Literal_Delimiter  Raw_String_Literal_Content
       Raw_String_Literal_Delimiter
     ;
 
@@ -962,16 +962,15 @@ fragment Raw_String_Literal_Delimiter
     : '"""'  '"'*
     ;
 
-fragment Raw_String_Literal Content
+fragment Raw_String_Literal_Content
     // anything except New_Line
     : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
-      (Raw_String_Literal Content | New_Line)* New_Line
+      (Raw_String_Literal_Content | New_Line)* New_Line
       Whitespace* Raw_String_Literal_Delimiter
-    ;
 
 fragment Utf8_Suffix
     : 'u8' | 'U8'
@@ -986,23 +985,23 @@ For any *Raw_String_Literal*:
   > *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
 - The beginning and end delimiters shall have the same raw string literal delimiter length.
   > *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
-- A *Raw_String_Literal Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
+- A *Raw_String_Literal_Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
   > *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
-- As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal Content*.
+- As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal_Content*.
 
 For a *Single_Line_Raw_String_Literal* only:
 
 - A *Single_Line_Raw_String_Literal* cannot be empty; it must contain at least one character.
-- A *Raw_String_Literal Content* cannot begin with `"`, as such a character is considered to belong to the preceding start delimiter. Similarly, a *Raw_String_Literal Content* cannot end with `"`, as such a character is considered to belong to the following end delimiter.
-- The value of the literal is *Raw_String_Literal Content*, which can contain leading, embedded, and trailing horizontal whitespace (as in `"""x  x   x"""` and `""" xxx           """`, the latter having a leading space and trailing tabs).
+- A *Raw_String_Literal_Content* cannot begin with `"`, as such a character is considered to belong to the preceding start delimiter. Similarly, a *Raw_String_Literal_Content* cannot end with `"`, as such a character is considered to belong to the following end delimiter.
+- The value of the literal is *Raw_String_Literal_Content*, which can contain leading, embedded, and trailing horizontal whitespace (as in `"""x  x   x"""` and `""" xxx           """`, the latter having a leading space and trailing tabs).
 
 For a *Multi_Line_Raw_String_Literal* only:
 
-- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal Content*s.
-- A *Raw_String_Literal Content* shall not appear on the same line as a start or end delimiter.
-- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal Content*s and one or more *New_Line*s).
-- A *Raw_String_Literal Content* can begin or end with `"`.
-- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal Content*s and *New_Lines* after any whitespace at the beginning of each *Raw_String_Literal Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
+- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal_Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal_Content*s.
+- A *Raw_String_Literal_Content* shall not appear on the same line as a start or end delimiter.
+- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal_Content*s and one or more *New_Line*s).
+- A *Raw_String_Literal_Content* can begin or end with `"`.
+- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal_Content*s and *New_Line*s after any whitespace at the beginning of each *Raw_String_Literal_Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
 
 > *Example*: The example
 >
@@ -1074,7 +1073,7 @@ For a *Multi_Line_Raw_String_Literal* only:
 >         </element>
 > ```
 >
-> In the case of `xml1`, the end delimiter has 8 leading spaces, so that is the amount of leading whitespace removed from each content line. With `xm12`, 4 leading spaces are removed, and with `xml3`, no leading spaces are removed. *end example*
+> In the case of `xml1`, the end delimiter has 8 leading spaces, so that is the amount of leading whitespace removed from each content line. With `xml2`, 4 leading spaces are removed, and with `xml3`, no leading spaces are removed. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -1092,7 +1091,7 @@ A *String_Literal* that contains a *Utf8_Suffix* is a ***UTF-8 string literal***
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As `ReadOnlySpan<byte>` is a ref struct type, a UTF-8 string literal cannot be converted to `object` or used as a type parameter ([§16.2.3](structs.md#1623-ref-modifier)). *end note*
+> *Note*: Because `ReadOnlySpan<byte>` is a ref struct type, the value of a UTF-8 string literal cannot be implicitly converted to `object`, nor can `ReadOnlySpan<byte>` be used as a type argument ([§16.2.3](structs.md#1623-ref-modifier)). *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -1652,7 +1651,7 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
-    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
       PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 

@@ -793,6 +793,7 @@ namespace System.Diagnostics.CodeAnalysis
     {
         public SetsRequiredMembersAttribute() {}
     }
+    }
 }
 
 namespace System.Linq.Expressions
@@ -851,7 +852,7 @@ namespace System.Runtime.CompilerServices
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
-        AttributeTargets.Interface | AttributeTargets.Method, 
+        AttributeTargets.Interface | AttributeTargets.Method,
         Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
@@ -927,7 +928,7 @@ namespace System.Runtime.CompilerServices
         System.AttributeTargets.Struct, AllowMultiple=false, Inherited=false)]
     public sealed class InterpolatedStringHandlerAttribute : Attribute
     {
-        public InterpolatedStringHandlerAttribute (); 
+        public InterpolatedStringHandlerAttribute ();
     }
 
     /// <summary>
@@ -964,6 +965,10 @@ namespace System.Runtime.CompilerServices
         ///    <c>[0, Length)</c>.
         /// </exception>
         object? this[int index] { get; }
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class ModuleInitializerAttribute : Attribute
+    {
+        public ModuleInitializerAttribute() { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
@@ -1532,13 +1537,12 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
-- `global::System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute`
 - `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
+- `global::System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
 - `global::System.Runtime.CompilerServices.CallerArgumentExpressionAttribute`
-- `global::System.Runtime.CompilerServices.CallerFileAttribute`
 - `global::System.Runtime.CompilerServices.CallerFilePathAttribute`
 - `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
 - `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
