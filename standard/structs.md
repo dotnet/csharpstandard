@@ -538,14 +538,14 @@ An inline array is a collection; as such, it can be iterated over by a `foreach`
 
 The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
 
-A list pattern ([§11.2.11](patterns.md#11211-list-pattern)) shall not be used in the context of an inline array.
+A list pattern (§list-pattern-new-clause) shall not be used in the context of an inline array.
 
 An inline array type is a valid constructible collection target type for a collection literal.
 
 Any indexers or `Slice` methods declared for an inline array type that have signatures matching those defined for non-inline array processing, shall not be used during inline array element access.
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"InlineArays4", replaceEllipsis:true, customEllipsisReplacements: ["Console.WriteLine(\"in indexer [int]\");","return 0;"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"InlineArrays4", replaceEllipsis:true, customEllipsisReplacements:["Console.WriteLine(\"in indexer [int]\");","return 0;"]} -->
 ```csharp
 > var buffer = new Buffer();
 > int x = buffer[2];      // element access
