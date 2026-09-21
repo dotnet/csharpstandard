@@ -22,7 +22,6 @@ An attribute class may be generic. When an *attribute_name* references a generic
 >
 > <!-- Example: {template:"standalone-lib", name:"GenericAttribute", ignoredWarnings:["CS0169"]} -->
 > ```csharp
-> using System;
 > public class Attr<T> : Attribute { } // OK – generic attribute class
 >
 > [Attr<int>]                           // OK
