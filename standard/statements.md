@@ -1388,7 +1388,7 @@ In the case where the expression `enumerable` represents a method call expressio
 
 The body of the `finally` block is constructed according to the following steps:
 
-- If `E` has an accessible `DisposeAsync()` method, then
+- Perform member lookup ([§12.5](expressions.md#125-member-lookup)) on `E` with the identifier `DisposeAsync` and no type arguments. If the result is a method group and overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) with an empty argument list selects an accessible instance method, that method is selected for asynchronous disposal:
   - If the return type is not awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), an error is produced and no further steps are taken.
   - Otherwise the `finally` clause is expanded to the semantic equivalent of:
 
