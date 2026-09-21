@@ -24,6 +24,8 @@ public record StatusCheckMessage(string file, int StartLine, int EndLine, string
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(TextWriter writer, string pathToRoot, string toolName)
 {
+    internal const int MaximumAnnotations = 50;
+
     private List<NewCheckRunAnnotation> annotations = [];
     public bool Success { get; private set; } = true;
 
@@ -155,15 +157,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// <returns>The full check run result object</returns>
     public async Task BuildCheckRunResult(string token, string owner, string repo, string sha)
     {
-        NewCheckRun result = new(toolName, sha)
-        {
-            Status = CheckStatus.Completed,
-            Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
-            Output = new($"{toolName} Check Run results", $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.")
-            {
-                Annotations = annotations
-            }
-        };
+        NewCheckRun result = CreateCheckRun(sha);
 
         var prodInformation = new ProductHeaderValue("TC49-TG2", "1.0.0");
         var tokenAuth = new Credentials(token);
@@ -182,5 +176,26 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
             writer.WriteLine("Exception details:");
             writer.WriteLine(e);
         }
+    }
+
+    internal NewCheckRun CreateCheckRun(string sha)
+    {
+        var annotationsToSubmit = annotations.Take(MaximumAnnotations).ToList();
+        var omittedAnnotations = annotations.Count - annotationsToSubmit.Count;
+        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.";
+        if (omittedAnnotations > 0)
+        {
+            summary += $" The first {MaximumAnnotations} diagnostics are annotated; {omittedAnnotations} additional diagnostics are available in the workflow log.";
+        }
+
+        return new(toolName, sha)
+        {
+            Status = CheckStatus.Completed,
+            Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
+            Output = new($"{toolName} Check Run results", summary)
+            {
+                Annotations = annotationsToSubmit
+            }
+        };
     }
 }

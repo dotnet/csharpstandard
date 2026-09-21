@@ -40,9 +40,12 @@ primary_pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
     | list_pattern
     | slice_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 ```
 
@@ -159,7 +162,7 @@ constant_pattern
     ;
 ```
 
-A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
+A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`, or if `T` is `System.Span<char>` or `System.ReadOnlySpan<char>` and the constant expression of `P` is of type `string` and is not the `null` literal.
 
 For a constant pattern `P`, its *converted value* is
 
@@ -170,7 +173,7 @@ For a constant pattern `P`, its *converted value* is
 Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
 
 - if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
-- if *e* is of type `System.Span<char>` or `System.ReadOnlySpan<char>`, and *v* is a constant string, and *v* does not have a constant value of `null`, then the pattern is considered matching if `System.MemoryExtensions.SequenceEqual<char>(e, System.MemoryExtensions.AsSpan(v))` returns `true`; otherwise
+- if *e* is of type `System.Span<char>` or `System.ReadOnlySpan<char>`, and *v* is a constant string, and *v* does not have a constant value of `null`, the pattern `P` *matches* the value *e* if `System.MemoryExtensions.SequenceEqual<char>(e, System.MemoryExtensions.AsSpan(v))` returns `true`; otherwise
 - the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
 
 > *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
@@ -515,9 +518,11 @@ The *relational_expression* in a *relational_pattern* is required to evaluate to
 
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
 
-It is a compile-time error if *constant_expression*is `double.NaN`, `float.NaN`, or `null_literal`.
+A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
 
-When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of *constant_expression* using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists. It is a compile-time error if the input type is a type parameter constrained to, or a type inheriting, from `System.Numerics.INumberBase<T>` and the input type has no suitable built-in binary relational operator defined.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the *constant_expression*.
+It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
+
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of the constant expression using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the constant expression.
 
 > *Example*:
 >
@@ -666,11 +671,11 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 > bool flag = true;
 > 
 > // This is parsed as: (msg is (not int) or string)
-> result = msg is not int or string;
+> bool result = msg is not int or string;
 > Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
 >
 > // This is parsed as: (obj is (int or string)) && flag
-> bool result = obj is int or string && flag;
+> result = obj is int or string && flag;
 > Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
 > 
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
@@ -700,7 +705,7 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 >
 > *end example*
 
-### 11.2.11 List pattern
+### §list-pattern-new-clause List pattern
 
 A *list_pattern* matches a sequence of elements in a list or an array.
 
@@ -755,7 +760,7 @@ The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any s
 >
 > *end example*
 
-### 11.2.12 Slice pattern
+### §slice-pattern-new-clause Slice pattern
 
 A *slice_pattern* discards zero or more elements. It shall only be used directly in a *list_pattern_clause*, and then only once at most in that clause.
 
@@ -802,7 +807,7 @@ The input type for a *slice_pattern* is the return type of the underlying `this[
 <!-- markdownlint-enable MD028 -->
 > *Example*: A subpattern can be nested within a slice pattern:
 >
-> <!-- Example: {template:"standalone-console", name:" SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
+> <!-- Example: {template:"standalone-console", name:"SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
 > ```csharp
 > MatchMessage("aBBA");  // output: Message aBBA matches; inner part is BB.
 > MatchMessage("apron"); // output: Message apron doesn't match.

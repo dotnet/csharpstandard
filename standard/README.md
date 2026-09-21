@@ -48,40 +48,42 @@
     - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
     - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
-  - [§7.1](basic-concepts.md#71-application-startup)  Application startup
+  - [§7.1](basic-concepts.md#71-application-startup-and-termination)  Application startup and termination
     - [§7.1.1](basic-concepts.md#711-general)  General
-    - [§7.1.2](basic-concepts.md#712-using-a-named-entry-point)  Using a named entry point
+    - [§7.1.2](basic-concepts.md#712-named-entry-points)  Named entry points
     - [§7.1.3](basic-concepts.md#713-using-top-level-statements)  Using top-level statements
-  - [§7.2](basic-concepts.md#72-application-termination)  Application termination
-  - [§7.3](basic-concepts.md#73-declarations)  Declarations
-  - [§7.4](basic-concepts.md#74-members)  Members
+    - [§7.1.4](basic-concepts.md#714-externally-defined-entry-point)  Externally defined entry point
+    - [§7.1.5](basic-concepts.md#715-entry-point-selection)  Entry point selection
+    - [§7.1.6](basic-concepts.md#716-entry-point-invocation)  Entry point invocation
+  - [§7.2](basic-concepts.md#72-declarations)  Declarations
+  - [§7.3](basic-concepts.md#73-members)  Members
+    - [§7.3.1](basic-concepts.md#731-general)  General
+    - [§7.3.2](basic-concepts.md#732-namespace-members)  Namespace members
+    - [§7.3.3](basic-concepts.md#733-struct-members)  Struct members
+    - [§7.3.4](basic-concepts.md#734-enumeration-members)  Enumeration members
+    - [§7.3.5](basic-concepts.md#735-class-members)  Class members
+    - [§7.3.6](basic-concepts.md#736-interface-members)  Interface members
+    - [§7.3.7](basic-concepts.md#737-array-members)  Array members
+    - [§7.3.8](basic-concepts.md#738-delegate-members)  Delegate members
+  - [§7.4](basic-concepts.md#74-member-access)  Member access
     - [§7.4.1](basic-concepts.md#741-general)  General
-    - [§7.4.2](basic-concepts.md#742-namespace-members)  Namespace members
-    - [§7.4.3](basic-concepts.md#743-struct-members)  Struct members
-    - [§7.4.4](basic-concepts.md#744-enumeration-members)  Enumeration members
-    - [§7.4.5](basic-concepts.md#745-class-members)  Class members
-    - [§7.4.6](basic-concepts.md#746-interface-members)  Interface members
-    - [§7.4.7](basic-concepts.md#747-array-members)  Array members
-    - [§7.4.8](basic-concepts.md#748-delegate-members)  Delegate members
-  - [§7.5](basic-concepts.md#75-member-access)  Member access
-    - [§7.5.1](basic-concepts.md#751-general)  General
-    - [§7.5.2](basic-concepts.md#752-declared-accessibility)  Declared accessibility
-    - [§7.5.3](basic-concepts.md#753-accessibility-domains)  Accessibility domains
-    - [§7.5.4](basic-concepts.md#754-protected-access)  Protected access
-    - [§7.5.5](basic-concepts.md#755-accessibility-constraints)  Accessibility constraints
-  - [§7.6](basic-concepts.md#76-signatures-and-overloading)  Signatures and overloading
-  - [§7.7](basic-concepts.md#77-scopes)  Scopes
+    - [§7.4.2](basic-concepts.md#742-declared-accessibility)  Declared accessibility
+    - [§7.4.3](basic-concepts.md#743-accessibility-domains)  Accessibility domains
+    - [§7.4.4](basic-concepts.md#744-protected-access)  Protected access
+    - [§7.4.5](basic-concepts.md#745-accessibility-constraints)  Accessibility constraints
+  - [§7.5](basic-concepts.md#75-signatures-and-overloading)  Signatures and overloading
+  - [§7.6](basic-concepts.md#76-scopes)  Scopes
+    - [§7.6.1](basic-concepts.md#761-general)  General
+    - [§7.6.2](basic-concepts.md#762-name-hiding)  Name hiding
+      - [§7.6.2.1](basic-concepts.md#7621-general)  General
+      - [§7.6.2.2](basic-concepts.md#7622-hiding-through-nesting)  Hiding through nesting
+      - [§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance)  Hiding through inheritance
+  - [§7.7](basic-concepts.md#77-namespace-and-type-names)  Namespace and type names
     - [§7.7.1](basic-concepts.md#771-general)  General
-    - [§7.7.2](basic-concepts.md#772-name-hiding)  Name hiding
-      - [§7.7.2.1](basic-concepts.md#7721-general)  General
-      - [§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)  Hiding through nesting
-      - [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)  Hiding through inheritance
-  - [§7.8](basic-concepts.md#78-namespace-and-type-names)  Namespace and type names
-    - [§7.8.1](basic-concepts.md#781-general)  General
-    - [§7.8.2](basic-concepts.md#782-unqualified-names)  Unqualified names
-    - [§7.8.3](basic-concepts.md#783-fully-qualified-names)  Fully qualified names
-  - [§7.9](basic-concepts.md#79-automatic-memory-management)  Automatic memory management
-  - [§7.10](basic-concepts.md#710-execution-order)  Execution order
+    - [§7.7.2](basic-concepts.md#772-unqualified-names)  Unqualified names
+    - [§7.7.3](basic-concepts.md#773-fully-qualified-names)  Fully qualified names
+  - [§7.8](basic-concepts.md#78-automatic-memory-management)  Automatic memory management
+  - [§7.9](basic-concepts.md#79-execution-order)  Execution order
 - [§8](types.md#8-types)  Types
   - [§8.1](types.md#81-general)  General
   - [§8.2](types.md#82-reference-types)  Reference types
@@ -209,8 +211,6 @@
       - [§9.7.2.7](variables.md#9727-values)  Values
       - [§9.7.2.8](variables.md#9728-constructor-invocations)  Constructor invocations
       - [§9.7.2.9](variables.md#9729-limitations-on-reference-variables)  Limitations on reference variables
-    - [§9.7.3](variables.md#973-the-scoped-modifier)  The scoped modifier
-    - [§9.7.4](variables.md#974-parameter-scope-variance)  Parameter scope variance
 - [§10](conversions.md#10-conversions)  Conversions
   - [§10.1](conversions.md#101-general)  General
   - [§10.2](conversions.md#102-implicit-conversions)  Implicit conversions
@@ -276,8 +276,6 @@
     - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
     - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
     - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
-    - [§11.2.11](patterns.md#11211-list-pattern)  List pattern
-    - [§11.2.12](patterns.md#11212-slice-pattern)  Slice pattern
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
@@ -375,11 +373,11 @@
       - [§12.8.17.1](expressions.md#128171-general)  General
       - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
         - [§12.8.17.2.1](expressions.md#1281721-general)  General
-      - [§12.8.17.3](expressions.md#128173-object-initializers)  Object initializers
-        - [§12.8.17.3.1](expressions.md#1281731-collection-initializers)  Collection initializers
-      - [§12.8.17.4](expressions.md#128174-anonymous-object-creation-expressions)  Anonymous object creation expressions
-      - [§12.8.17.5](expressions.md#128175-array-creation-expressions)  Array creation expressions
-      - [§12.8.17.6](expressions.md#128176-delegate-creation-expressions)  Delegate creation expressions
+        - [§12.8.17.2.2](expressions.md#1281722-object-initializers)  Object initializers
+        - [§12.8.17.2.3](expressions.md#1281723-collection-initializers)  Collection initializers
+      - [§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)  Anonymous object creation expressions
+      - [§12.8.17.4](expressions.md#128174-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.5](expressions.md#128175-delegate-creation-expressions)  Delegate creation expressions
     - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
     - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
     - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators
@@ -729,9 +727,7 @@
     - [§16.6.5](structs.md#1665-default-values)  Default values
     - [§16.6.6](structs.md#1666-boxing-and-unboxing)  Boxing and unboxing
     - [§16.6.7](structs.md#1667-meaning-of-this)  Meaning of this
-    - [§16.6.8](structs.md#1668-fields)  Fields
-      - [§16.6.8.1](structs.md#16681-field-initializers)  Field initializers
-      - [§16.6.8.2](structs.md#16682-ref-fields)  Ref fields
+    - [§16.6.8](structs.md#1668-field-initializers)  Field initializers
     - [§16.6.9](structs.md#1669-constructors)  Constructors
     - [§16.6.10](structs.md#16610-static-constructors)  Static constructors
     - [§16.6.11](structs.md#16611-properties)  Properties
@@ -745,11 +741,8 @@
       - [§16.6.15.4](structs.md#166154-field-safe-context)  Field safe context
       - [§16.6.15.5](structs.md#166155-operators)  Operators
       - [§16.6.15.6](structs.md#166156-method-and-property-invocation)  Method and property invocation
-      - [§16.6.15.7](structs.md#166157-method-arguments-must-match)  Method arguments must match
-      - [§16.6.15.8](structs.md#166158-infer-safe-context-of-declaration-expressions)  Infer safe-context of declaration expressions
-      - [§16.6.15.9](structs.md#166159-object-initializer-safe-context)  Object initializer safe context
-      - [§16.6.15.10](structs.md#1661510-stackalloc)  stackalloc
-      - [§16.6.15.11](structs.md#1661511-constructor-invocations)  Constructor invocations
+      - [§16.6.15.7](structs.md#166157-stackalloc)  stackalloc
+      - [§16.6.15.8](structs.md#166158-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types
@@ -863,16 +856,12 @@
       - [§23.5.7.10](attributes.md#235710-the-notnull-attribute)  The NotNull attribute
       - [§23.5.7.11](attributes.md#235711-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
       - [§23.5.7.12](attributes.md#235712-the-notnullwhen-attribute)  The NotNullWhen attribute
-    - [§23.5.8](attributes.md#2358-the-unscopedref-attribute)  The UnscopedRef attribute
-    - [§23.5.9](attributes.md#2359-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
-    - [§23.5.10](attributes.md#23510-the-moduleinitializer-attribute)  The ModuleInitializer attribute
-      - [§23.5.10.1](attributes.md#235101-custom-interpolated-string-expression-handlers)  Custom interpolated string expression handlers
-        - [§23.5.10.1.1](attributes.md#2351011-declaring-a-custom-handler)  Declaring a custom handler
-        - [§23.5.10.1.2](attributes.md#2351012-inhibiting-a-custom-handler)  Inhibiting a custom handler
-        - [§23.5.10.1.3](attributes.md#2351013-passing-information-tofrom-a-custom-handler)  Passing information to/from a custom handler
-    - [§23.5.11](attributes.md#23511-required-member-attributes)  Required member attributes
-      - [§23.5.11.1](attributes.md#235111-the-setsrequiredmembers-attribute)  The SetsRequiredMembers attribute
-      - [§23.5.11.2](attributes.md#235112-the-requiredmember-attribute)  The RequiredMember attribute
+    - [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)  The EnumeratorCancellation attribute
+    - [§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)  The ModuleInitializer attribute
+      - [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)  Custom interpolated string expression handlers
+        - [§23.5.9.1.1](attributes.md#235911-declaring-a-custom-handler)  Declaring a custom handler
+        - [§23.5.9.1.2](attributes.md#235912-inhibiting-a-custom-handler)  Inhibiting a custom handler
+        - [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler)  Passing information to/from a custom handler
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
   - [§24.1](unsafe-code.md#241-general)  General

@@ -25,12 +25,24 @@ non_record_struct_declaration
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
+
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
+    ;
 ```
 
 There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in [§16.4](structs.md#164-record-structs). The differences between the two kinds are discussed in [§16.5](structs.md#165-record-struct-and-non-record-struct-differences).
 
 A *non_record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
+A struct having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A *struct_declaration* that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
@@ -148,9 +160,9 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields ([§16.6.8.2](structs.md#16682-ref-fields)). *end note*
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields (§Ref-Fields). *end note*
 
-Fields in structs support capabilities not supported in classes. See [§16.6.8.2](structs.md#16682-ref-fields) for details.
+Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
 
 Except for the differences noted in [§16.6](structs.md#166-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
@@ -241,7 +253,7 @@ For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;
 
 #### 16.4.4.1 General
 
-In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.5](basic-concepts.md#75-signatures-and-overloading).)
 
 The members provided by the implementation are described in the following subclauses.
 
@@ -321,7 +333,7 @@ The provided override of `GetHashCode()` shall return an `int` result of combini
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
 >     public static bool operator==(R1 r1, R1 r2) => r1.Equals(r2);
->     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);    
+>     public static bool operator!=(R1 r1, R1 r2) => !(r1 == r2);
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(
@@ -434,18 +446,7 @@ In the case of a record class, the implementation shall provide a private, init-
 
 Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
 
-The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
-
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS8050"]} -->
-> ```csharp
-> record struct Pos(int X) // def assignment error in primary constructor
-> {
->     private int x;
->     public int X {
->         get { return x; } set { x = value; } 
->     } = X;
-> }
-> ```
+The definite assignment rules for struct instance constructors ([§16.6.9](structs.md#1669-constructors), [§12.8.14](expressions.md#12814-this-access)) apply to the primary constructor of record structs. As for any other struct instance constructor without a `this()` initializer, any instance field that is not definitely assigned by the primary constructor is implicitly initialized to its default value in the initialization phase that runs before the body of the primary constructor.
 
 ##### 16.4.4.5.3 Properties
 
@@ -730,9 +731,9 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > *end example*
 
-### 16.6.8 Fields
+### §fields Fields
 
-#### 16.6.8.1 Field initializers
+#### §field-initializers Field initializers
 
 As described in [§16.6.5](structs.md#1665-default-values), the default value of a struct consists of the value that results from setting all value type and reference variable fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
@@ -768,7 +769,7 @@ When a struct instance constructor has a `this()` constructor initializer that r
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
-#### 16.6.8.2 Ref fields
+#### §Ref-Fields Ref fields
 
 ```ANTLR
 struct_field_declaration
@@ -781,7 +782,12 @@ struct_field_declaration
 
 A *struct_field_declaration* without `ref`, `readonly ref`, or `ref readonly` is as described in [§15.5](classes.md#155-fields).
 
-A `ref` or `readonly ref` field is a reference variable and shall only be declared in a `ref` struct.
+A `ref` or `readonly ref` field is a reference variable and is subject to the following constraints:
+
+- It shall only be declared in a `ref struct`.
+- It shall not be declared `static`, `volatile`, or `const`.
+- Its type shall not itself be a `ref struct` type.
+- In a `readonly ref struct`, every `ref` field shall be declared `readonly ref` (it may additionally be declared `readonly ref readonly`).
 
 Consider the following ref struct declaration:
 
@@ -869,15 +875,15 @@ An explicitly declared parameterless instance constructor shall have public acce
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional. The execution of an instance constructor shall not result in the execution of a constructor in the struct’s base type `System.ValueType`.
 
-The `this` parameter of a struct instance constructor corresponds to an output parameter of the struct type. As such, `this` shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
+The `this` parameter of a struct instance constructor behaves similarly to an output parameter of the struct type, except that when the definite assignment requirements ([§9.4.1](variables.md#941-general)) for `this` (or for instance variables within `this`) are not met at a location where they would otherwise be required, that does not result in a compile-time error. Instead, the unassigned variables are implicitly initialized to the default value ([§9.3](variables.md#93-default-values)) in an *initialization* phase before any other code in the constructor runs, as described in [§12.8.14](expressions.md#12814-this-access).
 
-If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
+If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to `this` that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 
-Instance fields (other than `fixed` fields) shall be definitely assigned in struct instance constructors that do not have a `this()` initializer.
+For a struct instance constructor that does not have a `this()` initializer, any instance field (other than a `fixed` field) that is not definitely assigned at every location where the constructor returns, or that has not yet been definitely assigned at a location where the value of `this` or of that field is read, is implicitly initialized to its default value in the *initialization* phase described in [§12.8.14](expressions.md#12814-this-access).
 
 > *Example*: Consider the instance constructor implementation below:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2", expectedErrors:["CS0188"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2"} -->
 > ```csharp
 > struct Point
 > {
@@ -895,14 +901,16 @@ Instance fields (other than `fixed` fields) shall be definitely assigned in stru
 >
 >     public Point(int x, int y) 
 >     {
->         X = x; // error, this is not yet definitely assigned
->         Y = y; // error, this is not yet definitely assigned
+>         X = x; // ok; x is implicitly initialized to its default value
+>                // before the body runs, so calling the X setter is allowed
+>         Y = y; // ok, for the same reason
 >     }
 > }
 > ```
 >
-> No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
-> There is one exception to this, and that involves automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)). The definite assignment rules ([§12.24.2](expressions.md#12242-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> Because the instance fields `x` and `y` are not definitely assigned before the calls to the property setters, they are implicitly initialized to their default values in the initialization phase before the constructor body runs. The set accessors for `X` and `Y` may therefore be invoked even though the constructor body itself does not first assign `x` and `y`.
+>
+> Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) interact with these rules via the hidden backing field. The definite assignment rules ([§12.24.2](expressions.md#12242-simple-assignment)) specifically treat assignment to an auto-property of a struct type within an instance constructor of that struct type as a definite assignment of the hidden backing field of the auto-property. Thus, the following is also allowed:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Constructors3"} -->
 > ```csharp
@@ -955,7 +963,7 @@ For a property accessor expression, `s.P`:
 
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
-> *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+> *Note*: Because the backing field of an auto-property of a struct type is implicitly initialized to its default value in the initialization phase of an instance constructor that does not assign it ([§12.8.14](expressions.md#12814-this-access)), an explicit constructor initializer is not required in order to satisfy the definite-assignment rules for that backing field. *end note*
 
 ### 16.6.12 Methods
 
@@ -994,6 +1002,8 @@ At compile-time, each expression is associated with a context where that instanc
 Any expression whose compile-time type is not a ref struct has a safe-context of caller-context.
 
 A `default` expression, for any type, has safe-context of caller-context.
+
+A UTF-8 string literal ([§6.4.5.6](lexical-structure.md#6456-string-literals)) has a safe-context of caller-context.
 
 For any non-default expression whose compile-time type is a ref struct has a safe-context defined by the following sections.
 
@@ -1053,9 +1063,9 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-> *Example*: The following illustrates how `scoped` affects the safe-context of a method’s return value:
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
 > ref struct RS
 > {
@@ -1084,7 +1094,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 >
 > *end example*
 
-#### 16.6.15.7 Method arguments must match
+#### §method-arguments-must-match Method arguments must match
 
 For any method invocation `e.M(a1, a2, ... aN)`:
 
@@ -1108,7 +1118,7 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 
 > *Example*: The following illustrates how the method-arguments-must-match rule prevents a value with a narrower safe-context from being stored into a `ref` argument with a wider safe-context:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350","CS8352"]} -->
 > ```csharp
 > ref struct R { }
 >
@@ -1129,13 +1139,13 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 >
 > *end example*
 
-#### 16.6.15.8 Infer safe-context of declaration expressions
+#### §declaration-expression-safe-context Infer safe-context of declaration expressions
 
 The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
 
 - caller-context.
 - If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
-- If the out variable’s type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 
@@ -1169,7 +1179,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 >
 > *end example*
 
-#### 16.6.15.9 Object initializer safe context
+#### §object-initializer-safe-context Object initializer safe context
 
 The safe-context of an object initializer expression is the narrowest of:
 
@@ -1178,7 +1188,9 @@ The safe-context of an object initializer expression is the narrowest of:
 3. The safe-context of the RHS of assignments in member initializers to non-readonly setters, or the ref-safe-context in the case of ref assignment.
 
 > *Note*: Another way of modeling this is to consider any argument to a member initializer that can be assigned to the receiver as being an argument to the constructor. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following illustrates how an object initializer narrows the safe-context of the resulting value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ObjectInitializerSafeContext", expectedErrors:["CS8352"]} -->
@@ -1210,12 +1222,12 @@ The safe-context of an object initializer expression is the narrowest of:
 >
 > *end example*
 
-#### 16.6.15.10 stackalloc
+#### 16.6.15.7 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
 
-#### 16.6.15.11 Constructor invocations
+#### 16.6.15.8 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See [§16.6.15.9](structs.md#166159-object-initializer-safe-context) for details.
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.

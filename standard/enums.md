@@ -44,9 +44,7 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `nint`, `nuint`, and `char`. The underlying type may be specified either by an `integral_type` ([§8.3.5](types.md#835-simple-types)), or an `integral_type_name`. The `integral_type_name` is resolved in the same way as `type_name` ([§7.8.1](basic-concepts.md#781-general)), including taking any using directives ([§14.6](namespaces.md#146-using-directives)) into account.
-
-> *Note*: The `char` type cannot be used as an underlying type, either by keyword or via an `integral_type_name`. *end note*
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `nint`, `nuint`, and `char`. The underlying type may be specified either by an `integral_type` ([§8.3.5](types.md#835-simple-types)), or an `integral_type_name`. The `integral_type_name` is resolved in the same way as `type_name` ([§7.7.1](basic-concepts.md#771-general)), including taking any using directives ([§14.6](namespaces.md#146-using-directives)) into account.
 
 An enum declaration that does not explicitly declare an underlying type has an underlying type of `int`.
 
@@ -244,7 +242,7 @@ The following operators can be used on values of enum types:
 - `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.15.6](expressions.md#12156-enumeration-comparison-operators))
 - binary `+` ([§12.13.5](expressions.md#12135-addition-operator))
 - binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator))
-- `^`, `&`, `|` ([§12.16.3](expressions.md#12163-enumeration-logical-operators))
+- `^`, `&`, `|` ([§12.17.3](expressions.md#12173-user-defined-conditional-logical-operators))
 - `~` ([§12.9.5](expressions.md#1295-bitwise-complement-operator))
 - `++`, `--` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators))
 - `sizeof` ([§24.6.9](unsafe-code.md#2469-the-sizeof-operator))

@@ -5,7 +5,7 @@
 This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
 
 - The types introduced in this clause, `System.Index` ([§18.2](ranges.md#182-the-index-type)) and `System.Range` ([§18.3](ranges.md#183-the-range-type));
-- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) and binary `..` ([§12.11](expressions.md#1211-range-operator)) operators; and
+- The pre-defined unary `^` ([§12.9.6](expressions.md#1296-index-from-end-operator)) and binary `..` ([§12.12](expressions.md#1212-switch-expression)) operators; and
 - The *element_access* expression.
 
 Under the model a type is classified as:
@@ -45,7 +45,7 @@ The above definitions are extended for uses of `Index` and `Range` as follows:
 - A type is also a *sequence* if an *element_access* expression taking a single required `Index` argument, rather than an `int` argument, is supported. Where a distinction is required the type is termed ***extended indexable***.
 - A type is also *sliceable* if an *element_access* expression taking a single required `Range` argument, rather than a `Slice` method, is supported. Where a distinction is required the type is termed ***extended sliceable***.
 
-Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility ([§7.5](basic-concepts.md#75-member-access)) and therefore dependent on where the type is being used.
+Whether a type is classified as countable, indexable, or sliceable is subject to the constraints of member accessibility ([§7.4](basic-concepts.md#74-member-access)) and therefore dependent on where the type is being used.
 
 > *Example*: A type where the countable property and/or the indexer are `protected` is only a sequence to members of itself and any derived types. *end example*
 
@@ -184,7 +184,7 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 >
 > *end example*
 
-The language-defined operator `..` ([§12.11](expressions.md#1211-range-operator)) creates a `Range` value from `Index` values.
+The language-defined operator `..` ([§12.12](expressions.md#1212-switch-expression)) creates a `Range` value from `Index` values.
 
 > *Example*
 >

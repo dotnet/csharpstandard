@@ -8,33 +8,34 @@ Using directives ([§14.6](namespaces.md#146-using-directives)) and global using
 
 ## 14.2 Compilation units
 
-A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *global_using_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by a *compilation_unit_body*. A *compilation_unit_body* can either be zero or more *statement_list*s followed by zero or more *namespace_member_declaration*s, or a *file_scoped_namespace_declaration*. The *compilation_unit* defines the overall structure of the input.
+A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
+
+The structure of a single compilation unit is defined by *compilation_unit*:
 
 ```ANTLR
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
-    : statement_list* namespace_member_declaration*
+    : statement_list? namespace_member_declaration*
     | file_scoped_namespace_declaration
     ;
 ```
 
-A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
+The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directives)) of a compilation unit affect the *global_using_directive*s, *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-The *extern_alias_directive*s of a compilation unit affect the *global_using_directive*s, *using_directive*s, *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
+The *using_directive*s ([§14.6](namespaces.md#146-using-directives)) of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-The *using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
-
-The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
+The *global_using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
+
+The optional *statement_list* ([§13.3.2](statements.md#1332-statement-lists)) specifies statements to be used as an application entry point ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). Only one compilation unit in a program may contain a *statement_list*.
 
 The *namespace_member_declaration*s or *file_scoped_namespace_declaration* of each compilation unit of a program contribute members to a single declaration space called the global namespace.
 
 A *file_scoped_namespace_declaration* contributes members corresponding to the *namespace_declaration* to which it is semantically equivalent ([§14.3](namespaces.md#143-namespace-declarations)).
-
 > *Example*:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"CompilationUnits"} -->
@@ -112,41 +113,7 @@ The *qualified_identifier* of a *namespace_declaration* and *file_scoped_namespa
 >
 > *end example*
 
-A *file_scoped_namespace_declaration* permits a namespace declaration to be written without an accompanying `{ … }` block.
-
-> *Example*:
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
-> ```csharp
-> namespace Name;
-> using System;
-> class C
-> {
-> }
-> ```
->
-> is semantically equivalent to
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
-> ```csharp
-> namespace Name
-> {
->     using System;
->     class C
->     {
->     }
-> }
-> ```
->
-> *end example*
-
-A *file_scoped_namespace_declaration* is treated the same as a *namespace_declaration* at the same location in the *compilation_unit* with the same *qualified_identifier*.  The *extern_alias_directive*s, *using_directive*s and *type_declaration*s of that *file_scoped_namespace_declaration* act as if they were declared in the same order inside the *namespace_body* of that *namespace_declaration*.
-
-> *Note*: As determined by the grammar, a compilation unit cannot contain both a *file_scoped_namespace_declaration* and a *namespace_declaration*. It cannot contain multiple *file_scoped_namespace_declaration*s. It cannot contain both a *file_scoped_namespace_declaration* and any top level *statement*s. *type_declaration*s cannot precede a *file_scoped_namespace_declaration*. *end note*
-
-Different compilation units may contribute to the same namespace using either or both of the *namespace_member_declaration* or *file_scoped_namespace_declaration* syntax.
-
-Namespaces are open-ended, and two namespace declarations with the same fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) contribute to the same declaration space ([§7.3](basic-concepts.md#73-declarations)).
+Namespaces are open-ended, and two namespace declarations with the same fully qualified name ([§7.7.3](basic-concepts.md#773-fully-qualified-names)) contribute to the same declaration space ([§7.2](basic-concepts.md#72-declarations)).
 
 > *Example*: In the following code
 >
@@ -171,7 +138,7 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces3"} -->
 > ```csharp
 > namespace Name;
 > using System;
@@ -182,7 +149,7 @@ A *file_scoped_namespace_declaration* permits a namespace declaration to be writ
 >
 > is semantically equivalent to
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FileScopedNamespaces4"} -->
 > ```csharp
 > namespace Name
 > {
@@ -211,7 +178,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* is described in [§7.7.1](basic-concepts.md#771-general).
+The scope of an *extern_alias_directive* extends over *global_using_directive*s, the *using_directive*s, *global_attributes* and *compilation_unit_body* of its immediately containing *compilation_unit* or *namespace_body*.
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
@@ -328,7 +295,7 @@ It is a compile-time error to use a file-local type in a *global_using_static_di
 
 ### 14.6.1 General
 
-A ***using directive*** facilitates the use of namespaces and types defined in other namespaces. Using directives impact the name resolution process of *namespace_or_type_name*s ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *simple_name*s ([§12.8.4](expressions.md#1284-simple-names)), but unlike declarations, *using_directive*s do not contribute new members to the underlying declaration spaces of the compilation units or namespaces within which they are used.
+A ***using directive*** facilitates the use of namespaces and types defined in other namespaces. Using directives impact the name resolution process of *namespace_or_type_name*s ([§7.7](basic-concepts.md#77-namespace-and-type-names)) and *simple_name*s ([§12.8.4](expressions.md#1284-simple-names)), but unlike declarations, *using_directive*s do not contribute new members to the underlying declaration spaces of the compilation units or namespaces within which they are used.
 
 ```ANTLR
 using_directive
@@ -458,7 +425,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 >
 > *end example*
 
-Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the alias declaration space ([§7.3](basic-concepts.md#73-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
+Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the alias declaration space ([§7.2](basic-concepts.md#72-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
 
 > *Example*:
 >
@@ -937,11 +904,11 @@ type_declaration
 
 A *type_declaration* can occur as a top-level declaration in a compilation unit or as a member declaration within a namespace, class, or struct.
 
-When a type declaration for a type `T` occurs as a top-level declaration in a compilation unit, the fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) of the type declaration is the same as the unqualified name of the declaration ([§7.8.2](basic-concepts.md#782-unqualified-names)). When a type declaration for a type `T` occurs within a namespace, class, or struct declaration, the fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) of the type declaration is `S.N`, where `S` is the fully qualified name of the containing namespace, class, or struct declaration, and `N` is the unqualified name of the declaration.
+When a type declaration for a type `T` occurs as a top-level declaration in a compilation unit, the fully qualified name ([§7.7.3](basic-concepts.md#773-fully-qualified-names)) of the type declaration is the same as the unqualified name of the declaration ([§7.7.2](basic-concepts.md#772-unqualified-names)). When a type declaration for a type `T` occurs within a namespace, class, or struct declaration, the fully qualified name ([§7.7.3](basic-concepts.md#773-fully-qualified-names)) of the type declaration is `S.N`, where `S` is the fully qualified name of the containing namespace, class, or struct declaration, and `N` is the unqualified name of the declaration.
 
 A type declared within a class, interface, or struct is called a nested type ([§15.3.9](classes.md#1539-nested-types)).
 
-The permitted access modifiers and the default access for a type declaration depend on the context in which the declaration takes place ([§7.5.2](basic-concepts.md#752-declared-accessibility)):
+The permitted access modifiers and the default access for a type declaration depend on the context in which the declaration takes place ([§7.4.2](basic-concepts.md#742-declared-accessibility)):
 
 - Types declared in compilation units or namespaces can have `public` or `internal` access. The default is `internal` access.
 - Types declared in classes can have `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private` access. The default is `private` access.
@@ -961,7 +928,7 @@ qualified_alias_member
     ;
 ```
 
-A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) or as the left operand in a *member_access* ([§12.8.7](expressions.md#1287-member-access)).
+A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) or as the left operand in a *member_access* ([§12.8.7](expressions.md#1287-member-access)).
 
 A *qualified_alias_member* consists of two identifiers, referred to as the left-hand and right-hand identifiers, seperated by the `::` token and optionally followed by a *type_argument_list*. When the left-hand identifier is global then the global namespace is searched for the right-hand identifier. For any other left-hand identifier, that identifier is looked up as an extern or using alias ([§14.4](namespaces.md#144-extern-alias-directives) and [§14.6.2](namespaces.md#1462-using-alias-directives)). A compile-time error occurs if there is no such alias or the alias references a type. If the alias references a namespace then that namespace is searched for the right-hand identifier.
 
@@ -1032,7 +999,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440"], additionalFiles:["MyGlobalTypes.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440","CS8981"], additionalFiles:["MyGlobalTypes.cs"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >

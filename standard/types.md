@@ -222,7 +222,7 @@ nullable_value_type
     ;
 ```
 
-Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution ([§7.8.1](basic-concepts.md#781-general)) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
+Because the names `nint` and `nuint` are not keywords there is syntactic ambiguity between recognising them as a *type_name* or a *value_type*. If type resolution ([§7.7.1](basic-concepts.md#771-general)) on either of these names succeeds, that name shall be recognised as a *type_name*; otherwise it shall be recognised as a *value_type*.
 
 Unlike a variable of a reference type, a variable of a value type can contain the value `null` only if the value type is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). For every non-nullable value type there is a corresponding nullable value type denoting the same set of values plus the value `null`.
 
@@ -323,14 +323,6 @@ Every simple type has members. Each simple type has its aliased struct type’s 
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
 > *end note*.
-
-<!-- C# 11: In C# 11, nint and nuint become true aliases for System.IntPtr and System.UIntPtr. The following paragraphs describing the non-alias relationship should be updated or removed. -->
-
-The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
-
-- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
-- Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
-- In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
 ### 8.3.6 Integral types
 
@@ -639,7 +631,7 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 >
 > *end example*
 
-The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it does not specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)).
+The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.7](basic-concepts.md#77-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it does not specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)).
 
 > *Example*:
 >
@@ -753,9 +745,9 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.15.7](expressions.md#12157-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute ([§23.2.1](attributes.md#2321-general)).
-> - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
+> - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.7](basic-concepts.md#77-namespace-and-type-names)) to identify a static member or a nested type.
 > - A type parameter can only be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) if the type parameter is constrained by the unmanaged constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-> - Nullable annotations (`?`) aren’t allowed on an instance of a type parameter unless that type parameter is constrained to be either a reference type or a value type ([§15.2.5](classes.md#1525-type-parameter-constraints)).  
+> - Except when a type parameter is explicitly constrained to value types, the nullable type annotation (`?`) can only be applied to an occurrence of a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive), [§15.2.5](classes.md#1525-type-parameter-constraints)).
 >
 > *end note*
 

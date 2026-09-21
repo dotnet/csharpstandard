@@ -42,6 +42,8 @@ public static class FastCsprojCompilationParser
     private static readonly FrozenDictionary<string, TargetFrameworkInfo> SupportedTargetFrameworks = new KeyValuePair<string, TargetFrameworkInfo>[]
     {
         new("net6.0", new(Basic.Reference.Assemblies.Net60.References.All, LanguageVersion.CSharp10, DefaultWarningLevel: 6)),
+        new("net7.0", new(Basic.Reference.Assemblies.Net70.References.All, LanguageVersion.CSharp11, DefaultWarningLevel: 7)),
+        new("net8.0", new(Basic.Reference.Assemblies.Net80.References.All, LanguageVersion.CSharp12, DefaultWarningLevel: 8)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
     private static readonly CSharpParseOptions DefaultParseOptions = new(preprocessorSymbols: [

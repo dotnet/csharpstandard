@@ -197,7 +197,7 @@ keyword
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'file'      | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
@@ -213,15 +213,14 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'required'   | 'scoped'    | 'select'    | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
+    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
+    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
+    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
+    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
+    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
+    | 'var'       | 'when'       | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -339,11 +338,10 @@ fragment Hexadecimal_Escape_Sequence
 String_Literal
     : Regular_String_Literal
     | Verbatim_String_Literal
-    | Raw_String_Literal
     ;
 
 fragment Regular_String_Literal
-    : '"' Regular_String_Literal_Character* '"' Utf8_Suffix?
+    : '"' Regular_String_Literal_Character* '"'
     ;
 
 fragment Regular_String_Literal_Character
@@ -359,7 +357,7 @@ fragment Single_Regular_String_Literal_Character
     ;
 
 fragment Verbatim_String_Literal
-    : '@"' Verbatim_String_Literal_Character* '"' Utf8_Suffix?
+    : '@"' Verbatim_String_Literal_Character* '"'
     ;
 
 fragment Verbatim_String_Literal_Character
@@ -373,35 +371,6 @@ fragment Single_Verbatim_String_Literal_Character
 
 fragment Quote_Escape_Sequence
     : '""'
-    ;
-
-fragment Raw_String_Literal
-    : Single_Line_Raw_String_Literal
-    | Multi_Line_Raw_String_Literal
-    ;
-
-fragment Single_Line_Raw_String_Literal
-    : Raw_String_Literal_Delimiter  Raw_String_Literal Content
-      Raw_String_Literal_Delimiter
-    ;
-
-fragment Raw_String_Literal_Delimiter
-    : '"""'  '"'*
-    ;
-
-fragment Raw_String_Literal Content
-    // anything except New_Line
-    : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
-    ;
-
-fragment Multi_Line_Raw_String_Literal
-    : Raw_String_Literal_Delimiter Whitespace* New_Line
-      (Raw_String_Literal Content | New_Line)* New_Line
-      Whitespace* Raw_String_Literal_Delimiter
-    ;
-
-fragment Utf8_Suffix
-    : 'u8' | 'U8'
     ;
 
 // Source: §6.4.5.7 The null literal
@@ -424,14 +393,6 @@ right_shift
 
 right_shift_assignment
     : '>' '>='
-    ;
-
-unsigned_right_shift
-    : '>'  '>'  '>'
-    ;
-
-unsigned_right_shift_assignment
-    : '>'  '>'  '>='
     ;
 
 // Source: §6.5.1 General
@@ -568,7 +529,7 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
-    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
       PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
@@ -639,7 +600,7 @@ fragment PP_Pragma_Text
 
 ```ANTLR
 
-// Source: §7.8.1 General
+// Source: §7.7.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -825,9 +786,10 @@ primary_pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
-    | list_pattern
-    | slice_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Declaration pattern
@@ -928,20 +890,6 @@ negated_pattern
     | primary_pattern
     ;
 
-// Source: §11.2.11 List pattern
-list_pattern
-    : list_pattern_clause simple_designation?
-    ;
-
-list_pattern_clause
-    : '[' (pattern (',' pattern)* ','?)? ']'
-    ;
-
-// Source: §11.2.12 Slice pattern
-slice_pattern
-    : '..' pattern?
-    ;
-
 // Source: §12.6.2.1 General
 argument_list
     : argument (',' argument)*
@@ -957,10 +905,10 @@ argument_name
 
 argument_value
     : expression
-    | 'in' 'scoped'? variable_reference
-    | 'ref' 'scoped'? variable_reference
-    | 'out' 'scoped'? declaration_expression
-    | 'out' 'scoped'? variable_reference
+    | 'in' variable_reference
+    | 'ref' variable_reference
+    | 'out' declaration_expression
+    | 'out' variable_reference
     ;
 
 // Source: §12.8.1 General
@@ -1000,7 +948,6 @@ primary_expression
 interpolated_string_expression
     : interpolated_regular_string_expression
     | interpolated_verbatim_string_expression
-    | interpolated_raw_string_expression
     ;
 
 // interpolated regular string expressions
@@ -1049,8 +996,8 @@ fragment Interpolated_Regular_String_Element
 
 fragment Interpolated_Regular_String_Character
     // Any character except " (U+0022), \\ (U+005C),
-    // { (U+007B), and } (U+007D).
-    : ~["\\{}]
+    // { (U+007B), } (U+007D), and New_Line_Character.
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
     ;
 
 // interpolated verbatim string expressions
@@ -1104,68 +1051,6 @@ fragment Open_Brace_Escape_Sequence
 
 fragment Close_Brace_Escape_Sequence
     : '}}'
-    ;
-
-// interpolated raw string expressions
-
-interpolated_raw_string_expression
-    : single_line_interpolated_raw_string_expression
-    | multi_line_interpolated_raw_string_expression
-    ;
-
-single_line_interpolated_raw_string_expression
-    : Interpolated_Raw_String_Start  Interpolated_Raw_String_Mid
-        Interpolated_Raw_String_End
-    ;
-
-Interpolated_Raw_String_Prefix
-    : '$'+
-    ;
-
-Interpolated_Raw_String_Start
-    : Interpolated_Raw_String_Prefix  Raw_String_Literal_Delimiter
-    ;
-
-// the following two lexical rules are context sensitive, see details below
-
-Interpolated_Raw_String_Mid
-    : (Raw_String_Literal_Content | raw_interpolation)+
-    ;
-
-Interpolated_Raw_String_End
-    : Raw_String_Literal_Delimiter
-    ;
-
-raw_interpolation
-    : raw_interpolation_start expression
-        (',' interpolation_minimum_width)? Raw_Interpolation_Format?
-        raw_interpolation_end
-    ;
-
-raw_interpolation_start
-    : '{'+
-    ;
-
-raw_interpolation_end
-    : '}'+
-    ;
-
-// the following lexical rule is context sensitive, see details below
-
-Raw_Interpolation_Format
-    : ':' Interpolated_Raw_String_Character+
-;
-
-fragment Interpolated_Raw_String_Character
-    // Any character except " (U+0022), \\ (U+005C),
-    // { (U+007B), } (U+007D), and New_Line_Character.
-    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
-    ;
-
-multi_line_interpolated_raw_string_expression
-    : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line 
-      Whitespace* Interpolated_Raw_String_End
     ;
 
 // Source: §12.8.4 Simple names
@@ -1283,7 +1168,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1294,7 +1179,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : initializer_target '=' 'ref'? initializer_value
+    : initializer_target '=' initializer_value
     ;
 
 initializer_target
@@ -1303,11 +1188,11 @@ initializer_target
     ;
 
 initializer_value
-    : 'ref'? expression
+    : expression
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.3.1 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1326,7 +1211,7 @@ expression_list
     : expression (',' expression)*
     ;
 
-// Source: §12.8.17.4 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1348,7 +1233,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.8.17.5 Array creation expressions
+// Source: §12.8.17.4 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -1356,7 +1241,7 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.8.17.6 Delegate creation expressions
+// Source: §12.8.17.5 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
@@ -1535,7 +1420,6 @@ shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
-    | shift_expression unsigned_right_shift additive_expression
     ;
 
 // Source: §12.15.1 General
@@ -1597,7 +1481,7 @@ throw_expression
 
 // Source: §12.20 Declaration expressions
 declaration_expression
-    : 'scoped'? local_variable_type identifier
+    : local_variable_type identifier
     ;
 
 local_variable_type
@@ -1644,7 +1528,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : attributes? 'scoped'? anonymous_function_parameter_modifier? type identifier
+    : attributes? anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -1890,8 +1774,8 @@ local_variable_declaration
 
 // Source: §13.6.2.2 Implicitly typed local variable declarations
 implicitly_typed_local_variable_declaration
-    : 'scoped'? 'var' implicitly_typed_local_variable_declarator
-    | 'scoped'? ref_kind 'var' ref_local_variable_declarator
+    : 'var' implicitly_typed_local_variable_declarator
+    | ref_kind 'var' ref_local_variable_declarator
     ;
 
 implicitly_typed_local_variable_declarator
@@ -1900,7 +1784,7 @@ implicitly_typed_local_variable_declarator
 
 // Source: §13.6.2.3 Explicitly typed local variable declarations
 explicitly_typed_local_variable_declaration
-    : 'scoped'? type explicitly_typed_local_variable_declarators
+    : type explicitly_typed_local_variable_declarators
     ;
 
 explicitly_typed_local_variable_declarators
@@ -1919,7 +1803,7 @@ local_variable_initializer
 
 // Source: §13.6.2.4 Explicitly typed ref local variable declarations
 explicitly_typed_ref_local_variable_declaration
-    : 'scoped'? ref_kind type ref_local_variable_declarators
+    : ref_kind type ref_local_variable_declarators
     ;
 
 ref_local_variable_declarators
@@ -2082,7 +1966,7 @@ statement_expression_list
 // Source: §13.9.5.1 General
 foreach_statement
     : // synchronous foreach
-      'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
+      'foreach' '(' ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // asynchronous foreach
       'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
@@ -2204,11 +2088,11 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
-    : statement_list* namespace_member_declaration*
+    : statement_list? namespace_member_declaration*
     | file_scoped_namespace_declaration
     ;
 
@@ -2322,7 +2206,6 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
-    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2426,7 +2309,6 @@ field_modifier
     | 'static'
     | 'readonly'
     | 'volatile'
-    | 'required'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2440,13 +2322,13 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2455,7 +2337,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier* 'partial'?
+    : ref_method_modifier*
     ;
 
 method_header
@@ -2537,9 +2419,8 @@ default_argument
 
 parameter_modifier
     : parameter_mode_modifier
-    | 'this' 'scoped'? parameter_mode_modifier?
-    | 'scoped'? parameter_mode_modifier? 'this'
-    | 'scoped' parameter_mode_modifier?
+    | 'this' parameter_mode_modifier?
+    | parameter_mode_modifier? 'this'
     ;
 
 parameter_mode_modifier
@@ -2571,7 +2452,6 @@ property_modifier
     | 'abstract'
     | 'extern'
     | 'readonly'        // struct members only
-    | 'required'
     | unsafe_modifier   // unsafe code support
     ;
     
@@ -2735,7 +2615,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | 'checked'? '-' | '!' | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
+    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -2744,13 +2624,13 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
     : 'implicit' 'operator' type '(' fixed_parameter ')'
-    | 'explicit' 'operator' 'checked'? type '(' fixed_parameter ')'
+    | 'explicit' 'operator' type '(' fixed_parameter ')'
     ;
 
 operator_body
@@ -2828,7 +2708,7 @@ finalizer_body
 // Source: §15.16.1 General
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
-      type_parameter_list? delimited_parameter_list? class_base?
+      type_parameter_list? delimited_parameter_list? class_base? 
       type_parameter_constraints_clause* record_class_body
     ;
 
@@ -2855,6 +2735,17 @@ non_record_struct_declaration
       type_parameter_constraints_clause* struct_body ';'?
     ;
 
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
+    ;
+
 // Source: §16.2.2 Struct modifiers
 struct_modifier
     : 'new'
@@ -2863,7 +2754,6 @@ struct_modifier
     | 'internal'
     | 'private'
     | 'readonly'
-    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2880,7 +2770,7 @@ struct_body
 // Source: §16.3.1 General
 struct_member_declaration
     : constant_declaration
-    | struct_field_declaration
+    | field_declaration
     | method_declaration
     | property_declaration
     | event_declaration
@@ -2903,12 +2793,6 @@ record_struct_declaration
 record_struct_body
     : struct_body ';'?
     | ';'
-    ;
-
-// Source: §16.6.8.2 Ref fields
-struct_field_declaration
-    : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
-      variable_declarators ';'
     ;
 
 // Source: §17.7 Array initializers
@@ -2940,7 +2824,6 @@ interface_modifier
     | 'protected'
     | 'internal'
     | 'private'
-    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -3007,7 +2890,6 @@ enum_modifier
     | 'protected'
     | 'internal'
     | 'private'
-    | 'file'
     ;
 
 // Source: §20.4 Enum members
@@ -3039,7 +2921,6 @@ delegate_modifier
     | 'protected'
     | 'internal'
     | 'private'
-    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 
