@@ -1068,7 +1068,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 
 > *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
 > ref struct RS
 > {
@@ -1121,7 +1121,7 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 
 > *Example*: The following illustrates how the method-arguments-must-match rule prevents a value with a narrower safe-context from being stored into a `ref` argument with a wider safe-context:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodArgsMustMatch", expectedErrors:["CS8350","CS8352"]} -->
 > ```csharp
 > ref struct R { }
 >
