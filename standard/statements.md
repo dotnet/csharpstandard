@@ -289,7 +289,7 @@ declaration_statement
     ;
 ```
 
-Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
+Except for a *local_using_declaration*, the declared names are introduced into the nearest enclosing declaration space ([§7.2](basic-concepts.md#72-declarations)). A *local_using_declaration* introduces a new declaration space and scope that extends from the declaration to the end of the enclosing block, as specified in [§13.14.2](statements.md#13142-using-declaration).
 
 ### 13.6.2 Local variable declarations
 
@@ -340,7 +340,7 @@ If there are multiple declarators in a declaration then they are processed, incl
 
 The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained. Each local variable introduced by a *local_variable_declaration* is *initially unassigned* ([§9.4.3](variables.md#943-initially-unassigned-variables)). If a declarator has an initializing expression then the introduced local variable is classified as *assigned* at the end of the declarator ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
-The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.7](basic-concepts.md#77-scopes)):
+The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.6](basic-concepts.md#76-scopes)):
 
 - If the declaration occurs as a *for_initializer* then the scope is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* ([§13.9.4](statements.md#1394-the-for-statement));
 - If the declaration occurs as a *resource_acquisition* then the scope is the outermost block of the semantically equivalent expansion of the *using_statement* ([§13.14](statements.md#1314-the-using-statement));
@@ -369,7 +369,7 @@ For a discussion of `scoped`, see §scoped-modifier.
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
 > ```csharp
 > var i = 5;
 > var s = "Hello";
@@ -378,12 +378,12 @@ For a discussion of `scoped`, see §scoped-modifier.
 > var orders = new Dictionary<int,Order>();
 > ref var j = ref i;
 > ref readonly var k = ref i;
-> scoped var r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
+> scoped var r = new RS(ref i);   // ref struct RS { ref int Field; ... }
 > ```
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs","RefStruct.cs"]} -->
 > ```csharp
 > int i = 5;
 > string s = "Hello";
@@ -392,7 +392,7 @@ For a discussion of `scoped`, see §scoped-modifier.
 > Dictionary<int,Order> orders = new Dictionary<int,Order>();
 > ref int j = ref i;
 > ref readonly int k = ref i;
-> scoped RS r = new RS(ref i);   // ref struct RS { ref int Field; ... } 
+> scoped RS r = new RS(ref i);   // ref struct RS { ref int Field; ... }
 > ```
 >
 > The following are incorrect implicitly typed local variable declarations:
@@ -404,7 +404,7 @@ For a discussion of `scoped`, see §scoped-modifier.
 > var z = null;           // Error, null does not have a type
 > var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
-> scoped var i = 10;      // Error, i must be a ref or ref struct 
+> scoped var i = 10;      // Error, i must be a ref or ref struct
 > ```
 >
 > *end example*
@@ -607,7 +607,7 @@ It is a compile-time error for the body of the local function to contain a `goto
 
 > *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.22.3](expressions.md#12223-anonymous-function-bodies). *end note*
 
-A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
+A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.6](basic-concepts.md#76-scopes)).
 
 It is a compile-time error for a local function to declare a parameter, type parameter or local variable with the same name as one declared in any enclosing local variable declaration space.
 
@@ -1852,7 +1852,7 @@ A *try_statement* consists of the keyword `try` followed by a *block*, then zero
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 
-When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable is introduced into the declaration space of the *specific_catch_clause* ([§7.3](basic-concepts.md#73-declarations)). During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
+When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable is introduced into the declaration space of the *specific_catch_clause* ([§7.2](basic-concepts.md#72-declarations)). During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
 
 Unless a `catch` clause includes an exception variable name, it is impossible to access the exception object in the filter and `catch` block.
 
@@ -2290,7 +2290,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.3](basic-concepts.md#73-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. The variables declared by a *local_using_declaration*, together with the trailing *statement_list*, form a new declaration space and scope ([§7.2](basic-concepts.md#72-declarations), [§13.3.1](statements.md#1331-general)), equivalent to the block introduced by the corresponding rewrite to a *using_statement* shown above.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp

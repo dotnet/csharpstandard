@@ -1524,7 +1524,7 @@ In this relationship the *ref-safe-context* of a value can never be wider than t
 
 > *Example*: The following illustrates how `scoped ref` on a parameter prevents the parameter from being captured by a constructed `ref struct` value that the method returns:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedRefParameter", expectedErrors:["CS8347","CS8166"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedRefParameter", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
 > ref struct RS
 > {
