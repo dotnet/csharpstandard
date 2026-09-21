@@ -415,6 +415,7 @@ For a *conditional_expression* `c ? e1 : e2`, when
 1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
 
 an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+
 ### §anon-func-type-conversion Anonymous function type conversion
 
 The following conversions are permitted from an anonymous function type `F`(§anon-func-type):
