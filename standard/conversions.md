@@ -506,6 +506,16 @@ The following additional implicit conversions exist from a collection expression
 
 When a collection expression is converted to a ref struct type, all ref safety requirements ([§9.7.2](variables.md#972-ref-safe-contexts), [§16.6.15](structs.md#16615-safe-context-constraint)) shall be met.
 
+### §ImplicitInlineArrayConversions Implicit inline array conversions
+
+The implicit inline array (§InlineArray) conversions are:
+
+- From an expression designating a writable inline array with element type `T` to `System.Span<T>`
+- From an expression designating a writable inline array with element type `T` to `System.ReadonlySpan<T>`
+- From an expression designating a readonly inline array with element type `T` to `System.ReadonlySpan<T>`
+
+The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See §InlineArray for more information.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
@@ -750,6 +760,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit inline array conversions (§ImplicitInlineArrayConversions)
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
