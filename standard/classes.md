@@ -2457,12 +2457,12 @@ The argument corresponding to a `ref readonly` parameter may be a value, in whic
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ReferenceParameters2"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ReferenceReadonlyParameters1"} -->
 > ```csharp
-> LargeStruct ls /* init somehow */;
+> LargeStruct ls = default;
 > M(ref ls);
-> static void M(ref readonly LargeStruct p) { /* ... */ }
-> struct LargeStruct { /* ... */ }
+> static void M(ref readonly LargeStruct p) { }
+> struct LargeStruct { }
 > ```
 >
 > shows a large struct being passed by reference for efficiency, but without the called method having the ability to modify that that struct. *end example*
