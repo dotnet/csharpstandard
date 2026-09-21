@@ -6942,6 +6942,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 > ```
 >
 > *end note*
+
 ## 15.17 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
@@ -6953,4 +6954,3 @@ A record class differs from a non-record class in several important ways:
 - Its class body may be omitted.
 - It shall not have a member called `Clone`.
 - It shall not have an instance field with an unsafe type.
-
