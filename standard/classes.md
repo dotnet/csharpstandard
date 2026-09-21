@@ -5655,8 +5655,8 @@ class Program
 {
     static void Main()
     {
-        Console.WriteLine(new Person("Jane", "Wilson");
-        Console.WriteLine(new Person("Dr.", "Jane", "Wilson");
+        Console.WriteLine(new Person("Jane", "Wilson"));
+        Console.WriteLine(new Person("Dr.", "Jane", "Wilson"));
     }
 }
 ```
