@@ -545,7 +545,7 @@ An inline array type is a valid constructible collection target type for a colle
 Any indexers or `Slice` methods declared for an inline array type that have signatures matching those defined for non-inline array processing, shall not be used during inline array element access.
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"InlineArrays4", replaceEllipsis:true, customEllipsisReplacements:["Console.WriteLine(\"in indexer [int]\");","return 0;"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"InlineArrays4", ignoredWarnings:["CS9181"]} -->
 ```csharp
 > var buffer = new Buffer();
 > int x = buffer[2];      // element access
@@ -558,7 +558,7 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 >     {
 >         get
 >         {
->             …
+>             return 0;
 >         }
 >     }
 > }
