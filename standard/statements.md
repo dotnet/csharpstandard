@@ -1424,7 +1424,7 @@ The body of the `finally` block is constructed according to the following steps:
   finally {}
   ```
 
-> *Note*: When `E` is a non-nullable value type, the null checks shown above are elided. *end note*
+> *Note*: When `E` is a non-nullable value type, the null checks shown above may be elided. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -2198,7 +2198,7 @@ When such a method is selected, the statement is semantically equivalent to:
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When `ResourceType` is a non-nullable value type, the null check shown above is elided. *end note*
+> *Note*: When `ResourceType` is a non-nullable value type, the null check shown above may be elided. *end note*
 
 If no such method is selected, the corresponding synchronous formulations apply with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` awaited. The formulation for ref struct resources does not apply, since a ref struct cannot be the resource type of an `await using` statement.
 
