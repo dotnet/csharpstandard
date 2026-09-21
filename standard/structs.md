@@ -247,7 +247,7 @@ For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;
 
 #### §implicit-members-general General
 
-In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.6](basic-concepts.md#76-signatures-and-overloading).)
+In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.5](basic-concepts.md#75-signatures-and-overloading).)
 
 The members provided by the implementation are described in the following subclauses.
 
@@ -261,7 +261,7 @@ Instance field declarations for a non-record struct are permitted to include var
 
 #### §rec-struct-equalmem Equality members
 
-The provided equality members are similar to those for a record class ([§15.16.2](classes.md#15162-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
+The provided equality members are similar to those for a record class ([§15.16.6.3](classes.md#151663-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
 A record struct `R` implements `System.IEquatable<R>` and includes a synthesized strongly-typed overload of `Equals(R other)`, which is public, as follows:
 
