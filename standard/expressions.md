@@ -821,8 +821,8 @@ An *input type inference* is made *from* an expression `E` *to* a type `T` in th
 
 - If `E` is a *collection_expression* with elements `Eᵢ`, and `T` is a type with an element type `Tₑ` or `T` is a *nullable_value_type* `T0?` and `T0` has an element type `Tₑ`, then for each `Eᵢ`:
   - If `Eᵢ` is an *expression_element*, then an *input type inference* is made *from* `Eᵢ` *to* `Tₑ`.
-  - If `Eᵢ` is a *spread_element* with an iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) `Sᵢ`, then a lower-bound inference([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `Sᵢ` *to* `Tₑ`.
-- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-expressions)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
+  - If `Eᵢ` is a *spread_element* with an iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) `Sᵢ`, then a lower-bound inference([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `Sᵢ` *to* `Tₑ`.
+- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-literals)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
 - If `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T` and an *explicit return type inference* is made from `E` to `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
@@ -3844,7 +3844,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type (§declaring-a-collection-type-general).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type (§declaring-a-collection-type-general).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 

@@ -6840,7 +6840,7 @@ public class MyCollection<T> : IEnumerable<T>
         }
     }
     public IEnumerator<T> GetEnumerator() =>
-      _storage.AsEnumerable<T>().GetEnumerator();
+      ((IEnumerable<T>)_storage).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() =>
       _storage.GetEnumerator();
 }
@@ -6876,7 +6876,7 @@ It is an error if `CollectionBuilderAttribute` does not refer to an invokable me
 
 For a *collection_expression* with a target type `C<S₀, S₁, …>` where the type declaration `C<T₀, T₁, …>` has an associated collection-creation method `B.M<U₀, U₁, …>()`, the generic type arguments from the target type are applied in order (from outermost containing type to innermost) to the collection-creation method.
 
-The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
+The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] (§scoped-modifier)`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
 The construction of an instance of a collection type is described in §collection-construction.
 
@@ -6897,7 +6897,7 @@ If the target type is a struct or class type that implements `System.Collections
 - The constructor that is applicable with no arguments is invoked.
 - For each *collection_element*, in order:
 
-  - If the *collection_element* is an *expression_element*, the applicable `Add` instance or extension method is invoked with the *element_expression* as the argument. (Unlike classic collection initializer behavior ([§12.8.17.3.1](expressions.md#1281731-collection-initializers)), element evaluation and `Add` calls are not necessarily interleaved.)
+  - If the *collection_element* is an *expression_element*, the applicable `Add` instance or extension method is invoked with the *element_expression* as the argument. (Unlike classic collection initializer behavior ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)), element evaluation and `Add` calls are not necessarily interleaved.)
   - If the *collection_element* is a *spread_element* then one of the following steps is used:
 
     - An applicable `GetEnumerator` instance or extension method is invoked on the *spread_element*’s *expression*, and for each item from the enumerator the applicable `Add` instance or extension method is invoked on the collection instance with the item as the argument. If the enumerator implements `IDisposable`, then `Dispose` shall be called after enumeration, regardless of any exceptions.
