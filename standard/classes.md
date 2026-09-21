@@ -2793,9 +2793,9 @@ A compile-time error occurs unless all of the following are true for an override
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of the overridden base method.
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- The override method's return type is at least as accessible as the override method.
+- The override method’s return type is at least as accessible as the override method.
   > *Note*: This constraint permits an override method in a `private` class to have a `private` return type.  However, it requires a `public` override method in a `public` type to have a `public` return type. *end note*
-- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method's signature, where `T` is a type parameter, is interpreted as follows:
+- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
   - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
   - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
   - If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
@@ -4289,9 +4289,9 @@ Abstract property declarations are only permitted in abstract classes ([§15.2.2
 
 For an override property `P` declared in an interface `I`, the overridden base property is determined by examining each direct or indirect base interface of `I`, collecting the set of interfaces declaring an accessible property which has the same name as `P`. If this set of interfaces has a *most derived type*, to which there is an identity or implicit reference conversion from every type in this set, and that type contains a unique such property declaration, then that is the overridden base property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property's type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property’s type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
 
-> *Note*: The accessibility constraint on the overriding property's type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
+> *Note*: The accessibility constraint on the overriding property’s type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class or interface from further overriding the property. The accessors of a sealed property are also sealed.
 
@@ -6208,7 +6208,7 @@ If a record class is derived directly from `object`, the record class type has a
 System.Type EqualityContract { get; };
 ```
 
-The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
 
@@ -6216,9 +6216,9 @@ If the record class type is derived from some base record class type `Base`, the
 protected override System.Type EqualityContract { get; };
 ```
 
-The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn’t override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
 
-The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
 
 If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
@@ -6248,7 +6248,7 @@ If the record class type is derived from some base record class type, `Base`, th
 public sealed override bool Equals(Base? other);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
 
 The record class type includes a provided override declared as follows:
 
@@ -6256,7 +6256,7 @@ The record class type includes a provided override declared as follows:
 public override bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
+It is an error if the override is declared explicitly. It is an error if the method doesn’t override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
 
 The record class type includes a provided override method declared as follows:
 
@@ -6264,7 +6264,7 @@ The record class type includes a provided override method declared as follows:
 public override int GetHashCode();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn’t override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
 
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
@@ -6374,7 +6374,7 @@ A record class type contains two copying members:
 - A copy constructor ([§15.16.6.2](classes.md#151662-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
-The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
@@ -6393,7 +6393,7 @@ The ***printable members of a class*** are the instance public field and readabl
 The method performs the following tasks:
 
 1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
-2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
+2. For each of the record class’s printable members, appends that member’s name followed by space `=`space, followed by the member’s value separated with `,` and a space.
 3. Returns `true` if the record class has printable members; otherwise, `false`.
 
 For a member that has a value type, its value is converted to a string representation.
@@ -6411,7 +6411,7 @@ If the record class has no printable members, the method shall call the base `Pr
 3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
 4. Returns `true`.
 
-The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
+The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed.
 
 The record class shall include a provided method method declared as follows:
 
@@ -6419,7 +6419,7 @@ The record class shall include a provided method method declared as follows:
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
 Sealing an explicitly declared `ToString` method prevents the compiler from providing a `ToString` method for any derived record types. However, this does not prevent the compiler from providing `PrintMembers`.
 
@@ -6429,7 +6429,7 @@ The provided method:
 1. Appends the record class name to the builder, followed by ` { `,
 1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
 1. Appends `}`,
-1. Returns the builder's contents with `builder.ToString()`.
+1. Returns the builder’s contents with `builder.ToString()`.
 
 > *Example*: Given the following:
 >
