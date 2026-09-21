@@ -20,6 +20,23 @@ public static class FastCsprojCompilationParserTests
         return result;
     }
 
+    [Test]
+    public static void Net7Defaults()
+    {
+        var result = FastCsprojCompilationParser.ParseCsproj(
+            XDocument.Parse("""
+                <Project Sdk="Microsoft.NET.Sdk">
+                  <PropertyGroup>
+                    <TargetFramework>net7.0</TargetFramework>
+                  </PropertyGroup>
+                </Project>
+                """),
+            "Project.csproj");
+
+        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp11);
+        result.CompilationOptions.WarningLevel.ShouldBe(7);
+    }
+
     private static void CompareMSBuildWorkspaceCompilation(string csprojContents, CsprojParseResult result)
     {
         var msbuildCompilation = GetMSBuildWorkspaceCompilation(csprojContents);

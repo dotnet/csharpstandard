@@ -671,11 +671,11 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 > bool flag = true;
 > 
 > // This is parsed as: (msg is (not int) or string)
-> result = msg is not int or string;
+> bool result = msg is not int or string;
 > Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
 >
 > // This is parsed as: (obj is (int or string)) && flag
-> bool result = obj is int or string && flag;
+> result = obj is int or string && flag;
 > Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
 > 
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
