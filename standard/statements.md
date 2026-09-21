@@ -2024,9 +2024,9 @@ non_ref_local_variable_declaration
     ;
 ```
 
-A ***resource type*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
+A ***resource type*** is either a class or non-ref struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`, or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`, or a class or non-ref struct that has an accessible instance `DisposeAsync()` method with an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), or a class or non-ref struct that implements the `System.IAsyncDisposable` interface, which includes a single parameterless method named `DisposeAsync`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
+If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall have an accessible instance `DisposeAsync()` method with an awaitable return type or implement `System.IAsyncDisposable`. A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
@@ -2167,19 +2167,42 @@ using (ResourceType rN = eN)
 >
 > *end example*
 
-When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other formulations for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
+An `await using` statement of the form
 
 ```csharp
 await using (ResourceType resource = «expression») «statement»
 ```
 
-is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` is `await`ed:
+first performs member lookup ([§12.5](expressions.md#125-member-lookup)) on `ResourceType` with the identifier `DisposeAsync` and no type arguments. If the result is a method group and overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) with an empty argument list selects an accessible instance method, that method is selected for asynchronous disposal. If its return type is not awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), an error is produced and no further steps are taken.
+
+When such a method is selected, the statement is semantically equivalent to:
 
 ```csharp
-await using (ResourceType resource = «expression») «statement»
+{
+    ResourceType resource = «expression»;
+    try
+    {
+        «statement»;
+    }
+    finally
+    {
+        if ((object)resource != null)
+        {
+            await resource.DisposeAsync();
+        }
+    }
+}
 ```
 
-is semantically equivalent to:
+> *Note*: If `ResourceType` is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)), member lookup for `DisposeAsync` is performed on `ResourceType`, not on its underlying type. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: When `ResourceType` is a non-nullable value type, the null check shown above is elided. *end note*
+
+If no such method is selected, the corresponding synchronous formulations apply with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` awaited. The formulation for ref struct resources does not apply, since a ref struct cannot be the resource type of an `await using` statement.
+
+For example, when `ResourceType` is a reference type that implements `IAsyncDisposable`, the statement is semantically equivalent to:
 
 ```csharp
 {
@@ -2198,6 +2221,8 @@ is semantically equivalent to:
     }
 }
 ```
+
+The expression form of `await using` has the same possible formulations, with `resource` being a temporary variable inaccessible to user code.
 
 > *Note*: Any jump statements ([§13.10](statements.md#1310-jump-statements)) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
 
