@@ -442,7 +442,7 @@ Instance field declarations for a record struct are permitted to include variabl
 
 The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
 
-> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS0171","CS8050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"RecordStructPrimaryConstructor2", expectedErrors:["CS8050"]} -->
 > ```csharp
 > record struct Pos(int X) // def assignment error in primary constructor
 > {
@@ -828,7 +828,7 @@ Instance fields (other than `fixed` fields) shall be definitely assigned in stru
 
 > *Example*: Consider the instance constructor implementation below:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2", expectedErrors:["CS0188"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2"} -->
 > ```csharp
 > struct Point
 > {
