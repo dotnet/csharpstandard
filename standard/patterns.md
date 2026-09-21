@@ -807,7 +807,7 @@ The input type for a *slice_pattern* is the return type of the underlying `this[
 <!-- markdownlint-enable MD028 -->
 > *Example*: A subpattern can be nested within a slice pattern:
 >
-> <!-- Example: {template:"standalone-console", name:" SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
+> <!-- Example: {template:"standalone-console", name:"SlicePattern2", expectedOutput:["Message aBBA matches; inner part is BB.", "Message apron doesn't match.", "not valid", "valid"]} -->
 > ```csharp
 > MatchMessage("aBBA");  // output: Message aBBA matches; inner part is BB.
 > MatchMessage("apron"); // output: Message apron doesn't match.
