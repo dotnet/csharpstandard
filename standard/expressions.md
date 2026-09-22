@@ -157,7 +157,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.11](expressions.md#1211-range-operator) | Range | `..` |
-> |  [§12.12](expressions.md#1212-switch-expression)                                   | Switch                           | `switch { … }` |
+> |  [§12.12](expressions.md#1212-switch-expression)                                   | Switch                           | `switch { ... }` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.13](expressions.md#1213-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.14](expressions.md#1214-shift-operators)             | Shift                            | `<<` `>>` `>>>` |
@@ -1099,9 +1099,9 @@ When the implicit conversion from the argument type to the parameter type of an 
 >
 > <!-- Example: {template:"code-in-class-lib-without-using", name:"ApplicableFunctionMember", replaceEllipsis:true, expectedErrors:["CS1615","CS1503"]} -->
 > ```csharp
-> public static void M1(int p1) { … }
-> public static void M1(in int p1) { … }
-> public static void M2(in int p1) { … }
+> public static void M1(int p1) { ... }
+> public static void M1(in int p1) { ... }
+> public static void M2(in int p1) { ... }
 > public static void Test()
 > {
 >     int i = 10; uint ui = 34U;
@@ -1176,8 +1176,8 @@ It is permitted to have corresponding parameters in two overloaded methods diffe
 
 <!-- Example: {template:"code-in-class-lib-without-using", name:"BetterParmPassingMode", replaceEllipsis:true} -->
 ```csharp
-public static void M1(int p1) { … }
-public static void M1(in int p1) { … }
+public static void M1(int p1) { ... }
+public static void M1(in int p1) { ... }
 ```
 
 Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
@@ -1268,8 +1268,8 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
-> public interface I1<T> { … }
-> public interface I2<T> { … }
+> public interface I1<T> { ... }
+> public interface I2<T> { ... }
 >
 > public abstract class G1<U>
 > {
