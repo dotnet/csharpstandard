@@ -1576,7 +1576,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line 
+      (Interpolated_Raw_String_Mid | New_Line)* New_Line
       Whitespace* Interpolated_Raw_String_End
     ;
 ```
