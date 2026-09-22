@@ -553,7 +553,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), reference parameters of kind `ref readonly` ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)). Output and reference parameters of kind `ref` are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), reference parameters of kind `ref readonly` ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or parameter collections ([§15.6.2.4](classes.md#15624-parameter-collections)). Output and reference parameters of kind `ref` are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -607,14 +607,14 @@ The position of an argument or parameter is defined as the number of arguments o
 The corresponding parameters for function member arguments are established as follows:
 
 - Arguments in the *argument_list* of instance constructors, methods, indexers and delegates:
-  - A positional argument where a parameter occurs at the same position in the parameter list corresponds to that parameter, unless the parameter is a parameter array and the function member is invoked in its expanded form.
-  - A positional argument of a function member with a parameter array invoked in its expanded form, which occurs at or after the position of the parameter array in the parameter list, corresponds to an element in the parameter array.
+  - A positional argument where a parameter occurs at the same position in the parameter list corresponds to that parameter, unless the parameter is a parameter collection and the function member is invoked in its expanded form.
+  - A positional argument of a function member with a parameter collection invoked in its expanded form, which occurs at or after the position of the parameter collection in the parameter list, corresponds to an element in the parameter collection.
   - A named argument corresponds to the parameter of the same name in the parameter list.
   - For indexers, when invoking the set or init accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit `value` parameter of the set or init accessor declaration.
 - For properties, when invoking the get accessor there are no arguments. When invoking the set or init accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the set or init accessor declaration.
 - For user-defined unary operators (including conversions), the single operand corresponds to the single parameter of the operator declaration.
 - For user-defined binary operators, the left operand corresponds to the first parameter, and the right operand corresponds to the second parameter of the operator declaration.
-- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter array.
+- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter collection.
   > *Note*: This prevents `void M(bool a = true, bool b = true, bool c = true);` being invoked by `M(c: false, valueB);`. The first argument is used out-of-position (the argument is used in first position, but the parameter named `c` is in third position), so the following arguments should be named. In other words, non-trailing named arguments are only allowed when the name and the position result in finding the same corresponding parameter. *end note*
 
 #### 12.6.2.3 Run-time evaluation of argument lists
@@ -667,10 +667,10 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 >
 > *end example*
 
-Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
+Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter collection ([§15.6.2.4](classes.md#15624-parameter-collections)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
 
-- When a function member with a parameter array is invoked in its normal form, the argument given for the parameter array shall be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
-- When a function member with a parameter array is invoked in its expanded form, the invocation shall specify zero or more positional arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
+- When a function member with a parameter collection is invoked in its normal form, the argument given for the parameter collection shall be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
+- When a function member with a parameter collection is invoked in its expanded form, the invocation shall specify zero or more positional arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
 
 The expressions of an argument list are always evaluated in textual order.
 
@@ -701,7 +701,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
+When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* (§collection-expressions). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
 
 > *Example*: Given the declaration
 >
@@ -1077,20 +1077,20 @@ A function member is said to be an ***applicable function member*** with respect
 
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-  - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+  - for a value parameter or a parameter collection, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a reference parameter whose type is a struct type, an implicit interpolated string handler conversion exists from the argument to the type of the corresponding parameter, or
   - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
   - for a `ref readonly` parameter when the corresponding argument omits the `ref` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
-For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
+For a function member that includes a parameter collection, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter collection is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
-- The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
+- The expanded form is constructed by replacing the parameter collection in the function member declaration with zero or more value parameters of the collection's element type such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and:
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
-    - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+    - for an `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input or `ref readonly`, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
@@ -1138,27 +1138,32 @@ Parameter lists for each of the candidate function members are constructed in th
 - Reference and output parameters are removed from the parameter list
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
-Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
+Given an argument list `A` with a set of argument expressions `{E₁, E₂, …, Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, …, Pᵥ}` and `{Q₁, Q₂, …, Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
 - for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not an anonymous function type conversion, and
 
-  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
-  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
+  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, …, Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
+  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, …, Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
 
-- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
+- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and
+- for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
-In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
+In case the parameter type sequences `{P₁, P₂, …, Pᵥ}` and `{Q₁, Q₂, …, Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
 
 - If `Mᵢ` is a non-generic method and `Mₑ` is a generic method, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if `Mᵢ` is applicable in its normal form and `Mₑ` has a params array and is applicable only in its expanded form, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if both methods have params arrays and are applicable only in their expanded forms, and if the params array of `Mᵢ` has fewer elements than the params array of `Mₑ`, then `Mᵢ` is better than `Mₑ`.
-- Otherwise, if `Mᵥ` has more specific parameter types than `Mₓ`, then `Mᵥ` is better than `Mₓ`. Let `{R1, R2, ..., Rn}` and `{S1, S2, ..., Sn}` represent the uninstantiated and unexpanded parameter types of `Mᵥ` and `Mₓ`. `Mᵥ`’s parameter types are more specific than `Mₓ`s if, for each parameter, `Rx` is not less specific than `Sx`, and, for at least one parameter, `Rx` is more specific than `Sx`:
+- Otherwise, if `Mᵢ` is applicable in its normal form and `Mₑ` has a parameter collection and is applicable only in its expanded form, then `Mᵢ` is better than `Mₑ`.
+- Otherwise, if both methods have parameter collections and are applicable only in their expanded forms, and if the parameter collection of `Mᵢ` has fewer elements than the parameter collection of `Mₑ`, then `Mᵢ` is better than `Mₑ`.
+- Otherwise, if `Mᵥ` has more specific parameter types than `Mₓ`, then `Mᵥ` is better than `Mₓ`. Let `{R1, R2, …, Rn}` and `{S1, S2, …, Sn}` represent the uninstantiated and unexpanded parameter types of `Mᵥ` and `Mₓ`. `Mᵥ`’s parameter types are more specific than `Mₓ`s if, for each parameter, `Rx` is not less specific than `Sx`, and, for at least one parameter, `Rx` is more specific than `Sx`:
   - A type parameter is less specific than a non-type parameter.
   - Recursively, a constructed type is more specific than another constructed type (with the same number of type arguments) if at least one type argument is more specific and no type argument is less specific than the corresponding type argument in the other.
   - An array type is more specific than another array type (with the same number of dimensions) if the element type of the first is more specific than the element type of the second.
 - Otherwise if one member is a non-lifted operator and the other is a lifted operator, the non-lifted one is better.
 - If neither function member was found to be better, and all parameters of `Mᵥ` have a corresponding argument whereas default arguments need to be substituted for at least one optional parameter in `Mₓ`, then `Mᵥ` is better than `Mₓ`.
 - If for at least one parameter `Mᵥ` uses the ***better parameter-passing choice*** ([§12.6.4.4](expressions.md#12644-better-parameter-passing-mode)) than the corresponding parameter in `Mₓ` and none of the parameters in `Mₓ` use the better parameter-passing choice than `Mᵥ`, `Mᵥ` is better than `Mₓ`.
+- Otherwise, if both methods have parameter collections and are applicable only in their expanded forms then `Mᵢ` is better than `Mₑ` if the same set of arguments corresponds to the collection elements for both methods, and one of the following holds:
+  - both parameter collections are not *span_type*s, and an implicit conversion exists from the parameter collection of `Mᵢ` to the parameter collection of `Mₑ`
+  - the parameter collection of `Mᵢ` is `System.ReadOnlySpan<Eᵢ>`, and the parameter collection of `Mₑ` is `System.Span<Eₑ>`, and an identity conversion exists from `Eᵢ` to `Eₑ`
+  - the parameter collection of `Mᵢ` is `System.ReadOnlySpan<Eᵢ>` or `System.Span<Eᵢ>`, and the parameter collection of `Mₑ` is an array or array interface type with element type `Eₑ`, and an identity conversion exists from `Eᵢ` to `Eₑ`
 - Otherwise, no function member is better.
 
 A `delegate*` is more specific than `void*`.
@@ -1300,7 +1305,7 @@ Even though overload resolution of a dynamically bound operation takes place at 
 - For a delegate invocation ([§12.8.10.4](expressions.md#128104-delegate-invocations)), the list is a single function member with the same parameter list as the *delegate_type* of the invocation
 - For a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) on a type, or on a value whose static type is not dynamic, the set of accessible methods in the method group is known at compile-time.
 - For an object creation expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) the set of accessible constructors in the type is known at compile-time.
-- For an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
+- For an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
 
 In these cases a limited compile-time check is performed on each member in the known set of function members, to see if it can be known for certain never to be invoked at run-time. For each function member `F` a modified parameter and argument list are constructed:
 
@@ -1335,7 +1340,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.8.12](structs.md#16812-methods)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.6.12](structs.md#16612-methods)), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
@@ -1378,12 +1383,12 @@ An expression `E`, with a type `S` other than `dynamic`, can be ***deconstructed
 
 - If `E` is a *tuple-literal* the result of deconstruction is the expression `E` itself.
 
-- Otherwise, if `E` has a tuple type `(T₁, ..., Tₙ)`, then the result of deconstruction is semantically equivalent to the expression `(E.Item1, ..., E.Itemn)` except `E` is evaluated only once.
+- Otherwise, if `E` has a tuple type `(T₁, …, Tₙ)`, then the result of deconstruction is semantically equivalent to the expression `(E.Item1, …, E.Itemn)` except `E` is evaluated only once.
 
 - Otherwise if there is a unique instance or extension method `S.Deconstruct`; with `n ≥ 2` output parameters, with types `T₁` to `Tₙ`, and no other parameters; then `E` can be deconstructed. The result of the deconstruction is semantically equivalent to replacing `E` with the following pseudo-code:
 
   >```csharp
-  > E.Deconstruct(out T1 v1, ..., out TN vn) andThen (v1, ..., vn);
+  > E.Deconstruct(out T1 v1, …, out TN vn) andThen (v1, …, vn);
   >```
 
   Where `andThen` is a pseudo C# operation which performs its left-hand operand and then returns its right-operand as the result.
@@ -1624,7 +1629,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line
+      (Interpolated_Raw_String_Mid | New_Line)* New_Line 
       Whitespace* Interpolated_Raw_String_End
     ;
 ```
@@ -1953,7 +1958,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >
 > *end example*
 
-With respect to primary constructors ([§15.11.6](classes.md#15116-primary-constructors)), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
+With respect to primary constructors (§prim-constructor), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
 
 An ambiguity error shall result for a member access `E.I` when all the following conditions are met:
 
@@ -2042,7 +2047,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 #### 12.8.9.1 General
 
 A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
-and safe-context ([§16.8.15](structs.md#16815-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
+and safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
@@ -2469,7 +2474,7 @@ The *primary_expression* of an *element_access* shall not be an *array_creation_
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
 - The *primary_expression* has compile-time type `dynamic`.
-- At least one expression of the *argument_list* has compile-time type `dynamic`, and the *primary_no_array_creation_expression* does not have an inline array type ([§16.6](structs.md#166-inline-arrays)) or there is more than one *argument* in the *argument_list*.
+- At least one expression of the *argument_list* has compile-time type `dynamic`, and the *primary_no_array_creation_expression* does not have an inline array type (§InlineArray) or there is more than one *argument* in the *argument_list*.
 
 In this case the compile-time type of the *element_access* depends on the compile-time type of its *primary_expression*: if it has an array type then the compile-time type is the element type of that array type; otherwise the compile-time type is `dynamic` and the *element_access* is classified as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
@@ -2485,15 +2490,15 @@ In this case the compile-time type of the *element_access* depends on the compil
 >
 > *end example*
 
-If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access ([§12.8.12.3](expressions.md#128123-inline-array-element-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)).
+If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, if the *primary_no_array_creation_expression* of an *element_access* is a variable or value of an inline array type and the *argument_list* consists of a single argument, the *element_access* is an inline array element access (§InlineArrayElementAccess). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
 
 - a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
-- a value of `string` type, the *element_access* is a string access ([§12.8.12.4](expressions.md#128124-string-access));
-- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)).
+- a value of `string` type, the *element_access* is a string access ([§12.8.12.3](expressions.md#128123-string-access));
+- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)).
 
 #### 12.8.12.2 Array access
 
-For access to elements in an inline array ([§16.6](structs.md#166-inline-arrays)) see [§12.8.12.3](expressions.md#128123-inline-array-element-access).
+For access to elements in an inline array (§InlineArray) see §InlineArrayElementAccess.
 
 For an array access the *argument_list* shall not contain named arguments or by-reference arguments ([§15.6.2.3](classes.md#15623-by-reference-parameters)).
 
@@ -2521,16 +2526,16 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> > > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses ([§12.8.12.5](expressions.md#128125-indexer-access)) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
+> > > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses ([§12.8.12.4](expressions.md#128124-indexer-access)) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
 
 - Otherwise:
   - The result of evaluating the array access is a variable reference ([§9.5](variables.md#95-variable-references)) of the element type of the array.
   - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
   - The variable reference of the array element given by the index expressions is computed, and this becomes the result of the array access.
 
-#### 12.8.12.3 Inline array element access
+#### §InlineArrayElementAccess  Inline array element access
 
-For access to an element in an inline array ([§16.6](structs.md#166-inline-arrays)), the *primary_no_array_creation_expression* of the *element_access* shall designate an inline array. Furthermore, the *argument_list* shall contain a single *argument*, which is not a named argument ([§12.6.2.1](expressions.md#12621-general)). That *argument* shall be of type `int`, or be implicitly convertible to type `int`, `System.Index`, or `System.Range`.
+For access to an element in an inline array (§InlineArray), the *primary_no_array_creation_expression* of the *element_access* shall designate an inline array. Furthermore, the *argument_list* shall contain a single *argument*, which is not a named argument ([§12.6.2.1](expressions.md#12621-general)). That *argument* shall be of type `int`, or be implicitly convertible to type `int`, `System.Index`, or `System.Range`.
 
 It is a compile-time error if *argument* is a constant expression whose value results in an index outside the bounds of the inline array. If at runtime the value of *argument* results in an index outside the bounds of the inline array, a `System.IndexOutOfRangeException` is thrown.
 
@@ -2616,7 +2621,7 @@ The value of *argument* is converted to `int` and the element access is interpre
 
 *argument* is converted to `System.Index` and then to an `int`-based index value indicating the element position relative to the start of the inline array. Then, the element access is interpreted as described when *argument*’s type is `int`.
 
-Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See [§16.6](structs.md#166-inline-arrays) for more information.
+Using an index of `System.Index` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Index`. Specifically, an inline array element access ignores any declared indexers in the inline array type. See §InlineArray for more information.
 
 **When *argument*’s type is implicitly convertible to `System.Range`**
 
@@ -2644,7 +2649,7 @@ passing the `int` equivalents of the Range’s start and end Indexes, respective
 static System.ReadOnlySpan<T> GetSlice(in «InlineArrayType» array)
 ```
 
-Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See [§16.6](structs.md#166-inline-arrays) for more information.
+Using an index of `System.Range` to access an element in a non-inline array is described in [§12.8.12.2](expressions.md#128122-array-access). However, note carefully that that process is *not* used when an inline array is indexed using a `System.Range`. Specifically, an inline array element access ignores any declared Slice methods in the inline array type. See §InlineArray for more information.
 
 If *primary_no_array_creation_expression* is a value, an error is reported.
 
@@ -2679,7 +2684,7 @@ If *primary_no_array_creation_expression* is a value, an error is reported.
 >
 > *end example*
 
-#### 12.8.12.4 String access
+#### 12.8.12.3 String access
 
 For a string access the *argument_list* of the *element_access* shall contain a single unnamed value argument ([§15.6.2.2](classes.md#15622-value-parameters)) which shall be:
 
@@ -2707,7 +2712,7 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
   - The value of the converted index expression is checked against the actual bounds of the string instance referenced by `P`. If the value is out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
   - The value of character at the offset of the converted index expression with the string `P` becomes the result of the string access.
 
-#### 12.8.12.5 Indexer access
+#### 12.8.12.4 Indexer access
 
 For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not contain `out` or `ref` arguments.
 
@@ -3812,7 +3817,7 @@ When an instance of a struct `S` having a required member list ([§15.7.1](class
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.8.15.10](structs.md#1681510-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.6.15.10](structs.md#1661510-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -3982,7 +3987,7 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.22](expressions.md#1222-anonymous-function-expressions).
 
-### 12.8.25 Collection expressions
+### §collection-expressions Collection expressions
 
 A ***collection expression*** is a `[]`-delimited, comma-separated set of zero or more *collection_element*s that together represent a collection.
 
@@ -4005,7 +4010,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type ([§15.17.1](classes.md#15171-general)).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type (§declaring-a-collection-type-general).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
@@ -4345,7 +4350,7 @@ All non-positional properties being changed shall have both set and init accesso
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver’s clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
@@ -5926,7 +5931,7 @@ A non-`static` local function or non-`static` anonymous function can capture sta
 
 A *lambda_expression* shall not contain any *parameter_modifier*s with the `this` modifier.
 
-An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_array*s.
+An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_collection*s.
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
@@ -6008,7 +6013,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 - Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
-- An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_array*s.
+- An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_collection*s.
 
 The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
 
@@ -6138,7 +6143,7 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 
 #### 12.22.6.1 General
 
-Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
+Any local variable, value parameter, or parameter collection whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the `this` value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
 

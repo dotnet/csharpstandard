@@ -144,7 +144,7 @@ When an array type `S[]` implements `IList<T>`, some of the members of the imple
 
 ## 17.3 Array creation
 
-Array instances are created by *array_creation_expression*s ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)).
+Array instances are created by *array_creation_expression*s ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter collection ([§15.6.2.4](classes.md#15624-parameter-collections)).
 
 When an array instance is created, the rank and length of each dimension are established and then remain constant for the entire lifetime of the instance. In other words, it is not possible to change the rank of an existing array instance, nor is it possible to resize its dimensions.
 
@@ -314,5 +314,5 @@ When an array creation expression includes both explicit dimension lengths and a
 
 A warning shall be produced for a *variable_initializer* when all the following conditions are true:
 
-- The variable initializer represents an implicit or explicit identity conversion of a primary constructor parameter ([§15.11.6](classes.md#15116-primary-constructors));
+- The variable initializer represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
 - The primary constructor parameter is captured into the state of the enclosing type.

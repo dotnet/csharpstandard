@@ -36,13 +36,13 @@ non_record_class_with_positional_members
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.18](classes.md#1518-record-class-and-non-record-class-differences).
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
 
 A *non_record_class_declaration* can have one of two almost identical forms: *non_record_class_without_positional_members* and *non_record_class_with_positional_members*.
 
 A *non_record_class_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
-A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see [§15.11.6](classes.md#15116-primary-constructors).
+A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
 A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 
@@ -227,7 +227,7 @@ interface_type_list
 
 A warning shall be produced for an in or by-value argument in a *base_argument_list* when all the following conditions are true:
 
-- The argument represents an implicit or explicit identity conversion of a primary constructor parameter ([§15.11.6](classes.md#15116-primary-constructors));
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
 - The argument is not part of an expanded params argument;
 - The primary constructor parameter is captured into the state of the enclosing type.
 
@@ -888,7 +888,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.4](classes.md#15164-implicit-record-class-members)).
+The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 ```ANTLR
 class_member_declaration
@@ -1746,7 +1746,7 @@ The value of a field is obtained in an expression using a *simple_name* ([§12.8
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
-> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.8.8.2](structs.md#16882-ref-fields). *end note*
+> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.6.8.2](structs.md#16682-ref-fields). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
@@ -2133,7 +2133,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.8](structs.md#168-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.6](structs.md#166-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2219,7 +2219,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 A *method_declaration* has a valid combination of modifiers if all of the following are true. (These rules are modified slightly in the context of an interface; see [§19.4.1](interfaces.md#1941-general).):
 
@@ -2287,8 +2287,8 @@ delimited_parameter_list
 
 parameter_list
     : fixed_parameters
-    | fixed_parameters ',' parameter_array
-    | parameter_array
+    | fixed_parameters ',' parameter_collection
+    | parameter_collection
     ;
 
 fixed_parameters
@@ -2316,12 +2316,12 @@ parameter_mode_modifier
     | 'in'
     ;
 
-parameter_array
-    : attributes? 'params' array_type identifier
+parameter_collection
+    : attributes? 'params' type identifier
     ;
 ```
 
-The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
+The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_collection*.
 
 A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
@@ -2339,9 +2339,32 @@ The *expression* shall be implicitly convertible by an identity or nullable conv
 
 If optional parameters occur in an implementing partial method declaration, a compiler should give a warning, since any default arguments are removed per [§15.6.9](classes.md#1569-partial-methods). If optional parameters occur in an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
+A *parameter_collection* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), a `params` modifier, a *type*, and an *identifier*. A parameter collection declares a single parameter of the given array type with the given name. The *type* of a parameter collection shall be one of the following valid target types for a collection expression:
 
-A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
+- A single dimensional array type `T[]`, in which case the element type is `T`
+- A span type
+  - `System.Span<T>`
+  - `System.ReadOnlySpan<T>`
+  in which cases the element type is `T`
+- A type with an appropriate collection-creation method (§collection-construction) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
+- A struct or class type that implements `System.Collections.IEnumerable` where:
+  - The type has a constructor that can be invoked with no arguments, and the constructor is at least as accessible as the declaring member.
+  - The type has an instance (not an extension) method `Add` where:
+    - The method can be invoked with a single value argument.
+    - If the method is generic, the type arguments can be inferred from the argument.
+    - The method is at least as accessible as the declaring member.
+    In which case the element type is the iteration type ([§13.9.5.1]( statements.md#13951-general)) of *type*.
+- An interface type
+  - `System.Collections.Generic.IEnumerable<T>`
+  - `System.Collections.Generic.IReadOnlyCollection<T>`
+  - `System.Collections.Generic.IReadOnlyList<T>`
+  - `System.Collections.Generic.ICollection<T>`
+  - `System.Collections.Generic.IList<T>`  
+  in which case the element type is `T`.
+
+In a method invocation, a parameter collection permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter collections are described further in [§15.6.2.4](classes.md#15624-parameter-collections).
+
+A *parameter_collection* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_collection* would instead result in the creation of an empty collection.
 
 > *Example*: The following illustrates different kinds of parameters:
 >
@@ -2359,7 +2382,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 > ) { }
 > ```
 >
-> In the *parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
+> In the *parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter collection.
 >
 > *end example*
 
@@ -2374,7 +2397,7 @@ The following kinds of parameters exist:
 - Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
 - Reference readonly parameters, which are reference parameters that also have the `readonly` modifier.
-- Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
+- Parameter collections ([§15.6.2.4](classes.md#15624-parameter-collections)).
 
 > *Note*: As described in [§7.5](basic-concepts.md#75-signatures-and-overloading), the `in`, `out`, `ref`, and `ref readonly` modifiers are part of a method’s signature, but the `params` and `scoped` modifiers are not. *end note*
 
@@ -2552,26 +2575,26 @@ An output parameter is implicitly `scoped` ([§9.7.3](variables.md#973-the-scope
 >
 > *end example*
 
-#### 15.6.2.4 Parameter arrays
+#### 15.6.2.4 Parameter collections
 
-A parameter declared with a `params` modifier is a parameter array. If a parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
+A parameter declared with a `params` modifier is a parameter collection.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` cannot. *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter collection, but the type `string[,]` cannot. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
-A parameter array permits arguments to be specified in one of two ways in a method invocation:
+A parameter collection permits arguments to be specified in one of two ways in a method invocation:
 
-- The argument given for a parameter array can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
-- Alternatively, the invocation can specify zero or more arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
+- The argument given for a parameter collection can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
+- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in §collection-expressions as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
 
-Except for allowing a variable number of arguments in an invocation, a parameter array is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
+Except for allowing a variable number of arguments in an invocation, a parameter collection is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections1", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2616,11 +2639,13 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >
 > The fourth and fifth invocations pass a three-element and an empty collection expression, respectively. *end example*
 
-When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
+When performing overload resolution, a method with a parameter collection might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
+
+A potential ambiguity arises between the normal form and the expanded form of the method with a single parameter collection argument when it can be used as the parameter collection itself and as the element of the parameter collection at the same time. The ambiguity presents no problem, however, since it can be resolved by inserting a cast or using a collection expression, if needed.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections3", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2654,17 +2679,17 @@ When performing overload resolution, a method with a parameter array might be ap
 > F(object[])
 > ```
 >
-> In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked.
+> In the example, two of the possible expanded forms of the method with a parameter collection are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter collection, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of a collection instance that occurs when an expanded form of a method with a parameter collection is invoked.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> An array is a reference type, so the value passed for a parameter array can be `null`.
+> An array is a reference type, so the value passed for a parameter collection can be `null`.
 >
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections4", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -2690,11 +2715,11 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > *end example*
 
-When the type of a parameter array is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
+When the type of a parameter collection is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterCollections5", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -3541,7 +3566,7 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.11](structs.md#16811-properties)).
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.11](structs.md#16611-properties)).
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
@@ -3660,7 +3685,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an explicit interface member implementation.
-- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.8.11](structs.md#16811-properties), [§16.8.13](structs.md#16813-indexers)).
+- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.6.11](structs.md#16611-properties), [§16.6.13](structs.md#16613-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set or init accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
@@ -4568,7 +4593,7 @@ remove_accessor_declaration
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
@@ -4851,7 +4876,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5023,7 +5048,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 Indexers and properties are very similar in concept, but differ in the following ways:
 
 - A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.5](expressions.md#128125-indexer-access)).
+- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.4](expressions.md#128124-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
@@ -5630,7 +5655,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
-### 15.11.6 Primary constructors
+### §prim-constructor Primary constructors
 
 For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
 
@@ -6367,25 +6392,25 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### 15.16.2 Class members
+### 15.16.4 Class members
 
 It is an error for a member of a record class to be named `Clone`.
 
 It is an error for an instance field of a record class to have an unsafe type.
 
-### 15.16.3 Instance constructors
+### 15.16.5 Instance constructors
 
-A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.4.6.2](classes.md#1516462-primary-constructor) for more information.
+A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.6.6.2](classes.md#1516662-primary-constructor) for more information.
 
-### 15.16.4 Implicit record class members
+### 15.16.6 Implicit record class members
 
-#### 15.16.4.1 General
+#### 15.16.6.1 General
 
 Certain members are provided by the implementation unless a member with a matching signature is declared in the *class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-#### 15.16.4.2 Copy constructors
+#### 15.16.6.2 Copy constructors
 
 A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
 
@@ -6416,11 +6441,11 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >
 > the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
 
-In certain circumstances ([§15.16.4.4](classes.md#151644-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
+In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
 A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)).
 
-#### 15.16.4.3 Equality members
+#### 15.16.6.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6587,18 +6612,18 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-#### 15.16.4.4 Copy and clone members
+#### 15.16.6.4 Copy and clone members
 
 A record class type contains two copying members:
 
-- A copy constructor ([§15.16.4.2](classes.md#151642-copy-constructors))
+- A copy constructor ([§15.16.6.2](classes.md#151662-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-#### 15.16.4.5 Printing members
+#### 15.16.6.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -6768,17 +6793,17 @@ The provided method:
 >
 > *end example*
 
-#### 15.16.4.6 Positional record class members
+#### 15.16.6.6 Positional record class members
 
-##### 15.16.4.6.1 General
+##### 15.16.6.6.1 General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-##### 15.16.4.6.2 Primary constructor
+##### 15.16.6.6.2 Primary constructor
 
-The primary constructor of a record class is like that of a non-record class ([§15.11.6](classes.md#15116-primary-constructors)), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
+The primary constructor of a record class is like that of a non-record class (§prim-constructor), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
-##### 15.16.4.6.3 Properties
+##### 15.16.6.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
@@ -6808,7 +6833,7 @@ For a record class:
 >
 > *end example*
 
-##### 15.16.4.6.4 Deconstruct
+##### 15.16.6.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6838,11 +6863,11 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 >
 > *end example*
 
-## 15.17 Declaring a collection type
+## §declaring-a-collection-type Declaring a collection type
 
-### 15.17.1 General
+### §declaring-a-collection-type-general General
 
-There are a number of contexts in which a collection expression ([§12.8.25](expressions.md#12825-collection-expressions)) may be converted to a collection type ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
+There are a number of contexts in which a collection expression (§collection-expressions) may be converted to a collection type (§imp-collection-expression-conv). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
 
 Here is a simple user-defined collection type and its associated builder type:
 
@@ -6887,7 +6912,7 @@ internal static class MyCollectionBuilder
 }
 ```
 
-The collection type shall be annotated with `CollectionBuilderAttribute` ([§23.5.13](attributes.md#23513-the-collectionbuilder-attribute)) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
+The collection type shall be annotated with `CollectionBuilderAttribute` (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
 
 The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type.
 
@@ -6913,9 +6938,9 @@ For a *collection_expression* with a target type `C<S₀, S₁, …>` where the 
 
 The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
-The construction of an instance of a collection type is described in [§15.17.2](classes.md#15172-collection-construction).
+The construction of an instance of a collection type is described in §collection-construction.
 
-### 15.17.2 Collection construction
+### §collection-construction Collection construction
 
 The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
 
@@ -6925,7 +6950,7 @@ An unhandled exception thrown from any of the methods used during construction s
 
 `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
 
-If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§15.17.1](classes.md#15171-general)), the construction of the collection instance steps are, as follows:
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method (§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
 
 - The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
 - The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
@@ -6989,7 +7014,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 >
 > *end note*
 
-## 15.18 Record class and non-record class differences
+## 15.17 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
 
