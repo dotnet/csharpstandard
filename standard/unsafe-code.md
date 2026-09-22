@@ -276,7 +276,7 @@ A ***function pointer*** is a pointer capable of containing the address of a sta
 
 ```ANTLR
 funcptr_type
-    : 'delegate' '*' calling_convention_specifier? 
+    : 'delegate' '*' calling_convention_specifier?
       '<' funcptr_parameter_list funcptr_return_type '>'
     ;
 
