@@ -546,7 +546,7 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 > *Example*: Consider the following:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"InlineArrays4", ignoredWarnings:["CS9181"]} -->
-```csharp
+> ```csharp
 > var buffer = new Buffer();
 > int x = buffer[2];      // element access
 >
