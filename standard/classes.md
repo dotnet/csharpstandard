@@ -2398,7 +2398,7 @@ A *parameter_collection* consists of an optional set of *attributes* ([§23](att
   - `System.Collections.Generic.IReadOnlyCollection<T>`
   - `System.Collections.Generic.IReadOnlyList<T>`
   - `System.Collections.Generic.ICollection<T>`
-  - `System.Collections.Generic.IList<T>`  
+  - `System.Collections.Generic.IList<T>`
   in which case the element type is `T`.
 
 In a method invocation, a parameter collection permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter collections are described further in [§15.6.2.4](classes.md#15624-parameter-collections).
