@@ -36,13 +36,13 @@ non_record_class_with_positional_members
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.18](classes.md#1518-record-class-and-non-record-class-differences).
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.17](classes.md#1517-record-class-and-non-record-class-differences).
 
 A *non_record_class_declaration* can have one of two almost identical forms: *non_record_class_without_positional_members* and *non_record_class_with_positional_members*.
 
 A *non_record_class_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
-A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see [§15.11.6](classes.md#15116-primary-constructors).
+A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
 A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 
@@ -227,7 +227,7 @@ interface_type_list
 
 A warning shall be produced for an in or by-value argument in a *base_argument_list* when all the following conditions are true:
 
-- The argument represents an implicit or explicit identity conversion of a primary constructor parameter ([§15.11.6](classes.md#15116-primary-constructors));
+- The argument represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
 - The argument is not part of an expanded params argument;
 - The primary constructor parameter is captured into the state of the enclosing type.
 
@@ -822,7 +822,7 @@ The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{�
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations (§partial-properties), and partial indexer declarations (§partial-indexers)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -888,7 +888,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.4](classes.md#15164-implicit-record-class-members)).
+The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.6](classes.md#15166-implicit-record-class-members)).
 
 ```ANTLR
 class_member_declaration
@@ -1746,7 +1746,7 @@ The value of a field is obtained in an expression using a *simple_name* ([§12.8
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
-> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.8.8.2](structs.md#16882-ref-fields). *end note*
+> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.6.8.2](structs.md#16682-ref-fields). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
@@ -2133,7 +2133,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.8](structs.md#168-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.6](structs.md#166-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2219,7 +2219,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 A *method_declaration* has a valid combination of modifiers if all of the following are true. (These rules are modified slightly in the context of an interface; see [§19.4.1](interfaces.md#1941-general).):
 
@@ -3503,8 +3503,8 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifier* type member_name property_body
-    | attributes? property_modifier* ref_kind type member_name ref_property_body
+    : attributes? property_modifier* 'partial'? type member_name property_body
+    | attributes? property_modifier* 'partial'? ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -3541,7 +3541,7 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.11](structs.md#16811-properties)).
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.11](structs.md#16611-properties)). However, a partial property (§partial-properties) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
@@ -3660,7 +3660,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an explicit interface member implementation.
-- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.8.11](structs.md#16811-properties), [§16.8.13](structs.md#16813-indexers)).
+- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.6.11](structs.md#16611-properties), [§16.6.13](structs.md#16613-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set or init accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
@@ -4184,7 +4184,7 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 
@@ -4521,6 +4521,93 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 >
 > *end example*
 
+### §partial-properties Partial properties
+
+When a *property_declaration* includes `partial`, that property is said to be a ***partial property***. Partial properties may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+
+Partial properties may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
+
+There are two kinds of partial property declarations: If the body of each of the property’s accessors is a semicolon and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
+
+*Note*: As the syntactic form of a property with semicolon accessor bodies is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
+
+Partial properties are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialProperties1"} -->
+> ```csharp
+> // part containing defining partial declarations
+> public partial class C
+> {
+>     public partial string Prop1 { get; set; }
+>     public virtual partial string Prop2 { get; set; }
+> }
+> 
+> // part containing implementing partial declarations
+> public partial class C
+> {
+>     private string _field = "";
+>
+>     public partial string Prop1 { get => _field; set => _field = value; }
+>     virtual public partial string Prop2 { set => _field = value; get => _field; }
+> }
+> ```
+>
+> *end example*
+
+Across the parts of a type declaration, there shall be only one defining partial property declaration with a given signature, and there shall be only one implementing partial property declaration with a given signature.
+
+The signature-matching requirements are as follows:
+
+1. Type and ref-kind differences between partial property declarations result in a compile-time error.
+1. Differences in tuple element names within partial property declarations result in a compile-time error.
+1. The property declarations and their accessor declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration. In the case of private accessibility on the property, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`. Likewise, the corresponding accessors shall have the same implicit or same explicit accessibilities.
+1. All other syntactic differences in the signatures of partial property declarations result in a compile-time warning, with the following exceptions:
+
+- Attribute lists on or within partial property declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
+- Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
+
+1. Nullability differences that do not involve oblivious nullability result in warnings. When analyzing an accessor body, the implementation part signature is used. The definition part signature is used when analyzing use sites.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialProperties2", expectedErrors:["CS8799", "CS9254", "CS9253"]} -->
+> ```csharp
+> partial class C1
+> {
+>     private string _field;
+>     public partial string Prop { get; private set; }
+> 
+>     // Error: implementation set accessor modifier mismatch
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+>
+> partial class C2
+> {
+>     private string _field;
+>     public partial string Prop { get; init; }
+>
+>     // Error: implementation of 'Prop' must have an init accessor
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+>
+> partial class C3
+> {
+>     private string _field;
+>     public partial string Prop { get; }
+>
+>     // Error: implementation of 'Prop' cannot have a set accessor
+>     public partial string Prop { get => _field; set => _field = value; }
+> }
+> ```
+>
+> *end example*
+
+In *property_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the property’s type. A partial property cannot explicitly implement interface properties.
+
+Only a defining partial property participates in lookup.
+
 ## 15.8 Events
 
 ### 15.8.1 General
@@ -4568,7 +4655,7 @@ remove_accessor_declaration
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)).
 
 Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
@@ -4814,8 +4901,8 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 
 ```ANTLR
 indexer_declaration
-    : attributes? indexer_modifier* indexer_declarator indexer_body
-    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
+    : attributes? indexer_modifier* 'partial'? indexer_declarator indexer_body
+    | attributes? indexer_modifier* 'partial'? ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
@@ -4851,7 +4938,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.6.12](structs.md#16612-methods)). However, a partial indexer (§partial-indexers) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5023,7 +5110,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 Indexers and properties are very similar in concept, but differ in the following ways:
 
 - A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.5](expressions.md#128125-indexer-access)).
+- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.4](expressions.md#128124-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
@@ -5035,6 +5122,60 @@ Indexers and properties are very similar in concept, but differ in the following
 Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
 This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
+
+### §partial-indexers Partial indexers
+
+When an *indexer_declaration* includes `partial`, that indexer is said to be a ***partial indexer***. Partial indexers may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+
+Partial indexers may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
+
+There are two kinds of partial indexer declarations: If the body of each of the indexer’s accessors is a semicolon and the indexer has no `extern` modifier, the declaration is said to be a ***defining partial indexer declaration***. Otherwise, the declaration is said to be an ***implementing partial indexer declaration***.
+
+Partial indexers are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialIndexers1", ignoredWarnings:["CS1066"]} -->
+> ```csharp
+> // part containing defining partial indexer declaration
+> public partial class C
+> {
+>     public partial int this[int x] { get; private set; }
+> }
+>
+> // part containing implementing partial indexer declaration
+> public partial class C
+> {
+>     private int[] _store = new int[100];
+>     public partial int this[int x = 10] // default argument value is ignored
+>     {
+>         get => this._store[x];
+>         private set => this._store[x] = value;
+>     }
+> }
+> ```
+>
+> *end example*
+
+Across the parts of a type declaration, there shall be only one defining partial indexer declaration with a given signature, and there shall be only one implementing partial indexer declaration with a given signature.
+
+The signature-matching requirements are as follows:
+
+1. Type and ref-kind differences between partial indexer declarations result in a compile-time error.
+1. Differences in tuple element names within partial indexer declarations result in a compile-time error.
+1. The property declarations and their accessor declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration. In the case of private accessibility on the indexer, both shall be implicitly private (that is, with no accessibility modifier) or both shall be explicitly `private`. Likewise, the corresponding accessors shall have the same implicit or same explicit accessibilities.
+1. All other syntactic differences in the signatures of partial property declarations result in a compile-time warning, with the following exceptions:
+
+    - Attribute lists on or within partial indexer declarations do not need to match. Instead, merging of attributes in corresponding positions is performed in an unspecified order. Duplicates are not removed.
+    - Nullable context differences do not cause warnings. In other words, a difference where one of the types is nullable-oblivious and the other type is either nullable-annotated or not-nullable-annotated does not result in any warnings.
+    - Default argument values need not match, and any default arguments values in the implementing partial indexer declaration are ignored.
+
+1. A warning is reported when parameter names differ across defining and implementing declarations. The parameter names from the definition part are used at use sites.
+1. Nullability differences that do not involve oblivious nullability result in warnings. When analyzing an accessor body, the implementation part signature is used. The definition part signature is used when analyzing use sites.
+
+In *indexer_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the indexer’s type. A partial indexer cannot explicitly implement interface indexers.
+
+Only a defining partial indexer participates in lookup.
 
 ## 15.10 Operators
 
@@ -5630,7 +5771,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
-### 15.11.6 Primary constructors
+### §prim-constructor Primary constructors
 
 For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
 
@@ -6367,25 +6508,25 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### 15.16.2 Class members
+### 15.16.4 Class members
 
 It is an error for a member of a record class to be named `Clone`.
 
 It is an error for an instance field of a record class to have an unsafe type.
 
-### 15.16.3 Instance constructors
+### 15.16.5 Instance constructors
 
-A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.4.6.2](classes.md#1516462-primary-constructor) for more information.
+A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.6.6.2](classes.md#1516662-primary-constructor) for more information.
 
-### 15.16.4 Implicit record class members
+### 15.16.6 Implicit record class members
 
-#### 15.16.4.1 General
+#### 15.16.6.1 General
 
 Certain members are provided by the implementation unless a member with a matching signature is declared in the *class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-#### 15.16.4.2 Copy constructors
+#### 15.16.6.2 Copy constructors
 
 A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
 
@@ -6416,11 +6557,11 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >
 > the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
 
-In certain circumstances ([§15.16.4.4](classes.md#151644-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
+In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
 A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)).
 
-#### 15.16.4.3 Equality members
+#### 15.16.6.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6587,18 +6728,18 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-#### 15.16.4.4 Copy and clone members
+#### 15.16.6.4 Copy and clone members
 
 A record class type contains two copying members:
 
-- A copy constructor ([§15.16.4.2](classes.md#151642-copy-constructors))
+- A copy constructor ([§15.16.6.2](classes.md#151662-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-#### 15.16.4.5 Printing members
+#### 15.16.6.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -6768,17 +6909,17 @@ The provided method:
 >
 > *end example*
 
-#### 15.16.4.6 Positional record class members
+#### 15.16.6.6 Positional record class members
 
-##### 15.16.4.6.1 General
+##### 15.16.6.6.1 General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-##### 15.16.4.6.2 Primary constructor
+##### 15.16.6.6.2 Primary constructor
 
-The primary constructor of a record class is like that of a non-record class ([§15.11.6](classes.md#15116-primary-constructors)), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
+The primary constructor of a record class is like that of a non-record class (§prim-constructor), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
-##### 15.16.4.6.3 Properties
+##### 15.16.6.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
@@ -6808,7 +6949,7 @@ For a record class:
 >
 > *end example*
 
-##### 15.16.4.6.4 Deconstruct
+##### 15.16.6.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -6838,11 +6979,11 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 >
 > *end example*
 
-## 15.17 Declaring a collection type
+## §declaring-a-collection-type Declaring a collection type
 
-### 15.17.1 General
+### §declaring-a-collection-type-general General
 
-There are a number of contexts in which a collection expression ([§12.8.25](expressions.md#12825-collection-expressions)) may be converted to a collection type ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
+There are a number of contexts in which a collection expression (§collection-expressions) may be converted to a collection type (§imp-collection-expression-conv). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
 
 Here is a simple user-defined collection type and its associated builder type:
 
@@ -6887,7 +7028,7 @@ internal static class MyCollectionBuilder
 }
 ```
 
-The collection type shall be annotated with `CollectionBuilderAttribute` ([§23.5.13](attributes.md#23513-the-collectionbuilder-attribute)) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
+The collection type shall be annotated with `CollectionBuilderAttribute` (§collection-builder-attr) that designates an associated, non-generic builder class or struct type having a collection-creation method (whose name is user-defined; in this case, it is `Create`).
 
 The job of a ***collection-creation method*** is to create and initialize an instance of its associated collection type.
 
@@ -6913,9 +7054,9 @@ For a *collection_expression* with a target type `C<S₀, S₁, …>` where the 
 
 The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
-The construction of an instance of a collection type is described in [§15.17.2](classes.md#15172-collection-construction).
+The construction of an instance of a collection type is described in §collection-construction.
 
-### 15.17.2 Collection construction
+### §collection-construction Collection construction
 
 The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
 
@@ -6925,7 +7066,7 @@ An unhandled exception thrown from any of the methods used during construction s
 
 `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
 
-If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§15.17.1](classes.md#15171-general)), the construction of the collection instance steps are, as follows:
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method (§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
 
 - The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
 - The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
@@ -6989,7 +7130,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 >
 > *end note*
 
-## 15.18 Record class and non-record class differences
+## 15.17 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
 
