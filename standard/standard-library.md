@@ -1038,6 +1038,16 @@ namespace System.Threading
     {
         public bool IsCancellationRequested { get; }
     }
+
+    public sealed class Lock
+    {
+        public Lock();
+        public System.Threading.Lock.Scope EnterScope();
+        public ref struct Lock.Scope
+        {
+            public void Dispose();
+        }
+    }
 }
 
 namespace System.Threading.Tasks
@@ -1564,6 +1574,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.Unsafe`
 - `global::System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute`
+- `global::System.Threading.Lock`
+- `global::System.Threading.Lock.Scope`
 - `global::System.Threading.Monitor`
 - `global::System.Threading.Tasks.Task`
 - `global::System.Threading.Tasks.Task<TResult>`
