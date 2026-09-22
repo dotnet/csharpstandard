@@ -55,7 +55,7 @@ A *non_record_struct_declaration* can have one of two almost identical forms: *n
 
 A *non_record_struct_without_positional_members* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
-A *non_record_struct_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §15.11.6.
+A *non_record_struct_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see [§15.11.6](classes.md#15116-primary-constructors).
 
 A struct having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
@@ -226,7 +226,7 @@ An instance member definition or accessor of an instance property, indexer, or e
 
 ## 16.4 Primary constructors
 
-As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor (§15.11.6) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
+As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§15.11.6](classes.md#15116-primary-constructors)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
 
 In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
 
@@ -276,7 +276,7 @@ Instance field declarations for a non-record struct are permitted to include var
 
 #### 16.5.3.3 Equality members
 
-The provided equality members are similar to those for a record class (§15.16.4.3), except for the lack of method `EqualityContract`, null checks, or inheritance.
+The provided equality members are similar to those for a record class ([§15.16.4.3](classes.md#151643-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
 A record struct `R` implements `System.IEquatable<R>` and includes a synthesized strongly-typed overload of `Equals(R other)`, which is public, as follows:
 
@@ -449,7 +449,7 @@ As well as providing the members described in the preceding subclauses, position
 
 ##### 16.5.3.5.2 Primary constructor
 
-As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor (§15.16.4.6.2) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
+As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.4.6.2](classes.md#1516462-primary-constructor)) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
 
 In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
 
@@ -488,7 +488,7 @@ The method can be declared explicitly. It is an error if the explicit declaratio
 
 ## 16.6 Inline arrays
 
-A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` (§23.5.14) is an ***inline array type***, which is a managed type. An instance of that type is an ***inline array***, a structure that contains a contiguous block of a given number of elements of the same type, and nothing else. It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
+A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` ([§23.5.14](attributes.md#23514-the-inlinearray-attribute)) is an ***inline array type***, which is a managed type. An instance of that type is an ***inline array***, a structure that contains a contiguous block of a given number of elements of the same type, and nothing else. It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
 
 With some limitations (see later below), an inline array can be used like an array ([§17](arrays.md#17-arrays)).
 

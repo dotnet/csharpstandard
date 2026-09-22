@@ -1989,7 +1989,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >
 > *end example*
 
-With respect to primary constructors (§15.11.6), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
+With respect to primary constructors ([§15.11.6](classes.md#15116-primary-constructors)), the rule above affects whether an identifier within an instance member should be treated as a type reference, or as a primary constructor parameter reference, which, in turn, captures the parameter into the  state of the enclosing type. Even though "the member lookup of `E.I` is never ambiguous," when lookup yields a member group, in some cases it is impossible to determine whether a member access refers to a static member or an instance member without fully resolving (binding) the member access. At the same time, capturing a primary constructor parameter changes properties of enclosing type in a way that affects semantic analysis. For example, the type might become unmanaged and fail certain constraints because of that. There are even scenarios for which binding can succeed either way, depending on whether the parameter is considered captured or not.
 
 An ambiguity error shall result for a member access `E.I` when all the following conditions are met:
 
@@ -4041,7 +4041,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type (§15.17.1).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type ([§15.17.1](classes.md#15171-general)).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
@@ -4381,7 +4381,7 @@ All non-positional properties being changed shall have both set and init accesso
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver’s clone method (§15.16.4.4) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.

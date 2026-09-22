@@ -466,7 +466,7 @@ An implicit collection expression conversion exists from a collection expression
 
 - A single-dimensional array type `T[]`, in which case, the element type is `T`.
 - `System.Span<T>` and `System.ReadOnlySpan<T>`, in which cases, the element type is `T`.
-- A type with an appropriate collection-creation method (§15.17.1), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
+- A type with an appropriate collection-creation method ([§15.17.1](classes.md#15171-general)), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
 - A struct or class type that implements `System.Collections.IEnumerable` where:
 
   - The type has an applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) constructor that can be invoked with no arguments, and the constructor is accessible at the location of the collection expression.
