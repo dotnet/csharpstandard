@@ -1200,7 +1200,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 
 > *Example*: The following example shows the differences with overload resolution between array initializers and collection expressions:
 >
-> <!-- Example: {template:"standalone-lib", name:"CollectionExpressionsOverRes", expectedErrors:["CS0121","CS0121"], ignoredWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-lib", name:"CollectionExpressionsOverRes", expectedErrors:["CS0121"], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > class C
 > {
