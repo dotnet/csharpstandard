@@ -6876,7 +6876,7 @@ It is an error if `CollectionBuilderAttribute` does not refer to an invokable me
 
 For a *collection_expression* with a target type `C<S₀, S₁, …>` where the type declaration `C<T₀, T₁, …>` has an associated collection-creation method `B.M<U₀, U₁, …>()`, the generic type arguments from the target type are applied in order (from outermost containing type to innermost) to the collection-creation method.
 
-The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] (§scoped-modifier)`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
+The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
 The construction of an instance of a collection type is described in §collection-construction.
 
