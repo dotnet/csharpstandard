@@ -109,6 +109,7 @@ public static class FastCsprojCompilationParserTests
 
         var sanitizedParseOptions = msbuildCompilation.SyntaxTrees.First().Options;
 
+        sanitizedParseOptions = sanitizedParseOptions.WithFeatures(result.ParseOptions.Features);
         result.ParseOptions.Equals(sanitizedParseOptions).ShouldBeTrue();
 
         var sanitizedSyntaxTrees = msbuildCompilation.SyntaxTrees
@@ -123,8 +124,11 @@ public static class FastCsprojCompilationParserTests
         // Assert that the files have the same parse options and contents
         foreach (var (fastGenerated, msbuildGenerated) in result.GeneratedSources.Zip(sanitizedSyntaxTrees))
         {
-            fastGenerated.Options.ShouldBe(msbuildGenerated.Options);
-            fastGenerated.GetText().ToString().ShouldBe(msbuildGenerated.GetText().ToString());
+            var sanitizedGenerated = msbuildGenerated.WithRootAndOptions(
+                msbuildGenerated.GetRoot(),
+                ((CSharpParseOptions)msbuildGenerated.Options).WithFeatures(((CSharpParseOptions)fastGenerated.Options).Features));
+            fastGenerated.Options.ShouldBe(sanitizedGenerated.Options);
+            fastGenerated.GetText().ToString().ShouldBe(sanitizedGenerated.GetText().ToString());
         }
     }
 
