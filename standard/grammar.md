@@ -197,7 +197,7 @@ keyword
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'file'      | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
@@ -215,13 +215,13 @@ keyword
 contextual_keyword
     : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
     | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
-    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
-    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
-    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
-    | 'record'   | 'remove'     | 'required'   | 'scoped'    | 'select'    | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
-    | 'where'    | 'yield'
+    | 'equals'   | 'Fastcall'   | 'file'       | 'from'      | 'get'
+    | 'global'   | 'group'      | 'init'       | 'into'      | 'join'
+    | 'let'      | 'managed'    | 'nameof'     | 'nint'      | 'not'
+    | 'notnull'  | 'nuint'      | 'on'         | 'or'        | 'orderby'
+    | 'partial'  | 'record'     | 'remove'     | 'required'  | 'scoped'
+    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
+    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -381,7 +381,7 @@ fragment Raw_String_Literal
     ;
 
 fragment Single_Line_Raw_String_Literal
-    : Raw_String_Literal_Delimiter  Raw_String_Literal Content
+    : Raw_String_Literal_Delimiter  Raw_String_Literal_Content
       Raw_String_Literal_Delimiter
     ;
 
@@ -389,16 +389,15 @@ fragment Raw_String_Literal_Delimiter
     : '"""'  '"'*
     ;
 
-fragment Raw_String_Literal Content
+fragment Raw_String_Literal_Content
     // anything except New_Line
     : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
-      (Raw_String_Literal Content | New_Line)* New_Line
+      (Raw_String_Literal_Content | New_Line)* New_Line
       Whitespace* Raw_String_Literal_Delimiter
-    ;
 
 fragment Utf8_Suffix
     : 'u8' | 'U8'
@@ -568,7 +567,7 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
-    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character 
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
       PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
@@ -639,7 +638,7 @@ fragment PP_Pragma_Text
 
 ```ANTLR
 
-// Source: §7.8.1 General
+// Source: §7.7.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -825,9 +824,12 @@ primary_pattern
     | discard_pattern
     | type_pattern
     | relational_pattern
-    | logical_pattern
     | list_pattern
     | slice_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Declaration pattern
@@ -959,7 +961,6 @@ argument_value
     : expression
     | 'in' 'scoped'? variable_reference
     | 'ref' 'scoped'? variable_reference
-    | 'out' 'scoped'? declaration_expression
     | 'out' 'scoped'? variable_reference
     ;
 
@@ -994,7 +995,6 @@ primary_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
     | stackalloc_expression
-    | collection_expression
     ;
 
 // Source: §12.8.3 Interpolated string expressions
@@ -1284,7 +1284,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1308,7 +1308,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.3.1 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1327,7 +1327,7 @@ expression_list
     : expression (',' expression)*
     ;
 
-// Source: §12.8.17.4 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1349,7 +1349,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.8.17.5 Array creation expressions
+// Source: §12.8.17.4 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -1357,7 +1357,7 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.8.17.6 Delegate creation expressions
+// Source: §12.8.17.5 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
@@ -1450,24 +1450,6 @@ named_entity_target
     | 'base'
     | predefined_type 
     | qualified_alias_member
-    ;
-
-// Source: §12.8.25 Collection expressions
-collection_expression
-    : '[' (collection_element (',' collection_element)*)? ']'
-    ;
-
-collection_element
-    : expression_element
-    | spread_element
-    ;
-
-expression_element
-    : expression
-    ;
-
-spread_element
-    : '..' expression
     ;
 
 // Source: §12.9.1 General
@@ -1654,7 +1636,22 @@ anonymous_function_signature
     ;
 
 explicit_anonymous_function_signature
-    : '(' parameter_list? ')'
+    : '(' explicit_anonymous_function_parameter_list? ')'
+    ;
+
+explicit_anonymous_function_parameter_list
+    : explicit_anonymous_function_parameter
+      (',' explicit_anonymous_function_parameter)*
+    ;
+
+explicit_anonymous_function_parameter
+    : attributes? 'scoped'? anonymous_function_parameter_modifier? type identifier
+    ;
+
+anonymous_function_parameter_modifier
+    : 'ref'
+    | 'out'
+    | 'in'
     ;
 
 implicit_anonymous_function_signature
@@ -1809,6 +1806,7 @@ compound_assignment
 compound_assignment_operator
     : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
+    | unsigned_right_shift_assignment
     ;
 
 // Source: §12.25 Expression
@@ -2089,7 +2087,7 @@ foreach_statement
       'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // asynchronous foreach
-      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
+      'await' 'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // deconstructing foreach
       'await'? 'foreach' '(' deconstructor 'in' expression ')'
@@ -2208,11 +2206,11 @@ yield_statement
 
 // Source: §14.2 Compilation units
 compilation_unit
-    : extern_alias_directive* using_directive* global_attributes? compilation_unit_body
+    : extern_alias_directive* global_using_directive* using_directive* global_attributes? compilation_unit_body
     ;
 
 compilation_unit_body
-    : statement_list* namespace_member_declaration*
+    : statement_list? namespace_member_declaration*
     | file_scoped_namespace_declaration
     ;
 
@@ -2271,7 +2269,7 @@ using_directive
 
 // Source: §14.6.2 Using alias directives
 using_alias_directive
-    : 'using' 'unsafe'? identifier '=' (namespace_name | type) ';'
+    : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
 // Source: §14.6.3 Using namespace directives
@@ -2281,7 +2279,7 @@ using_namespace_directive
 
 // Source: §14.6.4 Using static directives
 using_static_directive
-    : 'using' 'static' 'unsafe'? type_name ';'
+    : 'using' 'static' type_name ';'
     ;
 
 // Source: §14.7 Namespace member declarations
@@ -2311,20 +2309,9 @@ class_declaration
     ;
 
 non_record_class_declaration
-    : non_record_class_without_positional_members
-    | non_record_class_with_positional_members
-    ;
-
-non_record_class_without_positional_members
     : attributes? class_modifier* 'partial'? 'class' identifier
-        type_parameter_list? class_base?
-        type_parameter_constraints_clause* class_body
-    ;
-
-non_record_class_with_positional_members
-    : attributes? class_modifier* 'partial'? 'class' identifier
-        type_parameter_list? delimited_parameter_list class_base?
-        type_parameter_constraints_clause* class_body
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body
     ;
 
 // Source: §15.2.2.1 General
@@ -2355,10 +2342,6 @@ class_base
     : ':' class_type base_argument_list?
     | ':' interface_type_list
     | ':' class_type base_argument_list? ',' interface_type_list
-    ;
-
-base_argument_list
-    : '(' argument_list? ')'
     ;
 
 interface_type_list
@@ -2401,7 +2384,6 @@ constructor_constraint
 // Source: §15.2.6 Class body
 class_body
     : '{' class_member_declaration* '}' ';'?
-    | ';'
     ;
 
 // Source: §15.3.1 General
@@ -2460,13 +2442,13 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+    : attributes? method_modifiers 'partial'? return_type method_header method_body
+    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier* 'partial'?
+    : method_modifier*
     ;
 
 ref_kind
@@ -2475,7 +2457,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier* 'partial'?
+    : ref_method_modifier*
     ;
 
 method_header
@@ -2563,7 +2545,7 @@ parameter_modifier
     ;
 
 parameter_mode_modifier
-    : ref_kind
+    : 'ref'
     | 'out'
     | 'in'
     ;
@@ -2737,6 +2719,9 @@ operator_modifier
     : 'public'
     | 'static'
     | 'extern'
+    | 'abstract'
+    | 'virtual'
+    | 'sealed'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2755,7 +2740,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | 'checked'? '-' | '!' | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
+    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -2764,8 +2749,9 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : 'checked'? '+' | 'checked'? '-' | 'checked'? '*' | 'checked'? '/' | '%'
+    | '&' | '|' | '^' | '<<' | right_shift | unsigned_right_shift
+    | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -2848,8 +2834,19 @@ finalizer_body
 // Source: §15.16.1 General
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
-      type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* class_body
+      type_parameter_list? delimited_parameter_list? class_base? 
+      type_parameter_constraints_clause* record_class_body
+    ;
+
+// Source: §15.16.2 Class base specification
+base_argument_list
+    : '(' argument_list? ')'
+    ;
+
+// Source: §15.16.3 Record class body
+record_class_body
+    : class_body
+    | ';'
     ;
 
 // Source: §16.2.1 General
@@ -2859,20 +2856,20 @@ struct_declaration
     ;
 
 non_record_struct_declaration
-    : non_record_struct_without_positional_members
-    | non_record_struct_with_positional_members
-    ;
-
-non_record_struct_without_positional_members
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* struct_body
+      type_parameter_constraints_clause* struct_body ';'?
     ;
 
-non_record_struct_with_positional_members
-    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
-      identifier type_parameter_list? delimited_parameter_list struct_interfaces?
-      type_parameter_constraints_clause* struct_body
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* record_struct_body
+    ;
+
+record_struct_body
+    : struct_body ';'?
+    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers
@@ -2894,8 +2891,7 @@ struct_interfaces
 
 // Source: §16.2.6 Struct body
 struct_body
-    : '{' struct_member_declaration* '}' ';'?
-    | ';'
+    : '{' struct_member_declaration* '}'
     ;
 
 // Source: §16.3.1 General
@@ -2913,14 +2909,20 @@ struct_member_declaration
     | fixed_size_buffer_declaration   // unsafe code support
     ;
 
-// Source: §16.5.1 General
+// Source: §16.4.1 General
 record_struct_declaration
     : attributes? struct_modifier* 'partial'? 'record' 'struct'
       identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* struct_body
+      type_parameter_constraints_clause* record_struct_body
     ;
 
-// Source: §16.8.8.2 Ref fields
+// Source: §16.4.3 Record struct body
+record_struct_body
+    : struct_body ';'?
+    | ';'
+    ;
+
+// Source: §16.6.8.2 Ref fields
 struct_field_declaration
     : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
       variable_declarators ';'
@@ -2945,7 +2947,7 @@ variable_initializer
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface'
       identifier variant_type_parameter_list? interface_base?
-      type_parameter_constraints_clause* interface_body
+      type_parameter_constraints_clause* interface_body ';'?
     ;
 
 // Source: §19.2.2 Interface modifiers
@@ -2980,8 +2982,7 @@ interface_base
 
 // Source: §19.3 Interface body
 interface_body
-    : '{' interface_member_declaration* '}' ';'?
-    | ';'
+    : '{' interface_member_declaration* '}'
     ;
 
 // Source: §19.4.1 General
@@ -2999,7 +3000,7 @@ interface_member_declaration
 
 // Source: §20.2 Enum declarations
 enum_declaration
-    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
@@ -3012,9 +3013,8 @@ integral_type_name
     ;
 
 enum_body
-    : '{' enum_member_declarations? '}' ';'?
-    | '{' enum_member_declarations ',' '}' ';'?
-    | ';'
+    : '{' enum_member_declarations? '}'
+    | '{' enum_member_declarations ',' '}'
     ;
 
 // Source: §20.3 Enum modifiers

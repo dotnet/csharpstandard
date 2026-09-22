@@ -42,7 +42,7 @@ A delegate declaration that supplies a *variant_type_parameter_list* is a generi
 
 The `new` modifier is only permitted on delegates declared within another type, in which case it specifies that such a delegate hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier).
 
-The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the delegate type. Depending on the context in which the delegate declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)). It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
+The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the delegate type. Depending on the context in which the delegate declaration occurs, some of these modifiers might not be permitted ([§7.4.2](basic-concepts.md#742-declared-accessibility)). It is a compile-time error for any of the `public`, `protected`, `internal`, and `private` modifiers to be combined with the `file` modifier.
 
 The modifier `file` has the same meaning as that for a class declaration ([§15.2.2](classes.md#1522-class-modifiers)).
 
@@ -181,11 +181,11 @@ This definition of compatibility allows covariance in return type and contravari
 
 ## 21.5 Delegate instantiation
 
-An instance of a delegate is created by a *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
+An instance of a delegate is created by a *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
 
 - The static method referenced in the *delegate_creation_expression*, or
 - The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
-- Another delegate ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
+- Another delegate ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 > *Example*:
 >
@@ -215,7 +215,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§12.
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
 
-When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
+When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 Delegates are combined using the binary `+` ([§12.13.5](expressions.md#12135-addition-operator)) and `+=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator)) and `-=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). Delegates can be compared for equality ([§12.15.9](expressions.md#12159-delegate-equality-operators)).
 

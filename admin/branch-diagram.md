@@ -43,6 +43,18 @@ gitGraph
    commit id: "v11 reviewed features"
    branch v11-alpha
    commit id: "v11 alpha feature PRs"
+   branch draft-v12
+   checkout draft-v12
+   commit id: "v12 base"
+   commit id: "v12 reviewed features"
+   branch alpha-v12
+   commit id: "v12 alpha feature PRs"
+   branch draft-v13
+   checkout draft-v13
+   commit id: "v13 base"
+   commit id: "v13 reviewed features"
+   branch alpha-v13
+   commit id: "v13 alpha feature PRs"
 ```
 
 After each meeting, all changes merged since the previous meeting are propagated through each of the version specific branches. The following diagram shows the workflow:
@@ -78,6 +90,12 @@ gitGraph
    commit id: "v11 reviewed features"
    branch v11-alpha
    commit id: "v11 alpha feature PRs"
+   branch draft-v12
+   checkout draft-v12
+   commit id: "v12 base"
+   commit id: "v12 reviewed features"
+   branch alpha-v12
+   commit id: "v12 alpha feature PRs"
    checkout draft-v8
    commit id: "PRs merged at meeting"
    checkout draft-v9
@@ -92,6 +110,14 @@ gitGraph
    merge v10-alpha
    checkout v11-alpha
    merge draft-v11
+   checkout draft-v12
+   merge v11-alpha
+   checkout alpha-v12
+   merge draft-v12
+   checkout draft-v13
+   merge alpha-v12
+   checkout alpha-v13
+   merge draft-v13
 ```
 
 The changes approved by the committee are propagated in turn through all *draft* and *alpha* branches for upcoming versions. This process will introduce conflicts in feature specific PRs that will be resolved after the above workflow is completed.
