@@ -123,7 +123,7 @@ The application startup and termination process is semantically equivalent to th
   - Awaiting ([§12.9.9](expressions.md#1299-await-expressions)) the result of invoking the entry-point method, if its return type is a `Task` type.
   - In either case if the entry point requires an argument the application parameter array is supplied as its value.
 
-> *Note*: Invoking the entry-point method will cause the static constructor, if any, of the enclosing type to be executed first ([§15.12](classes.md#1512-static-constructors), [§16.8.10](structs.md#16810-static-constructors)). *end note*
+> *Note*: Invoking the entry-point method will cause the static constructor, if any, of the enclosing type to be executed first ([§15.12](classes.md#1512-static-constructors), [§16.6.10](structs.md#16610-static-constructors)). *end note*
 
 - The application is terminated
   - If the run results in an `int` value it serves as the termination status code;

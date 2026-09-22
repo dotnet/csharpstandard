@@ -276,7 +276,7 @@ A ***function pointer*** is a pointer capable of containing the address of a sta
 
 ```ANTLR
 funcptr_type
-    : 'delegate' '*' calling_convention_specifier?
+    : 'delegate' '*' calling_convention_specifier? 
       '<' funcptr_parameter_list funcptr_return_type '>'
     ;
 
@@ -1141,7 +1141,7 @@ fixed_size_buffer_declarator
     ;
 ```
 
-A fixed-size buffer declaration may include a set of attributes ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), accessibility modifiers corresponding to any of the declared accessibilities permitted for struct members ([§16.8.3](structs.md#1683-inheritance)) and an `unsafe` modifier ([§24.2](unsafe-code.md#242-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
+A fixed-size buffer declaration may include a set of attributes ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), accessibility modifiers corresponding to any of the declared accessibilities permitted for struct members ([§16.6.3](structs.md#1663-inheritance)) and an `unsafe` modifier ([§24.2](unsafe-code.md#242-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
