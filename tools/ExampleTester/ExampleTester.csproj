@@ -13,6 +13,7 @@
     <PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.8.11" />
     <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.8.11" />
     <PackageReference Include="Basic.Reference.Assemblies.Net90" Version="1.8.11" />
+    <PackageReference Include="Basic.Reference.Assemblies.Net100" Version="1.8.11" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
