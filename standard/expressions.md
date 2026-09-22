@@ -583,10 +583,10 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input or `ref readonly` reference parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
-- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) or is transformed into a `ref readonly` reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) and then passed as that. A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `out`, optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `out`, optionally followed by `scoped`, followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation. For a discussion of `scoped`, see §scoped-modifier.
+- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) or is transformed into a `ref readonly` reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) and then passed as that. A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `out`, optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `out`, optionally followed by `scoped`, followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, as mentioned above, an argument with value passing mode might be transformed into one with input or `ref readonly` reference passing mode.
 
@@ -1652,7 +1652,7 @@ An *interpolated_string_expression* is classified as a value, which is evaluated
 
 1. If the target of an assignment or method-call argument has type `string`, the expression is processed by the default interpolated string handler, `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler`, and the result has type `string`.
 1. If the target of an assignment or method-call argument has type `System.IFormattable` or `System.FormattableString`, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created.
-1. If the target of an assignment or method-call argument has a custom interpolated string handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) type, then
+1. If the target of an assignment or method-call argument has a custom interpolated string handler ([§23.5.11.1](attributes.md#235111-custom-interpolated-string-expression-handlers)) type, then
 
 - If the interpolated string contains no interpolations, the expression is processed as if the target type was `string`.
 - Otherwise, the expression is processed by the custom interpolated string handler and the result has that custom interpolated string handler’s type.
@@ -1672,7 +1672,7 @@ SomeInterpolatedStringHandler str2 = $"{val}";   // custom handler used
 M(str2);                // invokes M(SomeInterpolatedStringHandler)
 ```
 
-The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in [§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers).
+The remainder of this subclause deals with the default interpolated string handler behavior only. The declaration and use of custom interpolated string handlers is described in [§23.5.11.1](attributes.md#235111-custom-interpolated-string-expression-handlers).
 
 The meaning of an interpolation (*regular_interpolation*, *verbatim_interpolation*, and *raw_interpolation*) is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
@@ -3812,7 +3812,7 @@ When an instance of a struct `S` having a required member list ([§15.7.1](class
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.6.15.7](structs.md#166157-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.6.15.10](structs.md#1661510-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -5732,7 +5732,7 @@ local_variable_type
     ;
 ```
 
-'scoped' shall only be permitted with *local_variable_type* if *local_variable_type* is 'var' or a ref struct type, and *identifer* is not a discard.
+‘scoped’ shall only be permitted with *local_variable_type* if *local_variable_type* is ‘var’ or a ref struct type, and *identifer* is not a discard.
 
 The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§12.8.4](expressions.md#1284-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
@@ -5914,7 +5914,7 @@ anonymous_function_body
 
 If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. A `static` anonymous function may reference `static` members, type parameters, and constant definitions from the enclosing scope.
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing `static` anonymous function.
 
@@ -6006,7 +6006,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
-- Only *lambda_expression* parameters may contain 'scoped'.
+- Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 - An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_array*s.
 
@@ -7760,7 +7760,7 @@ The operator `= ref`  is called the ***ref assignment operator***. The expressio
 
 The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, an input parameter, or a discard. When the left operand is a discard, the right operand is evaluated but no variable reference is stored. Otherwise, the right operand shall be an expression that yields a *variable_reference* ([§9.5](variables.md#95-variable-references)) designating a value of the same type as the left operand.
 
-The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand (§9.7.2).
+The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 > *Note*: This requirement exists because the lifetime of the value pointed to by a ref location is invariant. The indirection prevents one from allowing any kind of variance here, even to narrower lifetimes. *end note*
 

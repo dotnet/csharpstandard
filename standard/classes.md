@@ -44,7 +44,7 @@ A *non_record_class_without_positional_members* consists of an optional set of *
 
 A *non_record_class_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
-A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
+A class having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -85,7 +85,7 @@ When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declara
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
-The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier. (`file` is a contextual keyword (§6.4.4) that has special meaning when used as a top-level type modifier.)
+The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier. (`file` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) that has special meaning when used as a top-level type modifier.)
 
 The `file` modifier shall only appear in a type declaration for a top-level type.
 
@@ -1746,7 +1746,7 @@ The value of a field is obtained in an expression using a *simple_name* ([§12.8
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
-> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see §Ref-Fields. *end note*
+> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.6.8.2](structs.md#16682-ref-fields). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
@@ -2327,7 +2327,7 @@ A *fixed_parameter* consists of an optional set of *attributes* ([§23](attribut
 
 An output parameter implicitly has the `scoped` modifier.
 
-For a discussion of `scoped`, see §scoped-modifier.
+For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `ref readonly` or `in` modifier may have a *default_argument*; however, in the `ref readonly` case, a warning shall be issued. The *expression* in a *default_argument* shall be one of the following:
 
@@ -2410,7 +2410,7 @@ It is a compile-time error to modify the value of an input parameter.
 
 > *Note*: The primary purpose of input parameters is for efficiency. When the type of a method parameter is a large struct (in terms of memory requirements), it is useful to be able to avoid copying the whole value of the argument when calling the method. Input parameters allow methods to refer to existing values in memory, while providing protection against unwanted changes to those values. *end note*
 
-An input parameter may carry the `scoped` modifier (§scoped-modifier) or the `[UnscopedRef]` attribute (§UnscopedRefAttribute).
+An input parameter may carry the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) or the `[UnscopedRef]` attribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)).
 
 ##### 15.6.2.3.3 Reference parameters
 
@@ -2493,9 +2493,9 @@ The argument corresponding to a `ref readonly` parameter may be a value, in whic
 >
 > shows a large struct being passed by reference for efficiency, but without the called method having the ability to modify that that struct. *end example*
 
-For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.14](expressions.md#12814-this-access)). The `this` parameter of a struct instance method is implicitly `scoped ref` (§scoped-modifier).
+For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.14](expressions.md#12814-this-access)). The `this` parameter of a struct instance method is implicitly `scoped ref` ([§9.7.3](variables.md#973-the-scoped-modifier)).
 
-A reference parameter may carry the `scoped` modifier (§scoped-modifier) or the `[UnscopedRef]` attribute (§UnscopedRefAttribute).
+A reference parameter may carry the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) or the `[UnscopedRef]` attribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)).
 
 ##### 15.6.2.3.4 Output parameters
 
@@ -2503,7 +2503,7 @@ A parameter declared with an `out` modifier is an ***output parameter***. For de
 
 A method declared as an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) shall not have output parameters.
 
-An output parameter is implicitly `scoped` (§scoped-modifier); the `[UnscopedRef]` attribute (§UnscopedRefAttribute) may be applied to widen its ref-safe-context.
+An output parameter is implicitly `scoped` ([§9.7.3](variables.md#973-the-scoped-modifier)); the `[UnscopedRef]` attribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)) may be applied to widen its ref-safe-context.
 
 > *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3568,7 +3568,7 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
 
-The modifier `required` indicates the instance member being declared is required to be set during object initialization, which forces the instance creator to provide an initial value for the member in an object initializer at the creation site. (See [§12.8.21](expressions.md#12821-default-value-expressions) and §SetsRequiredMembers for exemptions to this requirement.) A required member shall not be static. A required member shall be at least as accessible as its containing type.
+The modifier `required` indicates the instance member being declared is required to be set during object initialization, which forces the instance creator to provide an initial value for the member in an object initializer at the creation site. (See [§12.8.21](expressions.md#12821-default-value-expressions) and [§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute) for exemptions to this requirement.) A required member shall not be static. A required member shall be at least as accessible as its containing type.
 
 > *Note*: Although a required member declaration may include an initializer (*property_initializer* for a property, *variable_initializer* for a field), ordinarily, that initializer serves no purpose, as the instance creator is required to provide an initial value for that member anyway. However, if a constructor is decorated with the `SetsRequiredMembers` attribute the compiler assumes that member has been initialized correctly, and will not require an explicit initializer by the instance creator, resulting in the member’s initial value being that of its initializer, if one is present. *end note*
 
@@ -3576,13 +3576,13 @@ A ***required member list*** is a list of all the members of a type that are req
 To build the required member list `R` for a type `T`, the following steps are used:
 
 1. For every type `Tb`, starting with `T` and working through the base type chain until `object` is reached.
-1. If `Tb` is decorated with the `RequiredMember` attribute (§RequiredMember), then all members of `Tb` marked with that attribute are gathered into `Rb`
+1. If `Tb` is decorated with the `RequiredMember` attribute ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)), then all members of `Tb` marked with that attribute are gathered into `Rb`
 
     1. For every `Ri` in `Rb`, if `Ri` is overridden by any member of `R`, it is skipped.
     1. Otherwise, if any `Ri` is hidden by a member of `R`, then the lookup of required members fails, and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` is an error.
     1. Otherwise, `Ri` is added to `R`.
 
-A required member shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
+A required member shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 With regard to nullable reference type analysis ([§8.9](types.md#89-reference-types-and-nullability)), a required member need not be initialized to a valid nullable state when any of its instance constructors returns. Any required member in a type and its base types is considered by nullable analysis to have its default value at the beginning of any instance constructor in that type, unless it chains to a `this` or `base` constructor that is decorated with the `SetsRequiredMembersAttribute` attribute.
 
 Nullable analysis shall warn about all required members from the current and base types that do not have a valid nullable state at the end of a constructor decorated with the `SetsRequiredMembersAttribute` attribute.
@@ -5387,7 +5387,7 @@ Each of the types referenced in the *parameter_list* of an instance constructor 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
 All instance constructors on a type that has a required member list ([§15.7.1](classes.md#1571-general)) automatically advertise a contract that consumers of the type shall initialize all of the members in the list. It is an error for an instance constructor to advertise a contract that requires a member that is not at least as accessible as the constructor itself.
-An instance constructor whose *constructor_initializer* chains to another constructor decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), shall also be decorated with that attribute.
+An instance constructor whose *constructor_initializer* chains to another constructor decorated with the `SetsRequiredMembers` attribute ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)), shall also be decorated with that attribute.
 For every instance constructor `Ci` in type `T` with required members `R`, unless `Ci` is decorated with the attribute `SetsRequiredMembers`, consumers calling `Ci` shall do one of the following:
 
 - Set all members of `R` in an *object_initializer* on the *object_creation_expression*,
@@ -6209,7 +6209,7 @@ An iterator block may occur as a *method_body*, *operator_body* or *accessor_bod
 
 When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
 
-An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute).
+An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute).
 
 ### 15.15.2 Enumerator interfaces
 
@@ -6341,7 +6341,7 @@ An enumerable object may implement more interfaces than those specified above.
 
 An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
 
-An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
+An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
 
 ## 15.16 Record classes
 
@@ -6418,7 +6418,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 
 In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
-A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute (§SetsRequiredMembers).
+A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)).
 
 #### 15.16.6.3 Equality members
 
@@ -6911,7 +6911,7 @@ It is an error if `CollectionBuilderAttribute` does not refer to an invokable me
 
 For a *collection_expression* with a target type `C<S₀, S₁, …>` where the type declaration `C<T₀, T₁, …>` has an associated collection-creation method `B.M<U₀, U₁, …>()`, the generic type arguments from the target type are applied in order (from outermost containing type to innermost) to the collection-creation method.
 
-The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] (§scoped-modifier)`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
+The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
 The construction of an instance of a collection type is described in §collection-construction.
 

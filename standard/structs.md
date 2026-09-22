@@ -57,7 +57,7 @@ A *non_record_struct_without_positional_members* consists of an optional set of 
 
 A *non_record_struct_with_positional_members* has the same syntax but requires a *delimited_parameter_list*, as shown above in that grammar rule. For a discussion of *delimited_parameter_list*, see §prim-constructor.
 
-A struct having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
+A struct having a required member ([§15.7.1](classes.md#1571-general)) directly (that is, not through inheritance) shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)).
 A *struct_declaration* shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A *struct_declaration* that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
@@ -178,9 +178,9 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§24.8.2](unsafe-code.md#2482-fixed-size-buffer-declarations)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields (§Ref-Fields). *end note*
+> *Note*: A *struct_member_declaration* includes all *class_member_declaration* alternatives except *finalizer_declaration*, and adds *struct_field_declaration* which supports ref fields ([§16.6.8.2](structs.md#16682-ref-fields)). *end note*
 
-Fields in structs support capabilities not supported in classes. See §Ref-Fields for details.
+Fields in structs support capabilities not supported in classes. See [§16.6.8.2](structs.md#16682-ref-fields) for details.
 
 Except for the differences noted in [§16.6](structs.md#166-class-and-struct-differences), the descriptions of class members provided in [§15.3](classes.md#153-class-members) through [§15.12](classes.md#1512-static-constructors) apply to struct members as well.
 
@@ -547,7 +547,7 @@ An inline array is a collection; as such, it can be iterated over by a `foreach`
 
 The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
 
-A list pattern (§list-pattern-new-clause) shall not be used in the context of an inline array.
+A list pattern ([§11.2.11](patterns.md#11211-list-pattern)) shall not be used in the context of an inline array.
 
 An inline array type is a valid constructible collection target type for a collection literal.
 
@@ -829,9 +829,9 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > *end example*
 
-### §fields Fields
+### 16.6.8 Fields
 
-#### §field-initializers Field initializers
+#### 16.6.8.1 Field initializers
 
 As described in [§16.6.5](structs.md#1665-default-values), the default value of a struct consists of the value that results from setting all value type and reference variable fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
@@ -867,7 +867,7 @@ When a struct instance constructor has a `this()` constructor initializer that r
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
-#### §Ref-Fields Ref fields
+#### 16.6.8.2 Ref fields
 
 ```ANTLR
 struct_field_declaration
@@ -1161,7 +1161,7 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method’s return value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
@@ -1192,7 +1192,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 >
 > *end example*
 
-#### §method-arguments-must-match Method arguments must match
+#### 16.6.15.7 Method arguments must match
 
 For any method invocation `e.M(a1, a2, ... aN)`:
 
@@ -1237,13 +1237,13 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 >
 > *end example*
 
-#### §declaration-expression-safe-context Infer safe-context of declaration expressions
+#### 16.6.15.8 Infer safe-context of declaration expressions
 
 The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
 
 - caller-context.
 - If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
-- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+- If the out variable’s type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 
@@ -1277,7 +1277,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 >
 > *end example*
 
-#### §object-initializer-safe-context Object initializer safe context
+#### 16.6.15.9 Object initializer safe context
 
 The safe-context of an object initializer expression is the narrowest of:
 
@@ -1320,12 +1320,12 @@ The safe-context of an object initializer expression is the narrowest of:
 >
 > *end example*
 
-#### 16.6.15.7 stackalloc
+#### 16.6.15.10 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
 
-#### 16.6.15.8 Constructor invocations
+#### 16.6.15.11 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See [§16.6.15.9](structs.md#166159-object-initializer-safe-context) for details.
