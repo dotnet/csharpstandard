@@ -1165,7 +1165,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line 
+      (Interpolated_Raw_String_Mid | New_Line)* New_Line
       Whitespace* Interpolated_Raw_String_End
     ;
 
@@ -2834,7 +2834,7 @@ finalizer_body
 // Source: §15.16.1 General
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
-      type_parameter_list? delimited_parameter_list? class_base? 
+      type_parameter_list? delimited_parameter_list? class_base?
       type_parameter_constraints_clause* record_class_body
     ;
 
@@ -3162,7 +3162,7 @@ dataptr_type
 
 // Source: §24.3.3 Function pointers
 funcptr_type
-    : 'delegate' '*' calling_convention_specifier? 
+    : 'delegate' '*' calling_convention_specifier?
       '<' funcptr_parameter_list funcptr_return_type '>'
     ;
 
