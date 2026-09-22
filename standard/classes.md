@@ -2346,7 +2346,7 @@ A *parameter_collection* consists of an optional set of *attributes* ([§23](att
   - `System.Span<T>`
   - `System.ReadOnlySpan<T>`
   in which cases the element type is `T`
-- A type with an appropriate collection-creation method ((§15.17.1](classes.md#15171-general)) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
+- A type with an appropriate collection-creation method (§collection-construction) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
 - A struct or class type that implements `System.Collections.IEnumerable` where:
   - The type has a constructor that can be invoked with no arguments, and the constructor is at least as accessible as the declaring member.
   - The type has an instance (not an extension) method `Add` where:
@@ -2588,7 +2588,7 @@ A parameter declared with a `params` modifier is a parameter collection.
 A parameter collection permits arguments to be specified in one of two ways in a method invocation:
 
 - The argument given for a parameter collection can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
-- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in [§12.8.25](expressions.md#12825-collection-expressions) as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
+- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in §collection-expressions as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
 
 Except for allowing a variable number of arguments in an invocation, a parameter collection is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
 
@@ -7014,11 +7014,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 >
 > *end note*
 
-<<<<<<< ours
 ## 15.17 Record class and non-record class differences
-=======
-## 15.18 Record class and non-record class differences
->>>>>>> theirs
 
 A record class differs from a non-record class in several important ways:
 
