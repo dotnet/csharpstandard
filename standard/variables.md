@@ -1406,7 +1406,7 @@ For a variable designating a reference to a field, `e.F`:
 As a result, a field that is a reference variable may be returned as a reference variable from a `ref struct` or `readonly ref struct`, but a non-reference variable field may not.
 
 > *Example*:
-> <!-- Example: {template:"standalone-lib-without-using", name:"FieldsSafeContext", expectedErrors:["CS8170"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldsSafeContext", expectedErrors:["CS8170"], ignoredWarnings:["CS9265"]} -->
 >
 > ```csharp
 > ref struct RS

@@ -664,7 +664,7 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true, ignoredWarnings:["CS9336"]} -->
 > ```csharp
 > object msg = "msg";
 > object obj = 5;
