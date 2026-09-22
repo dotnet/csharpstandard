@@ -2,7 +2,7 @@
 
 ## 7.1 Application startup and termination
 
-### §app-startup-general General
+### 7.1.1 General
 
 A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-defined and external to this specification.
 
@@ -11,21 +11,21 @@ An application domain enables application isolation by acting as a container for
 
 An application run is initiated by invoking an ***entry point*** which is selected at compile-time from  candidate entry points which are specified in any of the following ways:
 
-1. Explicitly, by declaring a method with appropriate characteristics (§named-entry-points).
-1. Implicitly, by using top-level statements (§using-top-level-statements).
-1. Implementation-defined, by using a mechanism external to this specification to designate the entry point (§externally-defined-entry-point).
+1. Explicitly, by declaring a method with appropriate characteristics ([§7.1.2](basic-concepts.md#712-named-entry-points)).
+1. Implicitly, by using top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)).
+1. Implementation-defined, by using a mechanism external to this specification to designate the entry point ([§7.1.4](basic-concepts.md#714-externally-defined-entry-point)).
 
-> *Note*: With the exception of top-level statement candidates (§using-top-level-statements) all candidate entry points are standard methods; being a candidate, or the selected entry point, does not prevent these methods being invoked as normal. *end note*
+> *Note*: With the exception of top-level statement candidates ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) all candidate entry points are standard methods; being a candidate, or the selected entry point, does not prevent these methods being invoked as normal. *end note*
 
 It is a compile-time error if there are no candidate entry points.
 
-Otherwise one candidate is selected at compile-time as the entry point following the process in §entry-point-selection.
+Otherwise one candidate is selected at compile-time as the entry point following the process in [§7.1.5](basic-concepts.md#715-entry-point-selection).
 
-An application is run by invoking the selected entry point as described in §entry-point-invocation.
+An application is run by invoking the selected entry point as described in [§7.1.6](basic-concepts.md#716-entry-point-invocation).
 
-The ***termination status code***, the purpose of which is to allow communication of success or failure to the host environment, is determined based on the result from the entry point invocation (§entry-point-invocation).
+The ***termination status code***, the purpose of which is to allow communication of success or failure to the host environment, is determined based on the result from the entry point invocation ([§7.1.6](basic-concepts.md#716-entry-point-invocation)).
 
-### §named-entry-points Named entry points
+### 7.1.2 Named entry points
 
 A method qualifies as a canditate entry point by satisfying the following requirements:
 
@@ -38,11 +38,11 @@ A method qualifies as a canditate entry point by satisfying the following requir
 - It shall not be an optional partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementing declaration.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
-The declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
+The declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
 
 > *Note*: The requirements here do not specify that `Main` should be a class member, it can be a struct member. *end note*
 
-### §using-top-level-statements Using top-level statements
+### 7.1.3 Using top-level statements
 
 A single compilation unit ([§14.2](namespaces.md#142-compilation-units) in an application may contain a *statement_list*; called the ***top-level statements***. The meaning of the top-level statements is semantically equivalent to declaring the following in the global namespace:
 
@@ -66,7 +66,7 @@ The method name `«Main»` is a placeholder for an unspecified implementation pr
 
 The `«statement_list»` is a placeholder for *statement_list* of the *compilation-unit*.
 
-The parameter `args` is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply. This parameter receives the application parameters (§entry-point-invocation).
+The parameter `args` is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply. This parameter receives the application parameters ([§7.1.6](basic-concepts.md#716-entry-point-invocation)).
 
 Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method.
 
@@ -79,38 +79,38 @@ The replacement of the `«AsyncAndReturnType»` placeholder in the method signat
 | `await` only                      | `static async Task «Main»(string[] args)`
 | `await` and `return` with value   | `static async Task<int> «Main»(string[] args)`
 
-These generated signatures meet the requirements for named entry points (§named-entry-points) and therefore `«Main»` is a candidate entry point.
+These generated signatures meet the requirements for named entry points ([§7.1.2](basic-concepts.md#712-named-entry-points)) and therefore `«Main»` is a candidate entry point.
 
-> *Note*: These signatures include no declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)). However an implementation may include declared accessibility – as accessibility is ignored for entry point methods (§named-entry-points) the method would still be semantically equivalent.
+> *Note*: These signatures include no declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)). However an implementation may include declared accessibility – as accessibility is ignored for entry point methods ([§7.1.2](basic-concepts.md#712-named-entry-points)) the method would still be semantically equivalent.
 
-### §externally-defined-entry-point Externally defined entry point
+### 7.1.4 Externally defined entry point
 
 An implementation may provide a mechanism external to this specification to specify a candidate entry point.
 
-If that mechanism identifies a type within the program then the candidate entry point is determined as specified for named entry points (§named-entry-points).
+If that mechanism identifies a type within the program then the candidate entry point is determined as specified for named entry points ([§7.1.2](basic-concepts.md#712-named-entry-points)).
 
-If that mechanism identifies a method within the program then the method may have any name but otherwise must meet the requirements specified for named entry points (§named-entry-points).
+If that mechanism identifies a method within the program then the method may have any name but otherwise must meet the requirements specified for named entry points ([§7.1.2](basic-concepts.md#712-named-entry-points)).
 
 The external mechanism may only specify a single candidate entry point.
 
-A candidate entry point specified by an external mechanism takes precedence in entry point selection (§entry-point-selection).
+A candidate entry point specified by an external mechanism takes precedence in entry point selection ([§7.1.5](basic-concepts.md#715-entry-point-selection)).
 
-### §entry-point-selection Entry point selection
+### 7.1.5 Entry point selection
 
 It is a compile-time error if there are no candidate entry points.
 
 Otherwise the entry point is selected from the candidates:
 
-- If one of the candidates is specified by an external mechanism (§externally-defined-entry-point) it is selected as the entry point;
-- Otherwise, iff one of the candidates is defined by top-level statements (§using-top-level-statements) it is selected as the entry point;
+- If one of the candidates is specified by an external mechanism ([§7.1.4](basic-concepts.md#714-externally-defined-entry-point)) it is selected as the entry point;
+- Otherwise, iff one of the candidates is defined by top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) it is selected as the entry point;
 - Otherwise:
   - If any of the candidates have a return type of `int` or `void` then any candidates having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` are removed from the candidate pool.
   - If there is a single remaining candidate it is selected as the entry point.
   - Otherwise the entry point cannot be determined and a compile-time error shall be reported.
 
-The entry point selected at compile-time is invoked at runtime as part of application startup (§entry-point-invocation).
+The entry point selected at compile-time is invoked at runtime as part of application startup ([§7.1.6](basic-concepts.md#716-entry-point-invocation)).
 
-### §entry-point-invocation Entry point invocation
+### 7.1.6 Entry point invocation
 
 If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of non-null references to zero or more strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup.
 
@@ -134,7 +134,7 @@ Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as par
 
 > *Note*: The .NET Framework implementation makes every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). *end note*
 
-## 7.3 Declarations
+## 7.2 Declarations
 
 Declarations in a C# program define the constituent elements of the program. C# programs are organized using namespaces. These are introduced using namespace declarations ([§14](namespaces.md#14-namespaces)), which can contain type declarations and nested namespace declarations. Type declarations ([§14.7](namespaces.md#147-type-declarations)) are used to define classes ([§15](classes.md#15-classes)), structs ([§16](structs.md#16-structs)), interfaces ([§19](interfaces.md#19-interfaces)), enums ([§20](enums.md#20-enums)), and delegates ([§21](delegates.md#21-delegates)). The kinds of members permitted in a type declaration depend on the form of the type declaration. For instance, class declarations can contain declarations for constants ([§15.4](classes.md#154-constants)), fields ([§15.5](classes.md#155-fields)), methods ([§15.6](classes.md#156-methods)), properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), indexers ([§15.9](classes.md#159-indexers)), operators ([§15.10](classes.md#1510-operators)), instance constructors ([§15.11](classes.md#1511-instance-constructors)), static constructors ([§15.12](classes.md#1512-static-constructors)), finalizers ([§15.13](classes.md#1513-finalizers)), and nested types ([§15.3.9](classes.md#1539-nested-types)).
 
@@ -143,21 +143,21 @@ A declaration defines a name in the ***declaration space*** to which the declara
 - Two or more namespace declarations with the same name are allowed in the same declaration space. Such namespace declarations are aggregated to form a single logical namespace and share a single declaration space.
 - Declarations in separate programs but in the same namespace declaration space are allowed to share the same name.
     > *Note*: However, these declarations could introduce ambiguities if included in the same application. *end note*
-- Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
-- Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.8.2](basic-concepts.md#782-unqualified-names)).
+- Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.5](basic-concepts.md#75-signatures-and-overloading)).
+- Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.7.2](basic-concepts.md#772-unqualified-names)).
 - Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, struct or interface). In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-type-declarations)).
-- A namespace declaration and a type declaration in the same declaration space can share the same name as long as the type declaration has at least one type parameter ([§7.8.2](basic-concepts.md#782-unqualified-names)).
+- A namespace declaration and a type declaration in the same declaration space can share the same name as long as the type declaration has at least one type parameter ([§7.7.2](basic-concepts.md#772-unqualified-names)).
 
 There are several different types of declaration spaces, as described in the following.
 
 - Within all compilation units of a program, *namespace_member_declaration*s with no enclosing *namespace_declaration* are members of a single combined declaration space called the ***global declaration space***.
 - Within all compilation units of a program, *namespace_member_declaration*s within *namespace_declaration*s that have the same fully qualified namespace name are members of a single combined declaration space.
 - Each *compilation_unit* and *namespace_body* has an ***alias declaration space***. Each *extern_alias_directive* and *using_alias_directive* of the *compilation_unit* or *namespace_body* contributes a member to the alias declaration space ([§14.5.2](namespaces.md#1452-using-alias-directives)).
-- Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§16.2.4](structs.md#1624-partial-modifier)). Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class, struct, or interface cannot contain a member declaration with the same name as the class, struct, or interface. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
+- Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§16.2.4](structs.md#1624-partial-modifier)). Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class, struct, or interface cannot contain a member declaration with the same name as the class, struct, or interface. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
 - Each delegate declaration creates a new declaration space. Names are introduced into this declaration space through parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s.
 - Each enumeration declaration creates a new declaration space. Names are introduced into this declaration space through *enum_member_declarations*.
-- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set and init accessor for a property or an indexer introduce the name `value` as a parameter. The body of the function member, anonymous function, or local function, if any, is considered to be nested within the local variable declaration space. When a local variable declaration space and a nested local variable declaration space contain elements with the same name, within the scope of the nested local name, the outer local name is hidden ([§7.7.1](basic-concepts.md#771-general)) by the nested local name.
-  > *Note*: Discard parameters of anonymous functions ([§12.21.2](expressions.md#12212-anonymous-function-signatures)) do not introduce names into any declaration space. *end note*
+- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set and init accessor for a property or an indexer introduce the name `value` as a parameter. The body of the function member, anonymous function, or local function, if any, is considered to be nested within the local variable declaration space. When a local variable declaration space and a nested local variable declaration space contain elements with the same name, within the scope of the nested local name, the outer local name is hidden ([§7.6.1](basic-concepts.md#761-general)) by the nested local name.
+  > *Note*: Discard parameters of anonymous functions ([§12.22.2](expressions.md#12222-anonymous-function-signatures)) do not introduce names into any declaration space. *end note*
 - Additional local variable declaration spaces may occur within member declarations, anonymous functions and local functions. Names are introduced into these declaration spaces through *pattern*s, *declaration_expression*s,  *declaration_statement*s and *exception_specifier*s. Local variable declaration spaces may be nested, but it is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable, local function or constant with the same name as a parameter, type parameter, local variable, local function or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other. Local declaration spaces are created by the following constructs:
   - Each *variable_initializer* in a field and property declaration introduces its own local variable declaration space, that is not nested within any other local variable declaration space.
   - The body of a function member, anonymous function, or local function, if any, creates a local variable declaration space that is considered to be nested within the function’s local variable declaration space.
@@ -165,7 +165,7 @@ There are several different types of declaration spaces, as described in the fol
   - Each *block*, *switch_block*, *specific_catch_clause*, *iteration_statement* and *using_statement* creates a nested local variable declaration space.
   - Each *embedded_statement* that is not directly part of a *statement_list* creates a nested local variable declaration space.
   - Each *switch_section* creates a nested local variable declaration space. However, variables declared directly within the *statement_list* of the *switch_section* (but not within a nested local variable declaration space inside the *statement_list*) are added directly to the local variable declaration space of the enclosing *switch_block*, instead of that of the *switch_section*.
-  - The syntactic translation of a *query_expression* ([§12.22.3](expressions.md#12223-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
+  - The syntactic translation of a *query_expression* ([§12.23.3](expressions.md#12233-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
 > *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0. The local variable `z` is not in scope within the switch section for the default case, as it is introduced in the local variable declaration space for the switch section in which the declaration occurs.
@@ -195,7 +195,7 @@ There are several different types of declaration spaces, as described in the fol
 The textual order in which names are declared is generally of no significance. In particular, textual order is not significant for the declaration and use of namespaces, constants, methods, properties, events, indexers, operators, instance constructors, finalizers, static constructors, and types. Declaration order is significant in the following ways:
 
 - Declaration order for field declarations determines the order in which their initializers (if any) are executed ([§15.5.6.2](classes.md#15562-static-field-initialization), [§15.5.6.3](classes.md#15563-instance-field-initialization)).
-- Local variables shall be defined before they are used ([§7.7](basic-concepts.md#77-scopes)).
+- Local variables shall be defined before they are used ([§7.6](basic-concepts.md#76-scopes)).
 - Declaration order for enum member declarations ([§20.4](enums.md#204-enum-members)) is significant when *constant_expression* values are omitted.
 
 > *Example*: The declaration space of a namespace is “open ended”, and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
@@ -277,9 +277,9 @@ The textual order in which names are declared is generally of no significance. I
 >
 > *end note*
 
-## 7.4 Members
+## 7.3 Members
 
-### 7.4.1 General
+### 7.3.1 General
 
 Namespaces and types have ***member***s.
 
@@ -287,9 +287,9 @@ Namespaces and types have ***member***s.
 
 Members of a type are either declared in the type declaration or ***inherited*** from the base class of the type. When a type inherits from a base class, all members of the base class, except instance constructors, finalizers, and static constructors become members of the derived type. The declared accessibility of a base class member does not control whether the member is inherited—inheritance extends to any member that is not an instance constructor, static constructor, or finalizer.
 
-> *Note*: However, an inherited member might not be accessible in a derived type, for example because of its declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)). *end note*
+> *Note*: However, an inherited member might not be accessible in a derived type, for example because of its declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)). *end note*
 
-### 7.4.2 Namespace members
+### 7.3.2 Namespace members
 
 Namespaces and types that have no enclosing namespace are members of the ***global namespace***. This corresponds directly to the names declared in the global declaration space.
 
@@ -297,17 +297,17 @@ Namespaces and types declared within a namespace are members of that namespace. 
 
 Namespaces have no access restrictions. It is not possible to declare private, protected, or internal namespaces, and namespace names are always publicly accessible.
 
-### 7.4.3 Struct members
+### 7.3.3 Struct members
 
 The members of a struct are the members declared in the struct and the members inherited from the struct’s direct base class `System.ValueType` and the indirect base class `object`.
 
 The members of a simple type correspond directly to the members of the struct type aliased by the simple type ([§8.3.5](types.md#835-simple-types)).
 
-### 7.4.4 Enumeration members
+### 7.3.4 Enumeration members
 
 The members of an enumeration are the constants declared in the enumeration and the members inherited from the enumeration’s direct base class `System.Enum` and the indirect base classes `System.ValueType` and `object`.
 
-### 7.4.5 Class members
+### 7.3.5 Class members
 
 The members of a class are the members declared in the class and the members inherited from the base class (except for class `object` which has no base class). The members inherited from the base class include the constants, fields, methods, properties, events, indexers, operators, and types of the base class, but not the instance constructors, finalizers, and static constructors of the base class. Base class members are inherited without regard to their accessibility.
 
@@ -315,31 +315,31 @@ A class declaration may contain declarations of constants, fields, methods, prop
 
 The members of `object` ([§8.2.3](types.md#823-the-object-type)) and `string` ([§8.2.5](types.md#825-the-string-type)) correspond directly to the members of the class types they alias.
 
-### 7.4.6 Interface members
+### 7.3.6 Interface members
 
 The members of an interface are the members declared in the interface and in all base interfaces of the interface.
 
 > *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§19.4](interfaces.md#194-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
-### 7.4.7 Array members
+### 7.3.7 Array members
 
 The members of an array are the members inherited from class `System.Array`.
 
-### 7.4.8 Delegate members
+### 7.3.8 Delegate members
 
 A delegate inherits members from class `System.Delegate`. Additionally, it contains a method named `Invoke` with the same return type and parameter list specified in its declaration ([§21.2](delegates.md#212-delegate-declarations)). An invocation of this method shall behave identically to a delegate invocation ([§21.6](delegates.md#216-delegate-invocation)) on the same delegate instance.
 
 An implementation may provide additional members, either through inheritance or directly in the delegate itself.
 
-## 7.5 Member access
+## 7.4 Member access
 
-### 7.5.1 General
+### 7.4.1 General
 
-Declarations of members allow control over member access. The accessibility of a member is established by the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of the member combined with the accessibility of the immediately containing type, if any.
+Declarations of members allow control over member access. The accessibility of a member is established by the declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)) of the member combined with the accessibility of the immediately containing type, if any.
 
-When access to a particular member is allowed, the member is said to be ***accessible***. Conversely, when access to a particular member is disallowed, the member is said to be ***inaccessible***. Access to a member is permitted when the textual location in which the access takes place is included in the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the member.
+When access to a particular member is allowed, the member is said to be ***accessible***. Conversely, when access to a particular member is disallowed, the member is said to be ***inaccessible***. Access to a member is permitted when the textual location in which the access takes place is included in the accessibility domain ([§7.4.3](basic-concepts.md#743-accessibility-domains)) of the member.
 
-### 7.5.2 Declared accessibility
+### 7.4.2 Declared accessibility
 
 The ***declared accessibility*** of a member can be one of the following:
 
@@ -361,7 +361,7 @@ Depending on the context in which a member declaration takes place, only certain
 - Interface members implicitly have `public` declared accessibility.
 - Enumeration members implicitly have `public` declared accessibility. No access modifiers are allowed on enumeration member declarations.
 
-### 7.5.3 Accessibility domains
+### 7.4.3 Accessibility domains
 
 The ***accessibility domain*** of a member consists of the (possibly disjoint) sections of program text in which access to the member is permitted. For purposes of defining the accessibility domain of a member, a member is said to be ***top-level*** if it is not declared within a type, and a member is said to be ***nested*** if it is declared within another type. Furthermore, the ***program text*** of a program is defined as all text contained in all compilation units of the program, and the program text of a type is defined as all text contained in the *type_declaration*s of that type (including, possibly, types that are nested within the type).
 
@@ -393,8 +393,8 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 >
 > - First, if `M` is declared within a type (as opposed to a compilation unit or a namespace), a compile-time error occurs if that type is not accessible.
 > - Then, if `M` is `public`, the access is permitted.
-> - Otherwise, if `M` is `protected internal`, the access is permitted if it occurs within the program in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
-> - Otherwise, if `M` is `protected`, the access is permitted if it occurs within the class in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
+> - Otherwise, if `M` is `protected internal`, the access is permitted if it occurs within the program in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.4.4](basic-concepts.md#744-protected-access)).
+> - Otherwise, if `M` is `protected`, the access is permitted if it occurs within the class in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.4.4](basic-concepts.md#744-protected-access)).
 > - Otherwise, if `M` is `internal`, the access is permitted if it occurs within the program in which `M` is declared.
 > - Otherwise, if `M` is `private`, the access is permitted if it occurs within the type in which `M` is declared.
 > - Otherwise, the type or member is inaccessible, and a compile-time error occurs. *end note*
@@ -447,7 +447,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 >
 > *end example*
 
-As described in [§7.4](basic-concepts.md#74-members), all members of a base class, except for instance constructors, finalizers, and static constructors, are inherited by derived types. This includes even private members of a base class. However, the accessibility domain of a private member includes only the program text of the type in which the member is declared.
+As described in [§7.3](basic-concepts.md#73-members), all members of a base class, except for instance constructors, finalizers, and static constructors, are inherited by derived types. This includes even private members of a base class. However, the accessibility domain of a private member includes only the program text of the type in which the member is declared.
 
 > *Example*: In the following code
 >
@@ -476,7 +476,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 >
 > *end example*
 
-### 7.5.4 Protected access
+### 7.4.4 Protected access
 
 When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class. Instance interface members defined with `protected` or `private protected` access cannot be accessed from a `class` or `struct` that implements that interface; these can be accessed only from derived interfaces. However, `class` and `struct` types can implement `protected` instance members declared in an interface they implement.
 
@@ -549,7 +549,7 @@ In addition to these forms of access, a derived class can access a protected ins
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
+> *Note*: The accessibility domain ([§7.4.3](basic-concepts.md#743-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ProtectedAccess3"} -->
 > ```csharp
@@ -569,7 +569,7 @@ In addition to these forms of access, a derived class can access a protected ins
 >
 > the reference to `protected` member `C<int>.x` in `D` is valid even though the class `D` derives from `C<string>`. *end note*
 
-### 7.5.5 Accessibility constraints
+### 7.4.5 Accessibility constraints
 
 Several constructs in the C# language require a type to be at least as accessible as a member or another type. A type `T` is said to be at least as accessible as a member or type `M` if the accessibility domain of `T` is a superset of the accessibility domain of `M`. In other words, `T` is at least as accessible as `M` if `T` is accessible in all contexts in which `M` is accessible.
 
@@ -620,7 +620,7 @@ The following accessibility constraints exist:
 >
 > *end example*
 
-## 7.6 Signatures and overloading
+## 7.5 Signatures and overloading
 
 Methods, instance constructors, indexers, and operators are characterized by their ***signature***s:
 
@@ -670,11 +670,11 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 >
 > Note that any `in`, `out`, and `ref` parameter modifiers ([§15.6.2](classes.md#1562-method-parameters)) are part of a signature. Thus, `F(int)`, `F(in int)`, `F(out int)` , and `F(ref int)` are all unique signatures. However, `F(in int)`, `F(out int)` , and `F(ref int)` cannot be declared within the same interface because their signatures differ solely by `in`, `out`, and `ref`. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error. *end example*
 
-## 7.7 Scopes
+## 7.6 Scopes
 
-### 7.7.1 General
+### 7.6.1 General
 
-The ***scope*** of a name is the region of program text within which it is possible to refer to the entity declared by the name without qualification of the name. Scopes can be *nested*, and an inner scope may redeclare the meaning of a name from an outer scope. (This does not, however, remove the restriction imposed by [§7.3](basic-concepts.md#73-declarations) that within a nested block it is not possible to declare a local variable or local constant with the same name as a local variable or local constant in an enclosing block.) The name from the outer scope is then said to be ***hidden*** in the region of program text covered by the inner scope, and access to the outer name is only possible by qualifying the name.
+The ***scope*** of a name is the region of program text within which it is possible to refer to the entity declared by the name without qualification of the name. Scopes can be *nested*, and an inner scope may redeclare the meaning of a name from an outer scope. (This does not, however, remove the restriction imposed by [§7.2](basic-concepts.md#72-declarations) that within a nested block it is not possible to declare a local variable or local constant with the same name as a local variable or local constant in an enclosing block.) The name from the outer scope is then said to be ***hidden*** in the region of program text covered by the inner scope, and access to the outer name is only possible by qualifying the name.
 
 > *Note*: It may not be possible to access the hidden outer name from the inner scope because there is no way of qualifying it, such as with type parameters on nested type declarations. *end note*
 
@@ -688,15 +688,15 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)) is the *return_type*, *parameter_list*, and *type_parameter_constraints_clause*s of that *delegate_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on a *method_declaration* ([§15.6.1](classes.md#1561-general)) is the *method_declaration*.
-- The scope of a member declared by a *class_member_declaration* ([§15.3.1](classes.md#1531-general)) is the *class_body* (or *record_class_body*) in which the declaration occurs. In addition, the scope of a class member extends to the *class_body* (or *record_class_body*) of those derived classes that are included in the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the member.
+- The scope of a member declared by a *class_member_declaration* ([§15.3.1](classes.md#1531-general)) is the *class_body* (or *record_class_body*) in which the declaration occurs. In addition, the scope of a class member extends to the *class_body* (or *record_class_body*) of those derived classes that are included in the accessibility domain ([§7.4.3](basic-concepts.md#743-accessibility-domains)) of the member.
 - The scope of a member declared by a *struct_member_declaration* ([§16.3](structs.md#163-struct-members)) is the *struct_body* in which the declaration occurs.
 - The scope of a member declared by an *enum_member_declaration* ([§20.4](enums.md#204-enum-members)) is the *enum_body* in which the declaration occurs.
 - The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* or *ref_method_body* of that *method_declaration*.
 - The scope of a parameter declared in an *indexer_declaration* ([§15.9](classes.md#159-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§15.10](classes.md#1510-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§15.11](classes.md#1511-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- With the exception of discard parameters (§12.21.2), the scope of a parameter declared in a *lambda_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- With the exception of discard parameters (§12.21.2), the scope of a parameter declared in an *anonymous_method_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- With the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures)), the scope of a parameter declared in a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- With the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures)), the scope of a parameter declared in an *anonymous_method_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§13.5](statements.md#135-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)) is the *switch_block*.
@@ -785,7 +785,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > *end note*
 
-As described in §using-top-level-statements, top-level source tokens are enclosed by the generated entry-point method.
+As described in [§7.1.3](basic-concepts.md#713-using-top-level-statements), top-level source tokens are enclosed by the generated entry-point method.
 
 For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry-point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
 
@@ -793,15 +793,15 @@ This could lead to name shadowing of namespaces and types declared within the gl
 
 If the simple name evaluation occurs outside of the top-level statements and the evaluation yields a top-level local variable or function, a compile-time error results.
 
-### 7.7.2 Name hiding
+### 7.6.2 Name hiding
 
-#### 7.7.2.1 General
+#### 7.6.2.1 General
 
 The scope of an entity typically encompasses more program text than the declaration space of the entity. In particular, the scope of an entity may include declarations that introduce new declaration spaces containing entities of the same name. Such declarations cause the original entity to become *hidden*. Conversely, an entity is said to be ***visible*** when it is not hidden.
 
 Name hiding occurs when scopes overlap through nesting and when scopes overlap through inheritance. The characteristics of the two types of hiding are described in the following subclauses.
 
-#### 7.7.2.2 Hiding through nesting
+#### 7.6.2.2 Hiding through nesting
 
 Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, as a result of a local function or a lambda, and as a result of parameter, local variable, and local constant declarations.
 
@@ -862,13 +862,13 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 >
 > *end example*
 
-#### 7.7.2.3 Hiding through inheritance
+#### 7.6.2.3 Hiding through inheritance
 
 Name hiding through inheritance occurs when classes or structs redeclare names that were inherited from base classes. This type of name hiding takes one of the following forms:
 
 - A constant, field, property, event, or type introduced in a class, struct, or interface hides all base class members with the same name.
-- A method introduced in a class, struct, or interface hides all non-method base class members with the same name, and all base class methods with the same signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
-- An indexer introduced in a class, struct, or interface hides all base type indexers with the same signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) .
+- A method introduced in a class, struct, or interface hides all non-method base class members with the same name, and all base class methods with the same signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)).
+- An indexer introduced in a class, struct, or interface hides all base type indexers with the same signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) .
 
 The rules governing operator declarations ([§15.10](classes.md#1510-operators)) make it impossible for a derived class to declare an operator with the same signature as an operator in a base class. Thus, operators never hide one another.
 
@@ -943,9 +943,9 @@ A declaration of a new member hides an inherited member only within the scope of
 >
 > *end example*
 
-## 7.8 Namespace and type names
+## 7.7 Namespace and type names
 
-### 7.8.1 General
+### 7.7.1 General
 
 Several contexts in a C# program require a *namespace_name* or a *type_name* to be specified.
 
@@ -1066,7 +1066,7 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 >
 > *end example*
 
-### 7.8.2 Unqualified names
+### 7.7.2 Unqualified names
 
 Every namespace declaration and type declaration has an ***unqualified name*** determined as follows:
 
@@ -1074,7 +1074,7 @@ Every namespace declaration and type declaration has an ***unqualified name*** d
 - For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
 - For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator)) for K type parameters.
 
-### 7.8.3 Fully qualified names
+### 7.7.3 Fully qualified names
 
 Every namespace and type declaration has a ***fully qualified name,*** which uniquely identifies the namespace or type declaration amongst all others within the program. The fully qualified name of a namespace or type declaration with unqualified name `N` is determined as follows:
 
@@ -1119,7 +1119,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 >
 > *end example*
 
-## 7.9 Automatic memory management
+## 7.8 Automatic memory management
 
 C# employs automatic memory management, which frees developers from manually allocating and freeing the memory occupied by objects. Automatic memory management policies are implemented by a garbage collector. The memory management life cycle of an object is as follows:
 
@@ -1259,7 +1259,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >
 > *end example*
 
-## 7.10 Execution order
+## 7.9 Execution order
 
 Execution of a C# program proceeds such that the side effects of each executing thread are preserved at critical execution points. A ***side effect*** is defined as a read or write of a volatile field, a write to a non-volatile variable, a write to an external resource, and the throwing of an exception. The critical execution points at which the order of these side effects shall be preserved are references to volatile fields ([§15.5.4](classes.md#1554-volatile-fields)), `lock` statements ([§13.13](statements.md#1313-the-lock-statement)), and thread creation and termination. The execution environment is free to change the order of execution of a C# program, subject to the following constraints:
 
