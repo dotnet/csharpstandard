@@ -55,6 +55,24 @@ public static class FastCsprojCompilationParserTests
         result.CompilationOptions.WarningLevel.ShouldBe(8);
     }
 
+    [Test]
+    public static void Net9Defaults()
+    {
+        var result = FastCsprojCompilationParser.ParseCsproj(
+            XDocument.Parse("""
+                <Project Sdk="Microsoft.NET.Sdk">
+                  <PropertyGroup>
+                    <TargetFramework>net9.0</TargetFramework>
+                  </PropertyGroup>
+                </Project>
+                """),
+            "Project.csproj");
+
+        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp13);
+        ((int)result.ParseOptions.LanguageVersion).ShouldBe(1300);
+        result.CompilationOptions.WarningLevel.ShouldBe(9);
+    }
+
     private static void CompareMSBuildWorkspaceCompilation(string csprojContents, CsprojParseResult result)
     {
         var msbuildCompilation = GetMSBuildWorkspaceCompilation(csprojContents);
