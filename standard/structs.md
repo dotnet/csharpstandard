@@ -547,7 +547,7 @@ An inline array is a collection; as such, it can be iterated over by a `foreach`
 
 The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
 
-A list pattern (§list-pattern-new-clause) shall not be used in the context of an inline array.
+A list pattern ([§11.2.11](patterns.md#11211-list-pattern)) shall not be used in the context of an inline array.
 
 An inline array type is a valid constructible collection target type for a collection literal.
 
