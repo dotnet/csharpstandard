@@ -5135,7 +5135,7 @@ Partial indexers are useful for allowing one part of a type declaration to custo
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"PartialIndexers1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialIndexers1", ignoredWarnings:["CS1066"]} -->
 > ```csharp
 > // part containing defining partial indexer declaration
 > public partial class C
