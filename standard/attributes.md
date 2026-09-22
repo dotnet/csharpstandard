@@ -512,8 +512,9 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.11.1](attributes.md#235111-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
 - `System.Diagnostics.CodeAnalysis.UnscopedRefAttribute` ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
 - `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)) and `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
-- `System.Runtime.CompilerServices.CollectionBuilderAttribute` ([§23.5.13](attributes.md#23513-the-collectionbuilder-attribute)), which designates a collection type as having a collection-creation method.
-- `System.Runtime.CompilerServices.InlineArrayAttribute` ([§23.5.14](attributes.md#23514-the-inlinearray-attribute)), which marks a struct type as an inline array type ([§16.6](structs.md#166-inline-arrays)).
+- `System.Runtime.CompilerServices.CollectionBuilderAttribute` (§collection-builder-attr), which designates a collection type as having a collection-creation method.
+- `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute), which marks a struct type as an inline array type (§InlineArray).
+- `System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute` (§OvrldResPriAttribute), which specifies the priority of a member during overload resolution.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1579,9 +1580,9 @@ This attribute indicates that the constructor it decorates sets all required mem
 
 This attribute indicates that the current type has one or more required members ([§15.7.1](classes.md#1571-general)), or that a specific member of that type is required. However, it is an error for this attribute to be used explicitly. Instead, the presence of the modifier `required` results in the type or member being treated as if it were decorated with this attribute.
 
-### 23.5.13 The CollectionBuilder attribute
+### §collection-builder-attr The CollectionBuilder attribute
 
-This attribute designates a collection type as having a collection-creation method ([§15.17.1](classes.md#15171-general)).
+This attribute designates a collection type as having a collection-creation method (§declaring-a-collection-type-general).
 
 The constructor takes a builder type and the name of the method to be invoked to construct an instance of the collection type.
 
@@ -1589,9 +1590,71 @@ The attribute can be applied to a class, struct, ref struct, or interface. The a
 
 The builder type shall be a non-generic class or struct.
 
-### 23.5.14 The InlineArray attribute
+### §InlineArrayAttribute The InlineArray attribute
 
-This attribute is used to identify a non-record struct as an inline array type. For further information and examples of its use, see [§16.6](structs.md#166-inline-arrays).
+This attribute is used to identify a non-record struct as an inline array type. For further information and examples of its use, see §InlineArray.
+
+### §OvrldResPriAttribute The OverloadResolutionPriority attribute
+
+The attribute `OverloadResolutionPriority` is used to specify the priority of a member during overload resolution, as an `int` argument to the constructor. The absence of this attribute is equivalent to its presence with an argument of `0`. The higher the number, the higher the priority. All overloads with a lower priority than the highest overload priority are removed from the set of applicable matches.
+
+A library author might use this attribute to ensure that a new, better overload is preferred over an existing one, to reduce memory allocation, for example. This attribute informs the compiler which overload should be preferred.
+
+> <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority1", expectedOutput:["Span"]} -->
+> *Example*: Consider the following:
+>
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         var c = new C();
+>         int[] arr = [1, 2, 3];
+>         c.M(arr);   // Prints "Span"
+>     }
+> }
+> class C
+> {
+>     [OverloadResolutionPriority(1)]
+>     public void M(params ReadOnlySpan<int> s) => Console.WriteLine("Span");
+>     public void M(params int[] a) => Console.WriteLine("Array");
+> }
+> ```
+>
+> The second method has an implicit priority of zero, and in the absence of the explicit attribute, the second of the overloads would be invoked. However, with the attribute present, the first is invoked instead.
+>
+> <!-- Example: {template:"standalone-console", name:"OverloadResolutionPriority2"} -->
+> Certain uses of this attribute can make a member uncallable, as follows:
+>
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         var c = new C();
+>         c.M1(1); // Calls C3.M1(long), not M1(int)
+>         c.M2(1); // Calls C3.M2(int, string), not M2(int)
+>         c.M3("abc"); // Calls C3.M3(object), not M3(string)
+>     }
+> }
+> class C
+> {
+>     public void M1(int i) { }
+>     [OverloadResolutionPriority(1)]
+>     public void M1(long l) { }
+>
+>     [Conditional("DEBUG")]
+>     public void M2(int i) { }
+>     [OverloadResolutionPriority(1), Conditional("DEBUG")]
+>     public void M2(int i, [CallerArgumentExpression(nameof(i))] string s = "") { }
+>
+>     public void M3(string s) { }
+>     [OverloadResolutionPriority(1)]
+>     public void M3(object o) { }
+> }
+> ```
+>
+> *end example*
 
 ## 23.6 Attributes for interoperation
 
