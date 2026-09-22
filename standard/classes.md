@@ -6203,7 +6203,7 @@ A record class is a specialized reference type that is optimized for storing dat
 ```ANTLR
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
-      type_parameter_list? delimited_parameter_list? class_base? 
+      type_parameter_list? delimited_parameter_list? class_base?
       type_parameter_constraints_clause* record_class_body
     ;
 ```
