@@ -1064,9 +1064,15 @@ Overload resolution is a binding-time mechanism for selecting the best function 
 
 Each of these contexts defines the set of candidate function members and the list of arguments in its own unique way. For instance, the set of candidates for a method invocation does not include methods marked override ([§12.5](expressions.md#125-member-lookup)), and methods in a base class are not candidates if any method in a derived class is applicable ([§12.8.10.2](expressions.md#128102-method-invocations)).
 
+Each method has an ***overload resolution priority*** of type `int` that is used during the process of resolving a method group. By default, that priority is zero. Its value can be set via `OverloadResolutionPriorityAttribute` (§OvrldResPriAttribute). The overload resolution priority of a member comes from the least-derived declaration of that member. Overload resolution priority is not inherited or inferred from any interface members a type member may implement, and given a member `Mx` that implements an interface member `Mi`, no warning is issued if `Mx` and `Mi` have different overload resolution priorities.
+
 Once the candidate function members and the argument list have been identified, the selection of the best function member is the same in all cases:
 
 - First, the set of candidate function members is reduced to those function members that are applicable with respect to the given argument list ([§12.6.4.2](expressions.md#12642-applicable-function-member)). If this reduced set is empty, a compile-time error occurs.
+- Then, the reduced set of candidate members is grouped by declaring type. Within each group:
+  - Candidate function members are ordered by overload resolution priority. If the member is an override, the overload resolution priority comes from the least-derived declaration of that member.
+  - All members that have a lower overload resolution priority than the highest found within its declaring type group are removed.
+- The reduced groups are then recombined into the final set of applicable candidate function members.
 - Then, the best function member from the set of applicable candidate function members is located. If the set contains only one function member, then that function member is the best function member. Otherwise, the best function member is the one function member that is better than all other function members with respect to the given argument list, provided that each function member is compared to all other function members using the rules in [§12.6.4.3](expressions.md#12643-better-function-member). If there is not exactly one function member that is better than all other function members, then the function member invocation is ambiguous and a binding-time error occurs.
 
 The following subclauses define the exact meanings of the terms *applicable function member* and *better function member*.
