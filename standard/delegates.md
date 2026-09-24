@@ -47,7 +47,7 @@ The delegate’s type name is *identifier*.
 
 As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value.
 
-The optional *parameter_list* specifies the parameters of the delegate.
+The optional *parameter_list* specifies the parameters of the delegate. The scope of the parameters of the delegate is `nameof` expressions in attributes placed on the declaration, its type parameters, or its parameters.
 
 The *return_type* of a returns-by-value or returns-no-value delegate declaration specifies the type of the result, if any, returned by the delegate.
 
