@@ -6341,7 +6341,9 @@ The record class shall include a provided method method declared as follows:
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either provided, or explicitly declared, method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+
+Sealing an explicitly declared `ToString` method prevents the compiler from providing a `ToString` method for any derived record types. However, this does not prevent the compiler from providing `PrintMembers`.
 
 The provided method:
 
