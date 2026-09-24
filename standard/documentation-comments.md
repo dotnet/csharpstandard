@@ -963,7 +963,7 @@ IDs:
 "M:Acme.Widget.op_UnaryPlus(Acme.Widget)"
 ```
 
-The complete set of unary operator function names used is as follows: `op_UnaryPlus`, `op_UnaryNegation`, `op_LogicalNot`, `op_OnesComplement`, `op_Increment`, `op_Decrement`, `op_True`, and `op_False`.
+The complete set of unary operator function names used is as follows: `op_UnaryPlus`, `op_UnaryNegation`, `op_CheckedUnaryNegation`, `op_LogicalNot`, `op_OnesComplement`, `op_Increment`, `op_CheckedIncrement`, `op_Decrement`, `op_CheckedDecrement`, `op_True`, and `op_False`.
 
 **Binary operators**
 
@@ -984,9 +984,11 @@ IDs:
 "M:Acme.Widget.op_Addition(Acme.Widget,Acme.Widget)"
 ```
 
-The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
+The complete set of binary operator function names used is as follows: `op_Addition`, `op_CheckedAddition`, `op_Subtraction`, `op_CheckedSubtraction`, `op_Multiply`, `op_CheckedMultiply`, `op_Division`, `op_CheckedDivision`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
 **Conversion operators** have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the “`<`” and “`">`” characters are replaced by the “`{`” and “`}`” characters, respectively.
+
+The complete set of conversion operator function names used is as follows: `op_Explicit`, `op_CheckedExplicit`, and `op_Implicit`.
 
 <!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
