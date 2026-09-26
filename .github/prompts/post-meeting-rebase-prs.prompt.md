@@ -99,6 +99,9 @@ Do not use a fixed branch list or PR count.
    `v11-alpha` is valid. Stop if both alpha spellings exist for a version or
    the topology is ambiguous. Confirm the result against
    `admin/branch-diagram.md`.
+   A missing alpha is not permission to create one. Record the version as
+   draft-and-feature-only unless the user confirms that its feature set is
+   complete and explicitly authorizes an aggregate.
 3. Feature PRs target draft branches. For every discovered target
    `draft-vN`, list all open PRs with an explicit high limit and capture
    `number`, `baseRefName`, `headRefOid`, `headRefName`,
@@ -193,12 +196,39 @@ For each manifest PR:
      the PR as "needs manual rebase", and move on. To distinguish new
      from pre-existing: check the same ref against
      `"$REMOTE/<headRefName>"` (the pre-rebase state). Pre-existing
-     TOC002s from incomplete feature work are expected and do not block
-     the push.
-  7. Immediately before push, query `headRefOid` again. If it differs from
+     TOC002s may be inventoried during the comparison, but they must be
+     resolved before the completion gate permits a push.
+     Feature PR source trees may retain valid placeholder headings. Do not
+     replace them with aggregate numbering. Conversely, malformed headings,
+     blockquoted fences, grammar lines, or other source markup must be fixed
+     on this originating feature branch before it is integrated downstream;
+     do not defer the defect to an alpha-only patch.
+  7. **Run the feature-source completion gate before push.** Use the exact
+     pinned commands and record their output in the run manifest
+     or ledger:
+
+     ```bash
+     npx --yes markdownlint-cli2@0.23.2 'standard/*.md'
+     ( cd tools && dotnet run --project StandardAnchorTags -- \
+         --owner dotnet --repo csharpstandard --dryrun )
+     ( cd tools && dotnet test tools.sln --filter 'Name!~ExampleTests' )
+     ( cd tools && ./run-converter.sh )
+     ( cd tools && ./test-examples.sh )
+     git diff --check
+     ```
+
+     Require the branch's ordinary templates and generated projects to use
+     the target framework recorded for version N and explicit
+     `<LangVersion>N</LangVersion>`. Prove the parser resolves Roslyn's
+     specified/effective version-N enum name and numeric value. Explain every
+     intentionally isolated legacy template and prove the feature does not
+     select it. Any non-ANTLR failure is a hard stop.
+  8. Immediately before push, query `headRefOid` again. If it differs from
      the remote SHA captured immediately before checkout, stop and restart
-     this PR; the author moved it during the run. Otherwise:
-     `git push --force-with-lease "$REMOTE" HEAD:<headRefName>`. Then verify:
+     this PR; the author moved it during the run. Otherwise set
+     `EXPECTED` to that freshly verified remote SHA and push:
+     `git push --force-with-lease=<headRefName>:$EXPECTED "$REMOTE"
+     HEAD:<headRefName>`. Then verify:
 
      ```bash
      git fetch "$REMOTE" <headRefName>
@@ -207,7 +237,14 @@ For each manifest PR:
      ```
 
      Record success with that verified SHA.
-  8. **Produce the per-PR patch (Phase B input).** Capture the PR's commits
+     After the push, wait for all applicable GitHub checks to reach a
+     terminal state. Require every check to succeed except an explicitly
+     allowed ANTLR `grammar-validator` failure. Pending, queued, missing,
+     cancelled, or silently skipped required checks are not success. Also
+     require the PR to remain `OPEN`, target the expected base, report the
+     verified head SHA, and be `MERGEABLE`; `BLOCKED` is acceptable only when
+     it reflects review or the allowed grammar policy rather than conflicts.
+  9. **Produce the per-PR patch (Phase B input).** Capture the PR's commits
      relative to its base as a patch file so Phase B can surgically apply them
      onto `alpha-vN`:
 
@@ -238,6 +275,10 @@ After all PRs are processed, query every manifest PR's `headRefOid` one more
 time. If any head moved during the long run, refresh it. Otherwise set that
 record's `cutoffTime`, then set the top-level `finalizedAt`. Report the final
 PR count and cutoff range.
+
+If a shared defect is found on an earlier draft or feature branch, repair the
+earliest source and propagate root-first. Do not keep a downstream-only fix
+when descendants still inherit malformed source.
 
 ## Phase A2 — notify and route after Phase B
 
@@ -355,6 +396,9 @@ At the end, output a table grouped by base branch:
 - Any PR head that moved during the run and how its manifest entry was
   refreshed
 - PRs left for manual rebase (with reason — including any failing `TOC002` references from the post-rebase cross-reference check)
+- Exact local gate results, target-framework/`LangVersion` and Roslyn enum
+  evidence, terminal GitHub check state, mergeability, and remote-SHA
+  equality for every changed PR
 - Fork PRs commented on
 - PRs that already had the notice (skipped)
 - PRs flagged with the **alpha-drift notice** (Step 4)
@@ -365,5 +409,7 @@ At the end, output a table grouped by base branch:
 - Never close or merge a feature PR.
 - Never push to a fork.
 - Always use `--force-with-lease`, never `--force`.
+- Preserve the main checkout, existing worktrees, and stashes. Perform
+  rewrites in isolated worktrees and record before/after integrity evidence.
 - Never change `REMOTE` or substitute another remote during the run.
 - If `gh pr checkout` fails (e.g. permissions), record and skip.
