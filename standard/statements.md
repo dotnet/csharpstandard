@@ -2070,6 +2070,8 @@ Otherwise, the formulation is
 
 except that the cast of `resource` to `System.IDisposable` shall not cause boxing to occur.
 
+> *Note*: When `ResourceType` is a non-nullable value type, or a type parameter instantiated to a non-nullable value type, the null check shown above may be elided. *end note*
+
 For ref struct resources, the only semantically equivalent formulation is
 
 ```csharp
@@ -2172,7 +2174,7 @@ When such a method is selected, the statement is semantically equivalent to:
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When `ResourceType` is a non-nullable value type, the null check shown above may be elided. *end note*
+> *Note*: When `ResourceType` is a non-nullable value type, or a type parameter instantiated to a non-nullable value type, the null check shown above may be elided. *end note*
 
 If no such method is selected, the corresponding synchronous formulations apply with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` awaited. The formulation for ref struct resources does not apply, since a ref struct cannot be the resource type of an `await using` statement.
 
