@@ -2024,7 +2024,14 @@ non_ref_local_variable_declaration
     ;
 ```
 
-A ***resource type*** is either a class or non-ref struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`, or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`, or a class or non-ref struct that has an accessible instance `DisposeAsync()` method with an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), or a class or non-ref struct that implements the `System.IAsyncDisposable` interface, which includes a single parameterless method named `DisposeAsync`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
+A ***resource type*** is one of the following:
+
+- A class or non-ref struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`.
+- A ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`.
+- A class or non-ref struct that has an accessible instance `DisposeAsync()` method with an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
+- A class or non-ref struct that implements the `System.IAsyncDisposable` interface, which includes a single parameterless method named `DisposeAsync`.
+
+Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
 If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall have an accessible instance `DisposeAsync()` method with an awaitable return type or implement `System.IAsyncDisposable`. A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
