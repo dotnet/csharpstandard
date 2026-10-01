@@ -1386,48 +1386,14 @@ is semantically equivalent to:
 
 In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
-The body of the `finally` block is constructed according to the following steps:
+Perform the member lookup and overload resolution for `DisposeAsync` specified for an `await using` statement ([§13.14.1](statements.md#13141-general)), using the enumerator type `E` as `ResourceType`. If an accessible instance method is selected, or if there is an implicit conversion from `E` to `System.IAsyncDisposable`, the `finally` block is constructed as specified there, with `enumerator` in place of `resource`. This includes the error if a selected method has a non-awaitable return type.
 
-- Perform member lookup ([§12.5](expressions.md#125-member-lookup)) on `E` with the identifier `DisposeAsync` and no type arguments. If the result is a method group and overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) with an empty argument list selects an accessible instance method, that method is selected for asynchronous disposal:
-  - If the return type is not awaitable ([§12.9.9.2](expressions.md#12992-awaitable-expressions)), an error is produced and no further steps are taken.
-  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
+Otherwise, the `finally` clause is expanded to an empty block:
 
-    ```csharp
-    finally
-    {
-        if ((object)e != null)
-        {
-            await e.DisposeAsync();
-        }
-    }
-    ```
+```csharp
+finally {}
+```
 
-  > *Note*: If `E` is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)), member lookup for `DisposeAsync` is performed on `E`, not on its underlying type. *end note*
-
-- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, the `finally` clause is expanded to the semantic equivalent of:
-
-  ```csharp
-  finally
-  {
-      if ((object)e != null)
-      {
-          await ((System.IAsyncDisposable)e).DisposeAsync();
-      }
-  }
-  ```
-
-  If `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
-
-- Otherwise, the `finally` clause is expanded to an empty block:
-
-  ```csharp
-  finally {}
-  ```
-
-> *Note*: When `E` is a non-nullable value type, the null checks shown above may be elided. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
 #### 13.9.5.4 Deconstructing foreach
@@ -2210,6 +2176,8 @@ When such a method is selected, the statement is semantically equivalent to:
 
 If no such method is selected, the corresponding synchronous formulations apply with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `ValueTask` returned from `DisposeAsync` awaited. The formulation for ref struct resources does not apply, since a ref struct cannot be the resource type of an `await using` statement.
 
+If no method is selected and there is no implicit conversion to `System.IAsyncDisposable`, a compile-time error occurs.
+
 For example, when `ResourceType` is a reference type that implements `IAsyncDisposable`, the statement is semantically equivalent to:
 
 ```csharp
@@ -2228,6 +2196,8 @@ For example, when `ResourceType` is a reference type that implements `IAsyncDisp
     }
 }
 ```
+
+These disposal rules are also used by asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)).
 
 The expression form of `await using` has the same possible formulations, with `resource` being a temporary variable inaccessible to user code.
 
