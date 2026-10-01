@@ -1364,37 +1364,42 @@ An `await foreach` statement of the form
 await foreach (T item in enumerable) «embedded_statement»
 ```
 
-is semantically equivalent to:
+uses an `await using` statement ([§13.14.1](statements.md#13141-general)) in its expansion if either of the following conditions holds:
+
+- The member lookup and overload resolution for `DisposeAsync` specified for an `await using` statement, using the enumerator type `E` as `ResourceType`, select an accessible instance method.
+- There is an implicit conversion from `E` to `System.IAsyncDisposable`.
+
+In this case, the statement is semantically equivalent to:
+
+```csharp
+await using (E enumerator = enumerable.GetAsyncEnumerator())
+{
+    while (await enumerator.MoveNextAsync())
+    {
+        T item = enumerator.Current;
+        «embedded_statement»
+    }
+}
+```
+
+> *Note*: The return type of the selected method is not required to be awaitable in order to choose this expansion. If it is not awaitable, the `await using` statement produces a compile-time error, even if an implicit conversion to `System.IAsyncDisposable` exists. *end note*
+
+If neither condition holds, the statement is semantically equivalent to:
 
 ```csharp
 {
-    var enumerator = enumerable.GetAsyncEnumerator();
-    try
+    E enumerator = enumerable.GetAsyncEnumerator();
+    while (await enumerator.MoveNextAsync())
     {
-        while (await enumerator.MoveNextAsync())
-        {
-           T item = enumerator.Current;
-           «embedded_statement»
-        }
-    }
-    finally
-    {
-        // dispose of enumerator as described later in this clause.
+        T item = enumerator.Current;
+        «embedded_statement»
     }
 }
 ```
 
 In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)) the `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
-Perform the member lookup and overload resolution for `DisposeAsync` specified for an `await using` statement ([§13.14.1](statements.md#13141-general)), using the enumerator type `E` as `ResourceType`. If an accessible instance method is selected, or if there is an implicit conversion from `E` to `System.IAsyncDisposable`, the `finally` block is constructed as specified there, with `enumerator` in place of `resource`. This includes the error if a selected method has a non-awaitable return type.
-
-Otherwise, the `finally` clause is expanded to an empty block:
-
-```csharp
-finally {}
-```
-
-> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism is not available. *end note*
+> *Note*: An `await foreach` is not required to dispose of `enumerator` synchronously if an asynchronous dispose mechanism is not available. *end note*
 
 #### 13.9.5.4 Deconstructing foreach
 
@@ -1443,31 +1448,11 @@ An `await foreach` statement of the form:
 await foreach («deconstructor» in enumerable) «embedded_statement»
 ```
 
-is semantically equivalent to:
+uses the same expansions as asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), replacing `T item = enumerator.Current;` with `«deconstructor» = enumerator.Current;`. This *deconstructing_assignment* contains the iteration-variable declarations in its *deconstructor*: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
 
-```csharp
-{
-    var enumerator = enumerable.GetAsyncEnumerator();
-    try
-    {
-        while (await enumerator.MoveNextAsync())
-        {
-           «deconstructor» = enumerator.Current;
-           «embedded_statement»
-        }
-    }
-    finally
-    {
-        // dispose of enumerator as for asynchronous foreach
-    }
-}
-```
-
-This follows the behavior of asynchronous foreach ([§13.9.5.3](statements.md#13953-asynchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* in which the *deconstructor* contains the iteration-variable declarations: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
-
-- `enumerator` is not visible or accessible anywhere in the program except as indicated in the above code
+- `enumerator` is not visible or accessible anywhere in the program except as indicated in those expansions
 - the variables declared within the «deconstructor» are read-only to the «embedded_statement»
-- the code in the `finally` block is determined as for asynchronous foreach
+- the conditions for using the `await using` expansion are the same as for asynchronous foreach
 
 > *Example*: A deconstructing foreach uses discards as placeholders for elements that are not needed. Here each element of the collection is a tuple whose second element is discarded:
 >
