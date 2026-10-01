@@ -2100,14 +2100,15 @@ Otherwise, the formulation is
     }
     finally
     {
-        IDisposable d = (IDisposable)resource;
-        if (d != null)
+        if ((object)resource != null)
         {
-            d.Dispose();
+            ((IDisposable)resource).Dispose();
         }
     }
 }
 ```
+
+except that the cast of `resource` to `System.IDisposable` shall not cause boxing to occur.
 
 For ref struct resources, the only semantically equivalent formulation is
 
@@ -2226,10 +2227,9 @@ For example, when `ResourceType` is a reference type that implements `IAsyncDisp
     }
     finally
     {
-        IAsyncDisposable d = (IAsyncDisposable)resource;
-        if (d != null)
+        if ((object)resource != null)
         {
-            await d.DisposeAsync();
+            await ((IAsyncDisposable)resource).DisposeAsync();
         }
     }
 }
