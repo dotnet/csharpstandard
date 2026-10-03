@@ -1564,7 +1564,10 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
-  - If `e` is zero and `I` is the name of a namespace in `N`, then:
+  - If `N` is the global namespace, the current *compilation_unit* contains top-level statements (§using-top-level-statements) and a declaration for *simple_name* occurs directly within the *method_body* ([§15.6.1](classes.md#1561-general)) of the generated entry-point method (§using-top-level-statements), then:
+    - The access is invalid and a compiler-time error shall be generated.
+      > *Note*: This rule means that a declaration of some *simple_name* in a top-level statement can hide a global declaration if referenced using the same *simple_name*. *end note*
+  - Otherwise, if `e` is zero and `I` is the name of a namespace in `N`, then:
     - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
     - Otherwise, the *simple_name* refers to the namespace named `I` in `N`.
   - Otherwise, if `N` contains an accessible type having name `I` and `e` type parameters, then:

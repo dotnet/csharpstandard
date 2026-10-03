@@ -48,7 +48,7 @@
     - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
     - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
-  - [§7.1](basic-concepts.md#71-application-startup)  Application startup
+  - [§7.1](basic-concepts.md#71-application-startup-and-termination)  Application startup
   - [§7.2](basic-concepts.md#72-application-termination)  Application termination
   - [§7.3](basic-concepts.md#73-declarations)  Declarations
   - [§7.4](basic-concepts.md#74-members)  Members
