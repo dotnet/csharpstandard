@@ -32,9 +32,9 @@ A method qualifies as a canditate entry point by satisfying the following requir
 - It shall have the name `Main`.
 - It shall be `static`.
 - It shall not be generic.
-- It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
+- It shall be declared in a non-generic type. If the type declaring the method is a nested type, all of its enclosing types shall be non-generic.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
-- It may have the `async` modifier only if the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
+- If the `async` modifier is present, the method’s return type shall be `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - It shall not be a partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementation.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
@@ -66,7 +66,7 @@ The method name `«Main»` is a placeholder for an unspecified implementation pr
 
 The `«statement_list»` is a placeholder for *statement_list* of the *compilation-unit*.
 
-The parameter `args` is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply. This parameter receives the application parameters (§entry-point-invocation).
+The parameter `args` is in scope within the top-level statements and not otherwise. Regular name resolution rules apply. This parameter receives the application parameters (§entry-point-invocation).
 
 Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method.
 
@@ -102,7 +102,7 @@ It is a compile-time error if there are no candidate entry points.
 Otherwise the entry point is selected from the candidates:
 
 - If one of the candidates is specified by an external mechanism (§externally-defined-entry-point) it is selected as the entry point;
-- Otherwise, iff one of the candidates is defined by top-level statements (§using-top-level-statements) it is selected as the entry point;
+- Otherwise, if exactly one of the candidates is defined by top-level statements (§using-top-level-statements) it is selected as the entry point;
 - Otherwise:
   - If any of the candidates have a return type of `int` or `void` then any candidates having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` are removed from the candidate pool.
   - If there is a single remaining candidate it is selected as the entry point.
@@ -121,14 +121,15 @@ The application startup and termination process is semantically equivalent to th
 - An application run is started by either:
   - Invoking ([§12.8.10](expressions.md#12810-invocation-expressions)) the entry-point method, if its return type is `void` or `int`; or
   - Awaiting ([§12.9.9](expressions.md#1299-await-expressions)) the result of invoking the entry-point method, if its return type is a `Task` type.
-  - In either case if the entry point requires an argument the application parameter array is supplied as its value.
+- In either case if the entry point requires an argument the application parameter array is supplied as its value.
 
 > *Note*: Invoking the entry-point method will cause the static constructor, if any, of the enclosing type to be executed first ([§15.12](classes.md#1512-static-constructors), [§16.4.10](structs.md#16410-static-constructors)). *end note*
 
 - The application is terminated
   - If the run results in an `int` value it serves as the termination status code;
   - Otherwise, if the run results in no return value the termination status code is `0`;
-  - Otherwise, if the run terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+  - Otherwise, if the run terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined.
+- Additionally, the implementation may provide alternative APIs for specifying the exit code and terminating the application.
 
 Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-defined.
 
@@ -679,8 +680,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 
 - The scope of a namespace member declared by a *namespace_member_declaration* ([§14.6](namespaces.md#146-namespace-member-declarations)) with no enclosing *namespace_declaration* is the entire program text.
 - The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period.
-- The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *using_directive*s, *global_attributes*, *statement_list*s, and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit* or *namespace_body* in which it occurs.
-- The scope of a name defined or imported by a *using_directive* ([§14.5](namespaces.md#145-using-directives)) extends over the *global_attributes*, *statement_list*s, and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
+- The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *using_directive*s, *global_attributes*, *statement_list*, and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit* or *namespace_body* in which it occurs.
+- The scope of a name defined or imported by a *using_directive* ([§14.5](namespaces.md#145-using-directives)) extends over the *global_attributes*, *statement_list*, and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
 - The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clause*s, and *class_body* of that *class_declaration*.
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
