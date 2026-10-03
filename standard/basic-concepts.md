@@ -786,13 +786,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > *end note*
 
-As described in §using-top-level-statements, top-level source tokens are enclosed by the generated entry-point method.
+As described in §using-top-level-statements, top-level statements are enclosed by the generated entry-point method. Any names declared within top-level statements are subject to the scoping rules (as defined above) applicable once the statements are enclosed within the entry-point method.
 
-For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry-point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
-
-This could lead to name shadowing of namespaces and types declared within the global namespace as well as to shadowing of imported names.
-
-If the simple name evaluation occurs outside of the top-level statements and the evaluation yields a top-level local variable or function, a compile-time error results.
+However, names declared within top-level statements impact *simple_name* resolution within a *compilation_unit*, potentially making some global entities inaccessible via *simple_name* ([§12.8.4](expressions.md#1284-simple-names)).
 
 ### 7.7.2 Name hiding
 
