@@ -2155,13 +2155,13 @@ A declaration has a valid combination of modifiers if all of the following are t
 
 Methods are classified according to what, if anything, they return:
 
-- If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
-- Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
-- Otherwise, the method is ***returns-by-value*** and returns a value.
+- If `ref` is present, the method is ***return-by-ref*** and returns a *variable reference*, that is optionally read-only;
+- Otherwise, if *return_type* is `void`, the method is ***return-no-value*** and does not return a value;
+- Otherwise, the method is ***return-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a return-by-value or return-no-value method declaration specifies the type of the result, if any, returned by the method. Only a return-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method return-by-value and the return type is a *task type* ([§15.14.1](classes.md#15141-general)).
 
-The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
+The *ref_return_type* of a return-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
@@ -2175,13 +2175,13 @@ The optional *parameter_list* specifies the parameters of the method ([§15.6.2]
 
 The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
+The *method_body* of a return-by-value or return-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a return-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -3250,11 +3250,11 @@ When the effective return type of a method is `void` and the method has a block 
 
 When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
+For a return-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
+For a return-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
-For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For return-by-value and return-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >

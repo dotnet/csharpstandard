@@ -45,13 +45,13 @@ The `public`, `protected`, `internal`, and `private` modifiers control the acces
 
 The delegate’s type name is *identifier*.
 
-As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value.
+As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate return-by-ref; otherwise, if *return_type* is `void`, the delegate return-no-value; otherwise, the delegate return-by-value.
 
 The optional *parameter_list* specifies the parameters of the delegate.
 
-The *return_type* of a returns-by-value or returns-no-value delegate declaration specifies the type of the result, if any, returned by the delegate.
+The *return_type* of a return-by-value or return-no-value delegate declaration specifies the type of the result, if any, returned by the delegate.
 
-The *ref_return_type* of a returns-by-ref delegate declaration specifies the type of the variable referenced by the *variable_reference* ([§9.5](variables.md#95-variable-references)) returned by the delegate.
+The *ref_return_type* of a return-by-ref delegate declaration specifies the type of the variable referenced by the *variable_reference* ([§9.5](variables.md#95-variable-references)) returned by the delegate.
 
 The optional *variant_type_parameter_list* ([§19.2.3](interfaces.md#1923-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 
@@ -83,7 +83,7 @@ The only way to declare a delegate type is via a *delegate_declaration*. Every d
 
 ## 21.3 Delegate members
 
-Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type shall provide a non-generic `Invoke` method whose parameter list matches the *parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§21.6](delegates.md#216-delegate-invocation)) .
+Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type shall provide a non-generic `Invoke` method whose parameter list matches the *parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for return-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§21.6](delegates.md#216-delegate-invocation)) .
 
 Implementations may define additional members in the delegate type.
 
@@ -97,9 +97,9 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 - For each value parameter, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
 - For each by-reference parameter, the parameter type in `D` is the same as the parameter type in `M`.
 - One of the following is true:
-  - `D` and `M` are both *returns-no-value*.
-  - `D` and `M` are returns-by-value ([§15.6.1](classes.md#1561-general), [§21.2](delegates.md#212-delegate-declarations)), and an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
-  - `D` and `M` are both returns-by-ref, an identity conversion exists between the return type of `M` and the return type of `D`, and both have the same *ref_kind*.
+  - `D` and `M` are both *return-no-value*.
+  - `D` and `M` are return-by-value ([§15.6.1](classes.md#1561-general), [§21.2](delegates.md#212-delegate-declarations)), and an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+  - `D` and `M` are both return-by-ref, an identity conversion exists between the return type of `M` and the return type of `D`, and both have the same *ref_kind*.
 
 This definition of compatibility allows covariance in return type and contravariance in parameter types.
 
