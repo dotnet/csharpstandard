@@ -628,6 +628,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a local variable declared in a *for_initializer* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* of the `for` statement.
 - The scope of a local constant declared in a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)) is the *block* in which the declaration occurs. It is a compile-time error to refer to a local constant in a textual position that precedes its *constant_declarator*.
 - The scope of a variable declared as part of a *foreach_statement*, *using_statement*, *lock_statement* or *query_expression* is determined by the expansion of the given construct.
+- The scope of a local variable declared by a pattern ([§9.1.1](patterns.md#1111-general)) or by an argument list ([§12.6.2.1](expressions.md#12621-general)) is described in [§new](#expression-variables).
 
 Within the scope of a namespace, class, struct, or enumeration member it is possible to refer to the member in a textual position that precedes the declaration of the member.
 
@@ -709,6 +710,32 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`.
 >
 > *end note*
+
+### 7.7.new Expression variables
+
+A local variable declared by a pattern ([§9.1.1](patterns.md#1111-general)) or by an argument list ([§12.6.2.1](expressions.md#12621-general)) is said to be an ***expression variable***. For an expression variable `v` declared by an expression `e`, the enclosing expression `x` is determined by FIXME (this is the "fullest expression" part).
+
+- If `x` is the complete body of a member, then the scope of `v` is the body of the member.
+- If `x` is the *statement_expression* of an expression statement ([§13.7](statements.md#137-expression-statements))
+  - Not quite the enclosing block, because of single-statement-no-braces if statements
+- If `x` is the *boolean_expression* of an `if` statement ([§13.8.2](statements.md#1382-the-if-statement))
+- If `x` is the *selector_expression* of an `switch` statement ([§13.8.2](statements.md#1383-the-switch-statement))
+- If `x` is the *boolean_expression* of a `while` statement ([§13.9.2](statements.md#1392-the-while-statement))
+- If `x` is the *boolean_expression* of a `do` statement ([§13.9.3](statements.md#1393-the-do-statement)) ???
+- If `x` is the *for_initializer* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) ???
+- If `x` is the *for_condition* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) ???
+- If `x` is the *for_iterator* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) ???
+- If `x` is the *expression* of a `return` statement ([§13.10.5](statements.md#13105-the-return-statement)) ??? (do we need one for variable_reference?)
+- If `x` is the *expression* of a `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)) ???
+- If `x` is the *boolean_expression* of an *exception_filter* in a `try` statement ([§13.11](statements.md#1311-the-try-statement)) ???
+- If `x` is the *expression* in a `lock` statement ([§13.13](statements.md#1313-the-lock-statement)) ???
+- If `x` is the *expression* of a *resource_acquisition* in a `using` statement ([§13.14](statements.md#1314-the-using-statement)) ???
+- If `x` is the *expression* in a `yield` statement ([§13.14](statements.md#1315-the-yield-statement)) ???
+- Something about anonymous functions...
+
+More open questions:
+
+- Can we actually determine a "fullest expression" - is the scope of `v` the same for `M(out int v)` and `M1(M2(out int v))` for example? What about `M1(out int v1) && M2(out int v2)`?
 
 ### 7.7.2 Name hiding
 
