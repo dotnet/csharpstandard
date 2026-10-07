@@ -367,7 +367,7 @@ A member lookup of a name `N` with `K` type arguments in a type `T` is proces
 
 - First, a set of accessible members named `N` is determined:
   - If `T` is a type parameter, then the set is the union of the sets of accessible members named `N` in each of the types specified as a primary constraint or secondary constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)) for `T`, along with the set of accessible members named `N` in `object`.
-  - Otherwise, the set consists of all accessible ([§7.5](basic-concepts.md#75-member-access)) members named `N` in `T`, including inherited members and the accessible members named `N` in `object`. If `T` is a constructed type, the set of members is obtained by substituting type arguments as described in [§15.3.3](classes.md#1533-members-of-constructed-types). Members that include an `override` modifier are excluded from the set.
+  - Otherwise, the set consists of all accessible ([§7.4](basic-concepts.md#74-member-access)) members named `N` in `T`, including inherited members and the accessible members named `N` in `object`. If `T` is a constructed type, the set of members is obtained by substituting type arguments as described in [§15.3.3](classes.md#1533-members-of-constructed-types). Members that include an `override` modifier are excluded from the set.
 - Next, if `K` is zero, all nested types whose declarations include type parameters are removed. If `K` is not zero, all members with a different number of type parameters are removed. When `K` is zero, methods having type parameters are not removed, since the type inference process ([§12.6.3](expressions.md#1263-type-inference)) might be able to infer the type arguments.
 - Next, if the member is invoked, all non-invocable members are removed from the set.
 - Next, members that are hidden by other members are removed from the set. For every member `S.M` in the set, where `S` is the type in which the member `M` is declared, the following rules are applied:
@@ -1555,7 +1555,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.2](basic-concepts.md#72-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -1564,7 +1564,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
-  - If `N` is the global namespace, the current *compilation_unit* contains top-level statements (§using-top-level-statements) and a declaration for *simple_name* occurs directly within the *method_body* ([§15.6.1](classes.md#1561-general)) of the generated entry-point method (§using-top-level-statements), then:
+  - If `N` is the global namespace, the current *compilation_unit* contains top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) and a declaration for *simple_name* occurs directly within the *method_body* ([§15.6.1](classes.md#1561-general)) of the generated entry-point method ([§7.1.3](basic-concepts.md#713-using-top-level-statements)), then:
     - The access is invalid and a compiler-time error shall be generated.
       > *Note*: This rule means that a declaration of some *simple_name* in a top-level statement can hide a global declaration if referenced using the same *simple_name*. *end note*
   - Otherwise, if `e` is zero and `I` is the name of a namespace in `N`, then:
@@ -1577,7 +1577,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - If `e` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then the *simple_name* refers to that namespace or type.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.
-  > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
+  > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)). *end note*
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression ([§12.19](expressions.md#1219-declaration-expressions)).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
@@ -1712,7 +1712,7 @@ The *member_access* is evaluated and classified as follows:
 
 #### 12.8.7.2 Identical simple names and type names
 
-In a member access of the form `E.I`, if `E` is a single identifier, and if the meaning of `E` as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) is a constant, field, property, local variable, or parameter with the same type as the meaning of `E` as a *type_name* ([§7.8.1](basic-concepts.md#781-general)), then both possible meanings of `E` are permitted. The member lookup of `E.I` is never ambiguous, since `I` shall necessarily be a member of the type `E` in both cases. In other words, the rule simply permits access to the static members and nested types of `E` where a compile-time error would otherwise have occurred.
+In a member access of the form `E.I`, if `E` is a single identifier, and if the meaning of `E` as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) is a constant, field, property, local variable, or parameter with the same type as the meaning of `E` as a *type_name* ([§7.7.1](basic-concepts.md#771-general)), then both possible meanings of `E` are permitted. The member lookup of `E.I` is never ambiguous, since `I` shall necessarily be a member of the type `E` in both cases. In other words, the rule simply permits access to the static members and nested types of `E` where a compile-time error would otherwise have occurred.
 
 > *Example*:
 >
@@ -2327,7 +2327,7 @@ For an indexer access, the *primary_expression* of the *element_access* shall be
 
 The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
-- The set of indexers provided by `T` is constructed. The set consists of all indexers declared in `T` or a base type of `T` that are not override declarations and are accessible in the current context ([§7.5](basic-concepts.md#75-member-access)).
+- The set of indexers provided by `T` is constructed. The set consists of all indexers declared in `T` or a base type of `T` that are not override declarations and are accessible in the current context ([§7.4](basic-concepts.md#74-member-access)).
 - The set is reduced to those indexers that are applicable and not hidden by other indexers. The following rules are applied to each indexer `S.I` in the set, where `S` is the type in which the indexer `I` is declared:
   - If `I` is not applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)), then `I` is removed from the set.
   - If `I` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)), then all indexers declared in a base type of `S` are removed from the set.
@@ -3122,7 +3122,7 @@ The first form of *typeof_expression* consists of a `typeof` keyword followed by
 
 The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
-> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
+> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
 
 When recognising the operand of a *typeof_expression* if both *unbound_type_name* and *type_name* are applicable, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, then *type_name* shall be chosen.
 
@@ -3131,7 +3131,7 @@ When recognising the operand of a *typeof_expression* if both *unbound_type_name
 The meaning of an *unbound_type_name* is determined as if:
 
 - The sequence of tokens is converted to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
-- The resulting *type_name* is resolved to a constructed type ([§7.8](basic-concepts.md#78-namespace-and-type-names)).
+- The resulting *type_name* is resolved to a constructed type ([§7.7](basic-concepts.md#77-namespace-and-type-names)).
 - The *unbound_type_name* is then the unbound generic type associated with the resolved constructed type ([§8.4](types.md#84-constructed-types)).
 
 > *Note*: There is no requirement for an implementation to transform the sequence of tokens, or produce the intermediary constructed type, just that the unbound generic type that is determined is “as if” this process was followed. *end note*
@@ -5136,7 +5136,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
-A declaration expression with the identifier `_` is a discard ([§9.2.9.2](variables.md#9292-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
+A declaration expression with the identifier `_` is a discard ([§9.2.9.2](variables.md#9292-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.2](basic-concepts.md#72-declarations)).
 
 > *Example*:
 >
@@ -5368,7 +5368,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 ### 12.21.2 Anonymous function signatures
 
-The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
+The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
 If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
 

@@ -567,7 +567,7 @@ fragment PP_Pragma_Text
 
 ```ANTLR
 
-// Source: §7.8.1 General
+// Source: §7.7.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -1988,7 +1988,7 @@ yield_statement
 // Source: §14.2 Compilation units
 compilation_unit
     : extern_alias_directive* using_directive* global_attributes?
-      namespace_member_declaration*
+      statement_list? namespace_member_declaration*
     ;
 
 // Source: §14.3 Namespace declarations

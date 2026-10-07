@@ -52,9 +52,9 @@ It is a compile-time error for the same modifier to appear multiple times in a c
 
 The `new` modifier is permitted on nested classes. It specifies that the class hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier). It is a compile-time error for the `new` modifier to appear on a class declaration that is not a nested class declaration.
 
-The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
+The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.4.2](basic-concepts.md#742-declared-accessibility)).
 
-When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
+When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
@@ -131,7 +131,7 @@ If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-p
 
 ##### 15.2.2.4.2 Referencing static class types
 
-A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
+A *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
 - The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`.
@@ -160,9 +160,9 @@ decorated_type_parameter
 
 *type_parameter* is defined in [§8.5](types.md#85-type-parameters).
 
-Each type parameter in a class declaration defines a name in the declaration space ([§7.3](basic-concepts.md#73-declarations)) of that class. Thus, it cannot have the same name as another type parameter of that class or a member declared in that class. A type parameter cannot have the same name as the type itself.
+Each type parameter in a class declaration defines a name in the declaration space ([§7.2](basic-concepts.md#72-declarations)) of that class. Thus, it cannot have the same name as another type parameter of that class or a member declared in that class. A type parameter cannot have the same name as the type itself.
 
-Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator)) for the number of type parameters) ([§7.8.3](basic-concepts.md#783-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
+Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator)) for the number of type parameters) ([§7.7.3](basic-concepts.md#773-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
 
 ### 15.2.4 Class base specification
 
@@ -232,7 +232,7 @@ The base class specified in a class declaration can be a constructed class type 
 >
 > *end example*
 
-The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
+The direct base class of a class type shall be at least as accessible as the class type itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
 The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§23.2.1](attributes.md#2321-general)).
 
@@ -250,7 +250,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 > class Z : X<Z.Y> {}
 > ```
 >
-> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`.
+> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.7](basic-concepts.md#77-namespace-and-type-names)) `Z` is not considered to have a member `Y`.
 >
 > *end example*
 
@@ -553,7 +553,7 @@ A type specified as an *interface_type* constraint shall satisfy the following r
 
 In either case, the constraint may involve any of the type parameters of the associated type or method declaration as part of a constructed type, and may involve the type being declared.
 
-Any class or interface type specified as a type parameter constraint shall be at least as accessible ([§7.5.5](basic-concepts.md#755-accessibility-constraints)) as the generic type or method being declared.
+Any class or interface type specified as a type parameter constraint shall be at least as accessible ([§7.4.5](basic-concepts.md#745-accessibility-constraints)) as the generic type or method being declared.
 
 A type specified as a *type_parameter* constraint shall satisfy the following rules:
 
@@ -851,7 +851,7 @@ The members of a class are divided into the following categories:
 - Static constructors, which implement the actions required to initialize the class itself ([§15.12](classes.md#1512-static-constructors)).
 - Types, which represent the types that are local to the class ([§14.7](namespaces.md#147-type-declarations)).
 
-A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md#73-declarations)), and the *type_parameter*s and the *class_member_declaration*s immediately contained by the *class_declaration* introduce new members into this declaration space. The following rules apply to *class_member_declaration*s:
+A *class_declaration* creates a new declaration space ([§7.2](basic-concepts.md#72-declarations)), and the *type_parameter*s and the *class_member_declaration*s immediately contained by the *class_declaration* introduce new members into this declaration space. The following rules apply to *class_member_declaration*s:
 
 - Instance constructors, finalizers, and static constructors shall have the same name as the immediately enclosing class. All other members shall have names that differ from the name of the immediately enclosing class.
 
@@ -862,7 +862,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 > *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the same name as long as they have different number of type parameters. *end note*
 
 - The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
-- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
+- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
 - The signature of an instance constructor shall differ from the signatures of all other instance constructors declared in the same class, and two constructors declared in the same class shall not have signatures that differ solely by `ref` and `out`.
 
@@ -874,7 +874,7 @@ The inherited members of a class ([§15.3.4](classes.md#1534-inheritance)) are n
 
 > *Note*: Thus, a derived class is allowed to declare a member with the same name or signature as an inherited member (which in effect hides the inherited member). *end note*
 
-The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member has the `partial` modifier.
+The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.2](basic-concepts.md#72-declarations)), and the scope of each member ([§7.6](basic-concepts.md#76-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member has the `partial` modifier.
 
 > *Example*:
 >
@@ -998,9 +998,9 @@ A class ***inherits*** the members of its direct base class. Inheritance means t
 
 - A derived class *extends* its direct base class. A derived class can add new members to those it inherits, but it cannot remove the definition of an inherited member.
 
-- Instance constructors, finalizers, and static constructors are not inherited, but all other members are, regardless of their declared accessibility ([§7.5](basic-concepts.md#75-member-access)). However, depending on their declared accessibility, inherited members might not be accessible in a derived class.
+- Instance constructors, finalizers, and static constructors are not inherited, but all other members are, regardless of their declared accessibility ([§7.4](basic-concepts.md#74-member-access)). However, depending on their declared accessibility, inherited members might not be accessible in a derived class.
 
-- A derived class can *hide* ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)) inherited members by declaring new members with the same name or signature. However, hiding an inherited member does not remove that member—it merely makes that member inaccessible directly through the derived class.
+- A derived class can *hide* ([§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance)) inherited members by declaring new members with the same name or signature. However, hiding an inherited member does not remove that member—it merely makes that member inaccessible directly through the derived class.
 
 - An instance of a class contains a set of all instance fields declared in the class and its base classes, and an implicit conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from a derived class type to any of its base class types. Thus, a reference to an instance of some derived class can be treated as a reference to an instance of any of its base classes.
 
@@ -1029,7 +1029,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 ### 15.3.5 The new modifier
 
-A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
+A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
 An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
@@ -1037,11 +1037,11 @@ If a `new` modifier is included in a declaration that does not hide an available
 
 ### 15.3.6 Access modifiers
 
-A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected` combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
+A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected` combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
 
 ### 15.3.7 Constituent types
 
-Types that are used in the declaration of a member are called the ***constituent type***s of that member. Possible constituent types are the type of a constant, field, property, event, or indexer, the return type of a method or operator, and the parameter types of a method, indexer, operator, or instance constructor. The constituent types of a member shall be at least as accessible as that member itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+Types that are used in the declaration of a member are called the ***constituent type***s of that member. Possible constituent types are the type of a constant, field, property, event, or indexer, the return type of a method or operator, and the parameter types of a method, indexer, operator, or instance constructor. The constituent types of a member shall be at least as accessible as that member itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 ### 15.3.8 Static and instance members
 
@@ -1124,7 +1124,7 @@ A type declared within a class, struct, or interface is called a ***nested type*
 
 #### 15.3.9.2 Fully qualified name
 
-The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declaration is `S.N` where `S` is the fully qualified name of the type declaration in which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator))).
+The fully qualified name ([§7.7.3](basic-concepts.md#773-fully-qualified-names)) for a nested type declaration is `S.N` where `S` is the fully qualified name of the type declaration in which type `N` is declared and `N` is the unqualified name ([§7.7.2](basic-concepts.md#772-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator))).
 
 #### 15.3.9.3 Declared accessibility
 
@@ -1170,7 +1170,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 
 #### 15.3.9.4 Hiding
 
-A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)) a base member. The `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)) is permitted on nested type declarations so that hiding can be expressed explicitly.
+A nested type may hide ([§7.6.2.2](basic-concepts.md#7622-hiding-through-nesting)) a base member. The `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)) is permitted on nested type declarations so that hiding can be expressed explicitly.
 
 > *Example*: The example
 >
@@ -1558,7 +1558,7 @@ The *type* of a *constant_declaration* specifies the type of the members introdu
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
-The *type* of a constant shall be at least as accessible as the constant itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of a constant shall be at least as accessible as the constant itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 The value of a constant is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)).
 
@@ -1664,7 +1664,7 @@ A *field_declaration* may include a set of *attributes* ([§23](attributes.md#23
 
 The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an “`=`” token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
 
-The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of a field shall be at least as accessible as the field itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.15](expressions.md#12815-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.23](expressions.md#1223-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)).
 
@@ -2173,7 +2173,7 @@ For an explicit interface member implementation, the *member_name* consists of a
 
 The optional *parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
-The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
@@ -2185,7 +2185,7 @@ The *ref_method_body* of a returns-by-ref method is either a semicolon, a block 
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
-The name, the number of type parameters, and the parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its parameters. The return type is not part of a method’s signature, nor are the names of the parameters, the names of the type parameters, or the constraints. When a parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
+The name, the number of type parameters, and the parameter list of a method define the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its parameters. The return type is not part of a method’s signature, nor are the names of the parameters, the names of the type parameters, or the constraints. When a parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
 The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
@@ -2273,7 +2273,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > *end example*
 
-A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
+A method declaration creates a separate declaration space ([§7.2](basic-concepts.md#72-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
 
 A method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) creates a copy, specific to that invocation, of the parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created parameters. Within the *block* of a method, parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
 
@@ -2285,7 +2285,7 @@ The following kinds of parameters exist:
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
 - Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
+> *Note*: As described in [§7.5](basic-concepts.md#75-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
 #### 15.6.2.2 Value parameters
 
@@ -3347,7 +3347,7 @@ Property declarations are subject to the same rules as method declarations ([§1
 
 The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
-The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of a property shall be at least as accessible as the property itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 A *property_body* may either consist of a statement body or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
@@ -3843,7 +3843,7 @@ Although the backing field is hidden, that field may have field-targeted attribu
 
 ### 15.7.5 Accessibility
 
-If an accessor has an *accessor_modifier*, the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
+If an accessor has an *accessor_modifier*, the accessibility domain ([§7.4.3](basic-concepts.md#743-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
 
 The presence of an *accessor_modifier* never affects member lookup ([§12.5](expressions.md#125-member-lookup)) or overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)). The modifiers on the property or indexer always determine which property or indexer is bound to, regardless of the context of the access.
 
@@ -4085,7 +4085,7 @@ An *event_declaration* may include a set of *attributes* ([§23](attributes.md#2
 
 Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of an event declaration shall be a *delegate_type* ([§8.2.8](types.md#828-delegate-types)), and that *delegate_type* shall be at least as accessible as the event itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of an event declaration shall be a *delegate_type* ([§8.2.8](types.md#828-delegate-types)), and that *delegate_type* shall be at least as accessible as the event itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, a compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
 
@@ -4381,7 +4381,7 @@ Unless the indexer is an explicit interface member implementation, the *type* is
 
 The *parameter_list* specifies the parameters of the indexer. The parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
 
-The *type* of an indexer and each of the types referenced in the *parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of an indexer and each of the types referenced in the *parameter_list* shall be at least as accessible as the indexer itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 An *indexer_body* may either consist of a statement body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In a statement body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
   
@@ -4393,7 +4393,7 @@ In a *ref_indexer_body* an expression body consisting of `=>` followed by `ref`,
 
 > *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
-The *parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its parameters. The element type and names of the parameters are not part of an indexer’s signature.
+The *parameter_list* of an indexer defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its parameters. The element type and names of the parameters are not part of an indexer’s signature.
 
 The signature of an indexer shall differ from the signatures of all other indexers declared in the same class.
 
@@ -4621,7 +4621,7 @@ The following rules apply to all operator declarations:
 - An operator declaration shall include both a `public` and a `static` modifier.
 - The parameters of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
-- All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+- All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.
 
 Each operator category imposes additional restrictions, as described in the following subclauses.
@@ -4870,9 +4870,9 @@ A *constructor_declaration* may include a set of *attributes* ([§23](attributes
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
+The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
-Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
@@ -5314,7 +5314,7 @@ Finalizers are not inherited. Thus, a class has no finalizers other than the one
 
 > *Note*: Since a finalizer is required to have no parameters, it cannot be overloaded, so a class can have, at most, one finalizer. *end note*
 
-Finalizers are invoked automatically, and cannot be invoked explicitly. An instance becomes eligible for finalization when it is no longer possible for any code to use that instance. Execution of the finalizer for the instance may occur at any time after the instance becomes eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)). When an instance is finalized, the finalizers in that instance’s inheritance chain are called, in order, from most derived to least derived. A finalizer may be executed on any thread. For further discussion of the rules that govern when and how a finalizer is executed, see [§7.9](basic-concepts.md#79-automatic-memory-management).
+Finalizers are invoked automatically, and cannot be invoked explicitly. An instance becomes eligible for finalization when it is no longer possible for any code to use that instance. Execution of the finalizer for the instance may occur at any time after the instance becomes eligible for finalization ([§7.8](basic-concepts.md#78-automatic-memory-management)). When an instance is finalized, the finalizers in that instance’s inheritance chain are called, in order, from most derived to least derived. A finalizer may be executed on any thread. For further discussion of the rules that govern when and how a finalizer is executed, see [§7.8](basic-concepts.md#78-automatic-memory-management).
 
 > *Example*: The output of the example
 >
