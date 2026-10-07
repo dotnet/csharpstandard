@@ -50,7 +50,7 @@ It is a compile-time error for the same modifier to appear multiple times in an 
 
 The `new` modifier is only permitted on interfaces defined within a class. It specifies that the interface hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier).
 
-The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the interface. Depending on the context in which the interface declaration occurs, only some of these modifiers might be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)). When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), the rules in [§15.2.2](classes.md#1522-class-modifiers) apply.
+The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the interface. Depending on the context in which the interface declaration occurs, only some of these modifiers might be permitted ([§7.4.2](basic-concepts.md#742-declared-accessibility)). When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), the rules in [§15.2.2](classes.md#1522-class-modifiers) apply.
 
 ### 19.2.3 Variant type parameter lists
 
@@ -130,7 +130,7 @@ A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Bᵥ
 
 An interface can inherit from zero or more interface types, which are called the ***explicit base interface***s of the interface. When an interface has one or more explicit base interfaces, then in the declaration of that interface, the interface identifier is followed by a colon and a comma-separated list of base interface types.
 
-A derived interface may declare new members that hide inherited members ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)) declared in base interfaces or explicitly implement inherited members ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)) declared in base interfaces.
+A derived interface may declare new members that hide inherited members ([§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance)) declared in base interfaces or explicitly implement inherited members ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)) declared in base interfaces.
 
 ```ANTLR
 interface_base
@@ -142,7 +142,7 @@ The explicit base interfaces can be constructed interface types ([§8.4](types.m
 
 For a constructed interface type, the explicit base interfaces are formed by taking the explicit base interface declarations on the generic type declaration, and substituting, for each *type_parameter* in the base interface declaration, the corresponding *type_argument* of the constructed type.
 
-The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
 > *Note*: For example, it is a compile-time error to specify a `private` or `internal` interface in the *interface_base* of a `public` interface. *end note*
 
@@ -237,7 +237,7 @@ This clause augments the description of members in classes ([§15.3](classes.md#
 
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
-- All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)).
+- All interface members implicitly have public access; however, an explicit access modifier ([§7.4.2](basic-concepts.md#742-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)).
 - The `abstract` modifier is implied for interface function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly.
 - An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly.
 - A `private` or `sealed` function member of an interface shall have a body.
@@ -247,13 +247,13 @@ This clause augments the description of members in classes ([§15.3](classes.md#
 
 Some declarations, such as *constant_declaration* ([§15.4](classes.md#154-constants)) have no restrictions in interfaces.
 
-The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does result in a warning ([§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)).
+The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does result in a warning ([§7.6.2.3](basic-concepts.md#7623-hiding-through-inheritance)).
 
 If a `new` modifier is included in a declaration that does not hide an inherited member, a warning is issued to that effect.
 
 > *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§19.4](interfaces.md#194-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
-The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
+The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.2](basic-concepts.md#72-declarations)), and the scope of each member ([§7.6](basic-concepts.md#76-scopes)) extends to the bodies of all the parts.
 
 > *Example*: Consider an interface `IA` with an implementation for a member `M` and a property `P`. An implementing type `C` does not provide an implementation for either `M` or `P`. They must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA` or `IB`. These members are not found through member lookup on a variable of type `C`.
 >
@@ -795,7 +795,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 <!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
 For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
-A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.7.2](basic-concepts.md#772-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
+A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.6.2](basic-concepts.md#762-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
 
 > *Example*:
 >

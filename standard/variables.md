@@ -136,7 +136,7 @@ The lifetime of a local variable is the portion of program execution during whic
 <!-- markdownlint-enable MD028 -->
 > *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, a compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
-> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.8](basic-concepts.md#78-automatic-memory-management)).
 >
 > *end note*
 

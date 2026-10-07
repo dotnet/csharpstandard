@@ -308,10 +308,10 @@ An implementation can accept other *attribute_target*s, the purposes of which ar
 
 By convention, attribute classes are named with a suffix of `Attribute`. An *attribute_name* can either include or omit this suffix. Specifically, an *attribute_name* is resolved as follows:
 
-- If the right-most identifier of the *attribute_name* is a verbatim identifier ([§6.4.3](lexical-structure.md#643-identifiers)), then the *attribute_name* is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). If the result is not a type derived from `System.Attribute`, a compile-time error occurs.
+- If the right-most identifier of the *attribute_name* is a verbatim identifier ([§6.4.3](lexical-structure.md#643-identifiers)), then the *attribute_name* is resolved as a *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)). If the result is not a type derived from `System.Attribute`, a compile-time error occurs.
 - Otherwise,
-  - The *attribute_name* is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
-  - The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
+  - The *attribute_name* is resolved as a *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
+  - The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
 
 If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute_name*. Otherwise a compile-time error occurs.
 
@@ -833,7 +833,7 @@ The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is all
 
 If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
-> *Note*: In the case of a function invocation from a top-level statement the string is a representation of the implementation provided name (§using-top-level-statements). *end note*
+> *Note*: In the case of a function invocation from a top-level statement the string is a representation of the implementation provided name ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). *end note*
 
 For invocations that occur within generic methods, only the method name itself is used, without the type parameter list.
 
