@@ -112,7 +112,7 @@ The entry point selected at compile-time is invoked at runtime as part of applic
 
 ### §entry-point-invocation Entry point invocation
 
-If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of non-null references to zero or more strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup.
+If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of zero or more string variables, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup. Although the values are implementation-defined, they shall not be null.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
