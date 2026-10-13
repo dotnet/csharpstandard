@@ -723,7 +723,7 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 > object msg = "msg";
 > object obj = 5;
 > bool flag = true;
-> 
+>
 > // This is parsed as: (msg is (not int) or string)
 > bool result = msg is not int or string;
 > Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
@@ -731,16 +731,16 @@ When a *pattern* appears on the right-hand-side of `is`, the extent of the patte
 > // This is parsed as: (obj is (int or string)) && flag
 > result = obj is int or string && flag;
 > Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
-> 
+>
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
 > result = obj is int || obj is string && flag;
 > Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}");
-> 
+>
 > flag = false;
 > // This is parsed as: (obj is (int or string)) && flag
 > result = obj is int or string && flag;
 > Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}");
-> 
+>
 > // This is parsed as: (obj is int) || ((obj is string) && flag)
 > result = obj is int || obj is string && flag;
 > Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}");
@@ -839,7 +839,7 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 >             break;
 >         // error: the pattern 'byte other' is subsumed by the (exhaustive)
 >         // previous cases
->         case byte other: 
+>         case byte other:
 >             break;
 >     }
 > }

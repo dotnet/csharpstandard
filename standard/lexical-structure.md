@@ -607,7 +607,7 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'     | 'alias'      | 'and'        | 'ascending' | 'async'
     | 'await'   | 'by'         | 'descending' | 'dynamic'   | 'equals'
-    | 'from'    | 'get'        | 'global'     | 'group'     | 'into' 
+    | 'from'    | 'get'        | 'global'     | 'group'     | 'into'
     | 'join'    | 'let'        | 'nameof'     | 'not'       | 'notnull'
     | 'on'      | 'or'         | 'orderby'    | 'partial'   | 'remove'
     | 'select'  | 'set'        | 'unmanaged'  | 'value'     | 'var'
