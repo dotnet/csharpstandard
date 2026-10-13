@@ -25,7 +25,7 @@ Options:
    -p, --parsing
       Perform parsing tests
    -d, --demo-parsing
-      Perform demo parsing tests 
+      Perform demo parsing tests
    -h, -?, --help
       Displays this help and exits
    -v, --verbose
@@ -55,7 +55,7 @@ usage() # [optErrorMsg [optExitCode]]
    # name the parameters
    local _optErrorMsg="$1"
    local _optExitCode="${2:--1}" # default to -1
-   
+
    # if optErrorMsg exists send all output to stderr
    if [ "$_optErrorMsg" != "" ]; then
       echo "Error: $_optErrorMsg" 1>&2
@@ -184,7 +184,7 @@ for i in "$@"; do
          if [[ "$requireArgument" != "" ]]; then
             errorExit "Internal error, argument expected on none argument option, contact developer"
          fi
-      fi      
+      fi
    fi
 done
 
@@ -203,7 +203,7 @@ fi
 # Args scanned, now locate environment directory.
 # Try in order:
 # - -e=path argument
-# - Is there an Environment folder in the current WD? 
+# - Is there an Environment folder in the current WD?
 # - Is there an Environment folder relative to the script source?
 # If all fail barf
 
@@ -242,7 +242,7 @@ debugEcho "envPath = [$envSrc] ${envPath}"
 # this does not validate the structure of the tests folder in any way
 # Try in order:
 # - -t=path argument
-# - Is there a Tests folder in the current WD? 
+# - Is there a Tests folder in the current WD?
 # - Is there a Tests folder relative to the script source?
 # If all fail barf
 
