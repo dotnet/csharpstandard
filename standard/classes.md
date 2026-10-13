@@ -5859,69 +5859,69 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >     public T1 P1 { get; init; }
 >     protected virtual Type EqualityContract => typeof(R1);
 >     public override bool Equals(object? obj) => Equals(obj as R1);
-> 
+>
 >     public virtual bool Equals(R1? other)
 >     {
 >         return !(other is null) &&
 >             EqualityContract == other.EqualityContract &&
 >             EqualityComparer<T1>.Default.Equals(P1, other.P1);
 >     }
-> 
+>
 >     public static bool operator==(R1? left, R1? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R1? left, R1? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(EqualityComparer<Type>.Default.GetHashCode(EqualityContract),
 >             EqualityComparer<T1>.Default.GetHashCode(P1));
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     protected override Type EqualityContract => typeof(R2);
 >     public override bool Equals(object? obj) => Equals(obj as R2);
 >     public sealed override bool Equals(R1? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R2? other)
 >     {
 >         return base.Equals((R1?)other) &&
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
-> 
+>
 >     public static bool operator==(R2? left, R2? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R2? left, R2? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
 >             EqualityComparer<T2>.Default.GetHashCode(P2));
 >     }
 > }
-> 
+>
 > class R3 : R2, IEquatable<R3>
 > {
 >     public T3 P3 { get; init; }
 >     protected override Type EqualityContract => typeof(R3);
 >     public override bool Equals(object? obj) => Equals(obj as R3);
 >     public sealed override bool Equals(R2? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R3? other)
 >     {
 >         return base.Equals((R2?)other) &&
 >             EqualityComparer<T3>.Default.Equals(P3, other.P3);
 >     }
-> 
+>
 >     public static bool operator==(R3? left, R3? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R3? left, R3? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
@@ -6002,21 +6002,21 @@ The provided method:
 > {
 >     public string FirstName { get; set; }
 >     public string LastName { get; set; }
-> 
+>
 >     public Base(string firstName, string lastName)
 >     {
 >         FirstName = firstName;
 >         LastName = lastName;
 >     }
 > }
-> 
+>
 > public record R2 : Base
 > {
 >     public int Age { get; set; }
 >     public R2(string firstName, string lastName, int age) :
 >         base(firstName, lastName) { Age = age; }
 > }
-> 
+>
 > class Program
 > {
 >     static void Main()
@@ -6050,7 +6050,7 @@ The provided method:
 > class R1 : IEquatable<R1>
 > {
 >     public T1 P1 { get; init; }
-> 
+>
 >     protected virtual bool PrintMembers(StringBuilder builder)
 >     {
 >         builder.Append(nameof(P1));
@@ -6058,7 +6058,7 @@ The provided method:
 >         builder.Append(this.P1); // or builder.Append(this.P1.ToString()); if P1 has a value type
 >         return true;
 >     }
-> 
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6072,12 +6072,12 @@ The provided method:
 >         return builder.ToString();
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     public T3 P3 { get; init; }
->     
+>
 >     protected override bool PrintMembers(StringBuilder builder)
 >     {
 >         if (base.PrintMembers(builder))
@@ -6093,7 +6093,7 @@ The provided method:
 >         builder.Append(this.P3); // or builder.Append(this.P3); if P3 has a value type
 >         return true;
 >     }
->     
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6215,7 +6215,7 @@ For each parameter of a *delimited_parameter_list* there is provided a correspon
 For a record class:
 
 - A public auto-property is created with get and init accessors.
-- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
+- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
 - Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record class parameter.
 
