@@ -282,7 +282,7 @@ Assignment to a variable of a struct type creates a *copy* of the value being as
 
 Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a by-reference parameter.
 
-When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.23.2](expressions.md#12232-simple-assignment).
+When a non-ref-valued property (§15.7.1) or non-ref-valued indexer (§15.9.1) of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.23.2](expressions.md#12232-simple-assignment).
 
 ### 16.4.5 Default values
 
