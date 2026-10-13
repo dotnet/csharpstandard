@@ -306,7 +306,7 @@ funcptr_return_type
     ;
 ```
 
-Just as a method has a signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)), a function pointer type has a signature for the method type to which it may point. That signature includes the calling convention.
+Just as a method has a signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)), a function pointer type has a signature for the method type to which it may point. That signature includes the calling convention.
 
 The non-null value of a function pointer having type `T` represents the address of a method having a signature compatible with type `T`.
 
