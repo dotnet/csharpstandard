@@ -1044,7 +1044,7 @@ A reference variable stores a *variable_reference* ([§9.5](variables.md#95-vari
 >
 > *end example*
 
-A ***reference return*** is the *variable_reference* returned from a returns-by-ref method ([§15.6.1](classes.md#1561-general)). This *variable_reference* is the referent of the reference return.
+A ***reference return*** is the *variable_reference* returned from a return-by-ref method ([§15.6.1](classes.md#1561-general)). This *variable_reference* is the referent of the reference return.
 
 > *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
 >
