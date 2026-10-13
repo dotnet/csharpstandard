@@ -606,11 +606,11 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'      | 'alias'      | 'ascending'  | 'async'     | 'await'
     | 'by'       | 'Cdecl'      | 'descending' | 'dynamic'   | 'equals'
-    | 'Fastcall' | 'from'.      | 'get'        | 'global'    | 'group'
-    | 'into'     | 'join'.      | 'let'        | 'managed'   | 'nameof'
-    | 'notnull'  | 'on'         | 'orderby'.   | 'partial'   | 'remove'
-    | 'select'   | 'set'        | 'Stdcall'.   | 'Thiscall'  | 'unmanaged'
-    | 'value'.   | 'var'.       | 'when'       | 'where'     | 'yield'
+    | 'Fastcall' | 'from'       | 'get'        | 'global'    | 'group'
+    | 'into'     | 'join'       | 'let'        | 'managed'   | 'nameof'
+    | 'notnull'  | 'on'         | 'orderby'    | 'partial'   | 'remove'
+    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
+    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
     ;
 ```
 
