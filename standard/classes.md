@@ -3491,7 +3491,7 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.23](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object (§init-accessors), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object (§init-accessors), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.23](expressions.md#1223-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.23.2](expressions.md#12232-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
@@ -3795,7 +3795,7 @@ An instance property containing an *init_accessor_declaration* is considered set
 >     public string? FirstName { get; init; }
 >     public string? LastName  { get; init; }
 > }
-> 
+>
 > class Consumption
 > {
 >     static void Example()
@@ -3830,7 +3830,7 @@ The rules around when init accessors are settable extend across type hierarchies
 >         Value = true;
 >     }
 > }
-> 
+>
 > class Consumption
 > {
 >     void Example()
@@ -3887,11 +3887,11 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >     }
 >     internal int OtherProperty { get; init; }
 > }
-> 
+>
 > class Derived : Base
 > {
 >     internal readonly int DerivedField;
-> 
+>
 >     internal int DerivedProperty
 >     {
 >         get => DerivedField;
@@ -3902,10 +3902,10 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >             Field = 13;         // Error: Field is readonly
 >         }
 >     }
-> 
+>
 >     public Derived()
 >     {
->         Property = 42;  // OK 
+>         Property = 42;  // OK
 >         Field = 13;     // Error: Field is readonly
 >     }
 > }
@@ -4276,12 +4276,12 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 > {
 >     public virtual int Property { get; init; }
 > }
-> 
+>
 > class C1 : Base
 > {
 >     public override int Property { get; init; }
 > }
-> 
+>
 > class C2 : Base
 > {
 >     // Error: Property must have init to override Base.Property

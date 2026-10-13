@@ -531,7 +531,7 @@ Once a particular function member has been identified at binding-time, possibly 
 
 Every function member and delegate invocation includes an argument list, which provides actual values or variable references for the parameters of the function member. The syntax for specifying the argument list of a function member invocation depends on the function member category:
 
-- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
+- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.
    > *Note*: This additional argument is not used for overload resolution, just during invocation of the set or init accessor. *end note*
 - For properties, the argument list is empty when invoking the get accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the set or init accessor.
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
