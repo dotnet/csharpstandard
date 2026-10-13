@@ -3622,7 +3622,7 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
-  
+
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
 
   If the operand of the negation operator is of type `nuint`, a compile-time error occurs.
