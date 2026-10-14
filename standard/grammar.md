@@ -2882,17 +2882,6 @@ non_record_struct_with_positional_members
       type_parameter_constraints_clause* struct_body
     ;
 
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
-
 // Source: §16.2.2 Struct modifiers
 struct_modifier
     : 'new'
