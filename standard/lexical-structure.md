@@ -623,18 +623,20 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'       | 'alias'   | 'allows'   | 'and'     | 'ascending'
-    | 'async'     | 'await'   | 'by'       | 'Cdecl'   | 'descending'
-    | 'dynamic'   | 'equals'  | 'Fastcall' | 'file'    | 'from'
-    | 'get'       | 'global'  | 'group'    | 'init'    | 'into'
-    | 'join'      | 'let'     | 'managed'  | 'nameof'  | 'nint'
-    | 'not'       | 'notnull' | 'nuint'    | 'on'      | 'or'
-    | 'orderby'   | 'partial' | 'record'   | 'remove'  | 'required'
-    | 'scoped'    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'
-    | 'unmanaged' | 'value'   | 'var'      | 'when'    | 'where'
-    | 'yield'
+    : 'add'      | 'alias'      | 'allows'     | 'and'       | 'ascending'
+    | 'async'    | 'await'      | 'by'         | 'Cdecl'     | 'descending'
+    | 'dynamic'  | 'equals'     | 'extension'  | 'Fastcall'  | 'file'
+    | 'from'     | 'get'        | 'global'     | 'group'     | 'init'
+    | 'into'     | 'join'       | 'let'        | 'managed'   | 'nameof'
+    | 'nint'     | 'not'        | 'notnull'    | 'nuint'     | 'on'
+    | 'or'       | 'orderby'    | 'partial'    | 'record'    | 'remove'
+    | 'required' | 'scoped'     | 'select'     | 'set'       | 'Stdcall'
+    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
+    | 'where'    | 'yield'
     ;
 ```
+
+It is an error for a type or alias to be named `extension`.
 
 > *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)). *end note*
 
