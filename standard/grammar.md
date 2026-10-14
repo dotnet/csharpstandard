@@ -213,15 +213,15 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'     | 'and'      | 'ascending' | 'async'
-    | 'await'    | 'by'        | 'Cdecl'    | 'descending' | 'dynamic'
-    | 'equals'   | 'Fastcall'  | 'file'     | 'from'     | 'get'       | 'global'
-    | 'group'    | 'init'      | 'into'     | 'join'      | 'let'
-    | 'managed'  | 'nameof'    | 'nint'     | 'not'       | 'notnull'
-    | 'nuint'    | 'on'        | 'or'       | 'orderby'   | 'partial'
-    | 'record'   | 'remove'    | 'required' | 'scoped'   | 'select'   | 'set'       | 'Stdcall'
-    | 'Thiscall' | 'unmanaged' | 'value'    | 'var'       | 'when'
-    | 'where'    | 'yield'
+    : 'add'     | 'alias'    | 'and'     | 'ascending'  | 'async'
+    | 'await'   | 'by'       | 'Cdecl'   | 'descending' | 'dynamic'
+    | 'equals'  | 'Fastcall' | 'file'    | 'from'       | 'get'
+    | 'global'  | 'group'    | 'init'    | 'into'       | 'join'
+    | 'let'     | 'managed'  | 'nameof'  | 'nint'       | 'not'
+    | 'notnull' | 'nuint'    | 'on'      | 'or'         | 'orderby'
+    | 'partial' | 'record'   | 'remove'  | 'required'   | 'scoped'
+    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'   | 'unmanaged'
+    | 'value'   | 'var'      | 'when'    | 'where'      | 'yield'
     ;
 
 // Source: §6.4.5.1 General
