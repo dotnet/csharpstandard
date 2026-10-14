@@ -711,7 +711,7 @@ Whenever a constructed type or generic method is referenced, the supplied type a
   - `A` is a `struct` type or `enum` type, but not a nullable value type.
   > *Note*: `System.ValueType` and `System.Enum` are reference types that do not satisfy this constraint. *end note*
   - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-- If the constraint is the constructor constraint `new()`, the type `A` shall not be `abstract` and shall have a public parameterless constructor. This is satisfied if one of the following is true:
+- If the constraint is the constructor constraint `new()`, the type `A` shall not be `abstract`, it shall not have a required member list ([§15.7.1](classes.md#1571-general)), and it shall have a public parameterless constructor. This is satisfied if one of the following is true:
   - `A` is a value type, since all value types have a public default constructor ([§8.3.3](types.md#833-default-constructors)).
   - `A` is a type parameter having the constructor constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
