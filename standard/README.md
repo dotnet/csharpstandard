@@ -727,7 +727,9 @@
     - [§16.6.5](structs.md#1665-default-values)  Default values
     - [§16.6.6](structs.md#1666-boxing-and-unboxing)  Boxing and unboxing
     - [§16.6.7](structs.md#1667-meaning-of-this)  Meaning of this
-    - [§16.6.8](structs.md#1668-field-initializers)  Field initializers
+    - [§fields](structs.md#fields-fields)  Fields
+      - [§field-initializers](structs.md#field-initializers-field-initializers)  Field initializers
+      - [§Ref-Fields](structs.md#ref-fields-ref-fields)  Ref fields
     - [§16.6.9](structs.md#1669-constructors)  Constructors
     - [§16.6.10](structs.md#16610-static-constructors)  Static constructors
     - [§16.6.11](structs.md#16611-properties)  Properties
