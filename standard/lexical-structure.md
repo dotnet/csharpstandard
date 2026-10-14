@@ -625,7 +625,7 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'      | 'alias'     | 'and'      | 'ascending' | 'async'
     | 'await'    | 'by'        | 'Cdecl'    | 'descending' | 'dynamic'
-    | 'equals'   | 'Fastcall'  | 'from'     | 'get'       | 'global'
+    | 'equals'   | 'Fastcall'  | 'file'     | 'from'     | 'get'       | 'global'
     | 'group'    | 'init'      | 'into'     | 'join'      | 'let'
     | 'managed'  | 'nameof'    | 'nint'     | 'not'       | 'notnull'
     | 'nuint'    | 'on'        | 'or'       | 'orderby'   | 'partial'
