@@ -6319,7 +6319,7 @@ Extension receiver types can be, or contain, nullable reference types, and exten
 
 For each non-method extension member, all the type parameters of its extension block shall be used in the combined set of parameters from the extension and the member.
 
-Within a given enclosing static class, the set of extension member declarations with the same extension receiver type modulo identity conversion and type parameter name substitution) are treated as a single declaration space similar to the members within a class or struct declaration, and are subject to the same rules about uniqueness ([§7.4.5]( basic-concepts.md#745-class-members)).
+Within a given enclosing static class, the set of extension member declarations with the same extension receiver type modulo identity conversion and type parameter name substitution) are treated as a single declaration space similar to the members within a class or struct declaration, and are subject to the same rules about uniqueness ([§15.3](classes.md#153-class-members)).
 
 The application of this uniqueness rule includes original extension methods within the same static class. For the purposes of comparison with methods within extension declarations, the `this` parameter is treated as an extension receiver specification along with any type parameters mentioned in that extension receiver type, and the remaining type parameters and method parameters are used for the method signature.
 
