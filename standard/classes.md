@@ -4990,7 +4990,7 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
       | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
