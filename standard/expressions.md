@@ -1752,7 +1752,7 @@ A *constant interpolated string* is an *interpolated_string_expression* that con
 - no interpolations, or
 - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, *Verbatim_Interpolation_Format*, or *Raw_Interpolation_Format* specifiers.
 
-For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
+For example, $“Hello”, $“{cs1}, world!” (given `const string cs1 = $"Hello";`), $“{“Hello,” + $“world!"}”, and $“xxx{(true ? $“{“X”}” : $“{$“{“Y”}”}”)}yyy” are all constant interpolated strings. However, $“{123}” and $“{“abc”}{123.45}” are not.
 
 For simplicity, the term *ISE* is used throughout this specification to mean either an *interpolated_string_expression* or an *additive_expression* composed entirely of *interpolated_string_expression*s and binary `+` operators.
 
@@ -4348,13 +4348,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
 
-*identifier* shall be an accessible instance field or property of the receiver's type.
+*identifier* shall be an accessible instance field or property of the receiver’s type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver's clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver’s clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
@@ -5741,7 +5741,7 @@ local_variable_type
     ;
 ```
 
-'scoped' shall only be permitted with *local_variable_type* if *local_variable_type* is 'var' or a ref struct type, and *identifer* is not a discard.
+‘scoped’ shall only be permitted with *local_variable_type* if *local_variable_type* is ‘var’ or a ref struct type, and *identifer* is not a discard.
 
 The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§12.8.4](expressions.md#1284-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
@@ -6015,7 +6015,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
-- Only *lambda_expression* parameters may contain 'scoped'.
+- Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 - An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_collection*s.
 
@@ -7992,7 +7992,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
