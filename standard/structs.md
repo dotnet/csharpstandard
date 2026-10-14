@@ -353,7 +353,7 @@ private bool PrintMembers(System.Text.StringBuilder builder);
 
 This method performs the following tasks:
 
-1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member's name followed by “` = `“ followed by the member's value separated with “`, “`,
+1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member’s name followed by “` = `“ followed by the member’s value separated with “`, “`,
 2. Returns true if the record struct has printable members.
 
 For a member that has a value type, its value shall be converted to a string representation.
@@ -376,7 +376,7 @@ This method performs the following tasks:
 
 1. Creates a `StringBuilder` instance,
 2. Appends the record struct name to the builder, followed by “` { `“,
-3. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
+3. Invokes the record struct’s `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
 4. Appends “`}`”,
 5. Returns the builder’s contents with `builder.ToString()`.
 
@@ -1150,7 +1150,7 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method’s return value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
@@ -1232,7 +1232,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 
 - caller-context.
 - If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
-- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+- If the out variable’s type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 
