@@ -145,7 +145,7 @@ A *pointer_type* cannot be used as a type argument ([§8.4](types.md#84-construc
 
 A *pointer_type* cannot be used as a type of a subexpression of a dynamically bound operation ([§12.3.3](expressions.md#1233-dynamic-binding)).
 
-A *pointer_type* cannot be used as the type of the first parameter in an extension method ([§15.6.10](classes.md#15610-extension-methods)).
+A *pointer_type* cannot be used as the type of the first parameter in an extension method ([§15.6.10](classes.md#15610-extension-methods)) if that parameter includes the `this` modifier, or as the type of an extension method’s *extension_receiver_parameter* (§Extension-Members).
 
 A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes.md#1554-volatile-fields)).
 
