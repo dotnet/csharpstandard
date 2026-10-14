@@ -1274,7 +1274,7 @@ See [§9.7.3](variables.md#973-the-scoped-modifier) for more information.
 
 ### 23.5.9 The ScopedRef attribute
 
-The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter's `scoped` annotation differs from its default state, in order to encode the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) in metadata. This attribute is not permitted in source.
+The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter’s `scoped` annotation differs from its default state, in order to encode the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) in metadata. This attribute is not permitted in source.
 
 ### 23.5.10 The EnumeratorCancellation attribute
 
@@ -1524,7 +1524,7 @@ If an `out bool` parameter is also declared to allow the handler to be inhibited
 
 #### 23.5.12.1 The SetsRequiredMembers attribute
 
-This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn't verify that the constructor actually initializes all required members.
+This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn’t verify that the constructor actually initializes all required members.
 
 > *Example*:
 >
