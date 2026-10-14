@@ -213,14 +213,15 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
-    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
-    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
-    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
-    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
-    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
-    | 'var'       | 'when'       | 'where'     | 'yield'
+    : 'add'      | 'alias'     | 'and'      | 'ascending' | 'async'
+    | 'await'    | 'by'        | 'Cdecl'    | 'descending' | 'dynamic'
+    | 'equals'   | 'Fastcall'  | 'from'     | 'get'       | 'global'
+    | 'group'    | 'init'      | 'into'     | 'join'      | 'let'
+    | 'managed'  | 'nameof'    | 'nint'     | 'not'       | 'notnull'
+    | 'nuint'    | 'on'        | 'or'       | 'orderby'   | 'partial'
+    | 'record'   | 'remove'    | 'select'   | 'set'       | 'Stdcall'
+    | 'Thiscall' | 'unmanaged' | 'value'    | 'var'       | 'when'
+    | 'where'    | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -742,12 +743,23 @@ variable_reference
 
 // Source: §11.2.1 General
 pattern
-    : declaration_pattern
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
+    | declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
+    | type_pattern
+    | relational_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 
 // Source: §11.2.2 Constant pattern
@@ -809,6 +821,39 @@ property_subpattern
 // Source: §11.2.7 Discard pattern
 discard_pattern
     : '_'
+    ;
+
+// Source: §11.2.8 Type pattern
+type_pattern
+    : type
+    ;
+
+// Source: §11.2.9 Relational pattern
+relational_pattern
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
+    ;
+
+// Source: §11.2.10 Logical pattern
+logical_pattern
+    : disjunctive_pattern
+    ;
+
+disjunctive_pattern
+    : disjunctive_pattern 'or' conjunctive_pattern
+    | conjunctive_pattern
+    ;
+
+conjunctive_pattern
+    : conjunctive_pattern 'and' negated_pattern
+    | negated_pattern
+    ;
+
+negated_pattern
+    : 'not' negated_pattern
+    | primary_pattern
     ;
 
 // Source: §12.6.2.1 General

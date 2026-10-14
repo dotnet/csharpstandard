@@ -1176,7 +1176,7 @@ Before the process described in [§13.9.5.1](statements.md#13951-general), the f
 If the process in [§13.9.5.1](statements.md#13951-general) completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
 - If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-- Otherwise, determine whether the type ‘X’ has an appropriate `GetEnumerator` extension method:
+- Otherwise, determine whether the type 'X' has an appropriate `GetEnumerator` extension method:
   - Perform extension method lookup on the type `X` with identifier `GetEnumerator`. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match which is not a method group, an error is produced, and no further steps are taken. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and a single argument of type `X`. If overload resolution produces no applicable methods, results in an ambiguity, or results in a single best method but that method is not accessible, an error is produced an no further steps are taken.
   - This resolution permits the first argument to be passed by ref if `X` is a struct type, and the ref kind is `in`.
@@ -1733,17 +1733,17 @@ return_statement
 
 A *return_statement* without *expression* is called a ***return-no-value***; one containing `ref` *expression* is called a ***return-by-ref***; and one containing only *expression* is called a ***return-by-value***.
 
-It is a compile-time error to use a return-no-value from a method declared as being returns-by-value or returns-by-ref ([§15.6.1](classes.md#1561-general)).
+It is a compile-time error to use a return-no-value from a method declared as being return-by-value or return-by-ref ([§15.6.1](classes.md#1561-general)).
 
-It is a compile-time error to use a return-by-ref from a method declared as being returns-no-value or returns-by-value.
+It is a compile-time error to use a return-by-ref from a method declared as being return-no-value or return-by-value.
 
-It is a compile-time error to use a return-by-value from a method declared as being returns-no-value or returns-by-ref.
+It is a compile-time error to use a return-by-value from a method declared as being return-no-value or return-by-ref.
 
 It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose ref-safe-context is not caller-context ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
 
-A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value get accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value and are methods with the effective return type `void`, set accessors of properties and indexers, add and remove accessors of events, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
+A function member is said to ***compute a value*** if it is a method with a return-by-value method ([§15.6.11](classes.md#15611-method-body)), a return-by-value get accessor of a property or indexer, or a user-defined operator. Function members that are return-no-value do not compute a value and are methods with the effective return type `void`, set accessors of properties and indexers, add and remove accessors of events, instance constructors, static constructors and finalizers. Function members that are return-by-ref do not compute a value.
 
 For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and the effective return type of the containing function member.
 

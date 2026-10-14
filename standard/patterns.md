@@ -27,18 +27,31 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : declaration_pattern
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
+    | declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
+    | type_pattern
+    | relational_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 ```
 
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of *constant_pattern* before *positional_pattern* in the alternatives of *pattern*. *end note*
+
+The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
 
 Some *pattern*s can result in the declaration of a local variable.
 
@@ -524,6 +537,223 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 >         var x => "other: " + x,
 >     };
 > }
+> ```
+>
+> *end example*
+
+### 11.2.8 Type pattern
+
+A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
+
+```ANTLR
+type_pattern
+    : type
+    ;
+```
+
+A type pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T` ([§11.2.2](patterns.md#1122-constant-pattern)).
+
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.15.12.1](expressions.md#1215121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
+
+### 11.2.9 Relational pattern
+
+A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
+
+```ANTLR
+relational_pattern
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
+    ;
+```
+
+The *relational_expression* in a *relational_pattern* is required to evaluate to a constant value.
+
+Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
+
+A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
+
+It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
+
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of the constant expression using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the constant expression.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(double.NaN));
+> Console.WriteLine(Classify(2.4));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -4.0 => "Too low",
+>     > 10.0 => "Too high",
+>     double.NaN => "Unknown",
+>     _ => "Acceptable",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> Too high
+> Unknown
+> Acceptable
+> ```
+>
+> *end example*
+
+### 11.2.10 Logical pattern
+
+A *logical_pattern* is used to negate the result of a pattern match, or to combine the results of multiple pattern matches using conjunction (`and`) or disjunction (`or`).
+
+```ANTLR
+logical_pattern
+    : disjunctive_pattern
+    ;
+
+disjunctive_pattern
+    : disjunctive_pattern 'or' conjunctive_pattern
+    | conjunctive_pattern
+    ;
+
+conjunctive_pattern
+    : conjunctive_pattern 'and' negated_pattern
+    | negated_pattern
+    ;
+
+negated_pattern
+    : 'not' negated_pattern
+    | primary_pattern
+    ;
+```
+
+`not`, `and`, and `or` are collectively called ***pattern operators***.
+
+A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
+
+It is a compile-time error for a pattern variable to be declared beneath a `not` or `or` pattern operator.
+
+> *Note*: Because neither `not` nor `or` can produce a definite assignment for a pattern variable, it is an error to declare one in those positions. *end note*
+
+In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
+
+- If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
+- Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
+- Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
+- Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)), the *narrowed type* is the type `System.ITuple`.
+- Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
+- Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
+- Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
+- Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
+- Otherwise the *narrowed type* of `P` is `P`'s input type.
+
+> *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
+
+When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar; as a result, the pattern operators `and`, `or`, and `not` within the pattern bind more tightly than the logical operators `&&`, `||`, and `!` outside the pattern.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(-100));
+> Console.WriteLine(Classify(5.7));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -40.0 => "Too low",
+>     >= -40.0 and < 0 => "Low",
+>     >= 0 and < 10.0 => "Acceptable",
+>     >= 10.0 and < 20.0 => "High",
+>     >= 20.0 => "Too high",
+>     double.NaN => "Unknown",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> High
+> Too low
+> Acceptable
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern2", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 1, 19)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 10, 9)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 5, 11)));
+>
+> static string GetCalendarSeason(DateTime date) => date.Month switch
+> {
+>     3 or 4 or 5 => "spring",
+>     6 or 7 or 8 => "summer",
+>     9 or 10 or 11 => "autumn",
+>     12 or 1 or 2 => "winter",
+>     _ => throw new ArgumentOutOfRangeException(nameof(date),
+>       $"Date with unexpected month: {date.Month}."),
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> winter
+> autumn
+> spring
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
+> ```csharp
+> object msg = "msg";
+> object obj = 5;
+> bool flag = true;
+>
+> // This is parsed as: (msg is (not int) or string)
+> bool result = msg is not int or string;
+> Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
+>
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
+>
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}");
+>
+> flag = false;
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}");
+>
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}");
+> ```
+>
+> The output produced is
+>
+> ```console
+> msg ("msg"): msg is not int or string: True
+> obj (5), flag (true): obj is int or string && flag: True
+> obj (5), flag (true): obj is int || obj is string && flag: True
+> obj (5), flag (false): obj is int or string && flag: False
+> obj (5), flag (false): obj is int || obj is string && flag: True
 > ```
 >
 > *end example*

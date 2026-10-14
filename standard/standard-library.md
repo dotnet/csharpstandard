@@ -869,12 +869,6 @@ namespace System.Runtime.CompilerServices
         public ModuleInitializerAttribute() { }
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ModuleInitializerAttribute : Attribute
-    {
-        public ModuleInitializerAttribute() { }
-    }
-
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {

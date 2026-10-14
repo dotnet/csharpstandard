@@ -268,6 +268,9 @@
     - [§11.2.5](patterns.md#1125-positional-pattern)  Positional pattern
     - [§11.2.6](patterns.md#1126-property-pattern)  Property pattern
     - [§11.2.7](patterns.md#1127-discard-pattern)  Discard pattern
+    - [§11.2.8](patterns.md#1128-type-pattern)  Type pattern
+    - [§11.2.9](patterns.md#1129-relational-pattern)  Relational pattern
+    - [§11.2.10](patterns.md#11210-logical-pattern)  Logical pattern
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
