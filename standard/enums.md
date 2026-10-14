@@ -247,7 +247,7 @@ The following operators can be used on values of enum types:
 - `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.15.6](expressions.md#12156-enumeration-comparison-operators))
 - binary `+` ([§12.13.5](expressions.md#12135-addition-operator))
 - binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator))
-- `^`, `&`, `|` ([§12.17.3](expressions.md#12173-user-defined-conditional-logical-operators))
+- `^`, `&`, `|` ([§12.16.3](expressions.md#12163-enumeration-logical-operators))
 - `~` ([§12.9.5](expressions.md#1295-bitwise-complement-operator))
 - `++`, `--` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators))
 - `sizeof` ([§24.6.9](unsafe-code.md#2469-the-sizeof-operator))

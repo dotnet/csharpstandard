@@ -793,7 +793,6 @@ namespace System.Diagnostics.CodeAnalysis
     {
         public SetsRequiredMembersAttribute() {}
     }
-    }
 }
 
 namespace System.Linq.Expressions
@@ -965,12 +964,6 @@ namespace System.Runtime.CompilerServices
         ///    <c>[0, Length)</c>.
         /// </exception>
         object? this[int index] { get; }
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ModuleInitializerAttribute : Attribute
-    {
-        public ModuleInitializerAttribute() { }
-    }
-
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class ModuleInitializerAttribute : Attribute
     {

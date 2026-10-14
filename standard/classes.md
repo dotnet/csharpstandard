@@ -1785,7 +1785,7 @@ The value of a field is obtained in an expression using a *simple_name* ([§12.8
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
-> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see §16.6.8.2. *end note*
+> *Note*: Inside a `ref struct`, a field may also be declared as a reference variable; see [§16.8.8.2](structs.md#16882-ref-fields). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
@@ -2172,7 +2172,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.6](structs.md#166-inline-arrays)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.8](structs.md#168-class-and-struct-differences)) and interfaces ([§19.4.3](interfaces.md#1943-interface-methods)).
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2258,7 +2258,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier (§16.6.12).
+A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
 
 A *method_declaration* has a valid combination of modifiers if all of the following are true. (These rules are modified slightly in the context of an interface; see [§19.4.1](interfaces.md#1941-general).):
 
@@ -2275,13 +2275,13 @@ A *method_declaration* has a valid combination of modifiers if all of the follow
 
 Methods are classified according to what, if anything, they return:
 
-- If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
-- Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
-- Otherwise, the method is ***returns-by-value*** and returns a value.
+- If `ref` is present, the method is ***return-by-ref*** and returns a *variable reference*, that is optionally read-only;
+- Otherwise, if *return_type* is `void`, the method is ***return-no-value*** and does not return a value;
+- Otherwise, the method is ***return-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a return-by-value or return-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method return-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
 
-The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
+The *ref_return_type* of a return-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
@@ -2295,13 +2295,13 @@ The optional *parameter_list* specifies the parameters of the method ([§15.6.2]
 
 The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
-The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
+The *method_body* of a return-by-value or return-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a return-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon. For partial methods the *ref_method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -2627,7 +2627,7 @@ A parameter declared with a `params` modifier is a parameter collection.
 A parameter collection permits arguments to be specified in one of two ways in a method invocation:
 
 - The argument given for a parameter collection can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter collection type. In this case, the parameter collection acts precisely like a value parameter.
-- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in §collection-expressions as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
+- Alternatively, the invocation can specify zero or more arguments for the parameter collection, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter collection. In this case, the invocation creates an instance of the parameter collection type according to the rules specified in [§12.8.25](expressions.md#12825-collection-expressions) as though the arguments were used as expression elements in a collection expression in the same order, and uses the newly created collection instance as the actual argument. When constructing the collection instance, the original unconverted arguments are used.
 
 Except for allowing a variable number of arguments in an invocation, a parameter collection is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
 
@@ -3216,7 +3216,7 @@ When a method declaration includes an `extern` modifier, the method is said to b
 
 The mechanism by which linkage to an external method is achieved is implementation-defined.
 
-> *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
+> *Example*: The following example demonstrates the use of the `extern` modifier and `DllImportAttribute`:
 >
 > <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
@@ -3275,7 +3275,7 @@ For a required partial method both the definition and implementation shall exist
 >     protected partial bool M3();        // required, impl. required
 >     public partial void M4(out int i);  // required, impl. required
 > }
-> 
+>
 > // part containing implementing partial method declarations
 > partial class C
 > {
@@ -3317,16 +3317,6 @@ If an implementing declaration exists for a given partial method, the invocation
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - Any default arguments ([§15.6.2](classes.md#1562-method-parameters)) in the implementing declaration are removed.
-
-If a defining declaration but not an implementing declaration is given for a restricted partial method `M`, the following restrictions apply:
-
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
-
-- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
-
-- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
-
-- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup-and-termination)).
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
@@ -3518,11 +3508,11 @@ When the effective return type of a method is `void` and the method has a block 
 
 When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
+For a return-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
+For a return-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
-For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For return-by-value and return-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >
@@ -3605,7 +3595,7 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier (§16.6.11). However, a partial property ([§15.7.7](classes.md#1577-partial-properties)) shall not have an `abstract` modifier.
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.11](structs.md#16811-properties)). However, a partial property ([§15.7.7](classes.md#1577-partial-properties)) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
@@ -3724,7 +3714,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an explicit interface member implementation.
-- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* (§16.6.11, §16.6.13).
+- The *accessor_modifier* `readonly` is permitted only in a *property_declaration* or *indexer_declaration* that is contained directly by a *struct_declaration* ([§16.8.11](structs.md#16811-properties), [§16.8.13](structs.md#16813-indexers)).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set or init accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
@@ -3775,7 +3765,7 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.22](expressions.md#1222-anonymous-function-expressions)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
@@ -4079,7 +4069,7 @@ An instance property containing an *init_accessor_declaration* is considered set
 >     public string? FirstName { get; init; }
 >     public string? LastName  { get; init; }
 > }
-> 
+>
 > class Consumption
 > {
 >     static void Example()
@@ -4114,7 +4104,7 @@ The rules around when init accessors are settable extend across type hierarchies
 >         Value = true;
 >     }
 > }
-> 
+>
 > class Consumption
 > {
 >     void Example()
@@ -4171,11 +4161,11 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >     }
 >     internal int OtherProperty { get; init; }
 > }
-> 
+>
 > class Derived : Base
 > {
 >     internal readonly int DerivedField;
-> 
+>
 >     internal int DerivedProperty
 >     {
 >         get => DerivedField;
@@ -4186,10 +4176,10 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >             Field = 13;         // Error: Field is readonly
 >         }
 >     }
-> 
+>
 >     public Derived()
 >     {
->         Property = 42;  // OK 
+>         Property = 42;  // OK
 >         Field = 13;     // Error: Field is readonly
 >     }
 > }
@@ -4570,12 +4560,12 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 > {
 >     public virtual int Property { get; init; }
 > }
-> 
+>
 > class C1 : Base
 > {
 >     public override int Property { get; init; }
 > }
-> 
+>
 > class C2 : Base
 > {
 >     // Error: Property must have init to override Base.Property
@@ -4607,7 +4597,7 @@ Partial properties are useful for allowing one part of a type declaration to cus
 >     public partial string Prop1 { get; set; }
 >     public virtual partial string Prop2 { get; set; }
 > }
-> 
+>
 > // part containing implementing partial declarations
 > public partial class C
 > {
@@ -4642,7 +4632,7 @@ The signature-matching requirements are as follows:
 > {
 >     private string _field;
 >     public partial string Prop { get; private set; }
-> 
+>
 >     // Error: implementation set accessor modifier mismatch
 >     public partial string Prop { get => _field; set => _field = value; }
 > }
@@ -4719,7 +4709,7 @@ remove_accessor_declaration
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier (§16.6.12).
+An *event_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *event_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
 
 Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
@@ -5002,7 +4992,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier (§16.6.12). However, a partial indexer ([§15.9.3](classes.md#1593-partial-indexers)) shall not have an `abstract` modifier.
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.13](structs.md#16813-indexers)). However, a partial indexer ([§15.9.3](classes.md#1593-partial-indexers)) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5174,7 +5164,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 Indexers and properties are very similar in concept, but differ in the following ways:
 
 - A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.4](expressions.md#128124-string-access)).
+- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.12.5](expressions.md#128125-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
@@ -5286,9 +5276,8 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+' | 'checked'? '-' | 'checked'? '*' | 'checked'? '/' | '%'
-    | '&' | '|' | '^' | '<<' | right_shift | unsigned_right_shift
-    | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
+      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -6560,7 +6549,7 @@ A record class is a specialized reference type that is optimized for storing dat
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
+      type_parameter_constraints_clause* class_body
     ;
 ```
 
@@ -6721,69 +6710,69 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >     public T1 P1 { get; init; }
 >     protected virtual Type EqualityContract => typeof(R1);
 >     public override bool Equals(object? obj) => Equals(obj as R1);
-> 
+>
 >     public virtual bool Equals(R1? other)
 >     {
 >         return !(other is null) &&
 >             EqualityContract == other.EqualityContract &&
 >             EqualityComparer<T1>.Default.Equals(P1, other.P1);
 >     }
-> 
+>
 >     public static bool operator==(R1? left, R1? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R1? left, R1? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(EqualityComparer<Type>.Default.GetHashCode(EqualityContract),
 >             EqualityComparer<T1>.Default.GetHashCode(P1));
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     protected override Type EqualityContract => typeof(R2);
 >     public override bool Equals(object? obj) => Equals(obj as R2);
 >     public sealed override bool Equals(R1? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R2? other)
 >     {
 >         return base.Equals((R1?)other) &&
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
-> 
+>
 >     public static bool operator==(R2? left, R2? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R2? left, R2? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
 >             EqualityComparer<T2>.Default.GetHashCode(P2));
 >     }
 > }
-> 
+>
 > class R3 : R2, IEquatable<R3>
 > {
 >     public T3 P3 { get; init; }
 >     protected override Type EqualityContract => typeof(R3);
 >     public override bool Equals(object? obj) => Equals(obj as R3);
 >     public sealed override bool Equals(R2? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R3? other)
 >     {
 >         return base.Equals((R2?)other) &&
 >             EqualityComparer<T3>.Default.Equals(P3, other.P3);
 >     }
-> 
+>
 >     public static bool operator==(R3? left, R3? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R3? left, R3? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
@@ -6866,21 +6855,21 @@ The provided method:
 > {
 >     public string FirstName { get; set; }
 >     public string LastName { get; set; }
-> 
+>
 >     public Base(string firstName, string lastName)
 >     {
 >         FirstName = firstName;
 >         LastName = lastName;
 >     }
 > }
-> 
+>
 > public record R2 : Base
 > {
 >     public int Age { get; set; }
 >     public R2(string firstName, string lastName, int age) :
 >         base(firstName, lastName) { Age = age; }
 > }
-> 
+>
 > class Program
 > {
 >     static void Main()
@@ -6914,7 +6903,7 @@ The provided method:
 > class R1 : IEquatable<R1>
 > {
 >     public T1 P1 { get; init; }
-> 
+>
 >     protected virtual bool PrintMembers(StringBuilder builder)
 >     {
 >         builder.Append(nameof(P1));
@@ -6922,7 +6911,7 @@ The provided method:
 >         builder.Append(this.P1); // or builder.Append(this.P1.ToString()); if P1 has a value type
 >         return true;
 >     }
-> 
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6936,12 +6925,12 @@ The provided method:
 >         return builder.ToString();
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     public T3 P3 { get; init; }
->     
+>
 >     protected override bool PrintMembers(StringBuilder builder)
 >     {
 >         if (base.PrintMembers(builder))
@@ -6957,7 +6946,7 @@ The provided method:
 >         builder.Append(this.P3); // or builder.Append(this.P3); if P3 has a value type
 >         return true;
 >     }
->     
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6994,7 +6983,7 @@ For each parameter of a *delimited_parameter_list* there is provided a correspon
 For a record class:
 
 - A public auto-property is created with get and init accessors.
-- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
+- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
 - Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record class parameter.
 
@@ -7049,7 +7038,7 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 
 ### 15.17.1 General
 
-There are a number of contexts in which a collection expression (§collection-expressions) may be converted to a collection type (§imp-collection-expression-conv). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
+There are a number of contexts in which a collection expression ([§12.8.25](expressions.md#12825-collection-expressions)) may be converted to a collection type ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
 
 Here is a simple user-defined collection type and its associated builder type:
 
@@ -7088,7 +7077,7 @@ public class MyCollection<T> : IEnumerable<T>
 }
 internal static class MyCollectionBuilder
 {
-    internal static MyCollection<T> 
+    internal static MyCollection<T>
       Create<T>(ReadOnlySpan<T> values) =>
         new MyCollection<T>(values);
 }

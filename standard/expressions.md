@@ -547,7 +547,7 @@ Once a particular function member has been identified at binding-time, possibly 
 
 Every function member and delegate invocation includes an argument list, which provides actual values or variable references for the parameters of the function member. The syntax for specifying the argument list of a function member invocation depends on the function member category:
 
-- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
+- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.
    > *Note*: This additional argument is not used for overload resolution, just during invocation of the set or init accessor. *end note*
 - For properties, the argument list is empty when invoking the get accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the set or init accessor.
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
@@ -701,7 +701,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* (§collection-expressions). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
+When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* ([§12.8.25](expressions.md#12825-collection-expressions)). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
 
 > *Example*: Given the declaration
 >
@@ -1610,7 +1610,8 @@ interpolated_raw_string_expression
     ;
 
 single_line_interpolated_raw_string_expression
-    : Interpolated_Raw_String_Start  Interpolated_Raw_String_Mid
+    : Interpolated_Raw_String_Start
+        (Interpolated_Raw_String_Mid | raw_interpolation)+
         Interpolated_Raw_String_End
     ;
 
@@ -1625,7 +1626,7 @@ Interpolated_Raw_String_Start
 // the following two lexical rules are context sensitive, see details below
 
 Interpolated_Raw_String_Mid
-    : (Raw_String_Literal_Content | raw_interpolation)+
+    : Raw_String_Literal_Content+
     ;
 
 Interpolated_Raw_String_End
@@ -1660,7 +1661,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line
+      (Interpolated_Raw_String_Mid | raw_interpolation | New_Line)* New_Line
       Whitespace* Interpolated_Raw_String_End
     ;
 ```
@@ -1810,7 +1811,10 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
   - Otherwise, if the declaration of `T` includes a primary constructor parameter `I`, the result is the primary constructor parameter `I`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
-  - If `e` is zero and `I` is the name of a namespace in `N`, then:
+  - If `N` is the global namespace, the current *compilation_unit* contains top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) and a declaration for *simple_name* occurs directly within the *method_body* ([§15.6.1](classes.md#1561-general)) of the generated entry-point method ([§7.1.3](basic-concepts.md#713-using-top-level-statements)), then:
+    - The access is invalid and a compiler-time error shall be generated.
+      > *Note*: This rule means that a declaration of some *simple_name* in a top-level statement can hide a global declaration if referenced using the same *simple_name*. *end note*
+  - Otherwise, if `e` is zero and `I` is the name of a namespace in `N`, then:
     - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, or any namespace declaration for `N` in the program contains a *global_using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
     - Otherwise, the *simple_name* refers to the namespace named `I` in `N`.
   - Otherwise, if `N` contains an accessible type having name `I` and `e` type parameters, then:
@@ -2227,9 +2231,9 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
-- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
-- Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
+- If the *invocation_expression* invokes a return-no-value method ([§15.6.1](classes.md#1561-general)) or a return-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
+- Otherwise, if the *invocation_expression* invokes a return-by-ref method ([§15.6.1](classes.md#1561-general)) or a return-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
+- Otherwise, the *invocation_expression* invokes a return-by-value method ([§15.6.1](classes.md#1561-general)) or return-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
 
 > *Note*: The following is only applicable in unsafe code. *end note*
 
@@ -2635,7 +2639,7 @@ static T GetItem(«InlineArrayType» array)
 >     Buffer10<int> GetBuffer() => default;
 >     void M3()
 >     {
->         int a = GetBuffer()[0];                 // OK 
+>         int a = GetBuffer()[0];                 // OK
 >         ref readonly int b = ref GetBuffer()[0];// Error, rhs is a value
 >         ref int c = ref GetBuffer()[0];         // Error; rhs is a value
 >     }
@@ -4079,7 +4083,7 @@ A *spread_element* causes the set of *collection_element*s designated by *expres
 >
 > `colors2` contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
 
-If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.  
+If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.
 
 ## 12.9 Unary operators
 
@@ -4148,7 +4152,7 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
-  
+
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
 
   If the operand of the negation operator is of type `nuint`, a compile-time error occurs.
@@ -4747,7 +4751,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```
 
   These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3](structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
-  
+
   > *Example*:
   >
   > <!-- Example: {template:"standalone-console", name:"AdditionOperator", expectedOutput:["s = ><","i = 1","f = 1.23E+15","d = 2.900"]} -->
@@ -7692,7 +7696,7 @@ It is a compile time error if any *variable_reference*, including any reclassifi
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
 - a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
-- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
+- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*.
 
 For these restrictions:
 
@@ -8042,7 +8046,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) that includes an initializer.
 - Attributes ([§23](attributes.md#23-attributes))
-- In a *constant_pattern* ([§11.2.2](patterns.md#1122-declaration-pattern))
+- In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 

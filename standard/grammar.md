@@ -213,15 +213,16 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'      | 'alias'      | 'allows'     | 'and'       | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'file'       | 'from'      | 'get'
-    | 'global'   | 'group'      | 'init'       | 'into'      | 'join'
-    | 'let'      | 'managed'    | 'nameof'     | 'nint'      | 'not'
-    | 'notnull'  | 'nuint'      | 'on'         | 'or'        | 'orderby'
-    | 'partial'  | 'record'     | 'remove'     | 'required'  | 'scoped'
-    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
-    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
+    : 'add'       | 'alias'   | 'allows'   | 'and'     | 'ascending'
+    | 'async'     | 'await'   | 'by'       | 'Cdecl'   | 'descending'
+    | 'dynamic'   | 'equals'  | 'Fastcall' | 'file'    | 'from'
+    | 'get'       | 'global'  | 'group'    | 'init'    | 'into'
+    | 'join'      | 'let'     | 'managed'  | 'nameof'  | 'nint'
+    | 'not'       | 'notnull' | 'nuint'    | 'on'      | 'or'
+    | 'orderby'   | 'partial' | 'record'   | 'remove'  | 'required'
+    | 'scoped'    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'
+    | 'unmanaged' | 'value'   | 'var'      | 'when'    | 'where'
+    | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -375,9 +376,13 @@ fragment Quote_Escape_Sequence
     : '""'
     ;
 
+fragment Utf8_Suffix
+    : 'u8' | 'U8'
+    ;
+
 fragment Raw_String_Literal
-    : Single_Line_Raw_String_Literal
-    | Multi_Line_Raw_String_Literal
+    : Single_Line_Raw_String_Literal Utf8_Suffix?
+    | Multi_Line_Raw_String_Literal Utf8_Suffix?
     ;
 
 fragment Single_Line_Raw_String_Literal
@@ -391,16 +396,13 @@ fragment Raw_String_Literal_Delimiter
 
 fragment Raw_String_Literal_Content
     // anything except New_Line
-    : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
+    : ~[\u000D\u000A\u0085\u2028\u2029]
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
       (Raw_String_Literal_Content | New_Line)* New_Line
       Whitespace* Raw_String_Literal_Delimiter
-
-fragment Utf8_Suffix
-    : 'u8' | 'U8'
     ;
 
 // Source: §6.4.5.7 The null literal
@@ -1116,7 +1118,8 @@ interpolated_raw_string_expression
     ;
 
 single_line_interpolated_raw_string_expression
-    : Interpolated_Raw_String_Start  Interpolated_Raw_String_Mid
+    : Interpolated_Raw_String_Start
+        (Interpolated_Raw_String_Mid | raw_interpolation)+
         Interpolated_Raw_String_End
     ;
 
@@ -1131,7 +1134,7 @@ Interpolated_Raw_String_Start
 // the following two lexical rules are context sensitive, see details below
 
 Interpolated_Raw_String_Mid
-    : (Raw_String_Literal_Content | raw_interpolation)+
+    : Raw_String_Literal_Content+
     ;
 
 Interpolated_Raw_String_End
@@ -1166,7 +1169,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line
+      (Interpolated_Raw_String_Mid | raw_interpolation | New_Line)* New_Line
       Whitespace* Interpolated_Raw_String_End
     ;
 
@@ -2786,9 +2789,8 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+' | 'checked'? '-' | 'checked'? '*' | 'checked'? '/' | '%'
-    | '&' | '|' | '^' | '<<' | right_shift | unsigned_right_shift
-    | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
+      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -2872,7 +2874,7 @@ finalizer_body
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
+      type_parameter_constraints_clause* class_body
     ;
 
 // Source: §16.2.1 General
@@ -2896,17 +2898,6 @@ non_record_struct_with_positional_members
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? delimited_parameter_list struct_interfaces?
       type_parameter_constraints_clause* struct_body
-    ;
-
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
     ;
 
 // Source: §16.2.2 Struct modifiers

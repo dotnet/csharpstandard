@@ -36,17 +36,6 @@ non_record_struct_with_positional_members
       identifier type_parameter_list? delimited_parameter_list struct_interfaces?
       type_parameter_constraints_clause* struct_body
     ;
-
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
 ```
 
 There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in [§16.5](structs.md#165-record-structs). The differences between the two kinds are discussed in [§16.7](structs.md#167-record-struct-and-non-record-struct-differences).
@@ -453,7 +442,7 @@ As with a record class, a record struct with a *delimited_parameter_list* has a 
 
 In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
 
-Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
+Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
 
 The definite assignment rules for struct instance constructors ([§16.8.9](structs.md#1689-constructors), [§12.8.14](expressions.md#12814-this-access)) apply to the primary constructor of record structs. As for any other struct instance constructor without a `this()` initializer, any instance field that is not definitely assigned by the primary constructor is implicitly initialized to its default value in the initialization phase that runs before the body of the primary constructor.
 
@@ -515,7 +504,7 @@ Console.WriteLine($"buffer[1..^0][0]  = >{buffer[1..^0][0]}<");
 public struct Buffer
 {
     private int _element0;
-    // other, optional, non-instance-field members 
+    // other, optional, non-instance-field members
 }
 ```
 
@@ -563,7 +552,7 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 > public struct Buffer
 > {
 >     private int _element0;
->     public int this[int index] // NOT USED for element access 
+>     public int this[int index] // NOT USED for element access
 >     {
 >         get
 >         {

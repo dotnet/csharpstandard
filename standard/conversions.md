@@ -484,7 +484,7 @@ An implicit collection expression conversion exists from a collection expression
   - `System.Collections.Generic.IReadOnlyList<T>`
   - `System.Collections.Generic.ICollection<T>`
   - `System.Collections.Generic.IList<T>`
-  
+
   in which case, the element type is `T`
 
 The implicit conversion exists if the type has an element type `U` where for each element `Eᵢ` in the collection expression:
@@ -819,15 +819,13 @@ A user-defined implicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to the set `D` only if an identity conversion to another type already included in the set does not exist.
-
 - Find the set of applicable user-defined and lifted conversion operators, `U`.
-  - Find the set of types, `D1`, from which user-defined conversion operators will be considered. This set consists of `S0` (if `S0` is a class or struct), the base classes of `S0` (if `S0` is a class), and `T0` (if `T0` is a class or struct).
-  - Find the set of applicable user-defined and lifted conversion operators, `U1`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D1` that convert from a type encompassing `S` to a type encompassed by `T`.
-  - If `U1` is not empty, then `U` is `U1`. Otherwise,
-    - Find the set of types, `D2`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* (if `Tᵢ` is a type parameter).
-    - Find the set of applicable user-defined and lifted conversion operators, `U2`. This set consists of the user-defined and lifted implicit conversion operators declared by the interfaces in `D2` that convert from a type encompassing `S` to a type encompassed by `T`.
-    - If `U2` is not empty, then `U` is `U2`.
+  - Find the set of types, `D₁`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), and `T₀` (if `T₀` is a class or struct). A type is added to `D₁` only if an identity conversion to another type already included in the set does not exist.
+  - Find the set of applicable user-defined and lifted conversion operators, `U₁`. This set consists of the user-defined and lifted implicit conversion operators declared by the classes or structs in `D₁` that convert from a type encompassing `E` to a type encompassed by `T`.
+  - If `U₁` is not empty, then `U` is `U₁`. Otherwise,
+    - Find the set of types, `D₂`, from which user-defined conversion operators will be considered. This set consists of `Sᵢ` *effective interface set* and their base interfaces (if `Sᵢ` is a type parameter), and `Tᵢ` *effective interface set* (if `Tᵢ` is a type parameter).
+    - Find the set of applicable user-defined and lifted conversion operators, `U₂`. This set consists of the user-defined and lifted implicit conversion operators declared by the interfaces in `D₂` that convert from a type encompassing `E` to a type encompassed by `T`.
+    - If `U₂` is not empty, then `U` is `U₂`.
 - If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.

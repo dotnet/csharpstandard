@@ -202,7 +202,7 @@ Array covariance specifically does not extend to arrays of *value_type*s. For ex
 
 ## 17.7 Array initializers
 
-Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)):
+Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.8.17.4](expressions.md#128174-array-creation-expressions)):
 
 ```ANTLR
 array_initializer
