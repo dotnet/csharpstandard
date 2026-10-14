@@ -980,7 +980,7 @@ fragment Raw_String_Literal_Delimiter
 
 fragment Raw_String_Literal_Content
     // anything except New_Line
-    : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
+    : ~[\u000D\u000A\u0085\u2028\u2029]
     ;
 
 fragment Multi_Line_Raw_String_Literal
