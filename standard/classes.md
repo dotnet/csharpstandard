@@ -6972,7 +6972,7 @@ public class MyCollection<T> : IEnumerable<T>
 }
 internal static class MyCollectionBuilder
 {
-    internal static MyCollection<T> 
+    internal static MyCollection<T>
       Create<T>(ReadOnlySpan<T> values) =>
         new MyCollection<T>(values);
 }
