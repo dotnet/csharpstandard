@@ -2783,12 +2783,6 @@ struct_member_declaration
     | fixed_size_buffer_declaration   // unsafe code support
     ;
 
-// Source: §16.4.3 Record struct body
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
-
 // Source: §17.7 Array initializers
 array_initializer
     : '{' variable_initializer_list? '}'
