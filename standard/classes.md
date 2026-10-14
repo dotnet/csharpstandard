@@ -4533,7 +4533,7 @@ Partial properties are useful for allowing one part of a type declaration to cus
 >     public partial string Prop1 { get; set; }
 >     public virtual partial string Prop2 { get; set; }
 > }
-> 
+>
 > // part containing implementing partial declarations
 > public partial class C
 > {
@@ -4568,7 +4568,7 @@ The signature-matching requirements are as follows:
 > {
 >     private string _field;
 >     public partial string Prop { get; private set; }
-> 
+>
 >     // Error: implementation set accessor modifier mismatch
 >     public partial string Prop { get => _field; set => _field = value; }
 > }
