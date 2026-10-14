@@ -257,13 +257,7 @@ In the case of a record struct, members are provided by the implementation unles
 
 The members provided by the implementation are described in the following subclauses.
 
-#### 16.4.4.2 Primary constructors
-
-The primary constructor of a record struct is like that of a non-record struct (§struct-prim-constructors), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
-
-Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
-
-#### 16.4.4.3 Equality members
+#### 16.4.4.2 Equality members
 
 The provided equality members are similar to those for a record class ([§15.16.6.3](classes.md#151663-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
@@ -442,9 +436,9 @@ A record struct with a *delimited_parameter_list* has a public ***primary constr
 
 If a record struct has a primary constructor, every explicitly declared instance constructor shall have a `this` constructor initializer ([§15.11.2](classes.md#15112-constructor-initializers)) that invokes the primary constructor or another explicitly declared instance constructor. The rules for resolving that initializer and for circular constructor dependencies apply as for other struct constructors ([§16.6.9](structs.md#1669-constructors)).
 
-Primary constructor parameters are in scope throughout the *record_struct_body*. Within an initializer of an instance field, property, or event, a primary constructor parameter shadows a member with the same name and may be used as a value. Elsewhere in that body, members shadow primary constructor parameters, and a primary constructor parameter shall not be referenced except within a `nameof` argument. No additional storage is provided merely because a primary constructor parameter is declared. Properties and their backing fields are provided only as specified in [§16.4.4.4.3](structs.md#164443-properties). A warning may be produced if a primary constructor parameter is not read.
+Primary constructor parameters are in scope throughout the *struct_body*. Within an initializer of an instance field, property, or event, a primary constructor parameter shadows a member with the same name and may be used as a value. Elsewhere in that body, members shadow primary constructor parameters, and a primary constructor parameter shall not be referenced except within a `nameof` argument. No additional storage is provided merely because a primary constructor parameter is declared. Properties and their backing fields are provided only as specified in [§16.4.4.4.3](structs.md#164443-properties). A warning may be produced if a primary constructor parameter is not read.
 
-At run time, the primary constructor initializes the backing fields of the auto-properties provided by [§16.4.4.4.3](structs.md#164443-properties) to the values of the corresponding parameters, then executes the instance initializers in the *record_struct_body* in textual order ([§15.5.6.1](classes.md#15561-general)). A matching explicitly declared field or property is not automatically initialized from the corresponding parameter; an initializer or constructor assignment is required to store that value.
+At run time, the primary constructor initializes the backing fields of the auto-properties provided by [§16.4.4.4.3](structs.md#164443-properties) to the values of the corresponding parameters, then executes the instance initializers in the *struct_body* in textual order ([§15.5.6.1](classes.md#15561-general)). A matching explicitly declared field or property is not automatically initialized from the corresponding parameter; an initializer or constructor assignment is required to store that value.
 
 Instance field declarations in a record struct may include variable initializers. In the absence of a primary constructor, explicitly declared instance constructors execute instance initializers according to the struct constructor rules ([§16.6.9](structs.md#1669-constructors)). Implicit default initialization ([§16.6.5](structs.md#1665-default-values)) does not execute instance initializers.
 
