@@ -484,7 +484,7 @@ An implicit collection expression conversion exists from a collection expression
   - `System.Collections.Generic.IReadOnlyList<T>`
   - `System.Collections.Generic.ICollection<T>`
   - `System.Collections.Generic.IList<T>`
-  
+
   in which case, the element type is `T`
 
 The implicit conversion exists if the type has an element type `U` where for each element `Eᵢ` in the collection expression:
