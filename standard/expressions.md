@@ -1550,7 +1550,8 @@ interpolated_raw_string_expression
     ;
 
 single_line_interpolated_raw_string_expression
-    : Interpolated_Raw_String_Start  Interpolated_Raw_String_Mid
+    : Interpolated_Raw_String_Start
+        (Interpolated_Raw_String_Mid | raw_interpolation)+
         Interpolated_Raw_String_End
     ;
 
@@ -1565,7 +1566,7 @@ Interpolated_Raw_String_Start
 // the following two lexical rules are context sensitive, see details below
 
 Interpolated_Raw_String_Mid
-    : (Raw_String_Literal_Content | raw_interpolation)+
+    : Raw_String_Literal_Content+
     ;
 
 Interpolated_Raw_String_End
@@ -1600,7 +1601,7 @@ fragment Interpolated_Raw_String_Character
 
 multi_line_interpolated_raw_string_expression
     : Interpolated_Raw_String_Start Whitespace* New_Line
-      (Interpolated_Raw_String_Mid | New_Line)* New_Line
+      (Interpolated_Raw_String_Mid | raw_interpolation | New_Line)* New_Line
       Whitespace* Interpolated_Raw_String_End
     ;
 ```
