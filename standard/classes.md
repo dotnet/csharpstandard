@@ -942,6 +942,7 @@ class_member_declaration
     | finalizer_declaration
     | static_constructor_declaration
     | type_declaration
+    | extension_declaration
     ;
 ```
 
@@ -960,6 +961,7 @@ The members of a class are divided into the following categories:
 - Finalizers, which implement the actions to be performed before instances of the class are permanently discarded ([§15.13](classes.md#1513-finalizers)).
 - Static constructors, which implement the actions required to initialize the class itself ([§15.12](classes.md#1512-static-constructors)).
 - Types, which represent the types that are local to the class ([§14.8](namespaces.md#148-type-declarations)).
+- Extensions, which allow members to be added conceptually to existing types without modifying their original source code (§Extension-members).
 
 A *class_declaration* creates a new declaration space ([§7.2](basic-concepts.md#72-declarations)), and the *type_parameter*s and the *class_member_declaration*s immediately contained by the *class_declaration* introduce new members into this declaration space. The following rules apply to *class_member_declaration*s:
 
@@ -2362,7 +2364,7 @@ parameter_collection
 
 The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_collection*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class, and that method is not declared inside an extension block (§Extension-members). If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
 An output parameter implicitly has the `scoped` modifier.
 
@@ -3427,7 +3429,9 @@ The implementing declaration for a required partial method may be an external me
 
 ### 15.6.10 Extension methods
 
-When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
+[There are two ways to declare an extension method. The original approach is described in this subclause. The newer alternate approach is described in §Extension-methods.]
+
+When the first parameter of a method includes the `this` modifier, and that method is not declared inside an extension block (§Extension-members), that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
 - It may only be an input parameter if it has a value type.
 - It may only be a reference parameter if it has a value type or has a generic type constrained to struct.
@@ -5574,7 +5578,7 @@ A *constructor_declaration* may include a set of *attributes* ([§23](attributes
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
+The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods outside extension blocks (§Extension-members and [§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
 Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
@@ -6213,6 +6217,255 @@ A compiler shall behave as if this method, and overrides of it, do not exist at 
 > *end example*
 
 For a discussion of the behavior when an exception is thrown from a finalizer, see [§22.4](exceptions.md#224-how-exceptions-are-handled).
+
+## §Extension-members Extension members
+
+### §Extension-general General
+
+An *extension_declaration* allow members to be added to an existing type without modifying that type’s original source code. An *extension_declaration* shall only be declared in a non-generic, non-nested static class.
+
+```ANTLR
+extension_declaration
+    : 'extension' type_parameter_list? '(' extension_receiver_parameter ')'
+      type_parameter_constraints_clause* extension_body
+    ;
+
+extension_receiver_parameter
+    : attributes? parameter_modifiers? type identifier?
+    ;
+
+extension_body
+    : '{' extension_member_declaration* '}' ';'?
+    ;
+
+extension_member_declaration
+    : method_declaration
+    | property_declaration
+    | operator_declaration
+    ;
+```
+
+Extension methods are discussed in §Extension-methods, extension properties are discussed in §Extension-properties, and extension operators are discussed in §Extension-operators.
+
+An instance of an *extension_declaration* is referred to as an ***extension block***.
+
+> *Example*: Here are some extension method declarations:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls1"} -->
+> ```csharp
+> using System.Linq;
+> public static class MyExtensions
+> {
+>     extension(string str)
+>     {
+>         public int ToInt32() => Int32.Parse(str);
+>     }
+>
+>     extension<T>(IEnumerable<T> source) where T : IEquatable<T>
+>     {
+>         public IEnumerable<T> ValuesEqualTo(T threshold)
+>             => source.Where(x => x.Equals(threshold));
+>     }
+>
+>     extension(int number)
+>     {
+>         public void ValueIncrement()
+>             => number++;
+>     }
+>
+>     extension(ref int number)
+>     {
+>         public void RefIncrement()
+>             => number++;
+>     }
+> }
+> ```
+>
+> *end example*
+
+The type parameters and extension receiver parameter of an extension declaration are in scope within the body of the extension declaration. It is an error to refer to the extension receiver parameter from within a static member, except within a `nameof` expression. It is an error for members to declare type parameters or parameters (as well as local variables and local functions directly within the member body) with the same name as a type parameter or extension receiver parameter of the extension declaration.
+
+It is not an error for the members themselves to have the same name as the type parameters or extension receiver parameter of the enclosing extension declaration. Member names are not directly found in a simple name lookup from within the extension declaration; lookup will thus find the type parameter or extension receiver parameter of that name, rather than the member.
+
+Extension members give rise to static methods being declared directly on the enclosing static class, and those can be found via simple name lookup; however, an extension declaration type parameter or extension receiver parameter of the same name will be found first.
+
+New-style extension methods can coexist with original-style ones and non-extension static members.
+
+An extension declaration is anonymous, and provides an extension receiver specification with any associated type parameters and constraints, followed by a set of extension member declarations. The extension receiver specification may be in the form of a parameter, or---if only static extension members are declared---a type.
+
+The type in the extension receiver specification is referred to as the *** extension receiver type*** and the parameter name, if present, is referred to as the ***extension receiver parameter***.
+
+If the extension receiver parameter is named, the extension receiver type shall not be static. If the extension receiver parameter is unnamed, it shall not have any modifiers, and it may only have the refness modifiers listed below, and `scoped`, otherwise. The extension receiver parameter has the same restrictions as the first parameter of an original-style extension method.
+
+An `EnumeratorCancellationAttribute` on an extension receiver parameter is ignored.
+
+Extension member declarations are syntactically identical to corresponding instance and static members in class and struct declarations (with the exception of constructors). Instance members refer to the extension receiver via the extension receiver parameter name.
+
+It is an error to specify an instance extension member if the enclosing extension declaration does not specify an extension receiver parameter.
+
+It is an error to specify the following modifiers on a member of an extension declaration: `abstract`, `virtual`, `override`, `new`, `sealed`, `partial`, and `protected` (and related accessibility modifiers).
+
+It is an error to specify the `readonly` modifier on a member of an extension declaration.
+
+The instance members are disallowed if the extension receiver parameter is unnamed.
+
+All members shall have names that differ from the name of the static enclosing class and the name of the extended type if it has one.
+
+It is an error to decorate an extension member with `ModuleInitializerAttribute`.
+
+By default the extension receiver is passed to instance extension members by value, just like other parameters. However, an extension declaration receiver in parameter form can specify `ref`, `ref readonly` and `in`, as long as the extension receiver type is known to be a value type. 
+
+Extension receiver types can be, or contain, nullable reference types, and extension receiver specifications that are in the form of parameters may specify attributes.
+
+For each non-method extension member, all the type parameters of its extension block shall be used in the combined set of parameters from the extension and the member.
+
+Within a given enclosing static class, the set of extension member declarations with the same extension receiver type modulo identity conversion and type parameter name substitution) are treated as a single declaration space similar to the members within a class or struct declaration, and are subject to the same rules about uniqueness ([§7.4.5]( basic-concepts.md#745-class-members)).
+
+The application of this uniqueness rule includes original extension methods within the same static class. For the purposes of comparison with methods within extension declarations, the `this` parameter is treated as an extension receiver specification along with any type parameters mentioned in that extension receiver type, and the remaining type parameters and method parameters are used for the method signature.
+
+When an extension member lookup is attempted, all extension declarations within static classes that are `using`-imported contribute their members as candidates, regardless of extension receiver type. Only as part of resolution are candidates with incompatible extension receiver types discarded.
+
+A full generic type inference is attempted between the type of the arguments (including the actual extension receiver) and any type parameters (combining those in the extension declaration and in the extension member declaration).
+
+When explicit type arguments are provided, they are used to substitute the type parameters of the extension declaration and the extension member declaration.
+
+Static extension methods are resolved like instance extension methods.  
+
+Extension properties are resolved like extension methods, with a single parameter (the extension receiver parameter) and a single argument (the actual extension receiver value). 
+
+A *using_static_directive* ([§14.6.4]( namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.  
+
+Extension members are subject to overload resolution prioritization ([§23.5.14](attributes.md#23514-the-overloadresolutionpriority-attribute)). The enclosing static class is considered to be the “containing type” consider by prioritization rules. Any `OverloadResolutionPriority` attribute present on an extension property applies to that property's accessors, so that the prioritization is respected when those accessors are used via disambiguation syntax.
+
+For an extension member declared inside a namespace to be accessed from outside that namespace, that namespace needs to be the imported via a *global_using_static_directive* or *using_static_directive*.
+
+### §Extension-methods Extension methods
+
+[There are two ways to declare an extension method. The original approach is described in [§15.6.10](classes.md#15610-extension-methods). The newer, alternative approach is described here.]
+
+An original-style extension method can be rewritten in the new style.
+
+> *Example*: The following original approach
+>
+> <!-- Example: {template:"standalone-lib", name:"OrigialStyleExtensionMethods"} -->
+> ```csharp
+> public static class Extensions
+> {
+>     public static int ToInt32(this string s) => Int32.Parse(s);
+>     public static T[] Slice<T>(this T[] source, int index, int count)
+>     {
+>         if (index < 0 || count < 0 || source.Length - index < count)
+>         {
+>             throw new ArgumentException();
+>         }
+>         T[] result = new T[count];
+>         Array.Copy(source, index, result, 0, count);
+>         return result;
+>     }
+> }
+> ```
+>
+> becomes
+>
+> <!-- Example: {template:"standalone-lib", name:"NewStyleExtensionMethods"} -->
+> ```csharp
+> public static class Extensions
+> {
+>     extension(string s)
+>     {
+>         public int ToInt32() => Int32.Parse(s);
+>     }
+>     extension<T>(T[] source)
+>     {
+>         public T[] Slice(int index, int count)
+>         {
+>             if (index < 0 || count < 0 || source.Length - index < count)
+>             {
+>                 throw new ArgumentException();
+>             }
+>             T[] result = new T[count];
+>             Array.Copy(source, index, result, 0, count);
+>             return result;
+>         }
+>     }
+> }
+> ```
+>
+> Apart from the `this` modifier, the only difference in the method declarations is that as the methods in the new-style approach need access to the extension receiver parameters `s` and `source`, respectively, the methods must not be declared static. *end example*
+> 
+### §Extension-properties Extension properties
+
+> *Example*: Here is an extension property declaration:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls2"} -->
+> ```csharp
+> public static class MyExtensions
+> {
+>     extension(Person per)
+>     {
+>         public string FullName => $"{per.FirstName} {per.LastName}";
+>     }
+> }
+> public record class Person(string? FirstName, string? LastName) { /*…*/ }
+> ```
+>
+> *end example*
+
+An extension property may not have an `init` accessor.
+
+### §Extension-operators Extension operators
+
+> *Example*: Here is an extension operator declaration:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls3"} -->
+> ```csharp
+> public static class MyExtensions
+> {
+>     extension(ValueTuple<double, double>)
+>     {
+>         public static (double, double) operator +((double, double) left,
+>          (double, double) right) =>
+>            (left.Item1 + right.Item1, left.Item2 + right.Item2);
+>     }
+> }
+> ```
+>
+> *end example*
+
+Although an extension operator has explicit operand types, those types still need to be declared within the operator declaration. (This allows type parameters to be declared and inferred, and is analogous to how a regular user-defined operator must be declared within one of its operand types.)
+
+A static extension operator for the extended type `T` shall take at least one parameter of type `S`, where `S` and `T` are identity convertible. Note that unlike for regular user-defined operators, `Nullable<T>` is not a valid type for `S`.
+
+For operators that require pair-wise declaration, the two declarations may occur in separate extension blocks for extended types `S` and `T`, respectively, as long as `S` and `T` are identity convertible and the extension blocks occur in the same static class.
+
+Instance compound assignment and increment operators are supposed to mutate the instance.
+Therefore, the following restrictions are applied for such extension operators:
+
+- The receiver type shall be either a reference type or a value type. (It cannot be an unconstrained type parameter.)
+- If the receiver type is a value type, the receiver parameter shall be a 'ref' parameter.
+- If the receiver type is a reference type, the receiver parameter shall be a value parameter.
+
+Like other extension members, extension operators are only considered if no applicable predefined or non-extension user-defined operators were found. The search then proceeds outwards scope by scope, starting with the innermost namespace within which the operator application occurs, until at least one applicable extension operator declaration is found. For compound assignment operators, this involves looking for first user-defined compound assignment operators and then, if none are found, non-assignment operators, before moving on to the next scope.
+
+At each scope, overload resolution works the same as other extension members:
+
+- The set of operator declarations for the given name (i.e., operator) is determined
+- Type inference is attempted for each, based on operand expressions
+- Declarations that fail type inference are removed
+- Declarations that are not applicable to the operands are removed
+- If there are no remaining candidates, proceed to the enclosing scope (or, if looking for compound-assignment operators, the corresponding simple operator)
+- Applying overload resolution between the candidate, select the unique best candidate, if it exists
+- If no unique best candidate can be found, overload resolution fails with an ambiguity error.
+
+The following restrictions are used for extension operators: When the operands of `&&` or `||` are of types that declare an applicable user-defined extension `operator &` or extension `operator |`, both of the following shall be true:
+
+- The operator shall compute the logical AND or the logical OR of two operands of type `T`, and shall return a result of type `T`.
+- The enclosing static class shall contain declarations of extension `operator true` and extension `operator false` applicable to an instance of type `T`.
+
+When an expression utilizing a user-defined operator is used in a lambda that is converted to a Linq Expression tree, an expression node that the compiler creates includes a `MethodInfo` pointing to the operator method.
+
+When the operator is an extension operator, a `MethodInfo` referring to the corresponding implementation method in the enclosing class is used.
+Extension operators `true` and `false` shall not be used for `dynamic` `&&` and `||`.
 
 ## 15.14 Async Functions
 
