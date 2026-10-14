@@ -1355,7 +1355,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
         processString = false;
         return;
     }
-    else 
+    else
     {
         processString = true;
         // continue construction
@@ -1374,7 +1374,7 @@ public class Logger
 {
     // …
     public void LogMessage(bool flag, int count,
-        [InterpolatedStringHandlerArgument("count","flag","")] 
+        [InterpolatedStringHandlerArgument("count","flag","")]
         LogInterpolatedStringHandler builder)
     {
         // …

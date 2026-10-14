@@ -866,7 +866,7 @@ namespace System.Runtime.CompilerServices
         System.AttributeTargets.Struct, AllowMultiple=false, Inherited=false)]
     public sealed class InterpolatedStringHandlerAttribute : Attribute
     {
-        public InterpolatedStringHandlerAttribute (); 
+        public InterpolatedStringHandlerAttribute ();
     }
 
     /// <summary>
