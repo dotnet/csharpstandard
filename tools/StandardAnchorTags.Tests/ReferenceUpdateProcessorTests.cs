@@ -19,4 +19,14 @@ public class ReferenceUpdateProcessorTests
     {
         Assert.That(ReferenceUpdateProcessor.IsCodeFenceDelimiter(line), Is.False);
     }
+
+    [Test]
+    public void RejectsSectionLinkWithoutClosingParenthesis()
+    {
+        const string line = "[§15.17](classes.md#1517-record-class-and-non-record-class-differences.";
+
+        var result = ReferenceUpdateProcessor.ExpandToIncludeExistingLink(line, new Range(1, 7));
+
+        Assert.That(result, Is.Null);
+    }
 }
