@@ -212,14 +212,6 @@ An instance member definition or accessor of an instance property, indexer, or e
 
 A record struct is a specialized value type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record struct, such as value-based equality and easy immutability.
 
-```ANTLR
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-```
-
 A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
 
 A *record_struct_declaration* having a *delimited_parameter_list* declares a ***positional record struct***.
@@ -239,13 +231,6 @@ It is an error for an instance field of a record struct to have an unsafe type.
 ### 16.4.3 Record struct body
 
 The *record_struct_body* of a record struct identifies the explicitly declared members of that struct.
-
-```ANTLR
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
-```
 
 For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
 
@@ -355,7 +340,7 @@ private bool PrintMembers(System.Text.StringBuilder builder);
 
 This method performs the following tasks:
 
-1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member’s name followed by “` = `“ followed by the member’s value separated with “`, “`,
+1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member's name followed by “` = `“ followed by the member's value separated with “`, “`,
 2. Returns true if the record struct has printable members.
 
 For a member that has a value type, its value shall be converted to a string representation.
@@ -378,7 +363,7 @@ This method performs the following tasks:
 
 1. Creates a `StringBuilder` instance,
 2. Appends the record struct name to the builder, followed by “` { `“,
-3. Invokes the record struct’s `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
+3. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
 4. Appends “`}`”,
 5. Returns the builder’s contents with `builder.ToString()`.
 
@@ -1063,7 +1048,7 @@ For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-> *Example*: The following illustrates how `scoped` affects the safe-context of a method’s return value:
+> *Example*: The following illustrates how `scoped` affects the safe-context of a method's return value:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"MethodInvocationSafeContext", expectedErrors:["CS8347","CS9075"]} -->
 > ```csharp
@@ -1145,7 +1130,7 @@ The safe-context of a declaration variable from an `out` argument (`M(x, out var
 
 - caller-context.
 - If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
-- If the out variable’s type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
+- If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
   - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
   - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 

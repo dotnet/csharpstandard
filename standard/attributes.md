@@ -510,7 +510,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.11](attributes.md#23511-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
 - `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.11.1](attributes.md#235111-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
-- `System.Diagnostics.CodeAnalysis.UnscopedRefAttribute` ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
+- System.Diagnostics.CodeAnalysis.UnscopedRefAttribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
 - `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)) and `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
@@ -822,7 +822,7 @@ If more than one caller-info attribute is specified on a given parameter, they a
 
 #### 23.5.6.2 The CallerLineNumber attribute
 
-The attribute `System.Runtime.CompilerServices.CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter’s type. This ensures that any non-negative line number up to that value can be passed without error.
+The attribute `CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter’s type. This ensures that any non-negative line number up to that value can be passed without error.
 
 If a function invocation from a location in source code omits an optional parameter with the `CallerLineNumberAttribute`, then a numeric literal representing that location’s line number is used as an argument to the invocation instead of the default parameter value.
 
@@ -832,7 +832,7 @@ The line number may be affected by `#line` directives ([§6.5.8](lexical-structu
 
 #### 23.5.6.3 The CallerFilePath attribute
 
-The attribute `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
+The attribute `CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
 If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a UTF-16 string literal representing that location’s file path is used as an argument to the invocation instead of the default parameter value.
 
@@ -842,7 +842,7 @@ The file path may be affected by `#line` directives ([§6.5.8](lexical-structure
 
 #### 23.5.6.4 The CallerMemberName attribute
 
-The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
+The attribute `CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
 If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a UTF-16 string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
@@ -1272,13 +1272,13 @@ See [§9.7.3](variables.md#973-the-scoped-modifier) for more information.
 
 ### 23.5.9 The ScopedRef attribute
 
-The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter’s `scoped` annotation differs from its default state, in order to encode the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) in metadata. This attribute is not permitted in source.
+The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter's `scoped` annotation differs from its default state, in order to encode the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) in metadata. This attribute is not permitted in source.
 
 ### 23.5.10 The EnumeratorCancellation attribute
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.15.5.2](classes.md#151552-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) in the body of that method.
 
-It is an error if the `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` attribute is applied to more than one parameter. The compiler may produce a warning if:
+It is an error if the `EnumeratorCancellationAttribute` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
 - `EnumeratorCancellationAttribute` is applied to a parameter of a type other than `CancellationToken`,
 - or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
@@ -1522,7 +1522,7 @@ If an `out bool` parameter is also declared to allow the handler to be inhibited
 
 #### 23.5.12.1 The SetsRequiredMembers attribute
 
-This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn’t verify that the constructor actually initializes all required members.
+This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn't verify that the constructor actually initializes all required members.
 
 > *Example*:
 >

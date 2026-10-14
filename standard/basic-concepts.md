@@ -32,10 +32,10 @@ A method qualifies as a canditate entry point by satisfying the following requir
 - It shall have the name `Main`.
 - It shall be `static`.
 - It shall not be generic.
-- It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
+- It shall be declared in a non-generic type. If the type declaring the method is a nested type, all of its enclosing types shall be non-generic.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
-- It may have the `async` modifier only if the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
-- It shall not be an optional partial method ([§15.6.9](classes.md#1569-partial-methods)) without an implementing declaration.
+- If the `async` modifier is present, the method’s return type shall be `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
+- It shall not be an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) without an implementing declaration.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
 The declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
@@ -66,7 +66,7 @@ The method name `«Main»` is a placeholder for an unspecified implementation pr
 
 The `«statement_list»` is a placeholder for *statement_list* of the *compilation-unit*.
 
-The parameter `args` is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply. This parameter receives the application parameters ([§7.1.6](basic-concepts.md#716-entry-point-invocation)).
+The parameter `args` is in scope within the top-level statements and not otherwise. Regular name resolution rules apply. This parameter receives the application parameters ([§7.1.6](basic-concepts.md#716-entry-point-invocation)).
 
 Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method.
 
@@ -102,7 +102,7 @@ It is a compile-time error if there are no candidate entry points.
 Otherwise the entry point is selected from the candidates:
 
 - If one of the candidates is specified by an external mechanism ([§7.1.4](basic-concepts.md#714-externally-defined-entry-point)) it is selected as the entry point;
-- Otherwise, iff one of the candidates is defined by top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) it is selected as the entry point;
+- Otherwise, if exactly one of the candidates is defined by top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) it is selected as the entry point;
 - Otherwise:
   - If any of the candidates have a return type of `int` or `void` then any candidates having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` are removed from the candidate pool.
   - If there is a single remaining candidate it is selected as the entry point.
@@ -112,7 +112,7 @@ The entry point selected at compile-time is invoked at runtime as part of applic
 
 ### 7.1.6 Entry point invocation
 
-If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of non-null references to zero or more strings, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup.
+If the entry point declares a parameter, then the implementation shall as the initial value of that parameter provide a non-null reference to a string array. This array shall consist of zero or more string variables, called ***application parameter***s, which are given implementation-defined values by the host environment prior to application startup. Although the values are implementation-defined, they shall not be null.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
@@ -121,14 +121,15 @@ The application startup and termination process is semantically equivalent to th
 - An application run is started by either:
   - Invoking ([§12.8.10](expressions.md#12810-invocation-expressions)) the entry-point method, if its return type is `void` or `int`; or
   - Awaiting ([§12.9.9](expressions.md#1299-await-expressions)) the result of invoking the entry-point method, if its return type is a `Task` type.
-  - In either case if the entry point requires an argument the application parameter array is supplied as its value.
+- In either case if the entry point requires an argument the application parameter array is supplied as its value.
 
 > *Note*: Invoking the entry-point method will cause the static constructor, if any, of the enclosing type to be executed first ([§15.12](classes.md#1512-static-constructors), [§16.6.10](structs.md#16610-static-constructors)). *end note*
 
 - The application is terminated
   - If the run results in an `int` value it serves as the termination status code;
   - Otherwise, if the run results in no return value the termination status code is `0`;
-  - Otherwise, if the run terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+  - Otherwise, if the run terminates due to an exception ([§22.4](exceptions.md#224-how-exceptions-are-handled)), the exit code is implementation-defined.
+- Additionally, the implementation may provide alternative APIs for specifying the exit code and terminating the application.
 
 Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-defined.
 
@@ -682,8 +683,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a namespace member declared by a *compilation_unit_body* whose fully qualified name is `N`, is every *compilation_unit_body* whose fully qualified name is `N` or starts with `N`, followed by a period.
 - The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period. Per [§14.3](namespaces.md#143-namespace-declarations), *file_scoped_namespace_declaration*s are treated as equivalent *namespace_declaration*s for this rule.
 - The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *global_using_directive*s, *using_directive*s, *global_attributes*, and *compilation_unit_body* of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit*, *namespace_body*, and *file_scoped_namespace_declaration* in which it occurs.
-- The scope of a name defined or imported by a *global_using_directive* extends over the *global_attributes* and *compilation_unit_body* of all the *compilation_unit*s in the program.
-- The scope of a name defined or imported by a *using_directive* ([§14.6](namespaces.md#146-using-directives)) extends over the *global_attributes*, *statement_list*s, and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
+- The scope of a name defined or imported by a *global_using_directive* extends over the *global_attributes* and *namespace_member_declaration*s of all the *compilation_unit*s in the program.
+- The scope of a name defined or imported by a *using_directive* ([§14.6](namespaces.md#146-using-directives)) extends over the *global_attributes*, *statement_list*, and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
 - The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clause*s, and *class_body* (or *record_class_body*) of that *class_declaration*.
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* (or *record_struct_body*) of that *struct_declaration*.
@@ -787,13 +788,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > *end note*
 
-As described in [§7.1.3](basic-concepts.md#713-using-top-level-statements), top-level source tokens are enclosed by the generated entry-point method.
+As described in [§7.1.3](basic-concepts.md#713-using-top-level-statements), top-level statements are enclosed by the generated entry-point method. Any names declared within top-level statements are subject to the scoping rules (as defined above) applicable once the statements are enclosed within the entry-point method.
 
-For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry-point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
-
-This could lead to name shadowing of namespaces and types declared within the global namespace as well as to shadowing of imported names.
-
-If the simple name evaluation occurs outside of the top-level statements and the evaluation yields a top-level local variable or function, a compile-time error results.
+However, names declared within top-level statements impact *simple_name* resolution within a *compilation_unit*, potentially making some global entities inaccessible via *simple_name* ([§12.8.4](expressions.md#1284-simple-names)).
 
 ### 7.6.2 Name hiding
 
