@@ -6293,7 +6293,7 @@ New-style extension methods can coexist with original-style ones and non-extensi
 
 An extension declaration is anonymous, and provides an extension receiver specification with any associated type parameters and constraints, followed by a set of extension member declarations. The extension receiver specification may be in the form of a parameter, or---if only static extension members are declared---a type.
 
-The type in the extension receiver specification is referred to as the *** extension receiver type*** and the parameter name, if present, is referred to as the ***extension receiver parameter***.
+The type in the extension receiver specification is referred to as the ***extension receiver type*** and the parameter name, if present, is referred to as the ***extension receiver parameter***.
 
 If the extension receiver parameter is named, the extension receiver type shall not be static. If the extension receiver parameter is unnamed, it shall not have any modifiers, and it may only have the refness modifiers listed below, and `scoped`, otherwise. The extension receiver parameter has the same restrictions as the first parameter of an original-style extension method.
 
@@ -6313,7 +6313,7 @@ All members shall have names that differ from the name of the static enclosing c
 
 It is an error to decorate an extension member with `ModuleInitializerAttribute`.
 
-By default the extension receiver is passed to instance extension members by value, just like other parameters. However, an extension declaration receiver in parameter form can specify `ref`, `ref readonly` and `in`, as long as the extension receiver type is known to be a value type. 
+By default the extension receiver is passed to instance extension members by value, just like other parameters. However, an extension declaration receiver in parameter form can specify `ref`, `ref readonly` and `in`, as long as the extension receiver type is known to be a value type.
 
 Extension receiver types can be, or contain, nullable reference types, and extension receiver specifications that are in the form of parameters may specify attributes.
 
@@ -6331,7 +6331,7 @@ When explicit type arguments are provided, they are used to substitute the type 
 
 Static extension methods are resolved like instance extension methods.  
 
-Extension properties are resolved like extension methods, with a single parameter (the extension receiver parameter) and a single argument (the actual extension receiver value). 
+Extension properties are resolved like extension methods, with a single parameter (the extension receiver parameter) and a single argument (the actual extension receiver value).
 
 A *using_static_directive* ([§14.6.4]( namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.  
 
@@ -6392,7 +6392,7 @@ An original-style extension method can be rewritten in the new style.
 > ```
 >
 > Apart from the `this` modifier, the only difference in the method declarations is that as the methods in the new-style approach need access to the extension receiver parameters `s` and `source`, respectively, the methods must not be declared static. *end example*
-> 
+
 ### §Extension-properties Extension properties
 
 > *Example*: Here is an extension property declaration:
