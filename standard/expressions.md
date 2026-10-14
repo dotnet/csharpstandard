@@ -701,7 +701,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* (§collection-expressions). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
+When a function member with a parameter collection is invoked in its expanded form with at least one expanded argument, the invocation is processed as if the expanded arguments were the *collection_element*s of a *collection_expression* ([§12.8.25](expressions.md#12825-collection-expressions)). An empty collection is passed when there are no arguments for the parameter collection; it is unspecified whether the reference passed is to a newly allocated or existing empty collection.
 
 > *Example*: Given the declaration
 >
