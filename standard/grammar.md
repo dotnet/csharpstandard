@@ -213,14 +213,15 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'       | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'        | 'Cdecl'      | 'descending' | 'dynamic'  | 'equals'
-    | 'Fastcall'  | 'from'       | 'get'       | 'global'    | 'group'
-    | 'init'      | 'into'       | 'join'      | 'let'       | 'managed'
-    | 'nameof'    | 'nint'       | 'notnull'   | 'nuint'     | 'on'
-    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'select'
-    | 'set'       | 'Stdcall'    | 'Thiscall'  | 'unmanaged' | 'value'
-    | 'var'       | 'when'       | 'where'     | 'yield'
+    : 'add'      | 'alias'     | 'and'      | 'ascending' | 'async'
+    | 'await'    | 'by'        | 'Cdecl'    | 'descending' | 'dynamic'
+    | 'equals'   | 'Fastcall'  | 'from'     | 'get'       | 'global'
+    | 'group'    | 'init'      | 'into'     | 'join'      | 'let'
+    | 'managed'  | 'nameof'    | 'nint'     | 'not'       | 'notnull'
+    | 'nuint'    | 'on'        | 'or'       | 'orderby'   | 'partial'
+    | 'record'   | 'remove'    | 'select'   | 'set'       | 'Stdcall'
+    | 'Thiscall' | 'unmanaged' | 'value'    | 'var'       | 'when'
+    | 'where'    | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -2780,19 +2781,6 @@ struct_member_declaration
     | static_constructor_declaration
     | type_declaration
     | fixed_size_buffer_declaration   // unsafe code support
-    ;
-
-// Source: §16.4.1 General
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-// Source: §16.4.3 Record struct body
-record_struct_body
-    : struct_body ';'?
-    | ';'
     ;
 
 // Source: §17.7 Array initializers

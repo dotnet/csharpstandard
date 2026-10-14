@@ -540,7 +540,7 @@ Once a particular function member has been identified at binding-time, possibly 
 
 Every function member and delegate invocation includes an argument list, which provides actual values or variable references for the parameters of the function member. The syntax for specifying the argument list of a function member invocation depends on the function member category:
 
-- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
+- For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set or init accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.
    > *Note*: This additional argument is not used for overload resolution, just during invocation of the set or init accessor. *end note*
 - For properties, the argument list is empty when invoking the get accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the set or init accessor.
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
@@ -1632,7 +1632,7 @@ A *constant interpolated string* is an *interpolated_string_expression* that con
 - no interpolations, or
 - interpolations whose *expression*s are constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
 
-For example, $“Hello”, $“{cs1}, world!” (given `const string cs1 = $"Hello";`), $“{“Hello,” + $“world!"}”, and $“xxx{(true ? $“{“X”}” : $“{$“{“Y”}”}”)}yyy” are all constant interpolated strings. However, $“{123}” and $“{“abc”}{123.45}” are not.
+For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
 
 For simplicity, the term *ISE* is used throughout this specification to mean either an *interpolated_string_expression* or an *additive_expression* composed entirely of *interpolated_string_expression*s and binary `+` operators.
 
@@ -1659,7 +1659,10 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
   - Otherwise, if the declaration of `T` includes a primary constructor parameter `I`, the result is the primary constructor parameter `I`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
-  - If `e` is zero and `I` is the name of a namespace in `N`, then:
+  - If `N` is the global namespace, the current *compilation_unit* contains top-level statements ([§7.1.3](basic-concepts.md#713-using-top-level-statements)) and a declaration for *simple_name* occurs directly within the *method_body* ([§15.6.1](classes.md#1561-general)) of the generated entry-point method ([§7.1.3](basic-concepts.md#713-using-top-level-statements)), then:
+    - The access is invalid and a compiler-time error shall be generated.
+      > *Note*: This rule means that a declaration of some *simple_name* in a top-level statement can hide a global declaration if referenced using the same *simple_name*. *end note*
+  - Otherwise, if `e` is zero and `I` is the name of a namespace in `N`, then:
     - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, or any namespace declaration for `N` in the program contains a *global_using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
     - Otherwise, the *simple_name* refers to the namespace named `I` in `N`.
   - Otherwise, if `N` contains an accessible type having name `I` and `e` type parameters, then:
@@ -2069,9 +2072,9 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
-- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
-- Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
+- If the *invocation_expression* invokes a return-no-value method ([§15.6.1](classes.md#1561-general)) or a return-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.22](expressions.md#1222-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
+- Otherwise, if the *invocation_expression* invokes a return-by-ref method ([§15.6.1](classes.md#1561-general)) or a return-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
+- Otherwise, the *invocation_expression* invokes a return-by-value method ([§15.6.1](classes.md#1561-general)) or return-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes. If the invocation is of an instance method, and the receiver is of an interface type `T`, the associated type is picked from the declaration or override of the method found in the most specific ([§19.4.10](interfaces.md#19410-most-specific-implementation)) interface from among `T` and its direct or indirect base interfaces. It is a compile-time error if no unique such type exists.
 
 > *Note*: The following is only applicable in unsafe code. *end note*
 
@@ -3747,7 +3750,7 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   ```
 
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
-  
+
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
 
   If the operand of the negation operator is of type `nuint`, a compile-time error occurs.
@@ -3974,13 +3977,13 @@ A *with_expression* is not permitted as a statement.
 
 The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
 
-*identifier* shall be an accessible instance field or property of the receiver’s type.
+*identifier* shall be an accessible instance field or property of the receiver's type.
 
 All non-positional properties being changed shall have both set and init accessors.
 
 This expression is evaluated as follows:
 
-- For a record class type, the receiver’s clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
+- For a record class type, the receiver's clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
 - For a record struct or non-record struct type, the receiver is copied.
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
@@ -7247,7 +7250,7 @@ It is a compile time error if any *variable_reference*, including any reclassifi
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
 - a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
-- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
+- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*.
 
 For these restrictions:
 
@@ -7581,7 +7584,7 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 

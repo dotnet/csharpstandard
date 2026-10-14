@@ -8,7 +8,7 @@ Base a new version branch off the previous version's "feature complete alpha bra
 
 Copilot can do a good job managing conflicts when applying patches, unless the scope of merge conflicts becomes too great. As a result, the order of applying patches is important. After several experiments, the best order is to apply the patches from most files changed to fewest files changes. Where different patches have changed the same number of files, order should work to minimize the potential conflict opportunities.
 
-For example, this order worked best for V9:
+For example, this order worked best for V10:
 
 1. *Lambda improvements*
    - https://github.com/dotnet/csharpstandard/pull/1566.patch
@@ -55,9 +55,9 @@ For example, this order worked best for V9:
    - small - 2 files
      - classes.md*
      - standard-library.md**
-1. *file scoped namespaces* 
+1. *file scoped namespaces*
    - **On 2/11/26, Rex noticed that all text edits to narrative in namespaces.md appear to have been applied, but neither of the sets of grammar changes was made.**
-   - https://github.com/dotnet/csharpstandard/pull/1540.patch 
+   - https://github.com/dotnet/csharpstandard/pull/1540.patch
    - small - 2 files
      - basic-concepts.md*
      - namespaces.md*
@@ -85,7 +85,7 @@ For example, this order worked best for V9:
 1. *forward*
    - https://github.com/dotnet/csharpstandard/pull/1537.patch
    - Small - 1 file
-     - foreword.md 
+     - foreword.md
 1. *Extended property patterns*
    - https://github.com/dotnet/csharpstandard/pull/1551.patch
    - small - 1 files

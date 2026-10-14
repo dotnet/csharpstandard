@@ -27,7 +27,7 @@ The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directive
 
 The *using_directive*s ([§14.6](namespaces.md#146-using-directives)) of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-The *global_using_directive*s of a compilation unit affect the *global_attributes* and *compilation_unit_body* of all compilation units in the program.
+The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
@@ -178,7 +178,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* extends over *global_using_directive*s, the *using_directive*s, *global_attributes* and *compilation_unit_body* of its immediately containing *compilation_unit* or *namespace_body*.
+The scope of an *extern_alias_directive* is described in [§7.7.1](basic-concepts.md#771-general).
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
