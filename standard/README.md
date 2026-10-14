@@ -642,6 +642,7 @@
     - [§15.7.4](classes.md#1574-automatically-implemented-properties)  Automatically implemented properties
     - [§15.7.5](classes.md#1575-accessibility)  Accessibility
     - [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+    - [§15.7.7](classes.md#1577-partial-properties)  Partial properties
   - [§15.8](classes.md#158-events)  Events
     - [§15.8.1](classes.md#1581-general)  General
     - [§15.8.2](classes.md#1582-field-like-events)  Field-like events
@@ -651,6 +652,7 @@
   - [§15.9](classes.md#159-indexers)  Indexers
     - [§15.9.1](classes.md#1591-general)  General
     - [§15.9.2](classes.md#1592-indexer-and-property-differences)  Indexer and Property Differences
+    - [§15.9.3](classes.md#1593-partial-indexers)  Partial indexers
   - [§15.10](classes.md#1510-operators)  Operators
     - [§15.10.1](classes.md#15101-general)  General
     - [§15.10.2](classes.md#15102-unary-operators)  Unary operators
@@ -885,6 +887,7 @@
       - [§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)  The RequiredMember attribute
     - [§23.5.13](attributes.md#23513-the-collectionbuilder-attribute)  The CollectionBuilder attribute
     - [§23.5.14](attributes.md#23514-the-inlinearray-attribute)  The InlineArray attribute
+    - [§23.5.15](attributes.md#23515-the-overloadresolutionpriority-attribute)  The OverloadResolutionPriority attribute
   - [§23.6](attributes.md#236-attributes-for-interoperation)  Attributes for interoperation
 - [§24](unsafe-code.md#24-unsafe-code)  Unsafe code
   - [§24.1](unsafe-code.md#241-general)  General

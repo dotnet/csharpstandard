@@ -213,15 +213,29 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'     | 'alias'    | 'and'     | 'ascending'  | 'async'
-    | 'await'   | 'by'       | 'Cdecl'   | 'descending' | 'dynamic'
-    | 'equals'  | 'Fastcall' | 'file'    | 'from'       | 'get'
-    | 'global'  | 'group'    | 'init'    | 'into'       | 'join'
-    | 'let'     | 'managed'  | 'nameof'  | 'nint'       | 'not'
-    | 'notnull' | 'nuint'    | 'on'      | 'or'         | 'orderby'
-    | 'partial' | 'record'   | 'remove'  | 'required'   | 'scoped'
-    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'   | 'unmanaged'
-    | 'value'   | 'var'      | 'when'    | 'where'      | 'yield'
+    : 'add'       | 'alias'
+    | 'allows'    | 'and'
+    | 'ascending' | 'async'
+    | 'await'     | 'by'
+    | 'Cdecl'     | 'descending'
+    | 'dynamic'   | 'equals'
+    | 'Fastcall'  | 'file'
+    | 'from'      | 'get'
+    | 'global'    | 'group'
+    | 'init'      | 'into'
+    | 'join'      | 'let'
+    | 'managed'   | 'nameof'
+    | 'nint'      | 'not'
+    | 'notnull'   | 'nuint'
+    | 'on'        | 'or'
+    | 'orderby'   | 'partial'
+    | 'record'    | 'remove'
+    | 'required'  | 'scoped'
+    | 'select'    | 'set'
+    | 'Stdcall'   | 'Thiscall'
+    | 'unmanaged' | 'value'
+    | 'var'       | 'when'
+    | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -328,7 +342,7 @@ fragment Single_Character
 
 fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
-      '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
+      '\\e'  | '\\f' | '\\n'  | '\\r' | '\\t' | '\\v'
     ;
 
 fragment Hexadecimal_Escape_Sequence
@@ -2375,6 +2389,11 @@ type_parameter_constraints_clause
     ;
 
 type_parameter_constraints
+    : restrictive_type_parameter_constraints (',' anti_constraints_clause)?
+    | anti_constraints_clause
+    ;
+
+restrictive_type_parameter_constraints
     : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
     | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
@@ -2401,6 +2420,18 @@ secondary_constraints
 constructor_constraint
     : 'new' '(' ')'
     ;
+
+anti_constraints_clause
+    : 'allows' anti_constraints
+
+anti_constraints
+    : anti_constraint (',' anti_constraint)*
+
+anti_constraint
+    : ref_struct_clause
+
+ref_struct_clause
+    : 'ref' 'struct'
 
 // Source: §15.2.6 Class body
 class_body
@@ -2543,8 +2574,8 @@ delimited_parameter_list
 
 parameter_list
     : fixed_parameters
-    | fixed_parameters ',' parameter_array
-    | parameter_array
+    | fixed_parameters ',' parameter_collection
+    | parameter_collection
     ;
 
 fixed_parameters
@@ -2572,14 +2603,14 @@ parameter_mode_modifier
     | 'in'
     ;
 
-parameter_array
-    : attributes? 'params' array_type identifier
+parameter_collection
+    : attributes? 'params' type identifier
     ;
 
 // Source: §15.7.1 General
 property_declaration
-    : attributes? property_modifier* type member_name property_body
-    | attributes? property_modifier* ref_kind type member_name ref_property_body
+    : attributes? property_modifier* 'partial'? type member_name property_body
+    | attributes? property_modifier* 'partial'? ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -2698,8 +2729,8 @@ remove_accessor_declaration
 
 // Source: §15.9.1 General
 indexer_declaration
-    : attributes? indexer_modifier* indexer_declarator indexer_body
-    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
+    : attributes? indexer_modifier* 'partial'? indexer_declarator indexer_body
+    | attributes? indexer_modifier* 'partial'? ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
