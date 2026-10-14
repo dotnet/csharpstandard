@@ -4349,7 +4349,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   ```
 
   These overloads of the binary `+` operator perform concatenation of UTF-16 strings. If an operand is `null`, an empty UTF-16 string is substituted. Otherwise, any non-`string` operand that is not a ref struct ([§16.2.3](structs.md#1623-ref-modifier)) is converted to its UTF-16 string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty UTF-16 string is substituted.
-  
+
   > *Example*:
   >
   > <!-- Example: {template:"standalone-console", name:"AdditionOperator", expectedOutput:["s = ><","i = 1","f = 1.23E+15","d = 2.900"]} -->
