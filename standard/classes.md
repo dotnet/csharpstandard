@@ -2236,13 +2236,13 @@ A *method_declaration* has a valid combination of modifiers if all of the follow
 
 Methods are classified according to what, if anything, they return:
 
-- If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
-- Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
-- Otherwise, the method is ***returns-by-value*** and returns a value.
+- If `ref` is present, the method is ***return-by-ref*** and returns a *variable reference*, that is optionally read-only;
+- Otherwise, if *return_type* is `void`, the method is ***return-no-value*** and does not return a value;
+- Otherwise, the method is ***return-by-value*** and returns a value.
 
-The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a return-by-value or return-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method return-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
 
-The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
+The *ref_return_type* of a return-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
@@ -2256,13 +2256,13 @@ The optional *parameter_list* specifies the parameters of the method ([§15.6.2]
 
 The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
-The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
+The *method_body* of a return-by-value or return-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a return-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon. For partial methods the *ref_method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -2879,9 +2879,9 @@ A compile-time error occurs unless all of the following are true for an override
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of the overridden base method.
 - The override method has a return type that is convertible by an identity conversion or (if the method has a value return) an implicit reference conversion to the return type of every override of the overridden base method that is declared in a (direct or indirect) base type of the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- The override method’s return type is at least as accessible as the override method.
+- The override method's return type is at least as accessible as the override method.
   > *Note*: This constraint permits an override method in a `private` class to have a `private` return type.  However, it requires a `public` override method in a `public` type to have a `public` return type. *end note*
-- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
+- A *type_parameter_constraints_clause* may only consist of the `class`, `struct`, or `default` *primary_constraint*s. The `class` and `struct` constraints may be placed on *type_parameter*s known according to the inherited constraints to be either reference or non-nullable value types respectively. The `default` constraint may be placed on *type_parameter*s that are not constrained to either reference or value types. Any type of the form `T?` in the overriding method's signature, where `T` is a type parameter, is interpreted as follows:
   - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type.
   - If either a `struct` constraint is added, or no constraint is added and the inherited constraint is a value type constraint, for the type parameter `T` then `T?` is a nullable value type.
   - If a `default` constraint is added for type parameter `T`, the interpretation of `T?` depends on the type argument substituted for `T`:
@@ -3152,7 +3152,7 @@ When a method declaration includes an `extern` modifier, the method is said to b
 
 The mechanism by which linkage to an external method is achieved is implementation-defined.
 
-> *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
+> *Example*: The following example demonstrates the use of the `extern` modifier and `DllImportAttribute`:
 >
 > <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
@@ -3211,7 +3211,7 @@ For a required partial method both the definition and implementation shall exist
 >     protected partial bool M3();        // required, impl. required
 >     public partial void M4(out int i);  // required, impl. required
 > }
-> 
+>
 > // part containing implementing partial method declarations
 > partial class C
 > {
@@ -3253,16 +3253,6 @@ If an implementing declaration exists for a given partial method, the invocation
 - The attributes in the resulting method declaration are the combined attributes of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial method declaration in unspecified order. Duplicates are not removed.
 - Any default arguments ([§15.6.2](classes.md#1562-method-parameters)) in the implementing declaration are removed.
-
-If a defining declaration but not an implementing declaration is given for a restricted partial method `M`, the following restrictions apply:
-
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
-
-- It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
-
-- Expressions occurring as part of an invocation of `M` do not affect the definite assignment state ([§9.4](variables.md#94-definite-assignment)), which can potentially lead to compile-time errors.
-
-- `M` cannot be the entry point for an application ([§7.1](basic-concepts.md#71-application-startup-and-termination)).
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
@@ -3454,11 +3444,11 @@ When the effective return type of a method is `void` and the method has a block 
 
 When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
+For a return-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
+For a return-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
-For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For return-by-value and return-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >
@@ -3711,7 +3701,7 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.22](expressions.md#1222-anonymous-function-expressions)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.24](expressions.md#1224-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators), [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.24.2](expressions.md#12242-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
@@ -4015,7 +4005,7 @@ An instance property containing an *init_accessor_declaration* is considered set
 >     public string? FirstName { get; init; }
 >     public string? LastName  { get; init; }
 > }
-> 
+>
 > class Consumption
 > {
 >     static void Example()
@@ -4050,7 +4040,7 @@ The rules around when init accessors are settable extend across type hierarchies
 >         Value = true;
 >     }
 > }
-> 
+>
 > class Consumption
 > {
 >     void Example()
@@ -4107,11 +4097,11 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >     }
 >     internal int OtherProperty { get; init; }
 > }
-> 
+>
 > class Derived : Base
 > {
 >     internal readonly int DerivedField;
-> 
+>
 >     internal int DerivedProperty
 >     {
 >         get => DerivedField;
@@ -4122,10 +4112,10 @@ The ability to assign to `readonly` fields from an init accessor is limited to t
 >             Field = 13;         // Error: Field is readonly
 >         }
 >     }
-> 
+>
 >     public Derived()
 >     {
->         Property = 42;  // OK 
+>         Property = 42;  // OK
 >         Field = 13;     // Error: Field is readonly
 >     }
 > }
@@ -4401,9 +4391,9 @@ Abstract property declarations are only permitted in abstract classes ([§15.2.2
 
 For an override property `P` declared in an interface `I`, the overridden base property is determined by examining each direct or indirect base interface of `I`, collecting the set of interfaces declaring an accessible property which has the same name as `P`. If this set of interfaces has a *most derived type*, to which there is an identity or implicit reference conversion from every type in this set, and that type contains a unique such property declaration, then that is the overridden base property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property’s type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. The overriding property's type shall be at least as accessible as the overriding property. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-write or read-init), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding and the inherited property. For an override property declared in an interface, there shall also be an identity conversion or (if the inherited property is read-only and has a value return) an implicit reference conversion between the type of the overriding property and the type of every override of the overridden base property that is declared in a (direct or indirect) base interface of the overriding property.
 
-> *Note*: The accessibility constraint on the overriding property’s type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
+> *Note*: The accessibility constraint on the overriding property's type permits an override property in a `private` class to have a `private` property type. However, it requires a `public` override property in a `public` type to have a `public` property type. *end note*
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class or interface from further overriding the property. The accessors of a sealed property are also sealed.
 
@@ -4506,12 +4496,12 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 > {
 >     public virtual int Property { get; init; }
 > }
-> 
+>
 > class C1 : Base
 > {
 >     public override int Property { get; init; }
 > }
-> 
+>
 > class C2 : Base
 > {
 >     // Error: Property must have init to override Base.Property
@@ -4851,7 +4841,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+An *indexer_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)) and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers. Additionally an *indexer_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.13](structs.md#16813-indexers)).
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -5081,9 +5071,8 @@ binary_operator_declarator
     ;
 
 overloadable_binary_operator
-    : 'checked'? '+' | 'checked'? '-' | 'checked'? '*' | 'checked'? '/' | '%'
-    | '&' | '|' | '^' | '<<' | right_shift | unsigned_right_shift
-    | '==' | '!=' | '>' | '<' | '>=' | '<='
+    : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
+      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -6132,15 +6121,15 @@ The ability to provide an alternate builder type shall not be used when the synt
 When an async function is compiled, the builder type is determined by:
 
 1. Using the builder type from `AsyncMethodBuilderAttribute`, if one is present;
-1. Otherwise, falling back to the builder type determined by the async function’s *return_type* ([§15.14.2](classes.md#15142-task-type-builder-pattern)).
+1. Otherwise, falling back to the builder type determined by the async function's *return_type* ([§15.14.2](classes.md#15142-task-type-builder-pattern)).
 
 If an `AsyncMethodBuilderAttribute` is present, the builder type specified by that attribute is constructed, if necessary.
 
-If the override type is an open generic type, take the single type argument of the async function’s return type and substitute it into the override type.
+If the override type is an open generic type, take the single type argument of the async function's return type and substitute it into the override type.
 
 If the override type is a bound generic type, then an error results.
 
-If the async function’s return type does not have a single type argument, an error results.
+If the async function's return type does not have a single type argument, an error results.
 
 To verify that the builder type is compatible with *return_type* of the async function:
 
@@ -6353,7 +6342,7 @@ A record class is a specialized reference type that is optimized for storing dat
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
+      type_parameter_constraints_clause* class_body
     ;
 ```
 
@@ -6428,7 +6417,7 @@ If a record class is derived directly from `object`, the record class type has a
 System.Type EqualityContract { get; };
 ```
 
-The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
 
 If the record class type is derived from some base record class type `Base`, the record class type includes a provided property declared as follows:
 
@@ -6436,9 +6425,9 @@ If the record class type is derived from some base record class type `Base`, the
 protected override System.Type EqualityContract { get; };
 ```
 
-The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn’t override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either the provided or the explicitly declared property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The provided property returns `typeof(R)` where `R` is the record class type.
 
-The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn’t allow overriding in a derived type and the record class type is not `sealed`.
+The record class type implements `System.IEquatable<R>` and includes a provided, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
 
 If `Equals(R? other)` is user-defined but `GetHashCode` is not, a warning shall be issued.
 
@@ -6468,7 +6457,7 @@ If the record class type is derived from some base record class type, `Base`, th
 public sealed override bool Equals(Base? other);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn’t override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
+It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The provided override returns `Equals((object?)other)`.
 
 The record class type includes a provided override declared as follows:
 
@@ -6476,7 +6465,7 @@ The record class type includes a provided override declared as follows:
 public override bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. It is an error if the method doesn’t override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
+It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The provided override returns `Equals(other as R)` where `R` is the record class type.
 
 The record class type includes a provided override method declared as follows:
 
@@ -6484,7 +6473,7 @@ The record class type includes a provided override method declared as follows:
 public override int GetHashCode();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn’t override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the provided, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
 
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
@@ -6514,69 +6503,69 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >     public T1 P1 { get; init; }
 >     protected virtual Type EqualityContract => typeof(R1);
 >     public override bool Equals(object? obj) => Equals(obj as R1);
-> 
+>
 >     public virtual bool Equals(R1? other)
 >     {
 >         return !(other is null) &&
 >             EqualityContract == other.EqualityContract &&
 >             EqualityComparer<T1>.Default.Equals(P1, other.P1);
 >     }
-> 
+>
 >     public static bool operator==(R1? left, R1? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R1? left, R1? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(EqualityComparer<Type>.Default.GetHashCode(EqualityContract),
 >             EqualityComparer<T1>.Default.GetHashCode(P1));
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     protected override Type EqualityContract => typeof(R2);
 >     public override bool Equals(object? obj) => Equals(obj as R2);
 >     public sealed override bool Equals(R1? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R2? other)
 >     {
 >         return base.Equals((R1?)other) &&
 >             EqualityComparer<T2>.Default.Equals(P2, other.P2);
 >     }
-> 
+>
 >     public static bool operator==(R2? left, R2? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R2? left, R2? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
 >             EqualityComparer<T2>.Default.GetHashCode(P2));
 >     }
 > }
-> 
+>
 > class R3 : R2, IEquatable<R3>
 > {
 >     public T3 P3 { get; init; }
 >     protected override Type EqualityContract => typeof(R3);
 >     public override bool Equals(object? obj) => Equals(obj as R3);
 >     public sealed override bool Equals(R2? other) => Equals((object?)other);
-> 
+>
 >     public virtual bool Equals(R3? other)
 >     {
 >         return base.Equals((R2?)other) &&
 >             EqualityComparer<T3>.Default.Equals(P3, other.P3);
 >     }
-> 
+>
 >     public static bool operator==(R3? left, R3? right) =>
 >         (object)left == right || (left?.Equals(right) ?? false);
-> 
+>
 >     public static bool operator!=(R3? left, R3? right) => !(left == right);
-> 
+>
 >     public override int GetHashCode()
 >     {
 >         return HashCode.Combine(base.GetHashCode(),
@@ -6594,7 +6583,7 @@ A record class type contains two copying members:
 - A copy constructor ([§15.16.4.2](classes.md#151642-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
-The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
@@ -6613,7 +6602,7 @@ The ***printable members of a class*** are the instance public field and readabl
 The method performs the following tasks:
 
 1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
-2. For each of the record class’s printable members, appends that member’s name followed by space `=`space, followed by the member’s value separated with `,` and a space.
+2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
 3. Returns `true` if the record class has printable members; otherwise, `false`.
 
 For a member that has a value type, its value is converted to a string representation.
@@ -6631,7 +6620,7 @@ If the record class has no printable members, the method shall call the base `Pr
 3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
 4. Returns `true`.
 
-The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed.
+The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
 
 The record class shall include a provided method method declared as follows:
 
@@ -6639,7 +6628,7 @@ The record class shall include a provided method method declared as follows:
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
 Sealing an explicitly declared `ToString` method prevents the compiler from providing a `ToString` method for any derived record types. However, this does not prevent the compiler from providing `PrintMembers`.
 
@@ -6649,7 +6638,7 @@ The provided method:
 1. Appends the record class name to the builder, followed by ` { `,
 1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
 1. Appends `}`,
-1. Returns the builder’s contents with `builder.ToString()`.
+1. Returns the builder's contents with `builder.ToString()`.
 
 > *Example*: Given the following:
 >
@@ -6659,21 +6648,21 @@ The provided method:
 > {
 >     public string FirstName { get; set; }
 >     public string LastName { get; set; }
-> 
+>
 >     public Base(string firstName, string lastName)
 >     {
 >         FirstName = firstName;
 >         LastName = lastName;
 >     }
 > }
-> 
+>
 > public record R2 : Base
 > {
 >     public int Age { get; set; }
 >     public R2(string firstName, string lastName, int age) :
 >         base(firstName, lastName) { Age = age; }
 > }
-> 
+>
 > class Program
 > {
 >     static void Main()
@@ -6707,7 +6696,7 @@ The provided method:
 > class R1 : IEquatable<R1>
 > {
 >     public T1 P1 { get; init; }
-> 
+>
 >     protected virtual bool PrintMembers(StringBuilder builder)
 >     {
 >         builder.Append(nameof(P1));
@@ -6715,7 +6704,7 @@ The provided method:
 >         builder.Append(this.P1); // or builder.Append(this.P1.ToString()); if P1 has a value type
 >         return true;
 >     }
-> 
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6729,12 +6718,12 @@ The provided method:
 >         return builder.ToString();
 >     }
 > }
-> 
+>
 > class R2 : R1, IEquatable<R2>
 > {
 >     public T2 P2 { get; init; }
 >     public T3 P3 { get; init; }
->     
+>
 >     protected override bool PrintMembers(StringBuilder builder)
 >     {
 >         if (base.PrintMembers(builder))
@@ -6750,7 +6739,7 @@ The provided method:
 >         builder.Append(this.P3); // or builder.Append(this.P3); if P3 has a value type
 >         return true;
 >     }
->     
+>
 >     public override string ToString()
 >     {
 >         var builder = new StringBuilder();
@@ -6787,7 +6776,7 @@ For each parameter of a *delimited_parameter_list* there is provided a correspon
 For a record class:
 
 - A public auto-property is created with get and init accessors.
-- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
+- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
 - Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record class parameter.
 
@@ -6881,7 +6870,7 @@ public class MyCollection<T> : IEnumerable<T>
 }
 internal static class MyCollectionBuilder
 {
-    internal static MyCollection<T> 
+    internal static MyCollection<T>
       Create<T>(ReadOnlySpan<T> values) =>
         new MyCollection<T>(values);
 }

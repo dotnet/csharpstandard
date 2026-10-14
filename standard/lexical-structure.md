@@ -135,6 +135,24 @@ then the *type_argument_list* shall be retained as part of the disambiguated pro
 >
 > *end example*
 
+When recognising a *relational_expression* ([§12.15.1](expressions.md#12151-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+
+To differentiate a collection initializer ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) with an element assignment, from a collection initializer with a lambda expression, the parser shall look ahead. Consider the following:
+
+```csharp
+var y = new C { [A] = x };    // OK: y[A] = x
+var z = new C { [A] x => x }; // OK: z[0] = [A] x => x
+```
+
+The parser shall treat `?[` as the start of a *null_conditional_element_access* ([[§12.8.13](expressions.md#12813-null-conditional-element-access)):
+
+```csharp
+x = b ? [A];               // OK
+y = b ? [A] () => { } : z; // error
+```
+
+To differentiate a method call `T()` from a lambda expression `T () => e`, the parser shall look ahead.
+
 ## 6.3 Lexical analysis
 
 ### 6.3.1 General
@@ -360,7 +378,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode character escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode character escape sequence is not processed in any other location (for example, to form an operator, punctuator, keyword or contextual keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -605,15 +623,15 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
-    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
-    | 'equals'   | 'Fastcall'   | 'file'       | 'from'      | 'get'
-    | 'global'   | 'group'      | 'init'       | 'into'      | 'join'
-    | 'let'      | 'managed'    | 'nameof'     | 'nint'      | 'not'
-    | 'notnull'  | 'nuint'      | 'on'         | 'or'        | 'orderby'
-    | 'partial'  | 'record'     | 'remove'     | 'required'  | 'scoped'
-    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'  | 'unmanaged'
-    | 'value'    | 'var'        | 'when'       | 'where'     | 'yield'
+    : 'add'     | 'alias'    | 'and'     | 'ascending'  | 'async'
+    | 'await'   | 'by'       | 'Cdecl'   | 'descending' | 'dynamic'
+    | 'equals'  | 'Fastcall' | 'file'    | 'from'       | 'get'
+    | 'global'  | 'group'    | 'init'    | 'into'       | 'join'
+    | 'let'     | 'managed'  | 'nameof'  | 'nint'       | 'not'
+    | 'notnull' | 'nuint'    | 'on'      | 'or'         | 'orderby'
+    | 'partial' | 'record'   | 'remove'  | 'required'   | 'scoped'
+    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'   | 'unmanaged'
+    | 'value'   | 'var'      | 'when'    | 'where'      | 'yield'
     ;
 ```
 
@@ -904,9 +922,9 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
-All string literal forms may optionally have a trailing *Utf8_Suffix*. The representation of each form is discussed below.
-
 A raw string literal consists of arbitrary text and newlines between multi-`"`-sequence delimiters (which better supports the readability of XML, JSON, and other forms of text that have some visually pleasing structure). A raw string literal may span multiple lines.
+
+All string literal forms may optionally have a trailing *Utf8_Suffix*. The representation of each form is discussed below.
 
 ```ANTLR
 String_Literal
@@ -948,9 +966,13 @@ fragment Quote_Escape_Sequence
     : '""'
     ;
 
+fragment Utf8_Suffix
+    : 'u8' | 'U8'
+    ;
+
 fragment Raw_String_Literal
-    : Single_Line_Raw_String_Literal
-    | Multi_Line_Raw_String_Literal
+    : Single_Line_Raw_String_Literal Utf8_Suffix?
+    | Multi_Line_Raw_String_Literal Utf8_Suffix?
     ;
 
 fragment Single_Line_Raw_String_Literal
@@ -964,16 +986,13 @@ fragment Raw_String_Literal_Delimiter
 
 fragment Raw_String_Literal_Content
     // anything except New_Line
-    : ~( '\u000D\u000A' | '\u000D' | '\u000A' | '\u0085' | '\u2028' | '\u2029')
+    : ~[\u000D\u000A\u0085\u2028\u2029]
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
       (Raw_String_Literal_Content | New_Line)* New_Line
       Whitespace* Raw_String_Literal_Delimiter
-
-fragment Utf8_Suffix
-    : 'u8' | 'U8'
     ;
 ```
 
@@ -1704,7 +1723,7 @@ A `#line hidden` directive has no effect on the source location information repo
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-Together, the tokens *PP_Start_Line_Character* ‘-’ *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
+Together, the tokens *PP_Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
 
 *PP_Start_Line_Character* represents a start position in the mapped file, specified as a line (*PP_Start_Line*) and column (*PP_Start_Character*) pair; for example, `(1,1)`. This position corresponds to the first character on the line following the directive in the generated code.
 
