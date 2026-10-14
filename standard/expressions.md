@@ -7250,7 +7250,7 @@ It is a compile time error if any *variable_reference*, including any reclassifi
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
 - a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
-- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
+- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*.
 
 For these restrictions:
 
