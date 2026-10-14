@@ -442,7 +442,7 @@ As with a record class, a record struct with a *delimited_parameter_list* has a 
 
 In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
 
-Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
+Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
 
 The definite assignment rules for struct instance constructors ([§16.6.9](structs.md#1669-constructors), [§12.8.14](expressions.md#12814-this-access)) apply to the primary constructor of record structs. As for any other struct instance constructor without a `this()` initializer, any instance field that is not definitely assigned by the primary constructor is implicitly initialized to its default value in the initialization phase that runs before the body of the primary constructor.
 
