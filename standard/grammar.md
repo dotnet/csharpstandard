@@ -2856,7 +2856,7 @@ finalizer_body
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
+      type_parameter_constraints_clause* class_body
     ;
 
 // Source: §16.2.1 General
