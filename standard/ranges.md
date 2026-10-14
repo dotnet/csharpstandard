@@ -16,7 +16,7 @@ Under the model a type is classified as:
 
 > *Note*: The model does not require that a slice of the type can be set, but a type may support it as an extension of the model. *end note*
 
-The model is supported for single-dimensional arrays ([§12.8.12.2](expressions.md#128122-array-access)) and strings ([§12.8.12.3](expressions.md#128123-string-access)).
+The model is supported for single-dimensional arrays ([§12.8.12.2](expressions.md#128122-array-access)) and strings ([§12.8.12.4](expressions.md#128124-string-access)).
 
 The model can be supported by any class, struct or interface type which provides appropriate indexers ([§15.9](classes.md#159-indexers)) which implement the model semantics.
 
@@ -143,8 +143,8 @@ This method does **not** check that the return value is in the valid range of `0
 `Index` values may be directly used in the *argument_list* of an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) which is:
 
 - an array access and the target is a single-dimensional array ([§12.8.12.2](expressions.md#128122-array-access));
-- a string access ([§12.8.12.3](expressions.md#128123-string-access))
-- an indexer access and the target type has an indexer with corresponding parameters of either `Index` type ([§12.8.12.4](expressions.md#128124-indexer-access)) or of a type to which `Index` values are implicitly convertible; or
+- a string access ([§12.8.12.4](expressions.md#128124-string-access))
+- an indexer access and the target type has an indexer with corresponding parameters of either `Index` type ([§12.8.12.5](expressions.md#128125-indexer-access)) or of a type to which `Index` values are implicitly convertible; or
 - an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified ([§18.4.2](ranges.md#1842-implicit-index-support)).
 
 ## 18.3 The Range type
@@ -259,9 +259,9 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 `Range` values can be directly used in the *argument_list* of an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) which is:
 
 - an array access and the target is a single-dimensional array ([§12.8.12.2](expressions.md#128122-array-access));
-- a string access ([§12.8.12.3](expressions.md#128123-string-access));
-- an indexer access and the target type has an indexer with corresponding parameters of either `Range` type ([§12.8.12.4](expressions.md#128124-indexer-access)) or of a type to which `Range` values are implicitly convertible; or
-- an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) and the target type conforms to a sequence pattern for which implicit `Range` support is specified ([§18.4.3](ranges.md#1843-implicit-range-support)).
+- a string access ([§12.8.12.4](expressions.md#128124-string-access));
+- an indexer access and the target type has an indexer with corresponding parameters of either `Range` type ([§12.8.12.5](expressions.md#128125-indexer-access)) or of a type to which `Range` values are implicitly convertible; or
+- an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)) and the target type conforms to a sequence pattern for which implicit `Range` support is specified ([§18.4.3](ranges.md#1843-implicit-range-support)).
 
 ## 18.4 Pattern-based implicit support for Index and Range
 
@@ -270,8 +270,8 @@ A concrete range value is *empty* if `N` is zero. An empty concrete range may ha
 If an *element_access* expression ([§12.8.12](expressions.md#12812-element-access)) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index` or `Range`; fails to be identified as:
 
 - an array access ([§12.8.12.2](expressions.md#128122-array-access)),
-- a string access ([§12.8.12.3](expressions.md#128123-string-access)), or
-- an indexer access ([§12.8.12.4](expressions.md#128124-indexer-access)) as `T` provides no suitable accessible indexer
+- a string access ([§12.8.12.4](expressions.md#128124-string-access)), or
+- an indexer access ([§12.8.12.5](expressions.md#128125-indexer-access)) as `T` provides no suitable accessible indexer
 
 then implicit support for the expression is provided if `T` conforms to a particular pattern. If `T` does not conform to this pattern then a compile-time error occurs.
 
