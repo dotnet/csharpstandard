@@ -491,7 +491,7 @@ Console.WriteLine($"buffer[1..^0][0]  = >{buffer[1..^0][0]}<");
 public struct Buffer
 {
     private int _element0;
-    // other, optional, non-instance-field members 
+    // other, optional, non-instance-field members
 }
 ```
 
@@ -539,7 +539,7 @@ Any indexers or `Slice` methods declared for an inline array type that have sign
 > public struct Buffer
 > {
 >     private int _element0;
->     public int this[int index] // NOT USED for element access 
+>     public int this[int index] // NOT USED for element access
 >     {
 >         get
 >         {

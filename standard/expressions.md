@@ -2554,7 +2554,7 @@ static T GetItem(«InlineArrayType» array)
 >     Buffer10<int> GetBuffer() => default;
 >     void M3()
 >     {
->         int a = GetBuffer()[0];                 // OK 
+>         int a = GetBuffer()[0];                 // OK
 >         ref readonly int b = ref GetBuffer()[0];// Error, rhs is a value
 >         ref int c = ref GetBuffer()[0];         // Error; rhs is a value
 >     }
