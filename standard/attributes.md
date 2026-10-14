@@ -905,7 +905,7 @@ For an invocation that occurs within a local function or an anonymous function, 
 
 The attribute `CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
-Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*. When applied to the first parameter of an extension method, the captured string is the source text of the receiver expression in an extension method invocation. If the method is invoked using static method syntax, the captured string is the argument corresponding to the first parameter.
+Except when it is the first parameter, which is not also an *extension_receiver_parameter* (§Extension-Members), in an extension method, the target parameter shall have a *default_argument*. When applied to the first parameter of an extension method, the captured string is the source text of the receiver expression in an extension method invocation. If the method is invoked using static method syntax, the captured string is the argument corresponding to the first parameter.
 
 Consider the following method declaration:
 
