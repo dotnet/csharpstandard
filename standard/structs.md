@@ -226,13 +226,6 @@ It is an error for an instance field of a record struct to have an unsafe type.
 
 The *record_struct_body* of a record struct identifies the explicitly declared members of that struct.
 
-```ANTLR
-record_struct_body
-    : struct_body ';'?
-    | ';'
-    ;
-```
-
 For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those implicitly provided by the implementation ([§16.4.4](structs.md#1644-implicit-record-struct-members)).
 
 ### 16.4.4 Implicit record struct members
