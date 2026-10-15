@@ -7497,6 +7497,7 @@ assignment
     | simple_assignment
     | compound_assignment
     | ref_assignment
+    | null_conditional_assignment
     ;
 ```
 
@@ -7504,7 +7505,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.24.6](expressions.md#12246-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.24.6](expressions.md#12246-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*. *null_conditional_assignment* provides a mechanism for simple and compound assignment to have a null conditional target.
 
 The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard ([§9.2.9.2](variables.md#9292-discards)). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
@@ -7931,6 +7932,33 @@ An event assignment is a subset of *compound_assignment* where the left operand 
 - An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the add accessor is invoked; if the operator was `-=`, the remove accessor is invoked.
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+
+### §Null-Cond-Assign Null conditional assignment
+
+*null_conditional_assignment* provides a mechanism for simple and compound assignment to have a null conditional target ([§12.8.8](expressions.md#1288-null-conditional-member-access) and [§12.8.13]( expressions.md#12813-null-conditional-element-access)).
+
+```ANTLR
+null_conditional_assignment
+    : null_conditional_member_access '=' expression
+    : null_conditional_member_access compound_assignment_operator expression
+    | null_conditional_element_access '=' expression
+    | null_conditional_element_access compound_assignment_operator expression
+    ;
+```
+
+When a *null_conditional_assignment* appears in an *expression_statement*, its semantics are, as follows:
+
+- `P?.A = B` is equivalent to `if (P is not null) P.A = B;`, except that `P` is only evaluated once.
+- `P?[A] = B` is equivalent to `if (P is not null) P[A] = B`, except that `P` is only evaluated once.
+
+Otherwise, its semantics are, as follows:
+
+- `P?.A = B` is equivalent to `(P is null) ? (T?)null : (P.A = B)`, where `T` is the result type of `P.A = B`, except that `P` is only evaluated once.
+- `P?[A] = B` is equivalent to `(P is null) ? (T?)null : (P[A] = B)`, where `T` is the result type of `P[A] = B`, except that `P` is only evaluated once.
+
+*expression* is only evaluated when the receiver of the conditional access is non-null.
+
+If the result of the *null_conditional_assignment* is used, its type shall be known to be of a value type or a reference type.
 
 ## 12.25 Expression
 
