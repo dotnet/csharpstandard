@@ -1,481 +1,159 @@
 ---
 mode: agent
-description: Phase B — serial per-version sweep that propagates committee changes and finalizes each alpha (committee changes + fresh patches) before advancing.
+description: Discover and propagate committee changes one reviewed version at a time, preserving source intent and active feature work.
 ---
 
-# Post-meeting: propagate changes through draft & alpha branches (Phase B)
+# Monthly post-meeting propagation
 
-You are propagating the changes merged into the current "starting" draft branch (after a TC49-TG2 committee meeting) forward through every future draft and alpha branch. See `admin/branch-diagram.md` for the rationale.
+Analyze first, confirm permissions with Bill, then execute one version at a time.
+Finalized predecessor -> draft -> authorized feature rebases -> existing alpha ->
+local review -> approved publication -> verification -> next authorized version.
 
-## Phase B of the two-phase post-meeting workflow
+Use `admin/branch-diagram.md` as conceptual context, but discover actual remote
+refs. Do not assume names or counts: `v11-alpha` is a valid existing alpha name.
+When working with csharp-squad, use its authoritative
+`post-meeting-propagation`, `standard-renumber`,
+`csharpstandard-version-validation`, and `csharp-standard-alpha-synthesis` skills.
+The companion `post-meeting-rebase-prs.prompt.md` handles only the current
+version's authorized sources; do not pre-rebase the entire chain.
 
-The monthly post-meeting work is split into two phases (see
-`post-meeting-rebase-prs.prompt.md` for **Phase A**):
+## Required authorization
 
-- **Phase A1 — feature-PR preparation (runs first).** Dynamically enumerate
-  the open feature PRs for the discovered draft branches, report the count,
-  rebase or notify them as appropriate, and produce a patch manifest. Each
-  manifest entry pins the PR number, base branch, head SHA, patch path, and
-  per-PR UTC cutoff time.
-- **Phase B — this prompt: a single serial sweep up the chain, atomic per
-  version.** For each version N in chain order, (1) propagate the
-  committee-merged changes into `draft-vN`, (2) real-renumber `draft-vN`
-  (watch the concept-drift trap), (3) cheap re-rebase only the vN PRs whose
-  base moved in step 1 and update their manifest pins, (4) **reconstruct the
-  version's alpha branch** by surgically applying the fresh feature deltas
-  onto its existing structure, validate, then (5) advance so
-  `draft-v(N+1)` is based on the now-finalized discovered alpha branch.
-- **Phase A2 — notification follow-up (runs after Phase B).** Consume Phase
-  B's deletion and future-version comment inventories to post alpha-drift
-  and routing notices. Phase A2 does not feed alpha reconstruction.
+Confirm repository path, authoritative remote/repository, meeting date and merged
+PRs, starting branch, endpoint, and per-version permissions:
 
-Do not interpret the phase names as a repeating A/B cycle. The chronology is
-**A1 → B → A2**. Phase B may call the narrowly scoped Phase A rebase
-machinery only to refresh PRs whose base moved during Phase B.
+- draft-only, draft plus features, or draft plus features plus existing alpha;
+- excluded feature heads whose authors are actively working;
+- historical alpha feature set/order, including intentionally retained closed PRs;
+- local commit and remote publication permissions, separately;
+- exact validation exceptions approved for this cycle.
 
-### ⚠️ Ordering invariant (the crux — do not violate)
+Scope changes override earlier permission. No alpha creation, next-version work,
+PR merges/comments, workflow dispatches, or protection changes are implied.
+Do not retain a version-specific exclusion forever; reconfirm it next meeting.
 
-**Never propagate or build anything downstream of version N's discovered
-alpha branch until that branch is finalized with BOTH the committee-merged
-changes AND the fresh feature-PR patches.** In one sentence: finalized alpha
-= finalized `draft-vN` + fresh vN feature deltas, constructed in **ONE
-pass**, before `draft-v(N+1)` is built on it.
+## 1. Freeze inventory and recover evidence
 
-This ordering reduces the risk of a second propagation cascade: propagating
-the whole chain before refreshing alpha feature content can make downstream
-branches depend on stale alpha text. It does not eliminate downstream drift.
-Every later draft and alpha still requires the raw-reference, semantic, and
-head-movement checks defined below.
+Record remote fetch/push repository identity, all relevant old OIDs, local refs,
+protected checkout, worktrees/statuses, stashes, and open PR metadata
+(number/base/head/repository/OID/state/draft/mergeability).
+Use isolated review refs/worktrees; never reset or overwrite divergent local heads.
+Keep resumable JSON/text ledgers and logs outside the working tree.
 
-## Observed failure modes this workflow must detect
+Discover both alpha naming forms. Stop on ambiguity. Absence is not permission to
+create an alpha. Preserve the actual historically integrated feature set rather
+than equating it with today's open-PR list.
 
-- A numbered heading can retain a stale symbolic anchor such as `§xx` or
-  `§some-placeholder`.
-- A feature PR can move after the patch cutoff, making the recorded patch
-  stale even when it still applies cleanly.
-- A downstream conflict resolution can preserve older normative structure
-  or wording instead of the intended later-version language.
+Recover interrupted artifacts before repeating research or mutations. A ledger
+must identify exact old/new OIDs and completed stages; verify actual state before
+resuming. Never apply stale cleanup stashes.
 
-## Assumptions
+## 2. Establish approved changes and deletion precedence
 
-- The committee secretary has already merged all approved PRs into the starting branch (default: `draft-v8`). Do **not** merge any other open PRs.
-- The `.github/workflows/update-on-merge.yaml` workflow will open an automated PR titled "Automated Section renumber and grammar extraction" on each branch that receives a push. These auto-PRs **must be merged** before the next propagation hop.
-- Auto-PRs may show a `BLOCKED` merge state due to branch protection rules requiring review approval — this is normal and not a CI failure. Wait for checks to pass, then merge.
-- You have `git` and `gh` available, and push permission to this repo.
+Inspect the complete merged series, not only its final commit. A rebase merge may
+contain several approved commits; capture the correct series boundary.
+Build an approved deletion/refactoring inventory, including relevant prior
+committee decisions, and retain source PR provenance.
 
-## Authoritative remote (set and validate once)
+For example, dotnet/csharpstandard#1691 removed separate pattern subsumption and
+exhaustiveness sections while retaining general definitions. Stale
+dotnet/csharpstandard#1460 edits must not restore those sections during a rebase or
+alpha rebuild.
 
-Use one remote for discovery, baselines, merges, comparisons, and pushes.
-This workflow intentionally does not support separate read and write remotes.
+Approved committee wording wins over speculative feature text. Preserve genuine
+later-version additions separately. A clean patch, successful rebase, or numeric
+link audit does not prove semantic fidelity.
 
-```bash
-REMOTE="${REMOTE:-upstream}"
-REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
-FETCH_REPO="$(gh repo view "$(git remote get-url "$REMOTE")" \
-  --json nameWithOwner -q .nameWithOwner)"
-PUSH_REPO="$(gh repo view "$(git remote get-url --push "$REMOTE")" \
-  --json nameWithOwner -q .nameWithOwner)"
-printf 'Authoritative remote: %s (fetch=%s, push=%s, gh=%s)\n' \
-  "$REMOTE" "$FETCH_REPO" "$PUSH_REPO" "$REPO"
-test "$FETCH_REPO" = "$REPO" && test "$PUSH_REPO" = "$REPO"
+## 3. Finalize the current draft
+
+Start from actual current upstream draft history and incorporate the verified
+finalized predecessor. Preserve unique approved draft changes and the version's
+compiler/tooling contract, including intentionally isolated legacy fixtures.
+
+Resolve conflicts hunk-by-hunk using approved sources and deletion provenance.
+Never blanket-select a conflicted prose file. Separate number relocation from
+meaning. Stop for normative ambiguity or unexplained tooling changes.
+
+Finalize draft numbering/grammar with the repository's exact tool when authorized.
+From `tools`, with `GH_TOKEN` and `HEAD_SHA` cleared, the command is:
+
+```text
+dotnet run --project StandardAnchorTags -- --owner dotnet --repo csharpstandard
 ```
 
-The final `test` is mandatory. Stop if it fails, if either URL cannot be
-resolved, or if the selected remote does not expose every branch in the
-propagation chain. Keep `REMOTE` unchanged for the entire A1 → B → A2 run.
-The Phase A manifest must record the same remote name and repository; stop
-if it does not match.
-
-## Discover the propagation chain
-
-Do not rely on a fixed list or assume every alpha is named `alpha-vN`.
-
-1. Fetch and list the actual remote branch names:
-
-   ```bash
-   git fetch "$REMOTE" --prune
-   git for-each-ref "refs/remotes/$REMOTE" \
-     --format='%(refname:strip=3)' \
-     | grep -E '^(draft-v[0-9]+|alpha-v[0-9]+|v[0-9]+-alpha)$' \
-     | sort -V
-   ```
-
-2. Starting with the user-supplied draft branch (default `draft-v8`),
-   enumerate later `draft-vN` branches by numeric version. For each version,
-   discover whether the remote has `alpha-vN` or `vN-alpha`; use the one that
-   exists. `v11-alpha` is valid and must not be rewritten as `alpha-v11`.
-   Stop if both names exist for one version or if the branch topology is
-   ambiguous.
-3. Build the ordered chain as the starting draft, then each later draft,
-   followed by its discovered alpha when one exists. Confirm the order
-   against `admin/branch-diagram.md` and remote ancestry. Report the exact
-   discovered chain before changing anything.
-
-> **Walk this chain as a per-version, atomic-per-version sweep.** For each
-> version N, finish `draft-vN` (propagate committee changes + renumber +
-> cheap re-rebase of moved vN PRs) **and** finalize the discovered alpha
-> branch (rebuild it from the fresh vN patches — Step D) BEFORE advancing to
-> `draft-v(N+1)`. The discovered alpha branch (`alpha-vN` or `vN-alpha`) is
-> never just a plain merge of its draft: it must also receive the fresh
-> feature-PR patches in the same pass, per the ordering invariant above.
->
-> Inspect `.github/workflows/update-on-merge.yaml` and report which
-> discovered branches are covered by `on.push.branches`. Do not assume an
-> auto-PR will appear on an uncovered branch. Alpha branches are commonly
-> uncovered, so their validation must be completed locally before advancing.
-
-If the user names a different starting branch, start there and propagate to
-every later branch in the discovered chain.
-
-## Pre-flight (run once, before walking the chain)
-
-These artifacts are referenced by Step B (conflict resolution) and Step B.6
-(future-version comment inventory). Capture them up front and persist them
-for the duration of the run.
-
-1. **Run directory and Phase A manifest.** Create a persistent, untracked run
-   directory under `.git`, not a temporary system directory:
-
-   ```bash
-   RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)"
-   RUN_DIR="$(git rev-parse --git-path "post-meeting/$RUN_ID")"
-   mkdir -p "$RUN_DIR"
-   ```
-
-   Load Phase A1's feature-PR manifest. Require one record per dynamically
-   enumerated feature PR, including PR number, base branch, head SHA, patch
-   path, UTC cutoff time, and the authoritative remote name and repository.
-   Report the manifest's resulting PR count. Stop if the manifest is missing,
-   has duplicate PR numbers, names a different remote or repository, or its
-   count differs from a fresh enumeration of open PRs on the discovered
-   target draft branches.
-
-2. **Baseline.** Determine the SHA on each branch in the chain at the
-   *previous* propagation. A reliable proxy is the most recent merge commit
-   whose subject begins with `Post-meeting propagation:` on that branch
-   (`git log --grep '^Post-meeting propagation:' -1 --format=%H "$REMOTE/<branch>"`).
-   Record `BASE_<branch>` for each branch. If a branch has no such commit
-   yet, fall back to the branch point and warn the user.
-
-3. **Deletion inventory** for the starting branch. Identify text the
-   committee removed in this cycle so Step B can recognize resurrection:
-
-   ```bash
-   # Files where lines were removed since the previous propagation:
-   git log "$BASE_<starting>".."$REMOTE/<starting>" --diff-filter=MD \
-     --name-only --pretty=format: -- standard/ | sort -u
-
-   # Hunks (negative lines) for review:
-   git log "$BASE_<starting>".."$REMOTE/<starting>" -p -- standard/ \
-     > "$RUN_DIR/starting-deletions.patch"
-   ```
-
-   Show the user the list of PRs merged this cycle (`gh pr list --base <starting> --state merged --search 'merged:>=<last-meeting-date>'`) and ask which performed substantive prose removals. Persist that list.
-
-4. **vNext-comment baseline** for every branch in the chain. Snapshot the current set of HTML comments in `standard/*.md` mentioning a future version, so Step B.6 can diff against it after each merge:
-
-   ```bash
-   for b in <chain>; do
-     git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
-       "$REMOTE/$b" -- 'standard/*.md' | sed "s|^$REMOTE/$b:||" \
-       > "$RUN_DIR/vnext-baseline-$b.txt" || true
-   done
-   ```
-
-   The grep is intentionally loose (false positives are fine — Phase A2
-   surfaces them for human triage; nothing is auto-applied).
-
-## Procedure
-
-Before starting, confirm the chain with the user and show which branches will be touched. Confirm the pre-flight artifacts above are captured. Then for each branch in order:
-
-> **Per-version sweep.** Although the steps below are written per *branch*,
-> execute them as a serial sweep that is **atomic per version**: for version
-> N, finish `draft-vN` (Steps A–B.8) **and** finalize its discovered alpha
-> branch (Step D) before touching `draft-v(N+1)`. Do not run ahead down the
-> chain — the ordering invariant above forbids building on an unfinalized
-> alpha.
-
-### Step A — Process auto-PR on the current branch
-
-1. `git fetch "$REMOTE" --prune`
-2. `git checkout <branch>` (or create it from `"$REMOTE/<branch>"` if it
-   does not exist), then `git pull --ff-only "$REMOTE" <branch>`. Require
-   local `HEAD` to equal `"$REMOTE/<branch>"` before continuing.
-3. Find the auto-PR opened by `update-on-merge.yaml`:
-
-   ```bash
-   gh pr list --base <branch> --state open \
-     --search 'in:title "Automated Section renumber and grammar extraction"' \
-     --json number,headRefName,mergeable,mergeStateStatus
-   ```
-
-4. If found:
-   - Wait until checks pass (`gh pr checks <num> --watch` is acceptable, with a reasonable timeout — if it doesn't go green within a few minutes, stop and ask the user).
-   - The auto-PR's checks include the `StandardAnchorTags` job. If that job reports any `TOC002` ("`<ref>` not found") diagnostic, **stop** even if `gh pr checks` reports the PR overall as mergeable — broken cross-references must be resolved before merging.
-   - Merge it with a **merge commit**: `gh pr merge <num> --merge --delete-branch`.
-   - `git fetch "$REMOTE" <branch>` and
-     `git pull --ff-only "$REMOTE" <branch>` on the branch.
-5. If not found and this is the starting branch, ask the user whether to wait, run the tools locally (`tools/run-smarten.sh`, `tools/run-section-renumber.sh`), or proceed without them. Do not run tools locally without explicit consent.
-6. If not found on a downstream branch (it should appear after the merge in step B below), continue.
-
-### Step B — Merge from previous branch (skip on the starting branch)
-
-1. Still on `<branch>`, run:
-
-   ```bash
-   git merge --no-ff "$REMOTE/<previous-branch>" \
-     -m "Post-meeting propagation: merge <previous-branch> into <branch>"
-   ```
-
-2. **Conflicts:**
-   - **Never blanket "take upstream"** on a conflict whose hunks touch
-     prose in `standard/*.md`. Doing so can silently resurrect text the
-     committee deleted on the downstream branch in this cycle or a prior
-     one.
-   - **Never use `git checkout --theirs <file>` or `git checkout --ours <file>`**
-     to resolve conflicts — these commands replace the *entire file* with
-     one side, not just the conflicted hunks, silently discarding all
-     non-conflicting changes from the other side. Resolve each hunk
-     individually in the conflict markers instead. If you accidentally
-     run `checkout --theirs/--ours`, recover with `git checkout -m <file>`
-     to restore the conflict markers.
-   - For each conflicted hunk in `standard/*.md`:
-     a. Cross-check the hunk's file and line range against the deletion inventory captured in Pre-flight (`$RUN_DIR/starting-deletions.patch`) **and** against any prior `Post-meeting propagation:` merges on the downstream branch (`git log --grep '^Post-meeting propagation:' -p "$REMOTE/<branch>" -- <file>`).
-     b. If the downstream side intentionally removed the text, keep the deletion and re-apply only non-overlapping upstream edits to the surrounding region.
-     c. If unclear, **abort the merge** (`git merge --abort`) and report to the user with the file, line range, and both sides of the hunk.
-   - Mechanical "take upstream" is acceptable **only** for:
-     - regenerated `standard/grammar.md`,
-     - TOC blocks below the `<!-- The remaining text is generated by a tool. Do not hand edit -->`marker,
-     - the generated TOC in `standard/README.md`.
-   - For any conflict in `tools/`, `.github/`, or any prose conflict you are not 100% sure is mechanical: **abort the merge** and stop.
-3. After conflicts are resolved (or if the merge was clean), **do not push yet**. Run Steps B.5 and B.6 below first.
-4. **Section-number drift in alpha branches.** Alpha branches often have
-   additional sections inserted (e.g. new feature clauses), which shift
-   subsequent section numbers. When merging upstream changes into an alpha
-   branch, check for duplicate section headers (e.g. two `## 14.5` headings)
-   caused by the merge combining the upstream's numbering with the alpha's
-   shifted numbering. The StandardAnchorTags tool will crash with
-   `System.InvalidOperationException: Duplicate section header` if this
-   happens. Fix by renumbering the duplicated header to its correct value.
-
-### Step B.5 — Cross-reference validation
-
-Run the section-renumber tool in dry-run mode against the post-merge working tree to surface broken or drifted cross-references *before* pushing:
-
-```bash
-( cd tools && dotnet run --project StandardAnchorTags -- \
-    --owner dotnet --repo csharpstandard --dryrun )
-```
-
-1. **Broken references.** Any *new* `TOC002` ("`<ref>` not found")
-   diagnostic that was not already present on `"$REMOTE/<branch>"` before
-   the merge is a **hard stop**. Compare the tool output against a pre-merge
-   run (or `git stash && run && git stash pop`) to distinguish new from
-   pre-existing. Pre-existing TOC002s from incomplete feature PRs on alpha
-   branches are expected and should be reported but do not block the merge.
-2. **Mandatory raw symbolic-reference audit.** Run this independently of
-   the tool and save the output:
-
-   ```bash
-   rg -n -e '§[a-z][a-z0-9-]*' -e '§xx' -e '#xx' \
-     standard --glob '*.md' \
-     > "$RUN_DIR/symbolic-refs-<branch>.txt" || true
-   ```
-
-   Review every match. A retained placeholder is a hard stop unless the
-   branch intentionally permits that exact pre-merge placeholder and it is
-   recorded in the report. This raw audit is mandatory because
-   `StandardAnchorTags` and its `TOC002` diagnostics previously missed
-   placeholders that remained in otherwise valid text, including symbolic
-   anchors left after headings had already been numbered.
-3. **Concept drift.** Count how many section numbers the dry run would change (lines beginning with `§` in the tool's diff output). If more than ~25 sections shift, sections have drifted enough that surviving cross-references like `§X.Y (Foo)` may now point at a different concept — the renumber tool fixes the *number* but cannot detect when the *concept* (parenthetical name, surrounding prose) is now wrong. Pause, list the affected references to the user, and proceed only on explicit confirmation.
-4. The actual renumber/grammar regeneration runs in the auto-PR opened by `update-on-merge.yaml` after push (Step A on the next iteration); do not commit dry-run output.
-
-### Step B.6 — Future-version comment inventory
-
-Diff the current branch's HTML comments mentioning future versions
-against the Pre-flight baseline to surface anything new this propagation brought in (these are notes the committee left for upcoming versions and need to be routed to the appropriate feature PRs by `post-meeting-rebase-prs.prompt.md`):
-
-```bash
-git --no-pager grep -nE '<!--[^>]*(vNext|v[0-9]+|future|upcoming|TODO)' \
-  HEAD -- 'standard/*.md' | sed 's|^HEAD:||' > "$RUN_DIR/vnext-current-<branch>.txt"
-diff "$RUN_DIR/vnext-baseline-<branch>.txt" "$RUN_DIR/vnext-current-<branch>.txt" \
-  > "$RUN_DIR/vnext-delta-<branch>.txt" || true
-```
-
-> Strip the `HEAD:` prefix with `sed`; the baseline command likewise strips
-> `"$REMOTE/<branch>:"`, preventing false positives on every line.
-
-For each *new* comment in the delta, record:
-
-- file path and line number,
-- full comment text,
-- branch where it appeared (`<branch>`),
-- best-guess target version parsed from the comment (e.g. `v10` from `<!-- v10: tighten wording -->`); leave blank if not parseable.
-
-Persist the accumulated list across the whole run. Include it in the final report so `post-meeting-rebase-prs.prompt.md` can consume it. **Do not edit `standard/*.md` to remove or apply these comments.**
-
-### Step B.7 — Finalize, push, and verify
-
-For a draft branch, run this step after B.6. For an alpha branch, **defer
-this entire step until Step D has applied, validated, and committed every
-fresh feature delta**. An alpha's first and only propagation push must
-already contain its committee merge and fresh feature content.
-
-1. Require a clean working tree. For an alpha, also require the Step D
-   finalization commit and record it as `ALPHA_FINAL_SHA`.
-2. Push the exact local head:
-
-   ```bash
-   git push "$REMOTE" HEAD:<branch>
-   git fetch "$REMOTE" <branch>
-   test "$(git rev-parse HEAD)" = "$(git rev-parse "$REMOTE/<branch>")"
-   ```
-
-   A failed equality check is a hard stop: the remote branch is not the
-   validated local result.
-3. If `update-on-merge.yaml` covers this branch, the push opens a fresh
-   auto-PR. Loop back to Step A for this branch. After merging that PR,
-   fetch again and require `ALPHA_FINAL_SHA` (for an alpha) to be an ancestor
-   of `"$REMOTE/<branch>"`:
-
-   ```bash
-   git merge-base --is-ancestor "$ALPHA_FINAL_SHA" "$REMOTE/<branch>"
-   ```
-
-4. Do not advance to another branch until the remote verification succeeds.
-
-### Step B.8 — Cheap re-rebase of moved `draft-vN` feature PRs (draft branches with open feature PRs)
-
-This implements step (3) of the per-version sweep. If Step B moved
-`draft-vN` (committee changes landed on it this cycle), the vN feature PRs
-that **Phase A** (`post-meeting-rebase-prs.prompt.md`) already rebased now
-have a stale base. Run this step only after Step A has merged the auto-PR
-created by Step B.7, so the feature PRs rebase onto the final draft head for
-this version.
-
-- Do the **cheap re-rebase of ONLY the vN PRs whose base moved** and
-  regenerate their `.patch` (Phase A machinery —
-  `git rebase "$REMOTE/draft-vN"` then
-  `git format-patch "$REMOTE/draft-vN..$REMOTE/<headRefName>"`). Do **not**
-  re-rebase PRs whose base did not move.
-- Immediately before rebasing each PR, query `headRefOid` again and compare
-  it with the manifest pin. If it moved after the recorded cutoff, stop for
-  that PR; do not overwrite or build an alpha from a stale patch. After a
-  successful rebase, update that PR's manifest entry with the new head SHA,
-  regenerated patch, and a new UTC cutoff time.
-- These refreshed patches are the input to Step D's alpha rebuild. The
-  patches Phase B applies to the alpha are always the freshest
-  post-propagation ones, not the Phase-A starting patches.
-
-### Step D — Surgically reconstruct the alpha from fresh feature deltas
-
-**This is the step that was previously unprompted — its absence is what let
-the ordering slip and produced the 2026-07 double-propagation cascade.** Run
-it whenever `<branch>` is a discovered alpha branch (`alpha-vN` or
-`vN-alpha`), after Step B has propagated the committee changes into it and
-**BEFORE** the chain advances to the next draft.
-
-The discovered alpha must equal **finalized `draft-vN` + the fresh vN
-feature deltas**, built in ONE pass:
-
-1. **Recheck every PR head after the potentially long propagation run.**
-   Query each manifest PR's current `headRefOid` and compare it with the
-   pinned SHA and cutoff time. If any head moved, stop alpha reconstruction,
-   refresh that PR through Phase A machinery, record a new pin and cutoff,
-   and restart validation. Never silently use the older patch.
-2. **Treat patches as feature-delta evidence, not commit-replay scripts.**
-   Apply the minimal normative delta onto the existing alpha structure.
-   Do not replay synchronization or base-merge commits wholesale, and do not
-   replace an alpha file with the feature PR's version. Preserve
-   branch-specific later-version language and structure unless the feature
-   itself intentionally changes it.
-3. **Perform a semantic three-way comparison for every high-conflict
-   normative section.** Compare:
-   - the section in the prior finalized alpha (`BASE_<alpha-branch>`),
-   - the section in the finalized target `draft-vN`, and
-   - the section at the pinned current feature-PR head.
-
-   Record the intended feature semantics, committee changes, and
-   later-version-only language that the reconstructed alpha must preserve.
-   Review the resulting alpha against that record. A patch applying cleanly,
-   a successful rebase, or correct renumbering is not evidence that the
-   normative result is semantically correct. If the three sources cannot be
-   reconciled confidently, stop and report the exact section and competing
-   text.
-4. **Watch the renumber concept-drift trap.** The renumber tool keeps a
-   `§NUMBER` and rewrites the ANCHOR to whatever concept now sits at that
-   number, silently corrupting cross-refs while the dry-run reports **no**
-   error. For each drifted ref, read the intended concept from the merged
-   anchor slug, find that concept's actual number on this branch, and set
-   BOTH the number and the anchor manually.
-5. **Dry-run and raw-reference validate.** Alpha branches commonly get no
-   auto-PR, so do **not** commit renumber/grammar output; revert only that
-   generated validation output after checking it, without reverting the
-   surgical feature-delta edits:
-
-   ```bash
-   ( cd tools && dotnet run --project StandardAnchorTags -- \
-       --owner dotnet --repo csharpstandard --dryrun )
-   ```
-
-   Any *new* `TOC002` diagnostic relative to the pre-rebuild baseline is a
-   **hard stop**. Also repeat the mandatory raw `rg` audit from Step B.5
-   across all `standard/*.md`; any unexplained `§[a-z][a-z0-9-]*`, `§xx`,
-   or `#xx` match is a hard stop.
-6. **Commit the complete alpha delta before any alpha push.** Review
-   `git status --short`, `git diff --check`, and the full diff. Stage only
-   the intentional surgical feature-delta files, inspect
-   `git diff --cached`, and create a normal commit:
-
-   ```bash
-   git commit -m "Post-meeting propagation: finalize <alpha-branch> feature deltas"
-   ALPHA_FINAL_SHA="$(git rev-parse HEAD)"
-   ```
-
-   If the manifest has no applicable feature delta and the tree is already
-   clean, record that no separate delta commit was required and use the
-   committee merge commit as `ALPHA_FINAL_SHA`. Then run Step B.7. Never
-   leave alpha delta edits only in the working tree or only in a local
-   commit.
-7. **Finalize before advancing.** Only when the discovered alpha carries BOTH the
-   committee changes AND the fresh vN patches may the sweep proceed to
-   `draft-v(N+1)`. Require the verified authoritative remote head from
-   Step B.7 to contain `ALPHA_FINAL_SHA`. This reduces propagation risk; it
-   does not replace downstream semantic and reference verification.
-
-### Step C — Move to the next branch
-
-Advance the per-version sweep. Before starting `draft-v(N+1)`, confirm
-the discovered alpha is finalized per Step D — **the ordering invariant
-forbids building `draft-v(N+1)` on an unfinalized alpha.** Repeat A–D for the
-next branch in the chain. Continue until the chain is done.
-
-## Reporting
-
-When finished (or when stopped on a conflict), produce a short report:
-
-- For each branch: action taken (auto-PR merged, propagation merge SHA, skipped).
-- The validated authoritative remote name and repository used for every
-  discovery, baseline, merge, comparison, and push.
-- The dynamically enumerated feature-PR count and the manifest cutoff time.
-- For each version N: whether its discovered alpha branch was **finalized** (committee changes + fresh vN deltas applied surgically, semantic comparison complete, dry-run and raw-reference audits clean) before `draft-v(N+1)` was started, and the list of vN PR numbers, pinned SHAs, and patches applied (Step D / Step B.8).
-- Any PR head that moved after cutoff and how it was refreshed or why work stopped.
-- The high-conflict normative sections compared and any unresolved semantic differences.
-- Any raw symbolic-reference matches and their disposition.
-- Any branches where you stopped and why.
-- The deletion inventory captured in Pre-flight (file list + originating PR numbers).
-- The accumulated future-version comment inventory from Step B.6 (file:line, comment text, source branch, best-guess target version). Hand this to `post-meeting-rebase-prs.prompt.md`.
-- A reminder to run the Phase A2 notification pass in
-  `post-meeting-rebase-prs.prompt.md`.
-
-## Safety rules
-
-- Never force-push to any `draft-v*`, `alpha-v*`, or `v*-alpha` branch.
-- Never use `git reset --hard` on a tracked branch.
-- Never merge any PR other than the automated renumber/grammar PR.
-- Never change `REMOTE` or substitute another remote during the run.
-- Never advance past an alpha until its `ALPHA_FINAL_SHA` is present on the
-  verified authoritative remote branch.
-- If `gh` shows the auto-PR's checks failing, stop and ask the user.
+Require zero placeholders/symbolic section references, correct hierarchy,
+concept-correct links, source-derived grammar, and idempotence.
+Do not hand-edit generated `standard/grammar.md`.
+
+## 4. Refresh only authorized current-version feature sources
+
+Invoke the companion rebase prompt only after this draft is finalized.
+Skip the phase entirely for draft-only versions. Respect all do-not-touch heads.
+Freeze/recheck each authorized PR head; do not overwrite author movement.
+
+Repair defects at the earliest authorized source and propagate them forward.
+Audit retired sections on sources and alpha, not only conflict markers.
+Never invoke `StandardAnchorTags` on feature branches, including dry runs.
+
+## 5. Rebuild the existing authorized alpha
+
+Integrate refreshed feature intent in historical order on an isolated review ref.
+Preserve approved retained closed feature content. Compare old alpha, finalized
+draft, current feature sources, and committee decisions in overlapping sections.
+
+Complete source/link/format fixes before finalization. Keep contextual-keyword
+Markdown table rows at equal cell counts. ANTLR `contextual_keyword` alternatives
+use five columns, allowing a final partial row; preserve tokens and their order.
+
+The exact section-renumber tool is the **last source-changing operation on the
+alpha**. Run it, then the identical command again and prove byte-idempotence.
+Regenerate grammar from source. Later source corrections require repeating this
+finalization and affected validation.
+
+Do not build the next draft from a provisional alpha.
+
+## 6. Validate, classify, and hand off for review
+
+Prove actual ordinary compiler version, generated-project counts, legacy-fixture
+isolation, lint, anchors/TOC, source fidelity, examples, converter, tool tests,
+grammar, and applicable PR checks.
+
+Separate PASS, exact authorized EXCEPTION, blocked-layer UNAVAILABLE, and
+NOT-TRIGGERED results. Pre-existing failures are not automatic waivers. Record
+exception authorization, exact diagnostics and input digests at each version.
+Revalidate changed inputs; stop for different failures. Do not fabricate harness
+outputs or silently modify test contracts.
+
+Provide exact worktree/ref/HEAD, tracked status, diffstat, source fixes, and review
+commands. Use `git diff <remote>/<target>` for the complete working-tree delta;
+appending `HEAD` omits staged/unstaged corrections. Distinguish committed review
+changes from additional working-tree edits. Stop for Bill's review.
+
+## 7. Publish only the reviewed state
+
+After explicit approval, commit only exact approved files with runtime trailers.
+Freeze the resulting reviewed OIDs. Re-read remote OIDs/protection immediately
+before writing; stop on unexplained movement or lease failure.
+
+Use explicit refspecs and exact
+`--force-with-lease=refs/heads/<branch>:<frozen-old-oid>` for every ref, preferably
+one atomic authorized version cohort. Drafts/alphas must advance fast-forward.
+A lease on a fast-forward is not a history rewrite. Rewritten feature publication
+requires explicit permission; no unconditional force or blind lease refresh.
+
+Verify remote equality, ancestry, source PR state/base/head/mergeability, and
+protected checkout/worktrees/stashes/refs.
+Inspect actual workflow branch/path filters before waiting for CI or bot PRs.
+No triggered Actions run means NOT-TRIGGERED, not green CI. Queued third-party
+suites are not proof of relevant validation. Dispatches and bot merges require
+separate approval.
+
+## Closeout
+
+Persist permissions, topology, provenance, old/new OIDs, exact leases, source
+repairs, review evidence, validation classifications, remote equality and
+preservation evidence. Record the next-version stop explicitly.
+
+Future-version notes are inventory for human triage, not permission to edit,
+remove, or post them. Report optional notifications for approval.
+Completion/publication never automatically authorizes the next version.
