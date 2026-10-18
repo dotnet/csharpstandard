@@ -1789,15 +1789,17 @@ For simplicity, the term *ISE* is used throughout this specification to mean eit
 
 ### 12.8.4 Simple names
 
-A *simple_name* consists of an identifier, optionally followed by a type argument list:
+A *simple_name* consists of an identifier, optionally followed by a *type_argument_list* or a *generic_dimension_specifier*:
 
 ```ANTLR
 simple_name
-    : identifier type_argument_list?
+    : identifier (type_argument_list | generic_dimension_specifier)?
     ;
 ```
 
-A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
+A *simple_name* can be of the form `I` or `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The presence of *generic_dimension_specifier* allows names like `X<>` or `X<,>` to be considered simple names.
+
+The *simple_name* is evaluated and classified as follows:
 
 - If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.2](basic-concepts.md#72-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures))), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -3646,6 +3648,8 @@ The `typeof` operator can be used on a type parameter. It is a compile time erro
 >
 > *end example*
 
+It is an error to use `generic_dimension_specifier` outside of a `typeof` or `nameof` expression.  Within either of those expressions it is an error to use `generic_dimension_specifier` within a `type_argument_list`, `array_type`, `pointer_type`, or `nullable_type`.
+
 ### 12.8.19 The sizeof operator
 
 The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type.
@@ -3943,7 +3947,8 @@ nameof_expression
     ;
     
 named_entity
-    : named_entity_target ('.' identifier type_argument_list?)*
+    : named_entity_target ('.' identifier
+        (type_argument_list | generic_dimension_specifier)?)*
     ;
     
 named_entity_target
@@ -3992,9 +3997,9 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >         string n9 = nameof(Program.InstanceMethod);      // "InstanceMethod"
 >         string n10 = nameof(Program.GenericMethod);      // "GenericMethod"
 >         string n11 = nameof(Program.NestedClass);        // "NestedClass"
-> 
+>         string x1 = nameof(List<>);                      // "List">
+>
 >         // Invalid
->         // string x1 = nameof(List<>);            // Empty type argument list
 >         // string x2 = nameof(List<T>);           // T is not in scope
 >         // string x3 = nameof(GenericMethod<>);   // Empty type argument list
 >         // string x4 = nameof(GenericMethod<T>);  // T is not in scope
@@ -4017,6 +4022,8 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just “Generic” instead of the full namespace, and of `nameof(TestAlias)` to “TestAlias” rather than “String”.
 > *end example*
+
+Member lookup on an unbound type expression within a `nameof` is performed the same way as for a `this` expression within that type declaration (modulo performing accessibility checks at the call site). In other words, lookup off of `List<>` in `nameof(List<>…)` works the same as lookup off of `this` within the `class List<T>` type itself.
 
 ### 12.8.24 Anonymous method expressions
 
