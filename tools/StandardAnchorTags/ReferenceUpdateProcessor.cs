@@ -83,7 +83,19 @@ internal class ReferenceUpdateProcessor
                 linkText = linkMap[referenceText].FormattedMarkdownLink;
             }
             // expand the range for any existing link:
-            sectionReferenceRange = ExpandToIncludeExistingLink(line, sectionReferenceRange);
+            if (ExpandToIncludeExistingLink(line, sectionReferenceRange) is not Range expandedRange)
+            {
+                var diagnostic = new StatusCheckMessage(
+                    path,
+                    lineNumber,
+                    lineNumber,
+                    $"Malformed section link for `{referenceText}`; expected `[section](target)`",
+                    DiagnosticIDs.TOC003);
+                logger.LogFailure(diagnostic);
+                returnedLine.Append(line[index..]);
+                return returnedLine.ToString();
+            }
+            sectionReferenceRange = expandedRange;
 
             var textRangeToCopyUnchanged = new Range(index, sectionReferenceRange.Start);
             // Copy text up to replacement:
@@ -128,7 +140,7 @@ internal class ReferenceUpdateProcessor
         return new Range(startIndex, endIndex);
     }
 
-    private static Range ExpandToIncludeExistingLink(string line, Range range)
+    internal static Range? ExpandToIncludeExistingLink(string line, Range range)
     {
         // If the character before the start of the range isn't the '[' character,
         // return => no existing link.
@@ -138,10 +150,19 @@ internal class ReferenceUpdateProcessor
 
         // Start and the end of the range, look for "](", then ']'. 
         int endIndex = range.End.Value;
-        if (line.Substring(endIndex, 2) != "](") throw new InvalidOperationException($"Unexpected link text >{line.Substring(endIndex, 2)}< in line >{line}<");
+        if ((endIndex + 1 >= line.Length) ||
+            (line[endIndex] != ']') ||
+            (line[endIndex + 1] != '('))
+        {
+            return null;
+        }
 
         endIndex += 2;
-        while (line[endIndex] != ')') endIndex++;
+        endIndex = line.IndexOf(')', endIndex);
+        if (endIndex == -1)
+        {
+            return null;
+        }
 
         return new Range(previous, endIndex + 1);
     }
