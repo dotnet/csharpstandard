@@ -28,6 +28,9 @@ The C# specification contains many source-code examples, some complete and other
 
 An example is annotated directly, prior to its occurrence in a spec md file, as described below in [Annotation Format](#annotation-format). The extraction and testing stages are part of PR processing within GitHub.
 
+For console diagnostics, optional local JSON reports, and downloadable CI
+artifacts, see [Diagnostic output](../README.md#diagnostic-output).
+
 ## Annotation Format
 
 ### General

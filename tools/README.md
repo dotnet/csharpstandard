@@ -17,6 +17,12 @@ state, and all collected diagnostics. For example, in PowerShell:
 $env:DIAGNOSTICS_REPORT_PATH = Join-Path $PWD 'reports\word-converter.json'
 ```
 
+Or, in Bash:
+
+```bash
+export DIAGNOSTICS_REPORT_PATH="$PWD/reports/word-converter.json"
+```
+
 Run the tool normally after setting the variable. Parent directories are created
 automatically. Reports retain every collected diagnostic, even when GitHub limits
 displayed annotations, and preserve message text without workflow-command
@@ -38,9 +44,10 @@ the workflow run's **Artifacts** section. Uploads run even after a failed tool
 step and warn if the tool could not produce a report; they do not change a
 failed job's result.
 
-Runner-generated annotations appear on the Actions job check. GitHub may also
-display them inline when their locations match the PR diff. These annotations
-do not recreate the separately named custom check runs.
+Each Actions job remains a pass/fail check on the PR. Runner-generated
+annotations belong to that job check; GitHub may also display them inline when
+their locations match the PR diff. These annotations do not recreate the
+separately named custom check runs.
 
 ### Testing diagnostic reporting
 
@@ -59,6 +66,24 @@ a report exists, and runner-generated annotations appear on the job check.
 Download and inspect the JSON artifact, and check the job's **GITHUB_TOKEN
 Permissions** log section for `Contents: read` with no repository write
 permissions. A same-repository PR does not verify fork-specific behavior.
+
+### Required checks and rollout
+
+Before rollout, inspect classic branch protection and repository or inherited
+organization rulesets for required checks that use the old custom check names.
+Replace any such requirements with the corresponding Actions job checks:
+
+| Old custom check name | Actions job check | Workflow |
+| --- | --- | --- |
+| `Example tester` | `test-extraction-and-runner` | [Test examples](../.github/workflows/test-examples.yaml) |
+| `Markdown to Word Converter` | `word-converter` | [Word Converter](../.github/workflows/word-converter.yaml) |
+| `TOC and Anchor updater` | `renumber-sections` | [Renumber standard TOC](../.github/workflows/renumber-sections.yaml) |
+
+Keep existing Actions job requirements and unrelated checks unchanged, and keep
+optional jobs optional. Verify that replacement jobs run for the branches and
+changes covered by each protection rule, including workflow path filters.
+Recheck the effective requirements before merging, and complete the fork-PR
+verification described above before rollout.
 
 ## GetGrammar
 
