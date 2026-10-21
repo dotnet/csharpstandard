@@ -2,7 +2,7 @@
 
 ## 7.1 Application startup
 
-A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-defined and external to this specification.
+A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-defined and external to this specification. See [§Something_that_doesnt_exist]
 
 A program compiled as an application shall contain at least one method qualifying as an entry point by satisfying the following requirements:
 
