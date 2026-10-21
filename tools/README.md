@@ -3,6 +3,17 @@
 This directory contains tools used in the process of preparing and
 validating the C# Standard.
 
+## Diagnostic output
+
+Tools that use the shared diagnostic logger retain their human-readable console
+output. When `GITHUB_ACTIONS` is `true`, errors, warnings, and notices also emit
+workflow commands for runner-generated annotations, using repository-relative
+file paths. Console-only messages do not generate annotations.
+
+The logger retains all collected diagnostics, independently of annotation display
+limits. The existing custom check-run publisher still submits only the first
+50 diagnostics; its summary identifies any additional diagnostics in the log.
+
 ## GetGrammar
 
 This is used to extract the ANTLR grammar from all the clauses in the Standard

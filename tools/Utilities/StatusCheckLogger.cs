@@ -13,6 +13,12 @@ namespace Utilities;
 public record StatusCheckMessage(string file, int StartLine, int EndLine, string Message, string Id);
 
 /// <summary>
+/// A tool-neutral diagnostic with a repository-relative file path and raw message.
+/// </summary>
+public record StatusCheckDiagnostic(
+    string Severity, string File, int StartLine, int EndLine, string Id, string Message);
+
+/// <summary>
 /// This class writes the status of the check to the console in the format GitHub supports
 /// </summary>
 /// <remarks>
@@ -26,13 +32,52 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
 {
     internal const int MaximumAnnotations = 50;
 
-    private List<NewCheckRunAnnotation> annotations = [];
+    private readonly List<StatusCheckDiagnostic> diagnostics = [];
+    public IReadOnlyList<StatusCheckDiagnostic> Diagnostics => diagnostics.AsReadOnly();
     public bool Success { get; private set; } = true;
 
     // Utility method to format the path to unix style, from the root of the repository.
-    private string FormatPath(string path) => Path.GetRelativePath(pathToRoot, path).Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    private string FormatPath(string path) =>
+        Path.GetRelativePath(
+            pathToRoot.Replace('\\', Path.DirectorySeparatorChar),
+            path.Replace('\\', Path.DirectorySeparatorChar)).Replace('\\', '/');
 
     private void WriteMessageToConsole(string prefix, StatusCheckMessage d) => writer.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
+
+    private void LogDiagnostic(string prefix, string severity, StatusCheckMessage d)
+    {
+        WriteMessageToConsole(prefix, d);
+        var diagnostic = new StatusCheckDiagnostic(
+            severity, FormatPath(d.file), d.StartLine, d.EndLine, d.Id, d.Message);
+        diagnostics.Add(diagnostic);
+
+        if (string.Equals(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"),
+            "true", StringComparison.OrdinalIgnoreCase))
+        {
+            writer.WriteLine(FormatWorkflowCommand(diagnostic));
+        }
+    }
+
+    private string FormatWorkflowCommand(StatusCheckDiagnostic d)
+    {
+        List<string> properties = [$"file={EscapeProperty(d.File)}"];
+        if (d.StartLine > 0)
+        {
+            properties.Add($"line={d.StartLine}");
+            if (d.EndLine >= d.StartLine)
+            {
+                properties.Add($"endLine={d.EndLine}");
+            }
+        }
+        properties.Add($"title={EscapeProperty($"{toolName} - {d.Id}")}");
+        return $"::{d.Severity} {string.Join(",", properties)}::{EscapeData(d.Message)}";
+    }
+
+    private static string EscapeData(string value) =>
+        value.Replace("%", "%25").Replace("\r", "%0D").Replace("\n", "%0A");
+
+    private static string EscapeProperty(string value) =>
+        EscapeData(value).Replace(":", "%3A").Replace(",", "%2C");
 
     /// <summary>
     /// Log a notice from the status check to the console only
@@ -65,37 +110,21 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the diagnostic information to console.
     /// </remarks>
-    public void LogNotice(StatusCheckMessage d)
-    {
-        WriteMessageToConsole("", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Notice, $"{d.Id}::{d.Message}")
-        );
-    }
+    public void LogNotice(StatusCheckMessage d) => LogDiagnostic("", "notice", d);
 
     /// <summary>
     /// Log a warning from the status check
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the warning notice to the console.
     /// Warnings are logged, but the process reports "success" to GitHub.
     /// </remarks>
-    public void LogWarning(StatusCheckMessage d)
-    {
-        WriteMessageToConsole("⚠️", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Warning, $"{d.Id}::{d.Message}")
-        );
-    }
+    public void LogWarning(StatusCheckMessage d) => LogDiagnostic("⚠️", "warning", d);
 
     /// <summary>
     /// Log a failure from the status check
@@ -114,7 +143,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the failure notice to the console.
     /// This method is distinct from <see cref="ExitOnFailure(StatusCheckMessage)"/> in
     /// that this method does not throw an exception. Its purpose is to log
@@ -122,12 +151,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </remarks>
     public void LogFailure(StatusCheckMessage d)
     {
-        WriteMessageToConsole("❌", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Failure, $"{d.Id}::{d.Message}")
-        );
+        LogDiagnostic("❌", "error", d);
         Success = false;
     }
 
@@ -136,7 +160,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the failure notice to the console.
     /// This method is distinct from <see cref="LogFailure(StatusCheckMessage)"/> in
     /// that this method throws an exception. Its purpose is to log
@@ -180,9 +204,18 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
 
     internal NewCheckRun CreateCheckRun(string sha)
     {
-        var annotationsToSubmit = annotations.Take(MaximumAnnotations).ToList();
-        var omittedAnnotations = annotations.Count - annotationsToSubmit.Count;
-        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.";
+        var annotationsToSubmit = diagnostics.Take(MaximumAnnotations)
+            .Select(d => new NewCheckRunAnnotation(d.File, d.StartLine, d.EndLine,
+                d.Severity switch
+                {
+                    "error" => CheckAnnotationLevel.Failure,
+                    "warning" => CheckAnnotationLevel.Warning,
+                    "notice" => CheckAnnotationLevel.Notice,
+                    _ => throw new InvalidOperationException($"Unknown diagnostic severity: {d.Severity}")
+                }, $"{d.Id}::{d.Message}"))
+            .ToList();
+        var omittedAnnotations = diagnostics.Count - annotationsToSubmit.Count;
+        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {diagnostics.Count} diagnostics.";
         if (omittedAnnotations > 0)
         {
             summary += $" The first {MaximumAnnotations} diagnostics are annotated; {omittedAnnotations} additional diagnostics are available in the workflow log.";
