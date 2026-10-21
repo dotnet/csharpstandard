@@ -15,12 +15,9 @@ jobs:
   renumber-sections:
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      pull-requests: write
+      contents: read
     env:
       DOTNET_NOLOGO: true
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
     steps:
     - name: Check out our repo
@@ -32,6 +29,16 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Run section renumbering dry run
+      env:
+        DIAGNOSTICS_REPORT_PATH: ${{ runner.temp }}/reports/renumber-sections.json
       run: |
         cd tools
         ./run-section-renumber.sh
+
+    - name: Upload diagnostics
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: section-renumber-diagnostics
+        path: ${{ runner.temp }}/reports/
+        if-no-files-found: warn

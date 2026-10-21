@@ -31,6 +31,17 @@ Without `DIAGNOSTICS_REPORT_PATH`, execution remains console-only locally.
 Reporting requires no GitHub authentication and no longer uses `GH_TOKEN` or
 `HEAD_SHA`.
 
+The PR workflows upload `example-test-diagnostics`, `word-converter-diagnostics`,
+and `section-renumber-diagnostics` artifacts. The merge-update workflow uploads
+both tool reports as `spec-update-diagnostics`. Download these artifacts from
+the workflow run's **Artifacts** section. Uploads run even after a failed tool
+step and warn if the tool could not produce a report; they do not change a
+failed job's result.
+
+Runner-generated annotations appear on the Actions job check. GitHub may also
+display them inline when their locations match the PR diff. These annotations
+do not recreate the separately named custom check runs.
+
 ## GetGrammar
 
 This is used to extract the ANTLR grammar from all the clauses in the Standard

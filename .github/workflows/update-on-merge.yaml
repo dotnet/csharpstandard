@@ -28,7 +28,6 @@ jobs:
       pull-requests: write    
     env:
       DOTNET_NOLOGO: true
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
@@ -54,6 +53,8 @@ jobs:
 
     - name: Renumber sections
       id: renumber-sections
+      env:
+        DIAGNOSTICS_REPORT_PATH: ${{ runner.temp }}/reports/renumber-sections.json
       run: |
         cd tools
         ./run-section-renumber.sh
@@ -69,6 +70,8 @@ jobs:
 
     - name: Run converter
       id: run-converter
+      env:
+        DIAGNOSTICS_REPORT_PATH: ${{ runner.temp }}/reports/word-converter.json
       run: |
         cd tools
         ./run-converter.sh
@@ -84,3 +87,11 @@ jobs:
         name: standard.docx
         path: ./tools/tmp/standard.docx
         retention-days: 15
+
+    - name: Upload diagnostics
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: spec-update-diagnostics
+        path: ${{ runner.temp }}/reports/
+        if-no-files-found: warn
