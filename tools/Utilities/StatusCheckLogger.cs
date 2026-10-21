@@ -1,4 +1,4 @@
-﻿using Octokit;
+﻿using System.Text.Json;
 
 namespace Utilities;
 
@@ -19,19 +19,16 @@ public record StatusCheckDiagnostic(
     string Severity, string File, int StartLine, int EndLine, string Id, string Message);
 
 /// <summary>
-/// This class writes the status of the check to the console in the format GitHub supports
+/// Collects tool diagnostics and writes console output, workflow commands, and JSON reports.
 /// </summary>
 /// <remarks>
-/// For all of our tools, if all error and warning messages are formatted correctly, GitHub
-/// will show those errors and warnings inline in the files tab for the PR. Let's format
-/// them correctly.
+/// In GitHub Actions, diagnostics produce runner-generated annotations. GitHub may also
+/// display them inline when their source locations match the PR diff.
 /// </remarks>
 /// <param name="pathToRoot">The path to the root of the repository</param>
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(TextWriter writer, string pathToRoot, string toolName)
 {
-    internal const int MaximumAnnotations = 50;
-
     private readonly List<StatusCheckDiagnostic> diagnostics = [];
     public IReadOnlyList<StatusCheckDiagnostic> Diagnostics => diagnostics.AsReadOnly();
     public bool Success { get; private set; } = true;
@@ -173,62 +170,26 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     }
 
     /// <summary>
-    /// Return the object required for a full status check
+    /// Write the complete diagnostic report, creating its parent directory.
     /// </summary>
-    /// <param name="owner">The GitHub owner (or organization)</param>
-    /// <param name="repo">The GitHub repo name</param>
-    /// <param name="sha">The head sha when running as a GitHub action</param>
-    /// <returns>The full check run result object</returns>
-    public async Task BuildCheckRunResult(string token, string owner, string repo, string sha)
+    /// <param name="outputPath">The destination JSON file.</param>
+    /// <param name="completedSuccessfully">
+    /// Whether the tool completed successfully, including failures outside diagnostic logging.
+    /// </param>
+    public async Task WriteReportAsync(string outputPath, bool completedSuccessfully = true)
     {
-        NewCheckRun result = CreateCheckRun(sha);
-
-        var prodInformation = new ProductHeaderValue("TC49-TG2", "1.0.0");
-        var tokenAuth = new Credentials(token);
-        var client = new GitHubClient(prodInformation);
-        client.Credentials = tokenAuth;
-
-        try
+        var fullPath = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+        await using var stream = File.Create(fullPath);
+        await JsonSerializer.SerializeAsync(stream, new
         {
-            await client.Check.Run.Create(owner, repo, result);
-        }
-        // If the token does not have the correct permissions, we will get a 403
-        // Once running on a branch on the dotnet org, this should work correctly.
-        catch (ForbiddenException e)
+            tool = toolName,
+            success = Success && completedSuccessfully,
+            diagnostics
+        }, new JsonSerializerOptions
         {
-            writer.WriteLine("===== WARNING: Could not create a check run.=====");
-            writer.WriteLine("Exception details:");
-            writer.WriteLine(e);
-        }
-    }
-
-    internal NewCheckRun CreateCheckRun(string sha)
-    {
-        var annotationsToSubmit = diagnostics.Take(MaximumAnnotations)
-            .Select(d => new NewCheckRunAnnotation(d.File, d.StartLine, d.EndLine,
-                d.Severity switch
-                {
-                    "error" => CheckAnnotationLevel.Failure,
-                    "warning" => CheckAnnotationLevel.Warning,
-                    "notice" => CheckAnnotationLevel.Notice,
-                    _ => throw new InvalidOperationException($"Unknown diagnostic severity: {d.Severity}")
-                }, $"{d.Id}::{d.Message}"))
-            .ToList();
-        var omittedAnnotations = diagnostics.Count - annotationsToSubmit.Count;
-        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {diagnostics.Count} diagnostics.";
-        if (omittedAnnotations > 0)
-        {
-            summary += $" The first {MaximumAnnotations} diagnostics are annotated; {omittedAnnotations} additional diagnostics are available in the workflow log.";
-        }
-
-        return new(toolName, sha)
-        {
-            Status = CheckStatus.Completed,
-            Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
-            Output = new($"{toolName} Check Run results", summary)
-            {
-                Annotations = annotationsToSubmit
-            }
-        };
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        });
     }
 }

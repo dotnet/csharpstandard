@@ -10,9 +10,26 @@ output. When `GITHUB_ACTIONS` is `true`, errors, warnings, and notices also emit
 workflow commands for runner-generated annotations, using repository-relative
 file paths. Console-only messages do not generate annotations.
 
-The logger retains all collected diagnostics, independently of annotation display
-limits. The existing custom check-run publisher still submits only the first
-50 diagnostics; its summary identifies any additional diagnostics in the log.
+Set `DIAGNOSTICS_REPORT_PATH` to a JSON file path to save the tool name, success
+state, and all collected diagnostics. For example, in PowerShell:
+
+```powershell
+$env:DIAGNOSTICS_REPORT_PATH = Join-Path $PWD 'reports\word-converter.json'
+```
+
+Run the tool normally after setting the variable. Parent directories are created
+automatically. Reports retain every collected diagnostic, even when GitHub limits
+displayed annotations, and preserve message text without workflow-command
+escaping. Console-only messages are not included.
+
+Once the logger is initialized, the tool writes its report even on early failure
+or an exception. A failed tool still returns a nonzero exit code; report-writing
+errors also fail the invocation. Failures before the tool starts, such as a
+compilation failure, may produce no report.
+
+Without `DIAGNOSTICS_REPORT_PATH`, execution remains console-only locally.
+Reporting requires no GitHub authentication and no longer uses `GH_TOKEN` or
+`HEAD_SHA`.
 
 ## GetGrammar
 
@@ -24,6 +41,9 @@ grammar.
 
 This automatically renumbers sections within the Standard. See
 the [contributing guide](../CONTRIBUTING.md) for details.
+
+The legacy `--owner` and `--repo` options are accepted for compatibility with
+existing scripts but are no longer required or used.
 
 ## Word Converter
 

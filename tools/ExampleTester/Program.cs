@@ -3,18 +3,23 @@ using System.CommandLine;
 using Utilities;
 
 var logger = new StatusCheckLogger(Console.Out, "..", "Example tester");
-var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
-var token = Environment.GetEnvironmentVariable("GH_TOKEN");
+var reportPath = Environment.GetEnvironmentVariable("DIAGNOSTICS_REPORT_PATH");
+int exitCode = 1;
 
-var rootCommand = new RootCommand();
-new TesterConfigurationBinder().ConfigureCommand(rootCommand, ExecuteAsync);
-int exitCode = rootCommand.Parse(args).Invoke();
-
-if ((token is not null) && (headSha is not null))
+try
 {
-    await logger.BuildCheckRunResult(token, "dotnet", "csharpstandard", headSha);
+    var rootCommand = new RootCommand();
+    new TesterConfigurationBinder().ConfigureCommand(rootCommand, ExecuteAsync);
+    exitCode = rootCommand.Parse(args).Invoke();
+    return exitCode;
 }
-return exitCode;
+finally
+{
+    if (reportPath is not null)
+    {
+        await logger.WriteReportAsync(reportPath, exitCode == 0);
+    }
+}
 
 async Task<int> ExecuteAsync(TesterConfiguration configuration)
 {
