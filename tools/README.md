@@ -42,6 +42,24 @@ Runner-generated annotations appear on the Actions job check. GitHub may also
 display them inline when their locations match the PR diff. These annotations
 do not recreate the separately named custom check runs.
 
+### Testing diagnostic reporting
+
+From the `tools` directory, run the focused logger and tool-report suites:
+
+```console
+dotnet test tools.sln --filter "FullyQualifiedName~StatusCheckLoggerTests|FullyQualifiedName~DiagnosticReportTests"
+```
+
+The integration tests use isolated temporary inputs, including compiling and
+running examples. They do not update the checked-out standard.
+
+For end-to-end verification, use a fork PR. Confirm that a deliberately failing
+tool still fails its Actions job, the **Upload diagnostics** step succeeds when
+a report exists, and runner-generated annotations appear on the job check.
+Download and inspect the JSON artifact, and check the job's **GITHUB_TOKEN
+Permissions** log section for `Contents: read` with no repository write
+permissions. A same-repository PR does not verify fork-specific behavior.
+
 ## GetGrammar
 
 This is used to extract the ANTLR grammar from all the clauses in the Standard

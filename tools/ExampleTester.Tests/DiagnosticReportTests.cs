@@ -83,7 +83,133 @@ public class DiagnosticReportTests
         });
     }
 
-    private async Task<(int ExitCode, string Error)> RunTesterAsync(string? reportPath, string[] args)
+    [TestCase(false, 0)]
+    [TestCase(true, 2)]
+    public async Task ActualExamplesPreserveFailureCountsAndDiagnosticLocations(
+        bool fail, int expectedExitCode)
+    {
+        var examples = Directory.CreateDirectory(Path.Combine(tempDirectory, "examples"));
+        var reportPath = Path.Combine(tempDirectory, "reports", "examples.json");
+        await CreateExampleAsync(examples.FullName, "first", fail);
+        await CreateExampleAsync(examples.FullName, "second", fail);
+
+        var result = await RunTesterAsync(reportPath, [examples.FullName]);
+        using var report = JsonDocument.Parse(await File.ReadAllTextAsync(reportPath));
+        var diagnostics = report.RootElement.GetProperty("diagnostics").EnumerateArray().ToArray();
+        var commands = result.Output.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
+            .Where(line => line.StartsWith("::error ", StringComparison.Ordinal)).ToArray();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.EqualTo(expectedExitCode), result.Error);
+            Assert.That(result.Output, Does.Contain("Tests: 2"));
+            Assert.That(result.Output, Does.Contain($"Failures: {expectedExitCode}"));
+            Assert.That(report.RootElement.GetProperty("success").GetBoolean(), Is.EqualTo(!fail));
+            Assert.That(diagnostics, Has.Length.EqualTo(expectedExitCode));
+            Assert.That(commands, Has.Length.EqualTo(expectedExitCode));
+            foreach (var diagnostic in diagnostics)
+            {
+                Assert.That(diagnostic.GetProperty("file").GetString(), Is.EqualTo("standard/expressions.md"));
+                Assert.That(diagnostic.GetProperty("startLine").GetInt32(), Is.EqualTo(42));
+                Assert.That(diagnostic.GetProperty("endLine").GetInt32(), Is.EqualTo(44));
+                Assert.That(diagnostic.GetProperty("severity").GetString(), Is.EqualTo("error"));
+                Assert.That(diagnostic.GetProperty("id").GetString(), Is.EqualTo("ExampleTester"));
+            }
+            foreach (var command in commands)
+            {
+                Assert.That(command, Does.StartWith(
+                    "::error file=standard/expressions.md,line=42,endLine=44,title=Example tester - ExampleTester::"));
+            }
+        });
+    }
+
+    [TestCase("compiler", "Mismatched errors")]
+    [TestCase("output", "Mismatched output")]
+    [TestCase("exception", "Exception type InvalidOperationException was thrown unexpectedly")]
+    public async Task ActualExampleFailuresUseSourceFilesForReportsAndAnnotations(
+        string failure, string expectedMessage)
+    {
+        var examples = Directory.CreateDirectory(Path.Combine(tempDirectory, "examples"));
+        var reportPath = Path.Combine(tempDirectory, "reports", "examples.json");
+        var program = failure switch
+        {
+            "compiler" => "public class Example { public static void Main() { Missing(); } }",
+            "output" => "public class Example { public static void Main() { System.Console.WriteLine(\"Actual output\"); } }",
+            "exception" => "public class Example { public static void Main() { throw new System.InvalidOperationException(\"Example failure\"); } }",
+            _ => throw new ArgumentException("Unknown failure scenario", nameof(failure))
+        };
+        await CreateExampleAsync(examples.FullName, "example", fail: true, program: program);
+
+        var result = await RunTesterAsync(reportPath, [examples.FullName]);
+        using var report = JsonDocument.Parse(await File.ReadAllTextAsync(reportPath));
+        var diagnostics = report.RootElement.GetProperty("diagnostics").EnumerateArray().ToArray();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.EqualTo(1), result.Error);
+            Assert.That(report.RootElement.GetProperty("success").GetBoolean(), Is.False);
+            Assert.That(diagnostics.Select(d => d.GetProperty("message").GetString()),
+                Has.Some.Contains(expectedMessage));
+            Assert.That(diagnostics.Select(d => d.GetProperty("file").GetString()),
+                Is.All.EqualTo("standard/expressions.md"));
+            Assert.That(result.Output, Does.Contain(
+                "::error file=standard/expressions.md,line=42,endLine=44,title=Example tester - ExampleTester::"));
+        });
+    }
+
+    [Test]
+    public async Task LaterExceptionPreservesPreviouslyCollectedDiagnostics()
+    {
+        var examples = Directory.CreateDirectory(Path.Combine(tempDirectory, "examples"));
+        var reportPath = Path.Combine(tempDirectory, "reports", "examples.json");
+        await CreateExampleAsync(examples.FullName, "first", fail: true);
+        await CreateExampleAsync(examples.FullName, "second", fail: false, startLine: 70);
+        File.Delete(Path.Combine(examples.FullName, "second", "Example.csproj"));
+
+        var result = await RunTesterAsync(reportPath, [examples.FullName]);
+        using var report = JsonDocument.Parse(await File.ReadAllTextAsync(reportPath));
+        var diagnostics = report.RootElement.GetProperty("diagnostics").EnumerateArray().ToArray();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.ExitCode, Is.Not.Zero);
+            Assert.That(result.Error, Does.Contain("Sequence contains no elements"));
+            Assert.That(report.RootElement.GetProperty("success").GetBoolean(), Is.False);
+            Assert.That(diagnostics, Has.Length.EqualTo(1));
+            Assert.That(diagnostics[0].GetProperty("file").GetString(),
+                Is.EqualTo("standard/expressions.md"));
+            Assert.That(diagnostics[0].GetProperty("message").GetString(),
+                Does.Contain("Output expected, but project has no entry point."));
+        });
+    }
+
+    private static async Task CreateExampleAsync(
+        string examples, string name, bool fail, int startLine = 42, string? program = null)
+    {
+        var example = Directory.CreateDirectory(Path.Combine(examples, name));
+        await File.WriteAllTextAsync(Path.Combine(example.FullName, "metadata.json"),
+            JsonSerializer.Serialize(new
+            {
+                name,
+                markdownFile = Path.Combine("..", "standard", "expressions.md"),
+                startLine,
+                endLine = startLine + 2,
+                expectedOutput = fail ? new[] { "Expected output" } : null
+            }));
+        await File.WriteAllTextAsync(Path.Combine(example.FullName, "Example.csproj"),
+            $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net6.0</TargetFramework>
+                <OutputType>{(program is null ? "Library" : "Exe")}</OutputType>
+              </PropertyGroup>
+            </Project>
+            """);
+        await File.WriteAllTextAsync(Path.Combine(example.FullName, "Example.cs"),
+            program ?? "public class Example { }");
+    }
+
+    private async Task<(int ExitCode, string Output, string Error)> RunTesterAsync(string? reportPath, string[] args)
     {
         var startInfo = new ProcessStartInfo("dotnet")
         {
@@ -114,8 +240,7 @@ public class DiagnosticReportTests
         try
         {
             await process.WaitForExitAsync(timeout.Token);
-            await output;
-            return (process.ExitCode, await error);
+            return (process.ExitCode, await output, await error);
         }
         finally
         {

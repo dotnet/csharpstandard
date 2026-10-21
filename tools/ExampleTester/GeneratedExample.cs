@@ -123,10 +123,10 @@ public class GeneratedExample
             bool ret = ValidateExpectedAgainstActual(type, expected, actualIds);
             if (!ret)
             {
-                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Details of actual {type}:", "ExampleTester");
+                logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, $"  Details of actual {type}:", "ExampleTester");
                 foreach (var diagnostic in actualDiagnostics)
                 {
-                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                    logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine,
                         $"    Line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1}: {diagnostic.Id}: {diagnostic.GetMessage()}",
                         "ExampleTester");
                 }
@@ -141,7 +141,7 @@ public class GeneratedExample
             {
                 if (Metadata.ExpectedOutput != null)
                 {
-                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Output expected, but project has no entry point.", "ExampleTester");
+                    logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, "  Output expected, but project has no entry point.", "ExampleTester");
                     return false;
                 }
                 return true;
@@ -158,7 +158,7 @@ public class GeneratedExample
             var emitResult = compilation.Emit(ms);
             if (!emitResult.Success)
             {
-                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Failed to emit assembly", "ExampleTester");
+                logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, "  Failed to emit assembly", "ExampleTester");
                 return false;
             }
 
@@ -166,13 +166,13 @@ public class GeneratedExample
             var type = generatedAssembly.GetType(typeName);
             if (type is null)
             {
-                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point type {typeName}", "ExampleTester");
+                logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point type {typeName}", "ExampleTester");
                 return false;
             }
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (method is null)
             {
-                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point method {typeName}.{methodName}", "ExampleTester");
+                logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point method {typeName}.{methodName}", "ExampleTester");
                 return false;
             }
             var arguments = method.GetParameters().Any()
@@ -247,7 +247,7 @@ public class GeneratedExample
             {
                 if (!result)
                 {
-                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, message, "ExampleTester");
+                    logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine, message, "ExampleTester");
                 }
                 return result;
             }
@@ -257,7 +257,7 @@ public class GeneratedExample
         {
             if (!expected.SequenceEqual(actual))
             {
-                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                logger.LogFailure(Metadata.MarkdownFile, Metadata.StartLine, Metadata.EndLine,
                     $"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}", "ExampleTester");
                 return false;
             }
