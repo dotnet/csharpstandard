@@ -305,13 +305,13 @@ Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and 
 
 **This subclause is informative.**
 
-Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. Binary numeric promotion consists of applying the following rules, in the order they appear here:
+Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. For each conversion described below, if the operand already has the target type, no conversion is required. Otherwise, if no implicit numeric conversion exists, a binding-time error occurs. Binary numeric promotion consists of applying the following rules, in the order they appear here:
 
-- If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
+- If either operand is of type `decimal`, the other operand is converted to type `decimal`.
 - Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
 - Otherwise, if either operand is of type `float`, the other operand is converted to type `float`.
-- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
-- Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
+- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`.
+- Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
 - Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `int`, or `nint`, both operands are converted to type `long`.
 - Otherwise, if either operand is of type `uint`, the other operand is converted to type `uint`.
@@ -7219,10 +7219,19 @@ constant_expression
     ;
 ```
 
-A constant expression shall have the value `null`, or be of a value type or a reference type. If a constant expression has a value type, that type shall be one of the following: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, the expression shall:
+A constant expression shall either have the value `null` or have one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, or any enumeration type.
 
-- have a value of type `string`; or
-- be a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) of reference type.
+> *Example*: The `null` literal is a constant expression and can be used as the default argument for a nullable value type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"NullConstantDefaultArguments"} -->
+> ```csharp
+> class C
+> {
+>     public static void M(int? x = null, nint? y = null) { }
+> }
+> ```
+>
+> *end example*
 
 A *constant_expression* of type `nint` shall have a value in the range \[-2147483648, 2147483647\]. A *constant_expression* of type `nuint` shall have a value in the range \[0, 4294967295\].
 
@@ -7241,7 +7250,7 @@ Only the following constructs are permitted in constant expressions:
 - The `?:` conditional operator.
 - The `!` null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)).
 - `sizeof` expressions, provided the unmanaged-type is one of the types specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator) for which `sizeof` returns a constant value.
-- Default value expressions, provided the type is one of the types listed above.
+- Default value expressions, provided the type is one of the types listed above, a reference type, or a type parameter that is known to be a reference type ([§12.8.21](expressions.md#12821-default-value-expressions)).
 
 The following conversions are permitted in constant expressions:
 
@@ -7272,15 +7281,13 @@ The following conversions are permitted in constant expressions:
 
 Whenever an expression fulfills the requirements listed above, the expression is evaluated at compile-time. This is true even if the expression is a subexpression of a larger expression that contains non-constant constructs.
 
-The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
-
 The compile-time evaluation of a *constant_expression* shall:
 
 - treat all values of type `nint` as `System.Int32`;
 - treat all values of type `nuint` as `System.UInt32`;
 - and otherwise use the same evaluation rules as for run-time non-constant expressions.
 
-If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the run-time evaluation of the whole expression would throw an exception, then a compile-time error shall be produced.
+If the run-time evaluation of a constant expression would throw an exception, a compile-time error shall be produced.
 
 > *Example*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
 >
@@ -7289,10 +7296,12 @@ If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the r
 > public class C
 > {
 >     private const nint hugeNumber = int.MaxValue + 1;
+>
+>     public static nint AddOne(nint value) => value + 1;
 > }
 > ```
 >
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn't representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> The constant declaration causes an error because the addition is performed with `int` operands and its result is not representable as `int`. In contrast, `AddOne` performs addition with `nint` operands at run-time. When `nint` is 64 bits, `AddOne(int.MaxValue)` returns 2147483648. *end example*
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
@@ -7307,7 +7316,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - Attributes ([§23](attributes.md#23-attributes))
 - In a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern))
 
-An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
+An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
 ## 12.26 Boolean expressions
 
