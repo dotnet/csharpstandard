@@ -3061,6 +3061,7 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2();          // required, impl. required
 >     protected partial bool M3();        // required, impl. required
 >     public partial void M4(out int i);  // required, impl. required
+>     private static partial void M5();   // required, impl. required
 > }
 >
 > // part containing implementing partial method declarations
@@ -3069,8 +3070,15 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2() { ... }
 >     protected partial bool M3() { ... }
 >     public partial void M4(out int i) { ... }
+>
+>     [System.Runtime.InteropServices.DllImport("NativeLibrary")]
+>     private static extern partial void M5();
 > }
 > ```
+>
+> The implementation of `M1` may be omitted. In contrast, `M5` requires an
+> implementing declaration, which uses `extern` and has a semicolon rather
+> than a block body.
 >
 > *end example*
 
