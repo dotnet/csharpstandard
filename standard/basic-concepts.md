@@ -697,8 +697,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a parameter declared in an *indexer_declaration* ([§15.9](classes.md#159-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§15.10](classes.md#1510-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§15.11](classes.md#1511-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- With the exception of discard parameters (§12.21.2), the scope of a parameter declared in a *lambda_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- With the exception of discard parameters (§12.21.2), the scope of a parameter declared in an *anonymous_method_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- The scope of a non-discard parameter ([§12.21.2](expressions.md#12212-anonymous-function-signatures)) declared in a *lambda_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- The scope of a non-discard parameter ([§12.21.2](expressions.md#12212-anonymous-function-signatures)) declared in an *anonymous_method_expression* ([§12.21](expressions.md#1221-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§13.5](statements.md#135-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)) is the *switch_block*.

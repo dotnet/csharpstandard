@@ -5368,15 +5368,15 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 ### 12.21.2 Anonymous function signatures
 
-If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
+In an anonymous function parameter list, if two or more of the *identifier*s occurring directly in its *explicit_anonymous_function_parameter*s or *implicit_anonymous_function_parameter*s are *discard_token*s, each corresponding parameter is a ***discard parameter*** ([§9.2.9.2](variables.md#9292-discards)). All other parameters are non-discard parameters, whose names are specified by their *identifier*s.
 
-The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
+The *anonymous_function_signature* of an anonymous function defines the names of the non-discard parameters and optionally the types of all the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a non-discard parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
-> *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discards. *end note*
+> *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discard parameters. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: In the following code, the local variable `_` is in scope inside the lambda body. Because the lambda has multiple `_` parameters, both are discards and introduce no name. The reference to `_` inside the body therefore resolves to the enclosing local variable, not to any lambda parameter.
+> *Example*: In the following code, the local variable `_` is in scope inside the lambda body. Because the lambda has multiple `_` parameters, both are discard parameters and introduce no name. The reference to `_` inside the body therefore resolves to the enclosing local variable, not to any lambda parameter.
 >
 > <!-- Example: {template:"standalone-console", name:"DiscardParametersVsLocal", inferOutput:true} -->
 > ```csharp
