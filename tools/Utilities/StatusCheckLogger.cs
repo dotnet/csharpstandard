@@ -1,4 +1,4 @@
-﻿using Octokit;
+﻿using System.Text.Json;
 
 namespace Utilities;
 
@@ -13,26 +13,68 @@ namespace Utilities;
 public record StatusCheckMessage(string file, int StartLine, int EndLine, string Message, string Id);
 
 /// <summary>
-/// This class writes the status of the check to the console in the format GitHub supports
+/// A tool-neutral diagnostic with a repository-relative file path and raw message.
+/// </summary>
+public record StatusCheckDiagnostic(
+    string Severity, string File, int StartLine, int EndLine, string Id, string Message);
+
+/// <summary>
+/// Collects tool diagnostics and writes console output, workflow commands, and JSON reports.
 /// </summary>
 /// <remarks>
-/// For all of our tools, if all error and warning messages are formatted correctly, GitHub
-/// will show those errors and warnings inline in the files tab for the PR. Let's format
-/// them correctly.
+/// In GitHub Actions, diagnostics produce runner-generated annotations. GitHub may also
+/// display them inline when their source locations match the PR diff.
 /// </remarks>
 /// <param name="pathToRoot">The path to the root of the repository</param>
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(TextWriter writer, string pathToRoot, string toolName)
 {
-    internal const int MaximumAnnotations = 50;
-
-    private List<NewCheckRunAnnotation> annotations = [];
+    private readonly List<StatusCheckDiagnostic> diagnostics = [];
+    public IReadOnlyList<StatusCheckDiagnostic> Diagnostics => diagnostics.AsReadOnly();
     public bool Success { get; private set; } = true;
 
     // Utility method to format the path to unix style, from the root of the repository.
-    private string FormatPath(string path) => Path.GetRelativePath(pathToRoot, path).Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    private string FormatPath(string path) =>
+        Path.GetRelativePath(
+            pathToRoot.Replace('\\', Path.DirectorySeparatorChar),
+            path.Replace('\\', Path.DirectorySeparatorChar)).Replace('\\', '/');
 
     private void WriteMessageToConsole(string prefix, StatusCheckMessage d) => writer.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
+
+    private void LogDiagnostic(string prefix, string severity, StatusCheckMessage d)
+    {
+        WriteMessageToConsole(prefix, d);
+        var diagnostic = new StatusCheckDiagnostic(
+            severity, FormatPath(d.file), d.StartLine, d.EndLine, d.Id, d.Message);
+        diagnostics.Add(diagnostic);
+
+        if (string.Equals(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"),
+            "true", StringComparison.OrdinalIgnoreCase))
+        {
+            writer.WriteLine(FormatWorkflowCommand(diagnostic));
+        }
+    }
+
+    private string FormatWorkflowCommand(StatusCheckDiagnostic d)
+    {
+        List<string> properties = [$"file={EscapeProperty(d.File)}"];
+        if (d.StartLine > 0)
+        {
+            properties.Add($"line={d.StartLine}");
+            if (d.EndLine >= d.StartLine)
+            {
+                properties.Add($"endLine={d.EndLine}");
+            }
+        }
+        properties.Add($"title={EscapeProperty($"{toolName} - {d.Id}")}");
+        return $"::{d.Severity} {string.Join(",", properties)}::{EscapeData(d.Message)}";
+    }
+
+    private static string EscapeData(string value) =>
+        value.Replace("%", "%25").Replace("\r", "%0D").Replace("\n", "%0A");
+
+    private static string EscapeProperty(string value) =>
+        EscapeData(value).Replace(":", "%3A").Replace(",", "%2C");
 
     /// <summary>
     /// Log a notice from the status check to the console only
@@ -65,37 +107,21 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the diagnostic information to console.
     /// </remarks>
-    public void LogNotice(StatusCheckMessage d)
-    {
-        WriteMessageToConsole("", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Notice, $"{d.Id}::{d.Message}")
-        );
-    }
+    public void LogNotice(StatusCheckMessage d) => LogDiagnostic("", "notice", d);
 
     /// <summary>
     /// Log a warning from the status check
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the warning notice to the console.
     /// Warnings are logged, but the process reports "success" to GitHub.
     /// </remarks>
-    public void LogWarning(StatusCheckMessage d)
-    {
-        WriteMessageToConsole("⚠️", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Warning, $"{d.Id}::{d.Message}")
-        );
-    }
+    public void LogWarning(StatusCheckMessage d) => LogDiagnostic("⚠️", "warning", d);
 
     /// <summary>
     /// Log a failure from the status check
@@ -114,7 +140,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the failure notice to the console.
     /// This method is distinct from <see cref="ExitOnFailure(StatusCheckMessage)"/> in
     /// that this method does not throw an exception. Its purpose is to log
@@ -122,12 +148,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </remarks>
     public void LogFailure(StatusCheckMessage d)
     {
-        WriteMessageToConsole("❌", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Failure, $"{d.Id}::{d.Message}")
-        );
+        LogDiagnostic("❌", "error", d);
         Success = false;
     }
 
@@ -136,7 +157,7 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
-    /// Add the diagnostic to the annotation list and
+    /// Collect the diagnostic and
     /// log the failure notice to the console.
     /// This method is distinct from <see cref="LogFailure(StatusCheckMessage)"/> in
     /// that this method throws an exception. Its purpose is to log
@@ -149,53 +170,26 @@ public class StatusCheckLogger(TextWriter writer, string pathToRoot, string tool
     }
 
     /// <summary>
-    /// Return the object required for a full status check
+    /// Write the complete diagnostic report, creating its parent directory.
     /// </summary>
-    /// <param name="owner">The GitHub owner (or organization)</param>
-    /// <param name="repo">The GitHub repo name</param>
-    /// <param name="sha">The head sha when running as a GitHub action</param>
-    /// <returns>The full check run result object</returns>
-    public async Task BuildCheckRunResult(string token, string owner, string repo, string sha)
+    /// <param name="outputPath">The destination JSON file.</param>
+    /// <param name="completedSuccessfully">
+    /// Whether the tool completed successfully, including failures outside diagnostic logging.
+    /// </param>
+    public async Task WriteReportAsync(string outputPath, bool completedSuccessfully = true)
     {
-        NewCheckRun result = CreateCheckRun(sha);
-
-        var prodInformation = new ProductHeaderValue("TC49-TG2", "1.0.0");
-        var tokenAuth = new Credentials(token);
-        var client = new GitHubClient(prodInformation);
-        client.Credentials = tokenAuth;
-
-        try
+        var fullPath = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+        await using var stream = File.Create(fullPath);
+        await JsonSerializer.SerializeAsync(stream, new
         {
-            await client.Check.Run.Create(owner, repo, result);
-        }
-        // If the token does not have the correct permissions, we will get a 403
-        // Once running on a branch on the dotnet org, this should work correctly.
-        catch (ForbiddenException e)
+            tool = toolName,
+            success = Success && completedSuccessfully,
+            diagnostics
+        }, new JsonSerializerOptions
         {
-            writer.WriteLine("===== WARNING: Could not create a check run.=====");
-            writer.WriteLine("Exception details:");
-            writer.WriteLine(e);
-        }
-    }
-
-    internal NewCheckRun CreateCheckRun(string sha)
-    {
-        var annotationsToSubmit = annotations.Take(MaximumAnnotations).ToList();
-        var omittedAnnotations = annotations.Count - annotationsToSubmit.Count;
-        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.";
-        if (omittedAnnotations > 0)
-        {
-            summary += $" The first {MaximumAnnotations} diagnostics are annotated; {omittedAnnotations} additional diagnostics are available in the workflow log.";
-        }
-
-        return new(toolName, sha)
-        {
-            Status = CheckStatus.Completed,
-            Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
-            Output = new($"{toolName} Check Run results", summary)
-            {
-                Annotations = annotationsToSubmit
-            }
-        };
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        });
     }
 }

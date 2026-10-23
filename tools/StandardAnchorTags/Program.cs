@@ -25,8 +25,8 @@ public class Program
     /// <returns>0 on success, non-zero on failure</returns>
     static int Main(string[] args)
     {
-        var ownerOption = new Option<string>("--owner") { Description = "The GitHub owner org (for example, \"dotnet\")" };
-        var repoOption = new Option<string>("--repo") { Description = "The GitHub repo name (for example, \"csharpstandard\")" };
+        var ownerOption = new Option<string>("--owner") { Description = "Legacy option; no longer used" };
+        var repoOption = new Option<string>("--repo") { Description = "Legacy option; no longer used" };
         var dryrunOption = new Option<bool>("--dryrun") { Description = "True for a dry run, false to update the text in all files" };
 
         var rootCommand = new RootCommand("Update section numbers, anchor tags, and the TOC")
@@ -38,18 +38,9 @@ public class Program
 
         rootCommand.Action = new CustomAction(async parseResult =>
         {
-            var owner = parseResult.GetValue(ownerOption);
-            var repo = parseResult.GetValue(repoOption);
-
-            if (string.IsNullOrEmpty(owner) || string.IsNullOrEmpty(repo))
-            {
-                Console.WriteLine("Error: --owner and --repo are required");
-                return 1;
-            }
-
             var dryrun = parseResult.GetValue(dryrunOption);
 
-            return await ExecuteAsync(owner, repo, dryrun);
+            return await ExecuteAsync(dryrun);
         });
 
         return rootCommand.Parse(args).Invoke();
@@ -58,30 +49,28 @@ public class Program
     /// <summary>
     /// Execute the main logic
     /// </summary>
-    /// <param name="owner">The GitHub owner org (for example, "dotnet")</param>
-    /// <param name="repo">The GitHub repo name (for example, "csharpstandard")</param>
     /// <param name="dryrun">True for a dry run, false to update the text in all files</param>
     /// <returns>0 on success, non-zero on failure</returns>
-    static async Task<int> ExecuteAsync(string owner, string repo, bool dryrun)
+    static async Task<int> ExecuteAsync(bool dryrun)
     {
         var logger = new StatusCheckLogger(Console.Out, "..", "TOC and Anchor updater");
-        var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
-        var token = Environment.GetEnvironmentVariable("GH_TOKEN");
-        using FileStream openStream = File.OpenRead(FilesPath);
-        standardClauses = await JsonSerializer.DeserializeAsync<Clauses>(openStream);
-        if (standardClauses is null)
-        {
-            Console.WriteLine("Could not read list of clauses. Exiting");
-            return 1;
-        }
-
-        if (dryrun)
-        {
-            Console.WriteLine("Doing a dry run");
-        }
-
+        var reportPath = Environment.GetEnvironmentVariable("DIAGNOSTICS_REPORT_PATH");
+        int exitCode = 1;
         try
         {
+            using FileStream openStream = File.OpenRead(FilesPath);
+            standardClauses = await JsonSerializer.DeserializeAsync<Clauses>(openStream);
+            if (standardClauses is null)
+            {
+                Console.WriteLine("Could not read list of clauses. Exiting");
+                return 1;
+            }
+
+            if (dryrun)
+            {
+                Console.WriteLine("Doing a dry run");
+            }
+
             TocSectionNumberBuilder sectionMap = await BuildSectionMap(dryrun, logger);
 
             if (!dryrun)
@@ -95,15 +84,16 @@ public class Program
             {
                 using GenerateGrammar grammarGenerator = await GenerateNewGrammar();
             }
+            exitCode = logger.Success ? 0 : 1;
+            return exitCode;
         }
         finally
         {
-            if ((token is not null) && (headSha is not null))
+            if (reportPath is not null)
             {
-                await logger.BuildCheckRunResult(token, owner, repo, headSha);
+                await logger.WriteReportAsync(reportPath, exitCode == 0);
             }
         }
-        return logger.Success ? 0 : 1;
     }
 
     private class CustomAction : AsynchronousCommandLineAction

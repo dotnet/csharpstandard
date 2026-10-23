@@ -75,10 +75,11 @@ Never blanket-select a conflicted prose file. Separate number relocation from
 meaning. Stop for normative ambiguity or unexplained tooling changes.
 
 Finalize draft numbering/grammar with the repository's exact tool when authorized.
-From `tools`, with `GH_TOKEN` and `HEAD_SHA` cleared, the command is:
+From `tools`, optionally set `DIAGNOSTICS_REPORT_PATH` to save a local JSON
+diagnostic report; no GitHub authentication is needed. The command is:
 
 ```text
-dotnet run --project StandardAnchorTags -- --owner dotnet --repo csharpstandard
+dotnet run --project StandardAnchorTags
 ```
 
 Require zero placeholders/symbolic section references, correct hierarchy,
