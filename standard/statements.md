@@ -1197,6 +1197,8 @@ is semantically equivalent to:
 }
 ```
 
+except that no copy of `x` is made when `GetEnumerator()` is called.
+
 The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 When the iteration variable is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a `foreach` statement of the form
@@ -1224,6 +1226,8 @@ is semantically equivalent to:
     }
 }
 ```
+
+except that no copy of `x` is made when `GetEnumerator()` is called.
 
 The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.23.4](expressions.md#12234-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
@@ -1472,6 +1476,8 @@ is semantically equivalent to:
     }
 }
 ```
+
+except that no copy of `x` is made when `GetEnumerator()` is called.
 
 This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* in which the *deconstructor* contains the iteration-variable declarations: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
 
