@@ -2,6 +2,8 @@
 
 Working space for [ECMA-TC49-TG2](https://www.ecma-international.org/task-groups/tc49-tg2/), the C# standard committee.
 
+Note that C# language *design* has its own repository, [`csharplang`](https://github.com/dotnet/csharplang).
+
 - The text is licensed under the [Creative Commons license](LICENSE).
 - The code for our tools is licensed under the [MIT license](LICENSE-CODE).
 
