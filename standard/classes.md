@@ -6325,15 +6325,15 @@ If the record class has no printable members, the method shall call the base `Pr
 
 The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
 
-The record class shall include a provided method method declared as follows:
+Unless a base record class declares a sealed override of `object.ToString()`, the record class shall include a provided method declared as follows:
 
 ```csharp
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. When no base record class declares a sealed override of `object.ToString()`, it is an error if the explicit declaration does not match the expected signature or accessibility, or if either the provided or explicitly declared method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
-Sealing an explicitly declared `ToString` method prevents the compiler from providing a `ToString` method for any derived record types. However, this does not prevent the compiler from providing `PrintMembers`.
+When a base record class declares a sealed override of `object.ToString()`, the implementation shall not provide a `ToString` method for the derived record class. An explicitly declared `ToString` member in such a derived record class is subject to the ordinary rules for member hiding and overriding. Sealing `ToString` does not prevent the implementation from providing `PrintMembers`.
 
 The provided method:
 
@@ -6343,6 +6343,34 @@ The provided method:
 1. Appends `}`,
 1. Returns the builder's contents with `builder.ToString()`.
 
+> *Example*: An unsealed record class can seal its `ToString` override. A derived record class inherits that implementation instead of receiving a provided override:
+>
+> <!-- Example: {template:"standalone-console", name:"PrintingMembers4", inferOutput:true} -->
+> ```csharp
+> record Base
+> {
+>     public sealed override string ToString() => "Base";
+> }
+>
+> record Derived(int Value) : Base;
+>
+> class Program
+> {
+>     static void Main()
+>     {
+>         Console.WriteLine(new Derived(1));
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> Base
+> ```
+>
+> *end example*
+>
 > *Example*: Given the following:
 >
 > <!-- Example: {template:"standalone-console", name:"PrintingMembers1", inferOutput:true} -->
