@@ -176,7 +176,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
+The scope of an *extern_alias_directive* is described in [§7.6](basic-concepts.md#76-scopes).
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
@@ -225,7 +225,7 @@ A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-dir
 
 A *using_static_directive* ([§14.5.4](namespaces.md#1454-using-static-directives)) imports the nested types and static members of a type.
 
-The scope of a *using_directive* is described in [§7.7.1]( basic-concepts.md#771-general).
+The scope of a *using_directive* is described in [§7.6](basic-concepts.md#76-scopes).
 
 ### 14.5.2 Using alias directives
 
