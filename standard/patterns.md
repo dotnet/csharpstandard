@@ -299,6 +299,8 @@ subpattern_name
     ;
 ```
 
+If a *subpattern* in the parenthesized list has a *subpattern_name*, that name shall consist of a single *identifier*.
+
 Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)).
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
@@ -313,9 +315,9 @@ If the input can be syntactically recognised as both a *constant_pattern* and a 
 
 In order to extract the values to match against the patterns in the list,
 
-1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
-2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
-3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
+1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has a *subpattern_name*, its *identifier* shall name the tuple element at the corresponding position in the tuple type.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.24.3](expressions.md#12243-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has a *subpattern_name*, its *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has a *subpattern_name*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
 4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
 
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
@@ -395,7 +397,7 @@ property_subpattern
     ;
 ```
 
-It is an error if any *subpattern* of a *property_pattern* does not contain an *identifier*.
+It is an error if any *subpattern* of a *property_pattern* does not contain a *subpattern_name*.
 
 It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)).
 
@@ -414,15 +416,17 @@ It is a compile-time error if the *type* is a nullable value type ([§8.3.12](ty
 > The example declaring `x2` is similar to `if (s is var x2)` in terms of inferring the variable type, but the property pattern guarantees that `x2` is non-null.
 > *end note*
 
-Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, it is a compile-time error if the expression *e* is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with the type *T* designated by *type*. If the type is absent, the type is assumed to be the static type of *e*. Each of the identifiers appearing on the left-hand-side of its *subpatterns* shall designate an accessible readable property or field of *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
+Given a match of an expression *e* to the pattern *type* `{` *subpatterns* `}`, let *T* be the type designated by *type* if present; otherwise, let *T* be the static type of *e*. It is a compile-time error if the expression *e* is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *T*. If the *simple_designation* of the *property_pattern* is present, it declares a pattern variable of type *T*.
 
-At runtime, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.
+For each *subpattern_name*, let *R* be *T* for the first *identifier*, and the type of the member designated by the preceding *identifier* for each subsequent *identifier*. The receiver type for member lookup is the underlying type of *R* if *R* is a nullable value type; otherwise, it is *R*. Each *identifier* shall designate an accessible readable instance property or field of its receiver type.
+
+At runtime, if the expression evaluates to `null`, the property pattern match fails, and the result is `false`. Otherwise, the expression is tested against *T*. If this fails then the property pattern match fails, and the result is `false`. If it succeeds, then each *property_subpattern* field or property is read, and its value matched against its corresponding pattern. The result of the whole match is `false` only if the result of any of these is `false`. The order in which subpatterns are matched is not specified, and a failed match may not test all subpatterns at runtime. If the match succeeds and the *simple_designation* of the *property_pattern* is a *single_variable_designation*, the declared variable is assigned the matched value.
 
 The *property_pattern* may be used to pattern-match with anonymous types.
 
-A *property_subpattern* may reference a nested member. In such a case, the receiver for each name lookup is the type of the previous member *T₀*, starting from the *input type* of the *property_pattern*. If *T* is a nullable type, *T₀* is its underlying type, otherwise *T₀* is equal to *T*. For example, a pattern of the form `{ Prop1.Prop2: pattern }` is exactly equivalent to `{ Prop1: { Prop2: pattern } }`.
+A *subpattern_name* containing more than one *identifier* denotes a sequence of nested property patterns. For example, a pattern of the form `{ Prop1.Prop2: pattern }` is exactly equivalent to `{ Prop1: { Prop2: pattern } }`. Each nested property pattern also requires its input value to be non-`null` for the match to succeed. Repeated member paths are permitted.
 
-> *Note*: This will include the null check when *T* is a nullable value type or a reference type. This null check means that the nested properties available will be the properties of *T₀*, not of *T*. As repeated member paths are allowed, the compilation of pattern matching can take advantage of common parts of patterns. *end note*
+> *Note*: For a nullable value-type receiver, lookup uses members of the underlying type rather than members of `Nullable<T>`. The compilation of pattern matching can take advantage of common parts of repeated member paths. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -465,6 +469,33 @@ A *property_subpattern* may reference a nested member. In such a case, the recei
 > Hi!
 > 12345
 > abc
+> ```
+>
+> *end example*
+>
+> *Example*: In the following pattern, `Date` is a nullable `DateTime` property of `Event`, and `Year` is a property of `DateTime`. The pattern `Event { Date.Year: 2020 }` is equivalent to `Event { Date: { Year: 2020 } }`; it fails when either the event or its date is `null`.
+>
+> <!-- Example: {template:"standalone-console", name:"PropertyPattern4", inferOutput:true} -->
+> ```csharp
+> #nullable enable
+> Console.WriteLine(IsIn2020(new Event { Date = new DateTime(2020, 1, 1) }));
+> Console.WriteLine(IsIn2020(new Event()));
+> Console.WriteLine(IsIn2020(null));
+>
+> static bool IsIn2020(object? value) => value is Event { Date.Year: 2020 };
+>
+> class Event
+> {
+>     public DateTime? Date { get; set; }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> True
+> False
+> False
 > ```
 >
 > *end example*
