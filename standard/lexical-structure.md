@@ -1094,7 +1094,7 @@ The following pre-processing directives are available:
 
 - `#define` and `#undef`, which are used to define and undefine, respectively, conditional compilation symbols ([§6.5.4](lexical-structure.md#654-definition-directives)).
 - `#if`, `#elif`, `#else`, and `#endif`, which are used to skip conditionally sections of source code ([§6.5.5](lexical-structure.md#655-conditional-compilation-directives)).
-- `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
+- `#line`, which is used to control line numbers and source file mapping emitted for errors and warnings (§6.5.8).
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).
@@ -1494,7 +1494,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§23.5.6](attributes.md#2356-caller-info-attributes)).
 
-> *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
+> *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. The information these directives provide might be used for debugging purposes and error handling, by allowing mapping of errors back to the original source file, rather than to the generated intermediate file. *end note*
 
 ```ANTLR
 fragment PP_Line
@@ -1506,6 +1506,8 @@ fragment PP_Line_Indicator
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
+    | PP_Start_Line_Character PP_Whitespace? '-' PP_Whitespace? PP_End_Line_Character
+      PP_Whitespace (PP_Character_Offset PP_Whitespace)? PP_Compilation_Unit_Name
     ;
 
 fragment PP_Compilation_Unit_Name
@@ -1516,17 +1518,106 @@ fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
+
+fragment PP_Start_Line_Character
+    : '(' PP_Whitespace? PP_Start_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_Start_Character PP_Whitespace? ')'
+    ;
+fragment PP_End_Line_Character
+    : '(' PP_Whitespace? PP_End_Line PP_Whitespace? ',' PP_Whitespace?
+      PP_End_Character PP_Whitespace? ')'
+    ;
+
+fragment PP_Start_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Line
+    : Decimal_Digit+
+    ;
+
+fragment PP_Start_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_End_Character
+    : Decimal_Digit+
+    ;
+
+fragment PP_Character_Offset
+    : Decimal_Digit+
+    ;
 ```
 
-When no `#line` directives are present, a compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, a compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, a compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that specifies a single line number, a compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive preserves the line-number and compilation-unit-name mapping established by an ordinary line-number directive. If the preceding mapping was established by an enhanced directive specifying a span, `#line hidden` instead restores the true source line numbers and compilation unit name. These rules apply to source locations reported in error messages and used by caller-info attributes ([§23.5.6](attributes.md#2356-caller-info-attributes)). The directive is also intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
+
+Together, the tokens *PP_Start_Line_Character* '-' *PP_End_Line_Character* specify a span of characters in the source file identified by *PP_Compilation_Unit_Name* (the ***mapped file***).
+
+*PP_Start_Line_Character* represents the inclusive start position of the span in the mapped file, specified as a line (*PP_Start_Line*) and column (*PP_Start_Character*) pair; for example, `(1,1)`.
+
+*PP_End_Line_Character* represents the inclusive end position of the span in the mapped file, specified as a line (*PP_End_Line*) and column (*PP_End_Character*) pair; for example, `(3,10)`.
+
+*PP_Start_Line* and *PP_End_Line* are positive integers that specify line numbers. *PP_Start_Character* and *PP_End_Character* are positive integers that specify column numbers, counted in UTF-16 code units. All four of these numbers are 1-based, meaning that the first line of the mapped file and the first UTF-16 code unit on each line is assigned number 1.
+
+The end position shall not precede the start position: *PP_End_Line* shall be greater than or equal to *PP_Start_Line*, and when *PP_Start_Line* equals *PP_End_Line*, *PP_End_Character* shall be greater than or equal to *PP_Start_Character*. Equal start and end positions specify a span of one UTF-16 code unit.
+
+*PP_Character_Offset* specifies an offset in UTF-16 code units for the line immediately following the directive, allowing for an inserted prefix. If omitted, the offset is zero; if explicitly specified, it shall be a positive integer. The offset need not be less than the length of that line.
+
+The mapping specified by an enhanced directive is in scope until the following `#line` directive or the end of the compilation unit, whichever comes first.
+
+For mapping a source span whose start is in the scope of an enhanced directive, let:
+
+- *F* be the true line number of the line immediately following the directive.
+- (*startLine*, *startColumn*) be the start position specified by the directive.
+- (*endLine*, *endColumn*) be the inclusive end position specified by the directive.
+- *O* be the offset, or zero if it is omitted.
+
+All line and column numbers in the following rules are 1-based. Source spans and mapped spans use an inclusive start position and an exclusive end position. Column numbers and the offset are measured in UTF-16 code units.
+
+If a source span starts on line *F* at a column less than or equal to *O*, the entire source span maps to the span from (*startLine*, *startColumn*) to (*endLine*, *endColumn* + 1), regardless of the source span's end position.
+
+Otherwise, the start and end positions of the source span are each mapped as follows. A position (*l*, *c*) maps to:
+
+- (*startLine* + *l* - *F*, *startColumn* + *c* - 1 - *O*) if *l* equals *F*.
+- (*startLine* + *l* - *F*, *c*) if *l* is greater than *F*.
+
+Both cases use the compilation unit name specified by the directive. A translated span is not clipped to the span specified by the directive.
+
+These rules apply to diagnostic source spans and to the source spans of debugging sequence points. The compiler determines which syntax constructs have sequence points and the source span associated with each such point; those choices are not specified here.
+
+> *Example*: A code generator that produces C# from a template file can use the enhanced form of the `#line` directive to map diagnostics back to positions in the original source:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"EnhancedLineDirectives1", expectedErrors:["CS0103", "CS0103"]} -->
+> ```csharp
+> #line (5,3)-(5,17) "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
+> ```
+>
+> If `output` and `Greet` are undeclared, their diagnostic spans in `template.dsl` are `(5,3)-(5,9)` and `(5,14)-(5,19)`, respectively, using exclusive end positions. The supplied span does not replace every diagnostic span.
+>
+> The *PP_Character_Offset* form allows the generator to account for an inserted prefix. With an offset of `11` for the prefix `output.Add(`:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"EnhancedLineDirectives2", expectedErrors:["CS0103", "CS0103"]} -->
+> ```csharp
+> #line (5,3)-(5,17) 11 "template.dsl"
+> output.Add(Greet("Hello"));
+> #line default
+> ```
+>
+> the diagnostic for `Greet` maps to `(5,3)-(5,8)`. The diagnostic for `output` starts within the inserted prefix, so it maps to the entire supplied span, `(5,3)-(5,18)` with an exclusive end position.
+>
+> Diagnostics starting on subsequent lines retain their generated column numbers. For example, an identifier at columns 9 through 16 on the second line after either directive maps to `(6,9)-(6,17)`.
+>
+> *end example*
 
 ### 6.5.9 Nullable directive
 
