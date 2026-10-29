@@ -760,7 +760,7 @@ If a program uses a type or member that is decorated with `ObsoleteAttribute`, a
 
 ### 23.5.5 The AsyncMethodBuilder attribute
 
-This attribute is described in [§15.14.1](classes.md#15141-general).
+This attribute associates a builder with a task type ([§15.14.1](classes.md#15141-general)) or selects a builder for an async function ([§15.14.5](classes.md#15145-task-builder-selection)).
 
 ### 23.5.6 Caller-info attributes
 
