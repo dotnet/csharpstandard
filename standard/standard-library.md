@@ -779,6 +779,7 @@ namespace System.Linq.Expressions
 
 namespace System.Runtime.CompilerServices
 {
+    [InterpolatedStringHandler]
     public ref struct DefaultInterpolatedStringHandler
     {
         public DefaultInterpolatedStringHandler(int literalLength,
@@ -787,11 +788,11 @@ namespace System.Runtime.CompilerServices
             int formattedCount, IFormatProvider? provider);
         public DefaultInterpolatedStringHandler(int literalLength,
             int formattedCount, IFormatProvider? provider, Span<char> initialBuffer);
-        public void AppendFormatted(scoped ReadOnlySpan<char> value);
+        public void AppendFormatted(ReadOnlySpan<char> value);
         public void AppendFormatted(string? value);
         public void AppendFormatted(object? value, int alignment = 0,
             string? format = default);
-        public void AppendFormatted(scoped ReadOnlySpan<char> value,
+        public void AppendFormatted(ReadOnlySpan<char> value,
             int alignment = 0, string? format = default);
         public void AppendFormatted(string? value, int alignment = 0,
             string? format = default);

@@ -1248,9 +1248,9 @@ The output produced is, as follows:
 val = {  FF}; 2 * val = 510.
 ```
 
-In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As such, according to [§12.8.3](expressions.md#1283-interpolated-string-expressions), the default interpolated string expression handler is invoked. The following subclause (§custInterpStrExpCustHandling) shows how to use a custom handler.
+In the call to `LogMessage`, the target of the interpolated string expression argument is parameter `msg`, which has type `string`. As described in [§12.8.3](expressions.md#1283-interpolated-string-expressions), the compiler can use the default interpolated string handler when it is available and the context supports it. The following example shows how to use a custom handler.
 
-In order to provide custom processing to the program above, a *custom interpolated string expression handler* is needed. Here then is the message logger with a custom handler added (which although it does nothing more than behave like the default handler, it provides the hooks for customization):
+In order to provide custom processing to the program above, a *custom interpolated string expression handler* is needed. Here is the message logger with a custom handler added, illustrating one possible implementation:
 
 <!-- Example: {template:"standalone-console-without-using", name:"DeclCustomHandler2", inferOutput:true} -->
 ```csharp
@@ -1277,6 +1277,10 @@ public ref struct LogInterpolatedStringHandler
     public void AppendFormatted<T>(T t, string format) where T : IFormattable
     {
         builder.Append(t?.ToString(format, null));
+    }
+    public void AppendFormatted<T>(T t, int alignment)
+    {
+        builder.Append(String.Format("{0," + alignment + "}", t));
     }
     public void AppendFormatted<T>(T t, int alignment, string format)
         where T : IFormattable
@@ -1317,34 +1321,99 @@ val = {  FF}; 2 * val = 510.
 
 A type having the attribute `InterpolatedStringHandlerAttribute` is said to be an *applicable interpolated string handler type*.
 
-To qualify as a custom interpolated string expression handler, a class or struct type shall have the following characteristics:
+An implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)) to a class or struct type `T` is bound as follows. The presence of the attribute establishes conversion applicability; constructor and append-method validation is performed after overload resolution selects the conversion.
 
-- Be marked with the attribute `InterpolatedStringHandlerAttribute`.
-- Have an accessible constructor whose first two parameters have type `int`. (Other parameters may follow, which are used to pass information to/from the handler. These are discussed in §custInterpStrExpPassInfo. An optional final parameter may be declared to inhibit the handler from processing the interpolated string. This is discussed in §custInterpStrExpInhibCustHandler).
+The constructor argument list consists of:
 
-When the compiler-generated code calls the constructor, the first parameter is set to the sum of the lengths of the interpolated string expression segments ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) in the interpolated string expression, and the second parameter is set to the number of interpolations. (For `($"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.)
+- Two `int` constants: the sum of the lengths of the literal segments and the number of interpolations in the *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). Literal lengths are calculated after decoding escapes, including replacing `{{` and `}}` with single braces. For `$"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.
+- Any additional arguments specified by `InterpolatedStringHandlerArgumentAttribute`, in the specified order (§custInterpStrExpPassInfo).
+- A final `out` argument of type `bool`.
 
-- Have an accessible method with the signature `void AppendLiteral(string s)`, which is called to process a single interpolated string expression literal segment.
-- Have a set of accessible overloaded methods called `AppendFormatted`, one of which is called to process a single interpolation, based on that interpolation’s content. Their signatures are, as follows:
-  - `void AppendFormatted<T>(T t)`, which deals with interpolations having no explicit format or alignment, as in the case of `{2 * val}`.
-  - `void AppendFormatted<T>(T t, string format) where T : System.IFormattable`, which deals with interpolations having an explicit format, but no alignment, as in the case of `{val:X4}`.
-  - `void AppendFormatted<T>(T t, int alignment, string format) where T : System.IFormattable`, which deals with interpolations having an explicit format and alignment, as in the case of `{val,4:X}`.
-- Have a public method with the signature `override string ToString()`, which returns the built string.
+Constructor binding is performed on `T` using this argument list and the ordinary rules for object creation ([§12.8.17.2](expressions.md#128172-object-creation-expressions)), including overload resolution, accessibility, and final validation. If this binding fails, including because it is ambiguous, binding is retried without the final `out bool` argument. It is a compile-time error if neither attempt selects a valid constructor.
 
-> *Note*: It is not a compile-time error to omit any of the `AppendFormatted` overloads, but if the handler is to be maximally robust, it should support all the formats recognized by the default handler. *end note*
+> *Example*: Ambiguity between constructors accepting the `out bool` argument does not prevent selection of a constructor without that argument:
+>
+> <!-- Example: {template:"standalone-console", name:"HandlerConstructorFallback", expectedOutput:["ungated"]} -->
+> ```csharp
+> Handler handler = $"";
+>
+> [System.Runtime.CompilerServices.InterpolatedStringHandler]
+> struct Handler
+> {
+>     public Handler(int literalLength, int formattedCount) =>
+>         Console.WriteLine("ungated");
+>     public Handler(int literalLength, int formattedCount,
+>         out bool enabled, int optional = 0) { enabled = true; }
+>     public Handler(int literalLength, int formattedCount,
+>         out bool enabled, long optional = 0) { enabled = true; }
+> }
+> ```
+>
+> *end example*
 
-The new overload of `LogMessage` takes a custom handler instead of `string`, and retrieves the string as formatted by that handler. When such overloads exist, if a corresponding handler exists and the interpolated string expression is not a constant ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), the compiler generates code to call the one taking a handler. In such cases, the compiler generates code to
+Append methods are resolved only for components present in the *interpolated_string_handler_expression*:
 
-- call the handler constructor
-- in lexical order within the interpolated string expression
-  - pass each interpolated string expression segment to `AppendLiteral`
-  - pass each interpolation to the appropriate `AppendFormatted` method.
-- return the final string as the value of the interpolated string expression.
-- execute the body of `LogMessage`.
+- For each nonempty literal segment, an invocation of `AppendLiteral` is resolved with one value argument of type `string`.
+- For each interpolation, an invocation of `AppendFormatted` is resolved. Its first argument is the interpolation's *expression*, passed by value. If an *interpolation_minimum_width* is present, its constant value is supplied as a named argument `alignment`. If a format specifier is present, its text is supplied as a named argument `format`.
+
+Member lookup and overload resolution use the ordinary rules for invocation through an instance of `T` ([§12.8.10.2](expressions.md#128102-method-invocations)). Each selected append method shall be an accessible instance method; extension methods are not considered. Optional parameters, generic inference, and argument conversions apply as usual. Every selected append method shall return either `void` or `bool` by value, and all selected append methods shall return the same type. A missing, ambiguous, or otherwise invalid required method is a compile-time error.
+
+> *Note*: No unused append overload or `ToString` override is required. Append methods need not be public or generic, and no particular generic constraint is required. A handler need not produce a string. *end note*
+
+Evaluation of a successfully bound conversion proceeds as follows:
+
+1. Previously evaluated receiver and argument values or storage locations are retained as specified in §custInterpStrExpPassInfo. Earlier components of a containing expression are evaluated first, preserving their ordinary evaluation order.
+1. The selected constructor is invoked with the literal length, interpolation count, forwarded arguments, and `out bool` argument, if selected. Its result is stored in a temporary of type `T`.
+1. If an `out bool` argument was selected and its value is `false`, no append call is executed and no interpolation expression is evaluated.
+1. Otherwise, the components are processed in lexical order, across the entire *interpolated_string_handler_expression*. Each literal segment is decoded and supplied to its selected `AppendLiteral` method. Each interpolation expression is evaluated, converted, and supplied with its alignment and format arguments to its selected `AppendFormatted` method. If an append method returns `false`, all subsequent append calls and interpolation expressions are skipped.
+1. The result of the conversion is the constructed handler, including any changes made by the append calls.
+
+The surrounding invocation, if any, still occurs when construction inhibits processing or an append method returns `false`. Later ordinary arguments are still evaluated in their normal order. There is no implicit disposal of the handler.
+
+Handler conversion does not implicitly invoke `ToString` or require a handler to produce a string. The preference between a handler overload and a string overload is specified in [§12.6.4.5](expressions.md#12645-better-conversion-from-expression).
+
+> *Example*: A handler can use nongeneric, nonpublic, bool-returning append methods without overriding `ToString`. It can also be passed by reference without an explicit `ref` argument:
+>
+> <!-- Example: {template:"standalone-console", name:"ConditionalHandlerEvaluation", expectedOutput:["construct:6:2", "literal:prefix", "body:2", "construct:0:1", "hole", "formatted:1:4:X", "body:1"]} -->
+> ```csharp
+> class Program
+> {
+>     static int Hole() { Console.WriteLine("hole"); return 1; }
+>     static void Write(ref Handler handler, params int[] values) =>
+>         Console.WriteLine("body:" + values.Length);
+>
+>     static void Main()
+>     {
+>         Write(($"prefix{Hole()}" + ($"{Hole()}"!)), 1, 2);
+>         Write($"{Hole(),4:X}", new[] { 1 });
+>     }
+> }
+>
+> [System.Runtime.CompilerServices.InterpolatedStringHandler]
+> struct Handler
+> {
+>     internal Handler(int literalLength, int formattedCount) =>
+>         Console.WriteLine($"construct:{literalLength}:{formattedCount}");
+>     internal bool AppendLiteral(string text)
+>     {
+>         Console.WriteLine("literal:" + text);
+>         return false;
+>     }
+>     internal bool AppendFormatted(int value, int alignment = 0, string format = null)
+>     {
+>         Console.WriteLine($"formatted:{value}:{alignment}:{format}");
+>         return false;
+>     }
+> }
+> ```
+>
+> The first literal append suppresses both holes in the first invocation. The second invocation evaluates its first hole and passes the alignment and format by name. Both invocations execute `Write`.
+>
+> *end example*
 
 ##### §custInterpStrExpInhibCustHandler Inhibiting a custom handler
 
-If a handler constructor has a final parameter of type `bool` that is an out parameter, when that constructor is called that parameter’s value is tested. If it is true, the behavior is as if that parameter were omitted. However, if it is false, the interpolated string expression is not processed further; that is, the handler is *inhibited*. Specifically, the interpolation expressions are not evaluated, and the methods `AppendLiteral` and `AppendFormatted` are not called.
+If constructor resolution selects a constructor with an `out bool` argument, that argument's value is tested after construction. If it is `true`, component processing begins. If it is `false`, the handler is *inhibited*: no interpolation expression is evaluated and no append method is called. This test is separate from the short-circuiting performed after each bool-returning append call.
 
 ``` csharp
 public LogInterpolatedStringHandler(int literalLength, int formattedCount,
@@ -1363,7 +1432,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
 }
 ```
 
-*Note*: The interpolations in an interpolated string expression may contain side effects (as result from `++`, `--`,  assignment, and some method calls). If a handler is inhibited, none of the side effects in the interpolated string expression are evaluated. If a handler is not inhibited, all of the side effects in the interpolated string expression are evaluated. *end note*
+> *Note*: Interpolation expressions can contain side effects, for example from `++`, `--`, assignments, and method calls. Constructor inhibition skips all such expressions. A false append result skips only the remaining expressions. Definite assignment accounts for these conditional paths ([§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)). *end note*
 
 ##### §custInterpStrExpPassInfo Passing information to/from a custom handler
 
@@ -1392,9 +1461,15 @@ public ref struct LogInterpolatedStringHandler
 }
 ```
 
-Attribute `InterpolatedStringHandlerArgument` is applied to the handler parameter, which shall follow the declarations of the parameters that are to be passed to the handler. The attribute constructor argument shall be a comma-separated list of zero or more strings that name the parameters to be passed, along with their order. An empty string designates the instance from which the handler is being invoked. As such, the attribute constructor call above containing `"count","flag",""` requires a matching handler constructor. If the attribute constructor argument list is empty, the behavior is as if the attribute was omitted.
+`InterpolatedStringHandlerArgumentAttribute` is applied to the handler parameter. Its arguments specify an ordered list of parameter names to forward to the handler constructor. An empty list forwards nothing. An empty string designates the receiver of the containing invocation.
 
-If an `out bool` parameter is also declared to allow the handler to be inhibited (§custInterpStrExpInhibCustHandler) that parameter shall be the final one.
+Each nonempty name shall identify another parameter of the containing member. An unknown name, the handler parameter's own name, or a request for an unavailable receiver, including that of a static method, is a compile-time error. A declaration may produce a warning if a named parameter is declared after the handler parameter; this does not make the declaration invalid.
+
+At a use of the handler conversion, each forwarded argument shall occur lexically before the *interpolated_string_handler_expression* in the invocation's argument list. A forwarded argument cannot be omitted and supplied by a parameter's default value. These requirements depend on call-site order, not declaration order; named arguments can therefore make a warned declaration usable. A request to forward an indexer receiver when the indexer is an *initializer_target* in a *member_initializer* is a compile-time error.
+
+Constructor overload resolution uses the parameter types of the containing member after substitution of its type arguments, not the original argument expressions. Forwarded arguments retain their parameter-passing modes. At run time, the already evaluated receiver and the already converted argument values or evaluated storage locations are reused by the handler construction and the containing invocation, preserving reference semantics. Additional conversions needed by the constructor are applied to these retained values; the original expressions are not evaluated or bound again.
+
+> *Note*: In particular, a forwarded lambda is not independently bound to a different delegate type for the constructor. Handler constructor parameter types do not contribute to generic inference for the containing invocation. Nullable analysis of constructor arguments does not flow changes back to the original receiver or argument slots. *end note*
 
 ## 23.6 Attributes for interoperation
 
