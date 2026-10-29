@@ -3909,7 +3909,7 @@ An awaiter’s implementation of the interface methods `INotifyCompletion.OnComp
 
 ## 12.10 With expressions
 
-A *with_expression* allows for ***non-destructive mutation*** by making a new record class, record struct, or non-record struct instance that is a copy of an existing record class, record struct, or non-record struct instance, respectively, optionally with specified properties and fields modified.
+A *with_expression* allows for ***non-destructive mutation*** by making a copy of an existing value or object, optionally with specified properties and fields modified.
 
 ```ANTLR
 with_expression
@@ -3920,18 +3920,25 @@ with_expression
 
 A *with_expression* is not permitted as a statement.
 
-The receiver type shall be non-`void` and of some record class, record struct, or non-record struct type.
+The receiver is the *switch_expression* preceding `with`. Its compile-time type shall be one of the following:
 
-*identifier* shall be an accessible instance field or property of the receiver's type.
+- A record class type, or a type parameter whose effective base class ([§15.2.5](classes.md#1525-type-parameter-constraints)) is a record class type.
+- An anonymous type ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
+- A value type other than `void`, or a type parameter constrained to be a value type.
 
-All non-positional properties being changed shall have both set and init accessors.
+Each *identifier* in the *member_initializer_list* shall name an accessible instance field or property of the receiver's type. A member shall not be initialized more than once.
 
-This expression is evaluated as follows:
+For a receiver other than an anonymous type, each member initializer is subject to the same rules as an assignment to the corresponding member of a variable of the receiver's type. A property assignment requires an accessible `set` or `init` accessor, but does not require a `get` accessor. An `init` accessor is permitted in this context ([§15.7.3](classes.md#1573-accessors)); the usual accessibility and readonly-field restrictions apply.
 
-- For a record class type, the receiver's clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver’s type.
-- For a record struct or non-record struct type, the receiver is copied.
-- Each `member_initializer` is processed the same way as an assignment to
-a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
+For an anonymous-type receiver, each initializer shall specify an expression implicitly convertible to the type of the named property. The absence of a setter on that property does not prevent its initialization by a *with_expression*.
+
+The type of the result is the compile-time type of the receiver. At run time, the receiver is evaluated once, before any member initializer expressions. Subsequent evaluation depends on its compile-time type:
+
+- For a record class type, or a type parameter whose effective base class is a record class type, the receiver's clone method ([§15.16.6.4](classes.md#151664-copy-and-clone-members)) is invoked, and its result is converted to the receiver's type. Each *member_initializer* is then processed as an assignment to a field or property of that result, in lexical order.
+- For a value type, or a type parameter constrained to be a value type, the receiver's value is copied. Each *member_initializer* is then processed as an assignment to a field or property of that copy, in lexical order. No record-class clone method is invoked.
+- For an anonymous type, the member initializer expressions are evaluated in lexical order and their converted values are retained. A new instance of the same anonymous type is constructed with those values for the named properties and the values from the evaluated receiver for every remaining property. Its read-only properties are initialized by construction, not by subsequent assignments.
+
+If *member_initializer_list* is omitted, no member assignments or replacements are performed after the applicable copying operation.
 
 > *Example*:
 >
@@ -3949,6 +3956,33 @@ a field or property access of the result of the conversion. Assignments are proc
 > ```
 >
 > *end example*
+>
+> *Example*: Assignment to a setter-only property does not require reading that property. Anonymous-type copying preserves unmodified properties:
+>
+> <!-- Example: {template:"standalone-console", name:"WithValueAndAnonymous", expectedOutput:["1/5","123/10/2/30"]} -->
+> ```csharp
+> var original = new S { X = 1 };
+> var changed = original with { X = 5 };
+> Console.WriteLine($"{original.Value}/{changed.Value}");
+>
+> int sequence = 0;
+> T Mark<T>(T value)
+> {
+>     Console.Write(++sequence);
+>     return value;
+> }
+> var source = new { A = 1, B = 2, C = 3 };
+> var copy = Mark(source) with { C = Mark(30), A = Mark(10) };
+> Console.WriteLine($"/{copy.A}/{copy.B}/{copy.C}");
+>
+> struct S
+> {
+>     public int Value;
+>     public int X { set { Value = value; } }
+> }
+> ```
+>
+> The receiver is evaluated before `Mark(30)` and `Mark(10)`, even though the property order in the anonymous type is `A`, `B`, `C`. *end example*
 
 ## 12.11 Range operator
 
@@ -4727,11 +4761,11 @@ bool operator !=(C x, C y);
 
 unless predefined equality operators otherwise exist for `C` (for example, when `C` is `string` or `System.Delegate`).
 
-Both operands shall be record classes, or both shall be non-record classes.
+If either operand is a record class operand, the other shall also be a record class operand.
 
 The operators return the result of comparing the two references for equality or non-equality.
 
-In the case of non-record class operands, `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+Except for record class operands, `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
 
 In the case of record class operands, `operator ==` returns `true` if and only if the values of all the corresponding instance fields in the two record classes and their base record classes are equal, or both references are `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
 

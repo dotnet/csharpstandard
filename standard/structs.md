@@ -38,7 +38,7 @@ record_struct_body
     ;
 ```
 
-There are two kinds of struct: ***non-record struct***, as declared by *non_record_struct_declaration*, and ***record struct***, as declared by  *record_struct_declaration*. A non-record struct is the kind of struct that C# has supported since the language’s inception. Record structs were added much later and are discussed in §record-structs. The differences between the two kinds are discussed in §record-struct-diffs.
+A ***struct*** is declared by *non_record_struct_declaration*, and a ***record struct*** is declared by *record_struct_declaration*. Record structs are discussed in §record-structs. The differences between the two kinds are discussed in §record-struct-diffs.
 
 A *non_record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
@@ -204,7 +204,7 @@ An instance member definition or accessor of an instance property, indexer, or e
 
 ### §record-structs-general General
 
-A record struct is a specialized value type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record struct, such as value-based equality and easy immutability.
+A record struct is a specialized value type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a struct, such as value-based equality and easy immutability.
 
 A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_struct_body*.
 
@@ -232,17 +232,9 @@ For a *record_struct_declaration*, the *record_struct_body*s `{}`, `{};`, and `;
 
 #### §implicit-members-general General
 
-In the case of a record struct, members are provided by the implemenation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.5](basic-concepts.md#75-signatures-and-overloading).)
+In the case of a record struct, members are provided by the implementation unless a member with a “matching” signature is declared in the *record_struct_body* or an accessible concrete non-virtual member with a “matching” signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered “hiding” in an inheritance scenario. (See Signatures and overloading [§7.5](basic-concepts.md#75-signatures-and-overloading).)
 
 The members provided by the implementation are described in the following subclauses.
-
-#### §prim-constr Primary constructors
-
-As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
-
-In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
-
-Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
 
 #### §rec-struct-equalmem Equality members
 
@@ -275,7 +267,7 @@ The record struct includes a provided override method declared as follows:
 public override readonly bool Equals(object? obj);
 ```
 
-It is an error if the override is declared explicitly. The provided override shall return `other is R temp && Equals(temp)` where `R` is the record struct.
+It is an error if the override is declared explicitly. The provided override shall return `obj is R temp && Equals(temp)` where `R` is the record struct.
 
 The record struct includes a provided override method declared as follows:
 
@@ -335,7 +327,7 @@ private bool PrintMembers(System.Text.StringBuilder builder);
 This method performs the following tasks:
 
 1. For each of the record struct’s printable members (non-static public field and readable property members), appends that member's name followed by “` = `“ followed by the member's value separated with “`, “`,
-2. Returns true if the record struct has printable members.
+1. Returns true if the record struct has printable members.
 
 For a member that has a value type, its value shall be converted to a string representation.
 
@@ -356,10 +348,10 @@ This method can be declared explicitly. It is an error if the explicit declarati
 This method performs the following tasks:
 
 1. Creates a `StringBuilder` instance,
-2. Appends the record struct name to the builder, followed by “` { `“,
-3. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
-4. Appends “`}`”,
-5. Returns the builder’s contents with `builder.ToString()`.
+1. Appends the record struct name to the builder, followed by “` { `“,
+1. Invokes the record struct's `PrintMembers` method giving it the builder, followed by “` `” if it returned true,
+1. Appends “`}`”,
+1. Returns the builder’s contents with `builder.ToString()`.
 
 > *Example*: Consider the following record struct:
 >
@@ -371,7 +363,7 @@ This method performs the following tasks:
 > For this record struct, the provided printing members would be something like:
 >
 > <!-- Example: {template:"standalone-lib", name:"RecordStructPrintingMembers2", additionalFiles:["T1T2T3.cs"], expectedErrors:["CS0535"]} -->
-> <!-- NOTE: In reality, class R1 will also have a synthesized implementation of interface member 'IEquatable<R1>.Equals(R1?)', but as that is not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
+> <!-- NOTE: In reality, struct R1 will also have a synthesized implementation of interface member 'IEquatable<R1>.Equals(R1)', but as that is not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
 > ```csharp
 > struct R1 : IEquatable<R1>
 > {
@@ -419,11 +411,38 @@ As well as providing the members described in the preceding subclauses, position
 
 ##### §rec-struct-pos-mem-pricon Primary constructor
 
-As with a record class, a record struct with a *delimited_parameter_list* has a primary constructor ([§15.16.6.6.2](classes.md#1516662-primary-constructor)) provided by the implementation. The semantics of the record class version apply here as well and are augmented by the text in this subclause.
+A record struct with a *delimited_parameter_list* has a public ***primary constructor*** whose signature corresponds to the parameters of that list. It is a compile-time error to declare another constructor with the same signature. If the declaration has no *delimited_parameter_list*, no primary constructor is provided. An empty *delimited_parameter_list* provides a parameterless primary constructor.
 
-In the case of a record class, the implementation shall provide a private, init-only field for each  parameter. However, for a record struct, the storage is read-write and provided in some unspecified manner.
+If a record struct has a primary constructor, every explicitly declared instance constructor shall have a `this` constructor initializer ([§15.11.2](classes.md#15112-constructor-initializers)) that invokes the primary constructor or another explicitly declared instance constructor. The rules for resolving that initializer and for circular constructor dependencies apply as for other struct constructors ([§16.4.9](structs.md#1649-constructors)).
 
-Instance field declarations for a record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *record_struct_body*.
+Primary constructor parameters are in scope throughout the *record_struct_body*. Within an initializer of an instance field, property, or event, a primary constructor parameter shadows a member with the same name and may be used as a value. Elsewhere in that body, members shadow primary constructor parameters, and a primary constructor parameter shall not be referenced except within a `nameof` argument. No additional storage is provided merely because a primary constructor parameter is declared. Properties and their backing fields are provided only as specified in §rec-struct-pos-mem-props. A warning may be produced if a primary constructor parameter is not read.
+
+At run time, the primary constructor initializes the backing fields of the auto-properties provided by §rec-struct-pos-mem-props to the values of the corresponding parameters, then executes the instance initializers in the *record_struct_body* in textual order ([§15.5.6.1](classes.md#15561-general)). A matching explicitly declared field or property is not automatically initialized from the corresponding parameter; an initializer or constructor assignment is required to store that value.
+
+Instance field declarations in a record struct may include variable initializers. In the absence of a primary constructor, explicitly declared instance constructors execute instance initializers according to the struct constructor rules ([§16.4.9](structs.md#1649-constructors)). Implicit default initialization ([§16.4.5](structs.md#1645-default-values)) does not execute instance initializers.
+
+> *Example*: A matching property can supply its own value instead of storing the primary constructor argument:
+>
+> <!-- Example: {template:"standalone-console", name:"RecordStructPrimaryStorage", expectedOutput:["42/0","0/42"]} -->
+> ```csharp
+> var r = new R<int>(42);
+> Console.WriteLine($"{r.Initial}/{r.X}");
+> Console.WriteLine($"{new S().X}/{new S(1).X}");
+>
+> record struct R<T>(T X)
+> {
+>     public T Initial { get; set; } = X;
+>     public T X => default;
+> }
+>
+> record struct S
+> {
+>     public int X = 42;
+>     public S(int ignored) { }
+> }
+> ```
+>
+> Here the initializer of `Initial` reads the parameter `X`, while the property `X` has no backing field. The implicitly provided parameterless construction of `S` does not run its field initializer, whereas its explicitly declared constructor does. *end example*
 
 The definite assignment rules for struct instance constructors apply to the primary constructor of record structs. For instance, the following is an error:
 
@@ -442,7 +461,7 @@ The definite assignment rules for struct instance constructors apply to the prim
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
-For each record struct parameter of a *delimited_parameter_list* there is provided a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each record struct parameter of a *delimited_parameter_list*, a corresponding public property member whose name and type are taken from the value parameter declaration is provided unless a matching member (§implicit-members-general) prevents its provision.
 
 For a record struct:
 
@@ -456,7 +475,7 @@ For a record struct:
 
 - It is an error if the inherited property or field is hidden.
 
-- The auto-property is initialized to the value of the corresponding primary constructor parameter.
+- Each provided auto-property is initialized to the value of the corresponding primary constructor parameter. Its backing field is `readonly` if the record struct has the `readonly` modifier.
 
 - Attributes may be applied to the provided auto-property and its backing field by using `property:` or `field:` targets, respectively, for attributes syntactically applied to the corresponding record struct parameter.
 
@@ -467,13 +486,13 @@ constructor declaration. The body of the method assigns each parameter of the De
 If the instance members accessed in the body do not include a property with a non-`readonly` `get` accessor, then the synthesized `Deconstruct` method is `readonly`.
 The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
-## §record-struct-diffs Record struct and non-record struct differences
+## §record-struct-diffs Record struct and struct differences
 
-A record struct differs from a non-record struct in several important ways:
+A record struct differs from a struct in several important ways:
 
 - It is declared using the keywords `record struct` instead of just `struct`.
 - It has a number of members provided for it by the implementation.
-- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
+- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters (§rec-struct-pos-mem-pricon). Subject to the matching-member rules, a property is provided for each parameter, with `get` and `set` accessors, or `get` and `init` accessors for a readonly record struct (§rec-struct-pos-mem-props). A `Deconstruct` method is provided only if there is at least one parameter and no matching member suppresses it (§rec-struct-pos-mem-decon).
 - Its record struct body may be omitted.
 - It shall not have a member called `Clone`.
 - It shall not have an instance field with an unsafe type.
