@@ -890,7 +890,7 @@ For an invocation that occurs within a local function or an anonymous function, 
 
 The attribute `CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
-Except when it is the first parameter in an extension method, the target parameter shall have a *default_argument*. When applied to the first parameter of an extension method, the captured string is the source text of the receiver expression in an extension method invocation. If the method is invoked using static method syntax, the captured string is the argument corresponding to the first parameter.
+The target parameter shall have a *default_argument*. If the sibling parameter named by the attribute is the first parameter of an extension method, an extension method invocation captures the source text of the receiver expression. If the method is invoked using static method syntax, the source text of the argument corresponding to that first parameter is captured.
 
 Consider the following method declaration:
 
@@ -917,15 +917,16 @@ The attribute constructor takes an argument of type `string`. That string
 
 A *parameter_list* may contain multiple target parameters.
 
-The type of the target parameter shall have a standard conversion from `string`.
+There shall be a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the type of the target parameter.
 
-> *Note:* This means no user-defined conversions from `string` are allowed, and in practice means the type of such a parameter must be `string`, `object`, or an interface implemented by `string`. *end note*
+> *Note*: This excludes user-defined conversions from `string`. In practice, the parameter type is `string`, `object`, `dynamic`, or an interface implemented by `string`. A `dynamic` parameter type does not by itself make an invocation dynamically bound; caller-information substitution for dynamically bound invocations is governed by [§23.5.6.1](attributes.md#23561-general). *end note*
 
 If an explicit argument is passed for the target parameter, no string is captured, and that parameter takes on that argument’s value. Otherwise, the text for the argument corresponding to the sibling parameter is converted to a captured string, according to the following rules:
 
-- Leading and trailing white space is removed both before and after any outermost grouping parentheses are removed.
-- All outermost grouping parentheses are removed both before and after any leading and trailing white space is removed.
-- All other *input_element*s are retained verbatim (including white space, comments, *Unicode_Escape_Sequence*s, and `@` prefixes on identifiers).
+- The source expression or *variable_reference* supplied for the sibling parameter is selected. For an attribute argument, its expression is selected; for an extension method receiver, its receiver expression is selected. Any argument name and any argument passing-mode keyword (`ref`, `in`, or `out`) are excluded.
+- Any outermost *parenthesized_expression* ([§12.8.5](expressions.md#1285-parenthesized-expressions)) is replaced by its contained expression, repeatedly until the result is not a *parenthesized_expression*. Parentheses belonging to a *tuple_literal* ([§12.8.6](expressions.md#1286-tuple-literals)) are not removed.
+- The captured string starts at the first character of the first token of the resulting expression or *variable_reference* and ends at the last character of its last token. Leading and trailing white space, line terminators, comments, and preprocessor directives outside these boundaries are excluded.
+- All source text within these boundaries is retained verbatim, including white space, line terminators, comments, preprocessor directives, *Unicode_Escape_Sequence*s, and `@` prefixes on identifiers.
 
 The captured string is then passed as the argument corresponding to the target parameter. However, if the argument for the sibling parameter is omitted, the target parameter takes on its *default_argument* value.
 
@@ -956,6 +957,92 @@ The captured string is then passed as the argument corresponding to the target p
 > val = 15, text = <l\u006fcal /*...*/ + // xxx
 >   5>
 > ```
+>
+> *end example*
+>
+> *Example*: An optional target parameter can capture an extension method's receiver by naming the first parameter. Both invocation forms below capture `value`:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"CallerArgumentAttr3", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> int value = 5;
+> value.Show();
+> Extensions.Show(value);
+>
+> static class Extensions
+> {
+>     public static void Show(this int value,
+>         [CallerArgumentExpression("value")] string text = "")
+>     {
+>         Console.WriteLine(text);
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> value
+> value
+> ```
+>
+> *end example*
+>
+> *Example*: Boundary comments and grouping parentheses are excluded, but tuple parentheses and source text between tokens, including directives, are retained. Argument names and passing-mode keywords are not part of the captured text:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"CallerArgumentAttr4", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> Capture(value: /*outer*/ ( /*before*/ 1 /*inside*/ + 2 /*after*/ ) /*outer*/);
+> Capture(((1, 2)));
+> int value = 5;
+> CaptureRef(ref value);
+> CaptureIn(in value);
+> CaptureOut(out value);
+> Capture(1 +
+> #if true
+> 2
+> #endif
+> );
+>
+> static void Capture<T>(T value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureRef(ref int value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureIn(in int value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureOut(out int value,
+>     [CallerArgumentExpression("value")] string text = "")
+> {
+>     value = 0;
+>     Console.WriteLine(text);
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> 1 /*inside*/ + 2
+> (1, 2)
+> value
+> value
+> value
+> 1 +
+> #if true
+> 2
+> ```
+>
+> The closing `#endif` is outside the last expression token and is therefore excluded.
 >
 > *end example*
 
