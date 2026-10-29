@@ -236,7 +236,7 @@ Note that `System.ValueType` is not itself a *value_type*. Rather, it is a *clas
 
 ### 8.3.3 Default constructors
 
-All value types have a public parameterless instance constructor called the ***default constructor***. For struct types that do not explicitly declare a parameterless instance constructor, the default constructor is synthesized by the compiler. The default constructor returns a zero-initialized instance known as the ***default value*** for the value type:
+Every value type has a ***default value***, which is independent of any explicitly declared instance constructor. The default value is a zero-initialized instance, determined as follows:
 
 - For all *simple_type*s, the default value is the value produced by a bit pattern of all zeros:
   - For `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, and `ulong`, the default value is `0`.
@@ -249,9 +249,11 @@ All value types have a public parameterless instance constructor called the ***d
 - For a *struct_type*, the default value is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
 - For a *nullable_value_type* the default value is an instance for which the `HasValue` property is false. The default value is also known as the ***null value*** of the nullable value type. Attempting to read the `Value` property of such a value causes an exception of type `System.InvalidOperationException` to be thrown ([§8.3.12](types.md#8312-nullable-value-types)).
 
-Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
+All value types have a public parameterless instance constructor. For a value type that does not explicitly declare one, an implicit parameterless instance constructor, called the ***default constructor***, produces the default value and does not execute instance field initializers. An explicitly declared parameterless instance constructor is not required to produce the default value.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types that do not have an explicitly declared parameterless instance constructor, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. For struct types that declare an explicit parameterless instance constructor, `default` produces the zero-initialized default value, while `new S()` invokes the declared constructor, and the results may differ. *end note*
+The `new` operator invokes the public parameterless instance constructor when its argument list is empty. A default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the default value without invoking an explicitly declared instance constructor.
+
+> *Note*: An implementation need not generate a constructor call for an implicit default constructor. For a struct type `S` that declares a parameterless instance constructor, `default(S)` and `new S()` may produce different values. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -273,6 +275,42 @@ Like any other instance constructor, the default constructor of a value type is 
 > *end example*
 
 A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.4.9](structs.md#1649-constructors)).
+
+> *Example*: Direct and constrained generic creation invoke the explicitly declared constructor, whereas default values and array elements are zero-initialized:
+>
+> <!-- Example: {template:"standalone-console", name:"ExplicitStructConstructorDefaults", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(new S().Value);
+> Console.WriteLine(default(S).Value);
+> Console.WriteLine((new S[1])[0].Value);
+> Console.WriteLine(Create<S>().Value);
+> Console.WriteLine(CreateStruct<S>().Value);
+>
+> static T Create<T>() where T : new() => new T();
+> static T CreateStruct<T>() where T : struct => new T();
+>
+> struct S
+> {
+>     public int Value;
+>
+>     public S()
+>     {
+>         Value = 7;
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> 7
+> 0
+> 0
+> 7
+> 7
+> ```
+>
+> *end example*
 
 ### 8.3.4 Struct types
 
@@ -712,7 +750,7 @@ Whenever a constructed type or generic method is referenced, the supplied type a
   > *Note*: `System.ValueType` and `System.Enum` are reference types that do not satisfy this constraint. *end note*
   - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 - If the constraint is the constructor constraint `new()`, the type `A` shall not be `abstract` and shall have a public parameterless constructor. This is satisfied if one of the following is true:
-  - `A` is a value type, since all value types have a public default constructor ([§8.3.3](types.md#833-default-constructors)).
+  - `A` is a value type, since all value types have a public parameterless instance constructor ([§8.3.3](types.md#833-default-constructors)).
   - `A` is a type parameter having the constructor constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   - `A` is a `class` that is not abstract and contains an explicitly declared public constructor with no parameters.

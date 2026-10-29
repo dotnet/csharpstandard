@@ -2275,10 +2275,34 @@ A *fixed_parameter* consists of an optional set of *attributes* ([§23](attribut
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
-- an expression of the form `new S()` where `S` is a value type
+- an expression of the form `new S()` where `S` is a value type and the expression invokes the implicit default constructor, rather than an explicitly declared parameterless instance constructor; the equivalent target-typed `new()` expression is also permitted
 - an expression of the form `default(S)` where `S` is a value type
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
+
+> *Example*: A struct with an explicitly declared parameterless constructor can use `default(S)` or `default` as a parameter default, but not `new S()` or `new()`:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"StructConstructorParameterDefaults", expectedErrors:["CS1736", "CS1736"]} -->
+> ```csharp
+> struct S
+> {
+>     public S() { }
+> }
+>
+> struct Z { }
+>
+> class C
+> {
+>     public void M(S value = default(S)) { }
+>     public void N(S value = default) { }
+>     public void P(Z value = new Z()) { }
+>     public void Q(Z value = new()) { }
+>     public void R(S value = new S()) { } // Error
+>     public void T(S value = new()) { }   // Error
+> }
+> ```
+>
+> *end example*
 
 If optional parameters occur in an implementing partial method declaration, a compiler should give a warning, since any default arguments are removed per [§15.6.9](classes.md#1569-partial-methods). If optional parameters occur in an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
