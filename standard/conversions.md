@@ -387,7 +387,7 @@ A user-defined implicit conversion consists of an optional standard implicit con
 
 ### 10.2.15 Anonymous function conversions and method group conversions
 
-Anonymous functions and method groups do not have types in and of themselves, but they may have a natural type (§anon-func-type). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
+Anonymous functions and method groups do not have ordinary compile-time types, but they may have a natural type. A natural type is an anonymous function type representing a signature (§anon-func-type). They may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
 
 ### 10.2.16 Default literal conversions
 
@@ -426,9 +426,9 @@ The following conversions are permitted from an anonymous function type `F`(§an
 
 There are no conversions to an anonymous function type from a type other than an anonymous function type.
 
-A conversion to `System.Delegate` or its base classes or interfaces realizes the anonymous function or method group as an instance of an appropriate delegate type.
+A conversion to `System.Delegate` or its base classes or interfaces realizes the anonymous function or method group as an instance of its corresponding delegate type (§anon-func-type).
 
-A conversion to `System.Linq.Expressions.Expression<TDelegate>` or its base classes realizes the anonymous function or method group as an expression tree with an appropriate delegate type.
+An anonymous function type conversion to `System.Linq.Expressions.Expression` or `System.Linq.Expressions.LambdaExpression` participates in applicability and overload resolution even when the source is a method group or an anonymous method. If such a conversion is selected, the source shall be a lambda expression that can be converted to `Expression<D>` under [§10.7](conversions.md#107-anonymous-function-conversions), where `D` is its corresponding delegate type. The result is an expression tree of type `Expression<D>`. A selected conversion from a method group or an anonymous method is a compile-time error.
 
 > *Example*:
 >
@@ -440,10 +440,33 @@ A conversion to `System.Linq.Expressions.Expression<TDelegate>` or its base clas
 > ```
 >
 > *end example*
+>
+> *Example*: Expression-tree realization is checked after overload resolution:
+>
+> <!-- Example: {template:"standalone-console", name:"AnonFuncTypeConv3", expectedErrors:["CS0428", "CS1946"]} -->
+> ```csharp
+> class Program
+> {
+>     static int GetValue() => 1;
+>     static void Select(Expression expression, string label) { }
+>     static void Select(Delegate function, object label) { }
+>
+>     static void Main()
+>     {
+>         Select(() => 1, "lambda");
+>         Select(GetValue, "method group");            // Error
+>         Select(delegate () { return 1; }, "method"); // Error
+>     }
+> }
+> ```
+>
+> Both overloads are applicable in each invocation. The `Expression` overload is better because of its second parameter, but only the lambda expression can be realized as an expression tree.
+>
+> *end example*
 
 Anonymous function type conversions are not implicit or explicit standard conversions and are not considered when determining whether a user-defined conversion operator is applicable to an anonymous function or method group.
 
-Although an implicit conversion to `object` is permitted, a warning shall be issued, as this may have been unintentional.
+A warning shall be issued for an implicit conversion of a method group to `object`, as this may have been unintentional. This warning is not required for a lambda expression or anonymous method, or for an explicit conversion of a method group to `object`.
 
 > *Example*:
 >
@@ -453,6 +476,7 @@ Although an implicit conversion to `object` is permitted, a warning shall be iss
 > object obj;
 > obj = r.NextDouble;         // warning: was this intentional?
 > obj = (object)r.NextDouble; // ok
+> obj = () => r.NextDouble(); // ok: no method-group warning
 > ```
 >
 > *end example*
@@ -1015,6 +1039,24 @@ Conversion of an anonymous function to a delegate type produces a delegate insta
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
+When a delegate is produced from a lambda expression, attributes explicitly specified on the lambda whose target is the method shall be emitted in metadata on the method referenced by the delegate's `Method` property. Attributes with a `return` target shall be emitted on that method's return parameter, and attributes on lambda parameters shall be emitted on the corresponding method parameters. These requirements do not specify a synthesized method name or the representation of captured variables.
+
+> *Example*: Explicit lambda attributes can be inspected through the resulting delegate:
+>
+> <!-- Example: {template:"standalone-console", name:"LambdaAttributeMetadata", expectedOutput:["True", "True", "True"]} -->
+> ```csharp
+> var identity = [Mark] [return: Mark] ([Mark] int value) => value;
+> Console.WriteLine(identity.Method.IsDefined(typeof(MarkAttribute), false));
+> Console.WriteLine(identity.Method.ReturnParameter.IsDefined(typeof(MarkAttribute), false));
+> Console.WriteLine(identity.Method.GetParameters()[0].IsDefined(typeof(MarkAttribute), false));
+>
+> [AttributeUsage(AttributeTargets.Method | AttributeTargets.ReturnValue |
+>     AttributeTargets.Parameter)]
+> sealed class MarkAttribute : Attribute { }
+> ```
+>
+> *end example*
+
 Conversions of semantically identical anonymous functions with the same (possibly empty) set of captured outer variable instances to the same delegate types are permitted (but not required) to return the same delegate instance. The term semantically identical is used here to mean that execution of the anonymous functions will, in all cases, produce the same effects given the same arguments. This rule permits code such as the following to be optimized.
 
 <!-- Example: {template:"standalone-lib", name:"EvalAnonFunct", replaceEllipsis:true} -->
@@ -1057,6 +1099,7 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It contains an assignment operator
 > - It contains an output or reference parameter
 > - It contains a dynamically bound expression
+> - It or one of its parameters has attributes
 >
 > *end note*
 
