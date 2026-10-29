@@ -679,6 +679,30 @@ For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *e
 - The definite-assignment state of *v* at the beginning of *exprᵢ* (*i* greater than one) is the same as the definite-assignment state at the end of *exprᵢ₋₁*.
 - The definite-assignment state of *v* at the end of *expr* is the same as the definite-assignment state at the end of *exprₓ*.
 
+For an interpolated string expression ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), these rules apply to the interpolation expressions in textual order, except when an interpolated string handler conversion introduces conditional evaluation. For a handler conversion, definite assignment follows the control flow of construction and append calls specified in §custInterpStrExpCustHandling. Constructor `out bool` results and bool-returning append results are treated as nonconstant conditions. Assignments in an interpolation that can be skipped do not make variables definitely assigned after the expression; assignments in unconditionally evaluated interpolations do contribute to definite assignment.
+
+> *Example*: Without constructor inhibition, the first append call is unconditional, but a preceding literal append can cause a later interpolation to be skipped:
+>
+> <!-- Example: {template:"standalone-console", name:"HandlerDefiniteAssignment", expectedErrors:["CS0165"]} -->
+> ```csharp
+> int first;
+> Handler h1 = $"{first = 1}";
+> Console.WriteLine(first); // OK: the first interpolation is evaluated
+> int later;
+> Handler h2 = $"prefix{later = 1}";
+> Console.WriteLine(later); // Error: AppendLiteral might return false
+>
+> [System.Runtime.CompilerServices.InterpolatedStringHandler]
+> struct Handler
+> {
+>     public Handler(int literalLength, int formattedCount) { }
+>     public bool AppendLiteral(string text) => false;
+>     public bool AppendFormatted(int value) => false;
+> }
+> ```
+>
+> *end example*
+
 #### 9.4.4.24 Invocation expressions and object creation expressions
 
 If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method or conditional local function for which the call is omitted ([§23.5.3.2](attributes.md#23532-conditional-methods), [§23.5.3.3](attributes.md#23533-conditional-local-functions)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:

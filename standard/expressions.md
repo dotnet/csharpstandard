@@ -569,13 +569,13 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 
 The *argument_value* can take one of the following forms:
 
-- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
+- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by [§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). An *interpolated_string_handler_expression* converted to a struct handler can also be passed to a reference parameter through a temporary, as specified in those clauses.
 - The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
 - The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
 - The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
 - The keyword `out` followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation.
 
-The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
+The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, an argument with value passing mode might be passed to an input parameter or, for an interpolated string handler conversion, to a reference parameter as described above.
 
 Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field cannot be treated as volatile by the invoked method.
 
@@ -610,6 +610,7 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 
 - For a value argument, if the parameter’s passing mode is value
   - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
+  - otherwise, if the parameter's passing mode is reference, it is a struct handler parameter to which an implicit interpolated string handler conversion applies. A temporary of the parameter type is initialized by that conversion and passed by reference. This does not permit an explicit `ref` argument to name an *interpolated_string_handler_expression* instead of a variable reference.
   - otherwise, the parameter’s passing mode is input. If the argument is a variable reference and there exists an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between the argument’s type and the parameter’s type, the resulting storage location becomes the storage location represented by the parameter in the function member invocation. Otherwise, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
 
      > *Example*: Given the following declarations and method calls:
@@ -1051,11 +1052,12 @@ The following subclauses define the exact meanings of the terms *applicable func
 A function member is said to be an ***applicable function member*** with respect to an argument list `A` when all of the following are true:
 
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
-- For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-  - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
-  - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
-  - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
+- For each argument in `A`, one of the following is true:
+  - The parameter-passing modes are identical, and one of the following is true:
+    - The parameter is a value parameter or parameter array, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to its type.
+    - The parameter is an input, reference, or output parameter, and an identity conversion exists between the argument type and parameter type.
+  - The argument has value passing mode, the parameter is an input parameter, and an implicit conversion exists from the argument expression to the parameter type.
+  - The argument has value passing mode, the parameter is a reference parameter of struct type, and an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)) exists from the argument expression to the parameter type.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
@@ -1065,6 +1067,7 @@ For a function member that includes a parameter array, if the function member is
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
+  - the parameter-passing mode of the argument is value, the corresponding parameter is a reference parameter of struct type, and an implicit interpolated string handler conversion exists from the argument expression to the parameter type.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
@@ -1108,7 +1111,7 @@ Parameter lists for each of the candidate function members are constructed in th
 
 - The expanded form is used if the function member was applicable only in the expanded form.
 - Optional parameters with no corresponding arguments are removed from the parameter list
-- Reference and output parameters are removed from the parameter list
+- Reference and output parameters are removed from the parameter list, except reference parameters corresponding to value arguments through an implicit interpolated string handler conversion.
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
@@ -1150,14 +1153,16 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
-  - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
-    > *Note*: This is only applicable in unsafe code. *end note*
-- `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+- `E` is a non-constant *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), `C₁` is an implicit interpolated string handler conversion, `T₁` is an applicable interpolated string handler type, and `C₂` is not an implicit interpolated string handler conversion.
+- `E` does not exactly match `T₂` and at least one of the following holds:
+  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+    - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
+      > *Note*: This is only applicable in unsafe code. *end note*
+  - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 12.6.4.6 Exactly matching expression
 
@@ -1376,16 +1381,36 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 ### 12.8.3 Interpolated string expressions
 
-An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications. Any quoted text that is not part of an interpolation (as defined by the grammar rules *Interpolated_Regular_String_Mid* and *Interpolated_Verbatim_String_Mid* shown below) is part of an *interpolated string expression segment*. As such, the quoted text contains zero or more interpolated string expression segments. Consider the following *interpolated_string_expression*:
+
+```csharp
+$"val = {{{val,4:X}}}; 2 * val = {2 * val}."
+```
+
+This contains the interpolated string expression segments `"val = {"`, `"}; 2 * val = "`, and `"."`, the first of which factors in the presence of the open/close brace escape sequences described in the grammar below. The quoted text also contains the interpolations `"{val,4:X}"` and `"{2 * val}"`.
 
 Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
 and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
 literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)).
 
+An *interpolated_string_handler_expression* identifies the expressions eligible for an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)). The productions below include additions, parentheses, and null-forgiving operators without changing the ordinary expression grammar or operator precedence ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)).
+
 ```ANTLR
 interpolated_string_expression
     : interpolated_regular_string_expression
     | interpolated_verbatim_string_expression
+    ;
+
+interpolated_string_handler_expression
+    : interpolated_string_handler_operand
+    | interpolated_string_handler_expression '+'
+      interpolated_string_handler_operand
+    ;
+
+interpolated_string_handler_operand
+    : interpolated_string_expression
+    | '(' interpolated_string_handler_expression ')'
+    | interpolated_string_handler_operand '!'
     ;
 
 // interpolated regular string expressions
@@ -1510,13 +1535,30 @@ other tokens in the language. *end note*
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this specification. *end note*
 
-An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), the interpolated string expression has that type. Otherwise, it has the type `string`.
+An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), it has that type. If it is converted to a custom interpolated string handler type, the handler conversion produces a value of that type (§custInterpStrExpHandler). Otherwise, the expression has type `string`, including when used in an implicitly typed local, a return expression, or another expression without a handler target.
 
-> *Note*: The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
+A handler conversion applies whenever a handler target is selected, even if the *interpolated_string_handler_expression* is constant or has no interpolations. A constant interpolated string of type `string` is evaluated at compile time. For other string-valued interpolations, when `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler` is available and the context supports its use, the compiler may use the handler pattern and obtain the string by calling `ToStringAndClear` on the handler. Otherwise, the formatting semantics below apply.
+
+> *Note*: Constants require no run-time handler. Contexts such as expression trees or interpolation expressions containing `await` can require fallback rather than a ref struct handler temporary. This does not change the general type rule or require a default handler to be present in the target library. *end note*
+
+These rules are illustrated by the following:
+
+```csharp
+static void M(string s) { }
+static void M(SomeInterpolatedStringHandler s) { }
+
+int val = 255;
+M($"no interpolations");// invokes M(string)
+M($"{val}");            // invokes M(SomeInterpolatedStringHandler)
+string s1 = $"{val}";   // string result; default handler can be used
+M(s1);                  // invokes M(string)
+SomeInterpolatedStringHandler str2 = $"{val}";   // custom handler used
+M(str2);                // invokes M(SomeInterpolatedStringHandler)
+```
+
+The remainder of this subclause specifies string formatting, `FormattableString` construction, and constant interpolation. Custom handler append methods define their own processing of literal segments and interpolations (§custInterpStrExpHandler).
 
 The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
-
-> *Note*: How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
 
 In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
 
@@ -1525,25 +1567,14 @@ In an *interpolation_minimum_width* the *constant_expression* shall have an impl
   - If the alignment is positive the formatted string is right-aligned by prepending the padding,
   - Otherwise it is left-aligned by appending the padding.
 
-The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type shall be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`.
+For a conversion to `System.IFormattable` or `System.FormattableString`, the expression is evaluated as an invocation of `System.Runtime.CompilerServices.FormattableStringFactory.Create`. For a nonconstant string result that does not use the default handler pattern, its formatting is defined by `string.Format`. An implementation may use an equivalent formatting strategy.
 
-In both cases, the argument list of the call consists of a *format string literal* with *format specifications* for each interpolation, and an argument for each expression corresponding to the format specifications.
+In each case, the first argument is a *format string literal* constructed by traversing the literal segments and interpolations in textual order:
 
-The format string literal is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*. The format string literal consists of, in order:
+- Each literal segment contributes its decoded string characters, with each literal `{` or `}` doubled for composite formatting. String delimiters are not included.
+- Each interpolation contributes a placeholder consisting of `{`, its zero-based decimal index, an optional comma followed by its *interpolation_minimum_width* value, an optional colon followed by its format-specifier text, and `}`.
 
-- The characters of the *Interpolated_Regular_String_Start* or *Interpolated_Verbatim_String_Start*
-- The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid*, if any
-- Then if `N ≥ 1` for each number `I` from `0` to `N-1`:
-  - A placeholder specification:
-    - A left brace (`{`) character
-    - The decimal representation of `I`
-    - Then, if the corresponding *regular_interpolation* or *verbatim_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
-    - The characters of the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, if any, of the corresponding *regular_interpolation* or *verbatim_interpolation*
-    - A right brace (`}`) character
-  - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid* immediately following the corresponding interpolation, if any
-- Finally the characters of the *Interpolated_Regular_String_End* or *Interpolated_Verbatim_String_End*.
-
-The subsequent arguments are the *expression*s from the interpolations, if any, in order.
+The second argument is an `object[]` containing the values of the interpolation expressions in textual order, each converted to `object`. Thus the invocations have the form `FormattableStringFactory.Create(format, new object[] { ... })` or `string.Format(format, new object[] { ... })`. For `IFormattable`, the factory result is converted to that interface type. Factory construction captures the values without formatting them.
 
 When an *interpolated_string_expression* contains multiple interpolations, the expressions in those interpolations are evaluated in textual order from the left to right.
 
@@ -1581,6 +1612,56 @@ Then:
 | `$"{(number==0?"Zero":"Non-zero")}"` | `string.Format("{0}", (number==0?"Zero":"Non-zero"))`         | `"Non-zero"` |
 
 *end example*
+
+A *constant interpolated string* is an *interpolated_string_expression* that contains
+
+- no interpolations, or
+- interpolations whose *expression*s are non-null constant expressions of type `string`, and these interpolations have no *interpolation_minimum_width*, *Regular_Interpolation_Format*, or *Verbatim_Interpolation_Format* specifiers.
+
+For example, $"Hello", $"{cs1}, world!" (given `const string cs1 = $"Hello";`), $"{"Hello," + $"world!"}", and $"xxx{(true ? $"{"X"}" : $"{$"{"Y"}"}")}yyy" are all constant interpolated strings. However, $"{123}" and $"{"abc"}{123.45}" are not.
+
+> *Example*: A null-valued string constant does not make an interpolation constant:
+>
+> <!-- Example: {template:"standalone-console", name:"ConstantInterpolationNull", expectedErrors:["CS0133"]} -->
+> ```csharp
+> const string word = "hello";
+> const string valid = $"{word}";
+> const string missing = null;
+> const string invalid = $"{missing}"; // Error
+> Console.WriteLine(valid + invalid);
+> ```
+>
+> *end example*
+
+When an *interpolated_string_handler_expression* is converted to a handler, its interpolated string components are processed from left to right using one handler instance and the aggregate literal length and interpolation count. Parentheses and null-forgiving operators do not introduce additional handler instances or prevent short-circuiting across components. The grammar excludes casts, `as` expressions, and ordinary string-valued operands.
+
+> *Example*: String-valued interpolation retains its type and fallback behavior in different contexts:
+>
+> <!-- Example: {template:"standalone-console", name:"InterpolationContexts", expectedOutput:["F", "7", "15", "1", "{  F}", "{{{0,3:X}}}", "1", "{  F}"]} -->
+> ```csharp
+> class Program
+> {
+>     static string Text() => $"{7}";
+>     static async Task Main()
+>     {
+>         int value = 15;
+>         var text = $"{value:X}";
+>         Console.WriteLine(text);
+>         Console.WriteLine(Text());
+>         string conditional = value > 0 ? $"{value}" : "unused";
+>         Console.WriteLine(conditional);
+>         Console.WriteLine($"{await Task.FromResult(1)}");
+>         Expression<Func<int, string>> tree = n => $"{{{n,3:X}}}";
+>         Console.WriteLine(tree.Compile()(value));
+>         FormattableString formattable = $"{{{value,3:X}}}";
+>         Console.WriteLine(formattable.Format);
+>         Console.WriteLine(formattable.ArgumentCount);
+>         Console.WriteLine(formattable.ToString(System.Globalization.CultureInfo.InvariantCulture));
+>     }
+> }
+> ```
+>
+> *end example*
 
 ### 12.8.4 Simple names
 
@@ -7396,6 +7477,7 @@ A *constant_expression* of type `nint` shall have a value in the range \[-214748
 Only the following constructs are permitted in constant expressions:
 
 - Literals (including the `null` literal).
+- Constant interpolated strings.
 - References to `const` members of class, struct, and interface types.
 - References to members of enumeration types.
 - References to local constants.
