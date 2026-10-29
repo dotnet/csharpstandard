@@ -363,7 +363,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
+An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`, except that for an *expression* that is an anonymous function or method group with an anonymous function type (§anon-func-type), `T` is its corresponding delegate type. The first alternative declares a variable with an initial value of *expression* converted to `T`; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
 
 > *Example*:
 >
@@ -398,8 +398,24 @@ An *implicitly_typed_local_variable_declaration* introduces a single local varia
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
 > var z = null;           // Error, null does not have a type
-> var u = x => x + 1;     // Error, anonymous functions do not have a type
+> var u = x => x + 1;     // Error, no natural type
 > var v = v++;            // Error, initializer cannot refer to v itself
+> ```
+>
+> *end example*
+
+Anonymous functions and method groups with anonymous function types may not be used in contexts in which the target is a discard.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name: "LocalVariableDecls7", ignoredWarnings:["CS8974"], expectedErrors:["CS8917","CS8917","CS8183"]} -->
+> ```csharp
+> var f1 = () => default;           // error: cannot infer type
+> var f2 = x => x;                  // error: cannot infer type
+> var f3 = () => 1;                 // Func<int>
+> var f4 = string () => "xx";       // Func<string>
+> var f5 = delegate (object o) { }; // Action<object>
+> _ = () => 1;                      // error
 > ```
 >
 > *end example*

@@ -807,7 +807,8 @@ An *unfixed* type variable `Xᵢ` *depends directly on* an *unfixed* type varia
 An *input type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
 - If `E` is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
-- If `E` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T`
+- Otherwise, if `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) and an *explicit return type inference* (§exprettypeinf) are made *from* `E` *to* `T`.
+- Otherwise, if `E` has an anonymous function type `F` (§anon-func-type) and either the corresponding parameter is a value parameter, or it is an input parameter for which `E` is not an input argument, a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `F` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `E` is an input argument, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
@@ -819,10 +820,11 @@ An *input type inference* is made *from* an expression `E` *to* a type `T` in th
 An *output type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
 - If `E` is a tuple literal with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
-- If `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
+- Otherwise, if `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
-- If `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then with parameter types `T₁..Tₖ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁..Tₖ` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tₓ`.
+- Otherwise, if `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then with parameter types `T₁..Tₖ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁..Tₖ` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tₓ`.
   > *Note*: This is only applicable in unsafe code. *end note*
+- Otherwise, if `E` has an anonymous function type `F` (§anon-func-type), then a *lower-bound inference* is made *from* `F` *to* `T`.
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
 
@@ -850,6 +852,7 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of lower bounds for `Xᵢ`.
+- Otherwise, if `U` is an anonymous function type (§anon-func-type), no inference is made.
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
 - Otherwise, sets `U₁...Uₑ` and `V₁...Vₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
@@ -911,10 +914,15 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
-- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`.
+- If any bound is not an anonymous function type (§anon-func-type), anonymous function types are removed from the lower bounds for `Xᵢ`.
+- The set of *candidate types* `Uₑ` starts out as the set of all types in the remaining set of bounds for `Xᵢ`.
 - Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
-- If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
+- If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then:
+  - If `V` is not an anonymous function type, `Xᵢ` is fixed to `V`.
+  - Otherwise, let `D` be the corresponding delegate type (§anon-func-type). If `Xᵢ` has an effective base class ([§15.2.5](classes.md#1525-type-parameter-constraints)) of `System.Linq.Expressions.Expression` or a type derived from it, `Xᵢ` is fixed to `Expression<D>`; otherwise, it is fixed to `D`. This is inference from an anonymous function type for the purposes of overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)).
 - Otherwise, type inference fails.
+
+> *Note*: Fixing to `Expression<D>` does not by itself guarantee that the argument can be converted to an expression tree. The conversion and expression-tree restrictions are checked separately (§anon-func-type-conversion). *end note*
 
 #### 12.6.3.14 Inferred return type
 
@@ -997,6 +1005,12 @@ The ***inferred return type*** is determined as follows:
 >
 > *end example*
 
+#### §exprettypeinf Explicit return type inference
+
+An *explicit return type inference* is made *from* an expression `E` *to* a type `T` in the following way:
+
+- If `E` is an anonymous function with explicit return type `Uᵣ`, and `T` is a delegate type or expression tree type with return type `Vᵣ`, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `Uᵣ` *to* `Vᵣ`.
+
 #### 12.6.3.15 Type inference for conversion of method groups
 
 Similar to calls of generic methods, type inference shall also be applied when a method group `M` containing a generic method is converted to a given delegate type `D` ([§10.8](conversions.md#108-method-group-conversions)). Given a method
@@ -1022,7 +1036,7 @@ The best common type for a set of expressions `E₁...Eᵥ` is determined as fol
 - A new *unfixed* type variable `X` is introduced.
 - For each expression `Eᵢ` an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is performed from it to `X`.
 - `X` is *fixed* ([§12.6.3.13](expressions.md#126313-fixing)), if possible, and the resulting type is the best common type.
-- Otherwise inference fails.
+- Otherwise, inference fails.
 
 > *Note*: Intuitively this inference is equivalent to calling a method `void M<X>(X x₁ ... X xᵥ)` with the `Eᵢ` as arguments and inferring `X`. *end note*
 
@@ -1113,8 +1127,12 @@ Parameter lists for each of the candidate function members are constructed in th
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
 
-- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and
-- for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
+- for each argument, the implicit conversion from `Eᵥ` to `Pᵥ` is not an anonymous function type conversion, and
+
+  - `Mᵥ` is a non-generic method or `Mᵥ` is a generic method with type parameters `{X₁, X₂, ..., Xᵥ}` and for each type parameter the type argument is inferred from an expression or from a type other than an anonymous function type, and
+  - for at least one argument, the implicit conversion from `Eᵥ` to `Qᵥ` is an anonymous function type conversion, or `Mₓ` is a generic method with type parameters `{Y₁, Y₂, ..., Yᵥ}` and for at least one type parameter the type argument is inferred from an anonymous function type, or
+
+- for each argument, the implicit conversion from `Eᵥ` to `Qᵥ` is not better than the implicit conversion from `Eᵥ` to `Pᵥ`, and for at least one argument, the conversion from `Eᵥ` to `Pᵥ` is better than the conversion from `Eᵥ` to `Qᵥ`.
 
 In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}` are equivalent (i.e., each `Pᵢ` has an identity conversion to the corresponding `Qᵢ`), the following tie-breaking rules are applied, in order, to determine the better function member.
 
@@ -1150,14 +1168,16 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if:
 
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
-  - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
-    > *Note*: This is only applicable in unsafe code. *end note*
-- `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+- `C₁` is not an *anonymous function type conversion* (§anon-func-type-conversion) and `C₂` is an *anonymous function type conversion*, or
+- `E` does not exactly match `T₂` and at least one of the following holds:
+  - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
+  - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+  - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+    - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
+      > *Note*: This is only applicable in unsafe code. *end note*
+  - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 12.6.4.6 Exactly matching expression
 
@@ -5406,11 +5426,13 @@ The run-time processing of a conditional expression of the form `b ? x : y` 
 
 An ***anonymous function*** is an expression that represents an “in-line” method definition. An anonymous function does not have a value or type in and of itself, but is convertible to a compatible delegate or expression-tree type. The evaluation of an anonymous-function conversion depends on the target type of the conversion: If it is a delegate type, the conversion evaluates to a delegate value referencing the method that the anonymous function defines. If it is an expression-tree type, the conversion evaluates to an expression tree that represents the structure of the method as an object structure.
 
-> *Note*: For historical reasons, there are two syntactic flavors of anonymous functions, namely *lambda_expression*s and *anonymous_method_expression*s. For almost all purposes, *lambda_expression*s are more concise and expressive than *anonymous_method_expression*s, which remain in the language for backwards compatibility. *end note*
+> *Note*: For historical reasons, there are two syntactic flavors of anonymous functions, namely *lambda_expression* and *anonymous_method_expression*. For almost all purposes, *lambda_expression* is more concise and expressive than *anonymous_method_expression*s, which remain in the language for backwards compatibility. *end note*
 
 ```ANTLR
 lambda_expression
-    : anonymous_function_modifier? anonymous_function_signature '=>' anonymous_function_body
+    : attributes? anonymous_function_modifier?
+      (return_type | ref_kind ref_return_type)?
+      anonymous_function_signature '=>' anonymous_function_body
     ;
 
 anonymous_method_expression
@@ -5437,7 +5459,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type identifier
+    : attributes? anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -5457,7 +5479,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : identifier
+    : attributes? identifier
     ;
 
 anonymous_function_body
@@ -5500,11 +5522,13 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 
 The `=>` operator has the same precedence as assignment (`=`) and is right-associative.
 
+> *Note*: It can be deduced from [§23.5.3.2](attributes.md#23532-conditional-methods) that *attributes* in a *lambda_expression* cannot designate that expression as a conditional method. *end note*
+
 An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.14](classes.md#1514-async-functions).
 
 The parameters of an anonymous function in the form of a *lambda_expression* can be explicitly or implicitly typed. In an explicitly typed parameter list, the type of each parameter is explicitly stated. In an implicitly typed parameter list, the types of the parameters are inferred from the context in which the anonymous function occurs—specifically, when the anonymous function is converted to a compatible delegate type or expression tree type, that type provides the parameter types ([§10.7](conversions.md#107-anonymous-function-conversions)).
 
-In a *lambda_expression* with a single, implicitly typed parameter, the parentheses may be omitted from the parameter list. In other words, an anonymous function of the form
+In a *lambda_expression* with a single, implicitly typed parameter, the parentheses may be omitted from the parameter list, provided that *lambda_expression* has no *attributes* on the whole expression or on any of its *explicit_anonymous_function_parameter*s, and it has no explicit return type. In other words, an anonymous function of the form
 
 ```csharp
 ( «param» ) => «expr»
@@ -5517,6 +5541,8 @@ can be abbreviated to
 ```
 
 The parameter list of an anonymous function in the form of an *anonymous_method_expression* is optional. If given, the parameters shall be explicitly typed. If not, the anonymous function is convertible to a delegate with any parameter list not containing output parameters.
+
+It is a compile error for any *explicit_anonymous_function_parameter* of an anonymous function in the form of an *anonymous_method_expression* to have *attributes*.
 
 A *block* body of an anonymous function is always reachable ([§13.2](statements.md#132-end-points-and-reachability)).
 
@@ -5535,6 +5561,9 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > delegate (int x) { return x + 1; } // Anonymous method expression
 > static delegate (int x) { return x + 1; } // static anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
+> var concat = string ([DisallowNull] string a, [DisallowNull] string b) => a + b;
+> Func<string, int?> parse = [X][return: Y] ([Z] s)
+>   => (s is not null) ? int.Parse(s) : null;
 > ```
 >
 > *end example*
@@ -5545,12 +5574,15 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
+- Only *lambda_expression*s may have *attributes* and explicit return types.
+
+The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
 
 ### 12.22.2 Anonymous function signatures
 
 If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
 
-The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
+The *anonymous_function_signature* of an anonymous function defines the names and optionally the types and *attributes* of the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
 > *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discards. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -5576,7 +5608,7 @@ The *anonymous_function_signature* of an anonymous function defines the names an
 
 If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
 
-Note that an *anonymous_function_signature* cannot include attributes or a parameter array. Nevertheless, an *anonymous_function_signature* may be compatible with a delegate type whose parameter list contains a parameter array.
+Note that an *anonymous_function_signature* cannot include a parameter array. Nevertheless, an *anonymous_function_signature* may be compatible with a delegate type whose parameter list contains a parameter array.
 
 Note also that conversion to an expression tree type, even if compatible, may still fail at compile-time ([§8.6](types.md#86-expression-tree-types)).
 
@@ -5941,6 +5973,107 @@ Separate non-`static` anonymous functions can capture the same instance of an ou
 ### 12.22.7 Evaluation of anonymous function expressions
 
 An anonymous function `F` shall always be converted to a delegate type `D` or an expression-tree type `E`, either directly or through the execution of a delegate creation expression `new D(F)`. This conversion determines the result of the anonymous function, as described in [§10.7](conversions.md#107-anonymous-function-conversions).
+
+### §anon-func-type Anonymous function type
+
+The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a method signature: the parameter types and ref kinds, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
+
+An anonymous function expression has a ***natural type*** if its parameter list is present, its parameter types are explicit, and its return type is either explicit or can be inferred ([§12.6.3.14](expressions.md#126314-inferred-return-type)). For this purpose, a non-async anonymous function whose body is an expression classified as nothing, or a block with no `return` statements specifying expressions, has inferred return type `void`.
+
+A method group has a natural type if all candidate methods (including extension methods) in the method group have a common signature.
+
+An anonymous function type is determined independently of a conversion. When a delegate type is needed, the corresponding delegate type is determined from this signature as specified below. In particular, that delegate type, not the anonymous function type, is used as the type of an implicitly typed local variable ([§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)).
+
+Consider the following:
+
+```csharp
+var parse1 = (string s) => int.Parse(s);
+var parse2 = delegate (string s) { return int.Parse(s); };
+```
+
+In both cases, the corresponding delegate type is `Func<string, int>`, allowing `var` to be used.
+
+Not all anonymous function expressions have a natural type, however. Consider the following:
+
+```csharp
+var parse3 = s => int.Parse(s); // error: type could not be inferred
+```
+
+An anonymous function expression having a natural type may be used in the context of a less-explicit type:
+
+```csharp
+object parse4 = (string s) => int.Parse(s);
+Delegate parse5 = (string s) => int.Parse(s);
+```
+
+Method groups may also initialize implicitly typed local variables:
+
+```csharp
+var read = Console.Read;   // Just one overload; Func<int> inferred
+var write = Console.Write; // error: multiple overloads, can't choose
+```
+
+An anonymous function type conversion to `LambdaExpression` or `Expression` (§anon-func-type-conversion), when successfully realized, produces an expression tree of type `Expression<D>`, where `D` is the corresponding delegate type. Such realization requires an eligible lambda expression ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)):
+
+```csharp
+LambdaExpression parseLambda = (string s) => int.Parse(s);
+    // Expression<Func<string, int>>
+Expression parseExpression = (string s) => int.Parse(s);
+    // Expression<Func<string, int>>
+```
+
+Anonymous function types are used in a few specific contexts only:
+
+- Implicit and explicit conversions.
+- Method type inference ([§12.6.3](expressions.md#1263-type-inference)) and best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)).
+- The initializer *expression* in an *implicitly_typed_local_variable_declarator* ([§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)).
+
+The delegate type for the anonymous function or method group with parameter types `P1, ..., Pn` and return type `R` is, as follows:
+
+- If any parameter or return value is not by value, or there are more than 16 parameters, or any of the parameter types or return type are not valid type arguments (e.g., `(int* p) => { }`), then the delegate is a synthesized `internal` anonymous delegate type with a signature that matches the anonymous function or method group, and with parameter names `arg1, ..., argn`, or `arg` if a single parameter;
+- If `R` is `void`, then the delegate type is `System.Action<P1, ..., Pn>`;
+- Otherwise, the delegate type is `System.Func<P1, ..., Pn, R>`.
+
+> *Note*: A future version of this specification might allow more signatures to bind to `System.Action<>` and `System.Func<>` types (e.g., if `ref struct` types are allowed type arguments). *end note*
+
+If two anonymous functions or method groups in the same compilation require synthesized delegate types with the same parameter types and modifiers, and the same return type and modifiers, the compiler shall use the same synthesized delegate type.
+
+> *Example*: Explicit return types can provide bounds even when parameter types have not yet been inferred. Anonymous function types can also provide bounds when there is no target delegate type:
+>
+> <!-- Example: {template:"standalone-console", name:"NaturalFunctionTypeInference", expectedOutput:["0", "3", "4", "3", "5", "Lambda", "7"]} -->
+> ```csharp
+> class Program
+> {
+>     static T Apply<T>(Func<T, T> transform) => transform(default(T));
+>     static T Identity<T>(T value) => value;
+>     static T AsTree<T>(T value) where T : Expression => value;
+>     static T Choose<T>(T first, T second) => first;
+>     static int GetValue() => 4;
+>
+>     static void Main()
+>     {
+>         Console.WriteLine(Apply(int (value) => value));
+>         Console.WriteLine(Identity(() => 3)());
+>         Console.WriteLine(Identity(GetValue)());
+>
+>         var functions = new[]
+>         {
+>             (string text) => text.Length,
+>             (string text) => int.Parse(text)
+>         };
+>         Console.WriteLine(functions[0]("abc"));
+>         Console.WriteLine(functions[1]("5"));
+>
+>         Console.WriteLine(AsTree(() => 1).NodeType);
+>         Func<object> first = () => 7;
+>         Console.WriteLine(Choose(first, () => 8)());
+>     }
+> }
+> ```
+>
+> The first invocation infers `T` as `int` from the explicit return type. The unconstrained `Identity` invocations infer `Func<int>`, and the array has element type `Func<string, int>`. The constraint on `AsTree` causes inference of `Expression<Func<int>>` instead of `Func<int>`. The ordinary delegate bound in `Choose` takes precedence over the anonymous function type bound.
+>
+> *end example*
 
 ### 12.22.8 Implementation Example
 
