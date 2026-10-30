@@ -1560,7 +1560,7 @@ The following method names are reserved. While many have corresponding operators
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
 | `op_UnsignedRightShift` | (reserved for future use) |
-| `op_UnsignedRightShiftAssignment` | (reserved) |
+| `op_UnsignedRightShiftAssignment` | `>>>` |
 
 ## 15.4 Constants
 
