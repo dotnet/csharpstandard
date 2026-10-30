@@ -1561,8 +1561,8 @@ The following method names are reserved. While many have corresponding operators
 | `op_True` | `true` |
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
-| `op_UnsignedRightShift` | (reserved for future use) |
-| `op_UnsignedRightShiftAssignment` | `>>>` |
+| `op_UnsignedRightShift` | `>>>` |
+| `op_UnsignedRightShiftAssignment` | (reserved) |
 
 ## 15.4 Constants
 
