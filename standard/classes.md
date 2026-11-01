@@ -5417,7 +5417,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Example*: The following example shows an implementation of operator- for an integer scalar class:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnaryOperators"} -->
 > ```csharp
 > public class MyNumber
 > {
