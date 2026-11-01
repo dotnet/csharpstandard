@@ -1601,7 +1601,7 @@ The following method names are reserved. While many have corresponding operators
 | `op_BitwiseAnd` | `&` (binary) |
 | `op_BitwiseAndAssignment` | `&=` |
 | `op_BitwiseOr` | `\|` |
-| `op_BitwiseOrAssignment` | `|=` |
+| `op_BitwiseOrAssignment` | `\|=` |
 | `op_CheckedAddition` | checked addition `+` |
 | `op_CheckedAdditionAssignment` | checked `+=` |
 | `op_CheckedDecrement` | static checked decrement `--` |
@@ -5365,7 +5365,7 @@ operator_body
 
 *Note*: The prefix logical negation ([§12.9.4](expressions.md#1294-logical-negation-operator)) and postfix null-forgiving operators ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), while represented by the same lexical token (`!`), are distinct. The latter is not an overloadable operator. *end note*
 
-The following categories of overloadable operators exist: unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), increment operators [§increment-operators), and compound assignment operators [§compound-assignment-operators).
+The following categories of overloadable operators exist: unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), increment operators (§increment-operators), and compound assignment operators (§compound-assignment-operators).
 
 The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
@@ -5603,7 +5603,7 @@ Effectively, an instance increment operator is a void-returning instance method 
 
 The signature of an instance increment operator consists of the operator tokens ('checked'? '++' | 'checked'? '--').
 
-A checked operator declaration requires a pair-wise declaration of an unchecked operator. A compile-time error occurs otherwise. 
+A checked operator declaration requires a pair-wise declaration of an unchecked operator. A compile-time error occurs otherwise.
 
 The purpose of the method is to adjust the value of the instance to the result of the requested increment operation, whatever that means in context of the declaring type.
 
