@@ -1593,37 +1593,44 @@ The following method names are reserved. While many have corresponding operators
 | **Method Name** | **C# Operator** |
 |--------------|----------------------|
 | `op_Addition` | `+` (binary) |
-| `op_AdditionAssignment` | (reserved) |
+| `op_AdditionAssignment` | `+=` |
 | `op_AddressOf` | (reserved) |
 | `op_Assign` | (reserved) |
 | `op_BitwiseAnd` | `&` (binary) |
-| `op_BitwiseAndAssignment` | (reserved) |
+| `op_BitwiseAndAssignment` | `&=` |
 | `op_BitwiseOr` | `\|` |
-| `op_BitwiseOrAssignment` | (reserved) |
+| `op_BitwiseOrAssignment` | `|=` |
 | `op_CheckedAddition` | checked addition `+` |
-| `op_CheckedDecrement` | checked decrement `--` |
+| `op_CheckedAdditionAssignment` | checked `+=` |
+| `op_CheckedDecrement` | static checked decrement `--` |
+| `op_CheckedDecrementAssignment` | instance checked decrement `--` |
 | `op_CheckedDivision` | checked division `/` |
 | `op_CheckedExplicit` | checked explicit (narrowing) coercion |
-| `op_CheckedIncrement` | checked increment `++` |
+| `op_CheckedIncrement` | static checked increment `++` |
+| `op_CheckedIncrementAssignment` | instance checked decrement `--` |
 | `op_CheckedMultiply` | checked multiply `*` |
 | `op_CheckedSubtraction` | checked subtraction `-` |
+| `op_CheckedSubtractionAssignment` | checked `-=` |
 | `op_CheckedUnaryNegation` | checked unary negation `-` |
 | `op_Comma` | (reserved) |
-| `op_Decrement` | `--` (prefix and postfix) |
+| `op_Decrement` | static `--` |
+| `op_DecrementAssignment` | instance `++` |
 | `op_Division` | `/` |
-| `op_DivisionAssignment` | (reserved) |
+| `op_DivisionAssignment` | `/=` |
+| `op_CheckedDivisionAssignment` | checked `/=` |
 | `op_Equality` | `==` |
 | `op_ExclusiveOr` | `^` |
-| `op_ExclusiveOrAssignment` | (reserved) |
+| `op_ExclusiveOrAssignment` | `^=` |
 | `op_Explicit` | explicit (narrowing) coercion |
 | `op_False` | `false` |
 | `op_GreaterThan` | `>` |
 | `op_GreaterThanOrEqual` | `>=` |
 | `op_Implicit` | implicit (widening) coercion |
-| `op_Increment` | `++` (prefix and postfix) |
+| `op_Increment` | static `++` |
+| `op_IncrementAssignment` | instance `++` |
 | `op_Inequality` | `!=` |
 | `op_LeftShift` | `<<` |
-| `op_LeftShiftAssignment` | (reserved) |
+| `op_LeftShiftAssignment` | `<<=` |
 | `op_LessThan` | `<` |
 | `op_LessThanOrEqual` | `<=` |
 | `op_LogicalAnd` | (reserved) |
@@ -1631,22 +1638,23 @@ The following method names are reserved. While many have corresponding operators
 | `op_LogicalOr` | (reserved) |
 | `op_MemberSelection` | (reserved) |
 | `op_Modulus` | `%` |
-| `op_ModulusAssignment` | (reserved) |
-| `op_MultiplicationAssignment` | (reserved) |
+| `op_ModulusAssignment` | `%=` |
+| `op_MultiplicationAssignment` | `*=` |
+| `op_CheckedMultiplicationAssignment` | checked `*=` |
 | `op_Multiply` | `*` (binary) |
 | `op_OnesComplement` | `~` |
 | `op_PointerDereference` | (reserved) |
 | `op_PointerToMemberSelection` | (reserved) |
 | `op_RightShift` | `>>` |
-| `op_RightShiftAssignment` | (reserved) |
+| `op_RightShiftAssignment` | `>>=` |
 | `op_SignedRightShift` | (reserved) |
 | `op_Subtraction` | `-` (binary) |
-| `op_SubtractionAssignment` | (reserved) |
+| `op_SubtractionAssignment` | `-=` |
 | `op_True` | `true` |
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
 | `op_UnsignedRightShift` | (reserved for future use) |
-| `op_UnsignedRightShiftAssignment` | (reserved) |
+| `op_UnsignedRightShiftAssignment` | `>>>=` |
 
 ## 15.4 Constants
 
@@ -5249,6 +5257,9 @@ operator_modifier
     | 'abstract'
     | 'virtual'
     | 'sealed'
+    | 'override'
+    | 'new'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -5256,6 +5267,8 @@ operator_declarator
     : unary_operator_declarator
     | binary_operator_declarator
     | conversion_operator_declarator
+    | increment_operator_declarator
+    | compound_assignment_operator_declarator
     ;
 
 unary_operator_declarator
@@ -5267,7 +5280,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
+    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -5285,6 +5298,28 @@ conversion_operator_declarator
     | 'explicit' 'operator' 'checked'? type '(' fixed_parameter ')'
     ;
 
+increment_operator_declarator
+    : type 'operator' overloadable_increment_operator '(' fixed_parameter ')'
+    | 'void' 'operator' overloadable_increment_operator '(' ')'
+    ;
+
+overloadable_increment_operator
+    : 'checked'? '++'
+    | 'checked'? '--'
+    ;
+
+compound_assignment_operator_declarator
+    : 'void' 'operator' overloadable_compound_assignment_operator
+        '(' fixed_parameter ')'
+    ;
+
+overloadable_compound_assignment_operator
+    : 'checked'? '+=' | 'checked'? '-=' | 'checked'? '*=' | 'checked'? '/=' |
+      '%=' | '&=' | '|=' | '^=' | '<<='
+    | right_shift_assignment
+    | unsigned_right_shift_assignment
+    ;
+
 operator_body
     : block
     | '=>' expression ';'
@@ -5296,7 +5331,7 @@ operator_body
 
 *Note*: The prefix logical negation ([§12.9.4](expressions.md#1294-logical-negation-operator)) and postfix null-forgiving operators ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), while represented by the same lexical token (`!`), are distinct. The latter is not an overloadable operator. *end note*
 
-There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
+The following categories of overloadable operators exist: unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), increment operators [§increment-operators), and compound assignment operators [§compound-assignment-operators).
 
 The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
@@ -5304,7 +5339,7 @@ For `extern` operators, the *operator_body* consists simply of a semicolon. For 
 
 The following rules apply to all operator declarations:
 
-- An operator declaration shall include both a `public` and a `static` modifier.
+- An operator declaration shall include a `public` modifier.
 - The parameters of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
@@ -5312,7 +5347,7 @@ The following rules apply to all operator declarations:
 
 Each operator category imposes additional restrictions, as described in the following subclauses.
 
-Like other members, operators declared in a base class are inherited by derived classes. Because operator declarations always require the class or struct in which the operator is declared to participate in the signature of the operator, it is not possible for an operator declared in a derived class to hide an operator declared in a base class. Thus, the `new` modifier is never required, and therefore never permitted, in an operator declaration.
+Like other members, operators declared in a base class are inherited by derived classes.
 
 Additional information on unary and binary operators can be found in [§12.4](expressions.md#124-operators).
 
@@ -5334,52 +5369,32 @@ The presence of `checked` in a checked operator declaration has no effect on the
 
 The following rules apply to unary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 - A unary `+`, `-`, `!` (logical negation only), or `~` operator shall take a single parameter of type `T` or `T?` and can return any type.
-- A unary `++` or `--` operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
 - A unary `true` or `false` operator shall take a single parameter of type `T` or `T?` and shall return type `bool`.
 
-The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
+The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.27](expressions.md#1227-boolean-expressions).
 
-> *Note*: A unary `++`, `--`, or `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
+> *Note*: A unary `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
-> *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
+> *Example*: The following example shows an implementation of operator- for an integer scalar class:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;",null]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators"} -->
 > ```csharp
-> public class IntVector
+> public class MyNumber
 > {
->     public IntVector(int length) {...}
->     public int Length { get { ... } }                      // Read-only property
->     public int this[int index] { get { ... } set { ... } } // Read-write indexer
->
->     public static IntVector operator++(IntVector iv)
+>     private int val;
+>     public MyNumber(int val = 0)
 >     {
->         IntVector temp = new IntVector(iv.Length);
->         for (int i = 0; i < iv.Length; i++)
->         {
->             temp[i] = iv[i] + 1;
->         }
->         return temp;
+>         this.val = val; 
 >     }
-> }
-> 
-> class Test
-> {
->     static void Main()
->     {
->         IntVector iv1 = new IntVector(4); // Vector of 4 x 0
->         IntVector iv2;
->         iv2 = iv1++;              // iv2 contains 4 x 0, iv1 contains 4 x 1
->         iv2 = ++iv1;              // iv2 contains 4 x 2, iv1 contains 4 x 2
->     }
+>     public static MyNumber operator-(MyNumber x) => new MyNumber(-x.val);
 > }
 > ```
->
-> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)).
 >
 > *end example*
 
@@ -5387,6 +5402,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
 - A binary `<<`, `>>`, or `>>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?`, and can return any type.
 
@@ -5401,6 +5417,8 @@ Certain binary operators require pair-wise declaration. For every declaration of
 > *Note*: A binary `+`, `-`, `*`, or `/` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 ### 15.10.4 Conversion operators
+
+*operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 
 A conversion operator declaration introduces a ***user-defined conversion*** ([§10.5](conversions.md#105-user-defined-conversions)), which augments the pre-defined implicit and explicit conversions.
 
@@ -5531,6 +5549,88 @@ The signature of a conversion operator consists of the source type and the targe
 > the conversion from `Digit` to `byte` is implicit because it never throws exceptions or loses information, but the conversion from `byte` to `Digit` is explicit since `Digit` can only represent a subset of the possible values of a `byte`.
 >
 > *end example*
+
+### §increment-operators Increment operators
+
+The following rules apply to static increment operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
+
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
+- An operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
+
+The signature of a static increment operator consists of the operator tokens ('checked'? `++`, 'checked'? `--`) and the type of the single parameter. The return type is not part of a static increment operator’s signature, nor is the name of the parameter.
+
+The following rules apply to instance increment operator declarations:
+
+- *operator_declaration* shall not include a `static` modifier.
+- An operator shall take no parameters.
+- An operator shall have `void` return type.
+
+Effectively, an instance increment operator is a void-returning instance method that has no parameters.
+
+The signature of an instance increment operator consists of the operator tokens ('checked'? '++' | 'checked'? '--').
+
+A checked operator declaration requires a pair-wise declaration of an unchecked operator. A compile-time error occurs otherwise. 
+
+The purpose of the method is to adjust the value of the instance to the result of the requested increment operation, whatever that means in context of the declaring type.
+
+> *Example*: The following example shows an implementation of operator++ for an integer scalar class:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"IncrementOperators"} -->
+> ```csharp
+> public class MyNumber
+> {
+>     private int val;
+>     public MyNumber(int val = 0)
+>     {
+>         this.val = val; 
+>     }
+>     public void operator++()
+>     {
+>         ++val;
+>     }
+> }
+> ```
+>
+> *end example*
+
+An instance increment operator can override an operator with the same signature declared in a base class.
+
+### §compound-assignment-operators Compound assignment operators
+
+The following rules apply to compound assignment operator declarations:
+
+- An operator declaration shall not include a `static` modifier.
+- An operator shall take one parameter.
+- An operator shall have `void` return type.
+
+Effectively, a compound assignment operator is a `void`-returning instance method that takes one parameter.
+
+The signature of a compound assignment operator consists of the operator tokens
+(`'checked'? '+='`, `'checked'? '-='`, `'checked'? '*='`, `'checked'? '/='`, `'%='`, `'&='`, `'|='`, `'^='`, `'<<='`, *right_shift_assignment*, *unsigned_right_shift_assignment*) and the type of the single parameter. The name of the parameter is not part of the signature.
+
+A checked-operator declaration requires a pair-wise declaration of a regular operator. A compile-time error occurs otherwise.
+
+> *Example*: The following example shows an implementation of operator+= for an integer scalar class:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CompAssignOperators"} -->
+> ```csharp
+> public class MyNumber
+> {
+>     private int val;
+>     public MyNumber(int val = 0)
+>     {
+>         this.val = val; 
+>     }
+>     public void operator+=(int x)
+>     {
+>         val += x;
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compound assignment operator can override an operator with the same signature declared in a base class.
 
 ## 15.11 Instance constructors
 
