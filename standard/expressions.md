@@ -195,17 +195,19 @@ The ***overloadable unary operator***s are:
 
 > `+  -  !` (logical negation only) `~  ++  --  true  false`
 
+A newer, alternate approach to explicit overloading of `++` and `--` is discussed in §increment-operators.
+
 Only the operators listed above can be overloaded. In particular, it is not possible to overload the null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) or the unary index from-end operator (prefix `^`, ([§12.9.6](expressions.md#1296-index-from-end-operator))).
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.27](expressions.md#1227-boolean-expressions)) and expressions involving the conditional ([§12.21](expressions.md#1221-conditional-operator)) and conditional logical operators ([§12.17](expressions.md#1217-conditional-logical-operators)). *end note*
 
 The ***overloadable binary operator***s are:
 
-> `+  -  *  /  %  &  |  ^  <<  >>  >>>  ==  !=  >  <  <=  >=`
+> `+  -  *  /  %  &  |  ^  <<  >>  >>>  ==  !=  >  <  <=  >=  «op»=`
 
 Only the operators listed above can be overloaded. In particular, it is not possible to overload member access, method invocation, or the `..`, `=`, `&&`, `||`, `??`, `?:`, `=>`, `checked`, `unchecked`, `new`, `typeof`, `default`, `as`, and `is` operators.
 
-When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded.
+When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded. Explicit overloading of a compound assignment operator is discussed in §compound-assignment-operators.
 
 > *Example*: An overload of operator `*` is also an overload of operator `*=`. This is described further in [§12.24](expressions.md#1224-assignment-operators). *end example*
 
@@ -243,11 +245,30 @@ The descriptions of individual operators in [§12.9](expressions.md#129-unary-op
 
 ### 12.4.4 Unary operator overload resolution
 
+#### §UnaryOpOverResGen General
+
+[Instance increment operator overload resolution is discussed in §InsIncOpOverRes.]
+
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
 - The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined unary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### §InsIncOpOverRes Instance increment operator overload resolution
+
+An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable instance increment operator, and `x` is an expression of type `X`, is processed as follows:
+
+- The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of candidate instance increment operators (§CandInsIncOp).
+- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the overload resolution yields no result.
+- The overload resolution rules ([§12.6.4](expressions.md#1264-overload-resolution)) are applied to the set of candidate operators to select the best operator, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### §CandInsIncOp Candidate instance increment operators
+
+Given a type `T` and an operation `«op»`, where `«op»` is an overloadable instance increment operator, the set of candidate user-defined operators provided by `T` is determined as follows:
+
+- In an `unchecked` evaluation context, it is a group of operators that would be produced by the member lookup process ([§12.5.1](expressions.md#1251-general)) when only instance `operator «op»()` operators were considered matching the target name `N`.
+- In a `checked` evaluation context, it is a group of operators that would be produced by the member lookup process when only instance `operator «op»()` and instance `operator checked «op»()` operators were considered matching the target name `N`. The `operator «op»()` operators that have pair-wise matching `operator checked «op»()` declarations are excluded from the group.
 
 ### 12.4.5 Binary operator overload resolution
 
@@ -2908,6 +2929,8 @@ post_decrement_expression
     ;
 ```
 
+The following applies when *primary_expression* has a non-user-defined type:
+
 The operand of a postfix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
 If the *primary_expression* has the compile-time type `dynamic` then the operator is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), the *post_increment_expression* or *post_decrement_expression* has the compile-time type `dynamic` and the following rules are applied at run-time using the run-time type of the *primary_expression*.
@@ -2936,6 +2959,25 @@ The run-time processing of a postfix increment or decrement operation of the for
 The `++` and `--` operators also support prefix notation ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)). The result of `x++` or `x--` is the value of `x` *before* the operation, whereas the result of `++x` or `--x` is the value of `x` *after* the operation. In either case, `x` itself has the same value after the operation.
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
+
+The following applies when *primary_expression* has a user-defined type:
+
+A user-defined type may provide a static form, an instance form, or both forms, of *operator_declaration* for this operator (§increment-operators).
+
+If the result of the operation is used or `x` in `x «op»` is not classified as a variable, the operation is processed by applying unary operator overload resolution as
+specified as specified earlier in this subclause for non-user-defined types.
+
+> *Note*: Consider a user-defined type, `U`, that declares an instance `operator++` but not a static one. Given an instance of `U` called `x`, `x++` produces an error as the result is used but no unary operator overload resolution is possible. *end note*
+
+Otherwise, priority is given to the instance increment operator, if one exists, as follows:
+
+First, an attempt is made to process the operation by applying
+instance increment operator overload resolution§InsIncOpOverRes). If the process produces no result and no error, then the operation is processed by applying unary operator overload resolution as specified earlier in this subclause for non-user-defined types.
+
+Otherwise, `x«op»` is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, the operator method is invoked on `x`. If `x` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+- If the type of `x` is not known to be a reference type, the operator method is invoked on `x`.
 
 ### 12.8.17 The new operator
 
@@ -4245,6 +4287,8 @@ pre_decrement_expression
     ;
 ```
 
+The following applies when *unary_expression* has a non-user-defined type:
+
 The operand of a prefix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
 If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set or init accessor. If this is not the case, a binding-time error occurs.
@@ -4271,6 +4315,25 @@ The `++` and `--` operators also support postfix notation ([§12.8.16](expressio
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined prefix increment and decrement operators defined above are also predefined.
+
+The following applies when *unary_expression* has a user-defined type:
+
+A user-defined type may provide a static form, an instance form, or both forms, of *operator_declaration* for this operator (§increment-operators).
+
+If `x` in `«op» x` is classified as a variable, priority is given to the instance increment version, if one exists, as follows:
+
+First, an attempt is made to process the operation by applying instance increment operator overload resolution (InsIncOpOverRes). If the process produces no result and no error, then the operation is processed by applying unary operator overload resolution as specified earlier in this subclause for non-user-defined types.
+
+Otherwise, `«op»x` is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance, and `x₀` is returned as the result of the operation. If `x₀` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+
+- If the type of `x` is not known to be a reference type:
+
+  - If the result of increment is used, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance, `x₀` is assigned to `x`, and `x₀` is returned as the result of the assignment.
+  - Otherwise, the operator method is invoked on `x`.
+  
+Side effects in `x` are evaluated only once in the process.
 
 ### 12.9.8 Cast expressions
 
@@ -7859,6 +7922,10 @@ The ref assignment operator shall not read the storage location referenced by th
 
 ### 12.24.5 Compound assignment
 
+#### §CompAssignGen General
+
+[Explicit compound assignment operator overload handling is discussed later in this subsection.]
+
 ```ANTLR
 compound_assignment
     : unary_expression compound_assignment_operator expression
@@ -7921,6 +7988,43 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
+
+The following discusses the case when an explicit compound assignment operator is declared:
+
+If `x` in `x «op»= y` is classified as a variable, priority is given to compound assignment operators (§compound-assignment-operators), as follows.
+
+First, an attempt is made to process an operation of the form `x «op»= y` by applying
+compound assignment operator overload resolution (§CompAssignOpOver). If the process produces no result and no error, then the operation is processed by applying binary operator overload resolution as the earlier part of this subclause specifies.
+
+Otherwise, the operation is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance with `y` as the argument, and `x₀` is returned as result of the compound assignment.
+- If `x₀` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+
+If the type of `x` is not known to be a reference type:
+
+- If the result of compound assignment is used, the `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance with `y` as the argument, `x₀` is assigned to `x` and `x₀` is returned as the result of the compound assignment.
+- Otherwise, the operator method is invoked on `x` with `y` as the argument.
+  
+Side effects in `x` are evaluated only once in the process.
+
+#### §CompAssignOpOver Compound assignment operator overload resolution
+
+An operation of the form `x «op»= y`, where `«op»=` is an overloadable compound assignment operator, `x` is an expression of type `X` is processed as follows:
+
+- The set of candidate user-defined operators provided by `X` for the operation `operator «op»=(y)` is determined using the rules of candidate compound assignment operators (§CandCompAssignOp).
+- If at least one candidate user-defined operator in the set is applicable to the argument list `(y)`, then this becomes the set of candidate operators for the operation. Otherwise, the overload resolution yields no result.
+- The overload resolution rules([§12.6.4](expressions.md#1264-overload-resolution)) are applied to the set of candidate operators to select the best operator with respect to the argument list `(y)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### §CandCompAssignOp Candidate compound assignment operators
+
+Given a type `T` and an operation `«op»=`, where `«op»=` is an overloadable compound assignment operator, the set of candidate user-defined operators provided by `T` is determined as follows:
+
+- In an unchecked evaluation context, it is a group of operators that would be produced
+  by the member lookup process ([§12.5.1](expressions.md#1251-general)) process when only instance `operator «op»=(Y)` operators were considered matching the target name `N`.
+- In a checked evaluation context, it is a group of operators that would be produced
+  by the member lookup] process when only instance `operator «op»=(Y)` and instance `operator checked «op»=(Y)` operators were considered matching the target name `N`. The `operator «op»=(Y)` operators that have pair-wise matching `operator checked «op»=(Y)`
+  declarations are excluded from the group.
 
 ### 12.24.6 Event assignment
 
