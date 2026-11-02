@@ -507,11 +507,13 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >     {
 >         // nonnull constraint allows nonnullable struct type argument
 >         A<int> x1;
->         // possible warning: nonnull constraint prohibits nullable struct type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // struct type argument
 >         A<int?> x2;
 >         // nonnull constraint allows nonnullable class type argument
 >         A<C> x3;
->         // possible warning: nonnull constraint prohibits nullable class type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // class type argument
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;

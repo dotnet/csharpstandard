@@ -248,7 +248,8 @@ namespace System
         public char this [int index] { get; }
         public static string Format(string format, params object?[] args);
         System.Collections.IEnumerator IEnumerable.GetEnumerator();
-        System.Collections.Generic.IEnumerator<char> IEnumerable<char>.GetEnumerator();
+        System.Collections.Generic.IEnumerator<char>
+            IEnumerable<char>.GetEnumerator();
     }
 
     public class SystemException : Exception
@@ -408,7 +409,8 @@ namespace System
     {
         public OperationCanceledException();
         public OperationCanceledException(string? message);
-        public OperationCanceledException(string? message, Exception? innerException);
+        public OperationCanceledException(
+            string? message, Exception? innerException);
     }
 
     /// <summary>
@@ -905,7 +907,8 @@ namespace System.Threading.Tasks
 
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult>
+            GetAwaiter();
     }
 
     public readonly struct ValueTask : System.IEquatable<ValueTask>

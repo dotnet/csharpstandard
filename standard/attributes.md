@@ -957,12 +957,12 @@ Specifies that a given method never returns if the associated `bool` parameter h
 > #nullable enable
 > public class X
 > {
->     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string argumentName)
+>     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string paramName)
 >     {
 >         if (isNull)
 >         {
->             throw new ArgumentException(argumentName,
->               $"argument {argumentName} cannot be null");
+>             throw new ArgumentException(paramName,
+>                 $"argument for {paramName} cannot be null");
 >         }
 >     }
 >
