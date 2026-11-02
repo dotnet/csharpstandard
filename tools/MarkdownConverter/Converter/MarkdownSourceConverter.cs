@@ -5,7 +5,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Markdown;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Collections;
-using Microsoft.FSharp.Core;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -16,9 +15,10 @@ public class MarkdownSourceConverter
 {
     /// <summary>
     /// The maximum code line length that's allowed without generating a warning.
-    /// (80 would be normal, but 81 appears to be okay, and avoids a couple of difficult line breaks.)
+    /// (80 would be normal, but 83 appears to be okay, and avoids some difficult line breaks.
+    /// 84 is fine in some places but not others.)
     /// </summary>
-    public const int MaximumCodeLineLength = 81;
+    public const int MaximumCodeLineLength = 83;
 
     private const int InitialIndentation = 540;
     private const int ListLevelIndentation = 360;
@@ -355,7 +355,7 @@ public class MarkdownSourceConverter
                 int lineLength = line.Words.Sum(w => w.Text.Length);
                 if (lineLength > MaximumCodeLineLength)
                 {
-                    reporter.Warning(DiagnosticIDs.MDC032, $"Line length {lineLength} > maximum {MaximumCodeLineLength}", lineOffset: lineOffset);
+                    reporter.Warning(DiagnosticIDs.MDC032, $"Line length {lineLength} > maximum {MaximumCodeLineLength};\r\n{line}", lineOffset: lineOffset);
                 }
 
                 if (onFirstLine)
