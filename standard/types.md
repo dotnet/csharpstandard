@@ -328,7 +328,7 @@ Every simple type has members. Each simple type that is an alias for a predefine
 
 The types `nint` and `nuint` are represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, and are *not* aliases for these types. In this context being *represented by* means:
 
-- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed via those types.
+- The only members directly accessible for `nint` and `nuint` are the required methods of `Object` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)). Any other members of `System.IntPtr` and `System.UIntPtr` may be accessed by explicit conversion to those types.
 - Operations performed through `dynamic` binding on `System.IntPtr` and `System.UIntPtr` values do not have access to the `nint` and `nuint` operators.
 - In all other respects `nint` and `nuint` behave as if they are aliases of `System.IntPtr` and `System.UIntPtr`.
 
