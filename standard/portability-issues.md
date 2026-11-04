@@ -51,13 +51,13 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements. ([§24.7](unsafe-code.md#247-the-fixed-statement))
 1. The behavior of the `fixed` statement if the string expression is `null`. ([§24.7](unsafe-code.md#247-the-fixed-statement))
 
-## §Imp-Spec-Behavior Implementation-specific behavior
+## B.4 Implementation-specific behavior
 
 The behaviors listed in this subclause need not be documented. The following are implementation-specific:
 
 1. How a nullable context is specified external to the source code to which it applies. ([§8.9.4.1](types.md#8941-general))
 
-## B.4 Unspecified behavior
+## B.5 Unspecified behavior
 
 1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
@@ -74,7 +74,7 @@ The behaviors listed in this subclause need not be documented. The following are
 1. An exception occurs during finalizer execution, and that exception is not caught ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
 1. If more than one member matches, which member is the implementation of `I.M` ([§19.6.5](interfaces.md#1965-interface-mapping)).
 
-## B.5 Other issues
+## B.6 Other issues
 
 1. The exact results of floating-point expression evaluation can vary from one implementation to another, because an implementation is permitted to evaluate such expressions using a greater range and/or precision than is required ([§8.3.7](types.md#837-floating-point-types)).
 1. Certain signatures are reserved for compatibility with other programming languages ([§15.3.10](classes.md#15310-reserved-member-names)).
