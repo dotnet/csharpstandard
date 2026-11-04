@@ -5364,8 +5364,8 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
 > (int x) => { return x + 1; }           // Explicitly typed, block body
-> static (int x) => x + 1                // static anonymous function, explicitly typed, expression body
-> static (int x) => { return x + 1; }    // static anonymous function, explicitly typed, block body
+> static (int x) => x + 1                // Static anonymous function, explicitly typed, expression body
+> static (int x) => { return x + 1; }    // Static anonymous function, explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
