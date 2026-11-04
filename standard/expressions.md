@@ -7335,19 +7335,7 @@ The compile-time evaluation of a *constant_expression* shall:
 
 If the run-time evaluation of a constant expression would throw an exception, a compile-time error shall be produced.
 
-> *Example*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"ConstantOverflow", expectedErrors:["CS0220"]} -->
-> ```csharp
-> public class C
-> {
->     private const nint hugeNumber = int.MaxValue + 1;
->
->     public static nint AddOne(nint value) => value + 1;
-> }
-> ```
->
-> The constant declaration causes an error because the addition is performed with `int` operands and its result is not representable as `int`. In contrast, `AddOne` performs addition with `nint` operands at run-time. When `nint` is 64 bits, `AddOne(int.MaxValue)` returns 2147483648. *end example*
+> *Note*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
