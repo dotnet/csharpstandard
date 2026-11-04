@@ -1405,11 +1405,16 @@ conditional_expression
 
 // Source: §12.21.1 General
 lambda_expression
-    : 'async'? anonymous_function_signature '=>' anonymous_function_body
+    : anonymous_function_modifier? anonymous_function_signature '=>' anonymous_function_body
     ;
 
 anonymous_method_expression
-    : 'async'? 'delegate' explicit_anonymous_function_signature? block
+    : anonymous_function_modifier? 'delegate' explicit_anonymous_function_signature? block
+    ;
+
+anonymous_function_modifier
+    : 'async' 'static'?
+    | 'static' 'async'?
     ;
 
 anonymous_function_signature
