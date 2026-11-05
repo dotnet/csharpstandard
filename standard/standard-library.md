@@ -154,7 +154,11 @@ namespace System
     }
 
     public readonly struct Int16 { }
-    public readonly struct Int32 { }
+    public readonly struct Int32
+    {
+        public const int MinValue;
+        public const int MaxValue; 
+    }
     public readonly struct Int64 { }
     public readonly struct IntPtr { }
 
@@ -267,7 +271,11 @@ namespace System
     }
 
     public readonly struct UInt16 { }
-    public readonly struct UInt32 { }
+    public readonly struct UInt32
+    {
+        public const int MinValue;
+        public const int MaxValue; 
+    }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
 
