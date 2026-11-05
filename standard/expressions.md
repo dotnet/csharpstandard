@@ -7279,7 +7279,7 @@ A constant expression shall either have the value `null` or have one of the foll
 >
 > *end example*
 
-A *constant_expression* of type `nint` shall have a value in the range \[-2147483648, 2147483647\]. A *constant_expression* of type `nuint` shall have a value in the range \[0, 4294967295\].
+A *constant_expression* of type `nint` shall have a value in the range `[int.MinValue, int.MaxValue]`. A *constant_expression* of type `nuint` shall have a value in the range `[uint.MinValue, uint.MaxValue]`.
 
 Only the following constructs are permitted in constant expressions:
 
