@@ -25,14 +25,10 @@ public class Program
     /// <returns>0 on success, non-zero on failure</returns>
     static int Main(string[] args)
     {
-        var ownerOption = new Option<string>("--owner") { Description = "Legacy option; no longer used" };
-        var repoOption = new Option<string>("--repo") { Description = "Legacy option; no longer used" };
         var dryrunOption = new Option<bool>("--dryrun") { Description = "True for a dry run, false to update the text in all files" };
 
         var rootCommand = new RootCommand("Update section numbers, anchor tags, and the TOC")
         {
-            ownerOption,
-            repoOption,
             dryrunOption
         };
 
