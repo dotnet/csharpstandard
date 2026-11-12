@@ -6992,7 +6992,7 @@ then in each case the former shall be chosen.
 For backward compatibility if any *deconstructor_element* is a *discard_token* then:
 
 - If name lookup ([§12.8.4](expressions.md#1284-simple-names)) for “`_`” finds an associated declaration then the *discard_token* is reclassified as a *simple_name*, which is syntactically a *variable_reference*.
-- Otherwise the *discard token* is a simple discard ([§12.19](expressions.md#1219-declaration-expressions)).
+- Otherwise the *discard_token* is a simple discard ([§12.19](expressions.md#1219-declaration-expressions)).
 
 It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *deconstructor_element* is not writeable.
 

@@ -569,7 +569,8 @@ Two identifiers are considered the same if they are identical after the followin
 The semantics of an identifier named `_` depends on the context in which it appears:
 
 - It can denote a named program element, such as a variable, class, or method, or
-- It can denote a discard ([§9.2.9.2](variables.md#9292-discards)).
+- It can denote a discard ([§9.2.9.2](variables.md#9292-discards)), or
+- It can denote a discard parameter of an anonymous function ([§12.21.2](expressions.md#12212-anonymous-function-signatures)).
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
