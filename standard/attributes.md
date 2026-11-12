@@ -16,7 +16,7 @@ Attributes are defined through the declaration of attribute classes ([§23.2](at
 
 A class that derives from the abstract class `System.Attribute`, whether directly or indirectly, is an ***attribute class***. The declaration of an attribute class defines a new kind of attribute that can be placed on program entities. By convention, attribute classes are named with a suffix of `Attribute`. Uses of an attribute may either include or omit this suffix.
 
-An attribute class may be generic. When an *attribute_name* references a generic attribute class, each type argument is subject to the same restrictions that apply to a type argument of the `typeof` operator ([§12.8.18](expressions.md#12818-the-typeof-operator)); for example, `dynamic`, a tuple type with element names, a nullable reference type, `nint`, and `nuint` are not permitted as type arguments. (In addition, a type parameter of the surrounding declaration shall not be used as a type argument; see §8.5.)
+An attribute class may be generic. When an *attribute_name* references a generic attribute class, each type argument is subject to the same restrictions that apply to a type argument of the `typeof` operator ([§12.8.18](expressions.md#12818-the-typeof-operator)); for example, `dynamic`, a tuple type with element names, a nullable reference type, `nint`, and `nuint` are not permitted as type arguments. (In addition, a type parameter of the surrounding declaration shall not be used as a type argument; see [§8.5](types.md#85-type-parameters).)
 
 > *Example*:
 >
@@ -507,11 +507,11 @@ A number of attributes affect the language in some way. These attributes include
 - `System.ObsoleteAttribute` ([§23.5.4](attributes.md#2354-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` ([§23.5.6.5](attributes.md#23565-the-callerargumentexpression-attribute)), which are used to supply information about the calling context to optional parameters.
-- `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
-- `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
-- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
-- System.Diagnostics.CodeAnalysis.UnscopedRefAttribute (§UnscopedRefAttribute), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
-- `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` (§SetsRequiredMembers) and `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
+- `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
+- `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.11](attributes.md#23511-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
+- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.11.1](attributes.md#235111-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
+- System.Diagnostics.CodeAnalysis.UnscopedRefAttribute ([§23.5.8](attributes.md#2358-the-unscopedref-attribute)), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
+- `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)) and `System.Runtime.CompilerServices.RequiredMemberAttribute` ([§23.5.12.2](attributes.md#235122-the-requiredmember-attribute)), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1323,9 +1323,9 @@ Specifies that a nullable argument will not be `null` when the method returns th
 >
 > *end example*
 
-### §UnscopedRefAttribute The UnscopedRef attribute
+### 23.5.8 The UnscopedRef attribute
 
-There are several cases in which a ref is treated as being implicitly scoped (§scoped-modifier); that is, the ref is not allowed to escape a method. For example:
+There are several cases in which a ref is treated as being implicitly scoped ([§9.7.3](variables.md#973-the-scoped-modifier)); that is, the ref is not allowed to escape a method. For example:
 
 - `this` for struct instance methods.
 - ref parameters that refer to ref struct types.
@@ -1355,13 +1355,13 @@ It is an error to use `UnscopedRefAttribute` on
 - A parameter passed by value.
 - A parameter passed by reference that is not implicitly scoped.
 
-See §scoped-modifier for more information.
+See [§9.7.3](variables.md#973-the-scoped-modifier) for more information.
 
-### §ScopedRefAttribute The ScopedRef attribute
+### 23.5.9 The ScopedRef attribute
 
-The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter's `scoped` annotation differs from its default state, in order to encode the `scoped` modifier (§scoped-modifier) in metadata. This attribute is not permitted in source.
+The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for compiler use. The compiler emits this attribute on a parameter when the parameter's `scoped` annotation differs from its default state, in order to encode the `scoped` modifier ([§9.7.3](variables.md#973-the-scoped-modifier)) in metadata. This attribute is not permitted in source.
 
-### 23.5.8 The EnumeratorCancellation attribute
+### 23.5.10 The EnumeratorCancellation attribute
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.15.5.2](classes.md#151552-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) in the body of that method.
 
@@ -1408,7 +1408,7 @@ The iterator will not have access to the `CancellationToken` argument for `GetAs
 >
 > *end example*
 
-### 23.5.9 The ModuleInitializer attribute
+### 23.5.11 The ModuleInitializer attribute
 
 The attribute `ModuleInitializerAttribute` is used to mark a method as a ***module initializer***. Such a method is called during initialization of the containing module. A module may have multiple initializers, which are called in an implementation-defined order.
 
@@ -1424,9 +1424,9 @@ A module initializer shall have the following characteristics:
 - Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
 - Not be a local function.
 
-#### 23.5.9.1 Custom interpolated string expression handlers
+#### 23.5.11.1 Custom interpolated string expression handlers
 
-##### 23.5.9.1.1 Declaring a custom handler
+##### 23.5.11.1.1 Declaring a custom handler
 
 Consider the following program, which implements a simple message logger:
 
@@ -1535,7 +1535,7 @@ An implicit interpolated string handler conversion ([§10.2.5](conversions.md#10
 The constructor argument list consists of:
 
 - Two `int` constants: the sum of the lengths of the literal segments and the number of interpolations in the *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). Literal lengths are calculated after decoding escapes, including replacing `{{` and `}}` with single braces. For `$"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.
-- Any additional arguments specified by `InterpolatedStringHandlerArgumentAttribute`, in the specified order ([§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler)).
+- Any additional arguments specified by `InterpolatedStringHandlerArgumentAttribute`, in the specified order ([§23.5.11.1.3](attributes.md#2351113-passing-information-tofrom-a-custom-handler)).
 - A final `out` argument of type `bool`.
 
 Constructor binding is performed on `T` using this argument list and the ordinary rules for object creation ([§12.8.17.2](expressions.md#128172-object-creation-expressions)), including overload resolution, accessibility, and final validation. If this binding fails, including because it is ambiguous, binding is retried without the final `out bool` argument. It is a compile-time error if neither attempt selects a valid constructor.
@@ -1571,7 +1571,7 @@ Member lookup and overload resolution use the ordinary rules for invocation thro
 
 Evaluation of a successfully bound conversion proceeds as follows:
 
-1. Previously evaluated receiver and argument values or storage locations are retained as specified in [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler). Earlier components of a containing expression are evaluated first, preserving their ordinary evaluation order.
+1. Previously evaluated receiver and argument values or storage locations are retained as specified in [§23.5.11.1.3](attributes.md#2351113-passing-information-tofrom-a-custom-handler). Earlier components of a containing expression are evaluated first, preserving their ordinary evaluation order.
 1. The selected constructor is invoked with the literal length, interpolation count, forwarded arguments, and `out bool` argument, if selected. Its result is stored in a temporary of type `T`.
 1. If an `out bool` argument was selected and its value is `false`, no append call is executed and no interpolation expression is evaluated.
 1. Otherwise, the components are processed in lexical order, across the entire *interpolated_string_handler_expression*. Each literal segment is decoded and supplied to its selected `AppendLiteral` method. Each interpolation expression is evaluated, converted, and supplied with its alignment and format arguments to its selected `AppendFormatted` method. If an append method returns `false`, all subsequent append calls and interpolation expressions are skipped.
@@ -1620,7 +1620,7 @@ Handler conversion does not implicitly invoke `ToString` or require a handler to
 >
 > *end example*
 
-##### 23.5.9.1.2 Inhibiting a custom handler
+##### 23.5.11.1.2 Inhibiting a custom handler
 
 If constructor resolution selects a constructor with an `out bool` argument, that argument's value is tested after construction. If it is `true`, component processing begins. If it is `false`, the handler is *inhibited*: no interpolation expression is evaluated and no append method is called. This test is separate from the short-circuiting performed after each bool-returning append call.
 
@@ -1643,7 +1643,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
 
 > *Note*: Interpolation expressions can contain side effects, for example from `++`, `--`, assignments, and method calls. Constructor inhibition skips all such expressions. A false append result skips only the remaining expressions. Definite assignment accounts for these conditional paths ([§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)). *end note*
 
-##### 23.5.9.1.3 Passing information to/from a custom handler
+##### 23.5.11.1.3 Passing information to/from a custom handler
 
 It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
 
@@ -1680,9 +1680,9 @@ Constructor overload resolution uses the parameter types of the containing membe
 
 > *Note*: In particular, a forwarded lambda is not independently bound to a different delegate type for the constructor. Handler constructor parameter types do not contribute to generic inference for the containing invocation. Nullable analysis of constructor arguments does not flow changes back to the original receiver or argument slots. *end note*
 
-### §Required-Member-Attributes Required member attributes
+### 23.5.12 Required member attributes
 
-#### §SetsRequiredMembers The SetsRequiredMembers attribute
+#### 23.5.12.1 The SetsRequiredMembers attribute
 
 This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn't verify that the constructor actually initializes all required members.
 
@@ -1735,7 +1735,7 @@ This attribute indicates that the constructor it decorates sets all required mem
 <!-- markdownlint-enable MD028 -->
 > *Note*: As the derived-type constructor `Student(string, string)` chains to the base-type constructor `Person(string, string)`, which has this attribute, the derived-type constructor must also have that attribute ([§15.11.1](classes.md#15111-general)). *end note*
 
-#### §RequiredMember The RequiredMember attribute
+#### 23.5.12.2 The RequiredMember attribute
 
 This attribute indicates that the current type has one or more required members ([§15.7.1](classes.md#1571-general)), or that a specific member of that type is required. However, it is an error for this attribute to be used explicitly. Instead, the presence of the modifier `required` results in the type or member being treated as if it were decorated with this attribute.
 
