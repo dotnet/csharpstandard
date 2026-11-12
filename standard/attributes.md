@@ -497,7 +497,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Diagnostics.ConditionalAttribute` ([§23.5.3](attributes.md#2353-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§23.5.4](attributes.md#2354-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
-- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` (§callargexpattr), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
 
@@ -800,13 +800,13 @@ Caller information is only substituted when a function is explicitly invoked in 
 
 One exception is query expressions. These are considered syntactic expansions, and if the calls they expand to omit optional parameters with caller-info attributes, caller information will be substituted. The location used is the location of the query clause which the call was generated from.
 
-If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumberAttribute`, `CallerFilePathAttribute`, `CallerMemberNameAttribute`. Consider the following parameter declaration:
+If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumberAttribute`, `CallerFilePathAttribute`, `CallerMemberNameAttribute`, `CallerArgumentExpressionAttribute`. Consider the following parameter declaration:
 
 ```csharp
 [CallerMemberName, CallerFilePath, CallerLineNumber] object p = ...
 ```
 
-`CallerLineNumberAttribute` takes precedence, and the other two attributes are ignored. If `CallerLineNumberAttribute` were omitted, `CallerFilePathAttribute` would take precedence, and `CallerMemberNameAttribute` would be ignored. The lexical ordering of these attributes is irrelevant.
+`CallerLineNumberAttribute` takes precedence, and the other three attributes are ignored. If `CallerLineNumberAttribute` were omitted, `CallerFilePathAttribute` would take precedence, and `CallerMemberNameAttribute` and `CallerArgumentExpressionAttribute` would be ignored. The lexical ordering of these attributes is irrelevant.
 
 #### 23.5.6.2 The CallerLineNumber attribute
 
@@ -885,6 +885,166 @@ For an invocation that occurs within a local function or an anonymous function, 
 > ```
 >
 > This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of that invocation of `F2` is also `Main`. Similarly, when `F2` is called by the anonymous function assigned to `anonymousFunction`, the reported caller is the method `Main`, which calls that anonymous function. *end example*
+
+#### §callargexpattr The CallerArgumentExpression attribute
+
+The attribute `CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
+
+The target parameter shall have a *default_argument*. If the sibling parameter named by the attribute is the first parameter of an extension method, an extension method invocation captures the source text of the receiver expression. If the method is invoked using static method syntax, the source text of the argument corresponding to that first parameter is captured.
+
+Consider the following method declaration:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"CallerArgumentAttr1"} -->
+```csharp
+using System;
+using System.Runtime.CompilerServices;
+#nullable enable
+class Test
+{
+    public static void M(int val = 0, [CallerArgumentExpression("val")] string? text = null)
+    {
+        Console.WriteLine($"val = {val}, text = <{text}>");
+    }
+}
+```
+
+in which the target parameter is `text` and the sibling parameter is `val`, whose corresponding argument’s source-code text can be captured in `text` when `M` is called.
+
+The attribute constructor takes an argument of type `string`. That string
+
+- Shall contain the name of a sibling parameter; otherwise, the attribute is ignored.
+- Shall omit the leading `@` from a parameter name having that prefix.
+
+A *parameter_list* may contain multiple target parameters.
+
+There shall be a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the type of the target parameter.
+
+> *Note*: This excludes user-defined conversions from `string`. In practice, the parameter type is `string`, `object`, `dynamic`, or an interface implemented by `string`. A `dynamic` parameter type does not by itself make an invocation dynamically bound; caller-information substitution for dynamically bound invocations is governed by [§23.5.6.1](attributes.md#23561-general). *end note*
+
+If an explicit argument is passed for the target parameter, no string is captured, and that parameter takes on that argument’s value. Otherwise, the text for the argument corresponding to the sibling parameter is converted to a captured string, according to the following rules:
+
+- The source expression or *variable_reference* supplied for the sibling parameter is selected. For an attribute argument, its expression is selected; for an extension method receiver, its receiver expression is selected. Any argument name and any argument passing-mode keyword (`ref`, `in`, or `out`) are excluded.
+- Any outermost *parenthesized_expression* ([§12.8.5](expressions.md#1285-parenthesized-expressions)) is replaced by its contained expression, repeatedly until the result is not a *parenthesized_expression*. Parentheses belonging to a *tuple_literal* ([§12.8.6](expressions.md#1286-tuple-literals)) are not removed.
+- The captured string starts at the first character of the first token of the resulting expression or *variable_reference* and ends at the last character of its last token. Leading and trailing white space, line terminators, comments, and preprocessor directives outside these boundaries are excluded.
+- All source text within these boundaries is retained verbatim, including white space, line terminators, comments, preprocessor directives, *Unicode_Escape_Sequence*s, and `@` prefixes on identifiers.
+
+The captured string is then passed as the argument corresponding to the target parameter. However, if the argument for the sibling parameter is omitted, the target parameter takes on its *default_argument* value.
+
+> *Example*: Given the declaration of `M` above, consider the following calls to `M`:
+>
+> <!-- Example: {template:"standalone-console", name:"CallerArgumentAttr2", inferOutput:true, additionalFiles:["CallerArgumentAttrM.cs"]} -->
+> ```csharp
+> Test.M();
+> Test.M(123);
+> Test.M(123, null);
+> Test.M(123, "xyz");
+> Test.M(  1  +      2 );
+> Test.M(( ( (123) + 0) ) );
+> int local = 10;
+> Test.M(l\u006fcal /*...*/ + // xxx
+>   5);
+> ```
+>
+> the output produced is
+>
+> ```console
+> val = 0, text = <>
+> val = 123, text = <123>
+> val = 123, text = <>
+> val = 123, text = <xyz>
+> val = 3, text = <1  +      2>
+> val = 123, text = <(123) + 0>
+> val = 15, text = <l\u006fcal /*...*/ + // xxx
+>   5>
+> ```
+>
+> *end example*
+>
+> *Example*: An optional target parameter can capture an extension method's receiver by naming the first parameter. Both invocation forms below capture `value`:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"CallerArgumentAttr3", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> int value = 5;
+> value.Show();
+> Extensions.Show(value);
+>
+> static class Extensions
+> {
+>     public static void Show(this int value,
+>         [CallerArgumentExpression("value")] string text = "")
+>     {
+>         Console.WriteLine(text);
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> value
+> value
+> ```
+>
+> *end example*
+>
+> *Example*: Boundary comments and grouping parentheses are excluded, but tuple parentheses and source text between tokens, including directives, are retained. Argument names and passing-mode keywords are not part of the captured text:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"CallerArgumentAttr4", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> Capture(value: /*outer*/ ( /*before*/ 1 /*inside*/ + 2 /*after*/ ) /*outer*/);
+> Capture(((1, 2)));
+> int value = 5;
+> CaptureRef(ref value);
+> CaptureIn(in value);
+> CaptureOut(out value);
+> Capture(1 +
+> #if true
+> 2
+> #endif
+> );
+>
+> static void Capture<T>(T value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureRef(ref int value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureIn(in int value,
+>     [CallerArgumentExpression("value")] string text = "")
+>     => Console.WriteLine(text);
+>
+> static void CaptureOut(out int value,
+>     [CallerArgumentExpression("value")] string text = "")
+> {
+>     value = 0;
+>     Console.WriteLine(text);
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> 1 /*inside*/ + 2
+> (1, 2)
+> value
+> value
+> value
+> 1 +
+> #if true
+> 2
+> ```
+>
+> The closing `#endif` is outside the last expression token and is therefore excluded.
+>
+> *end example*
 
 ### 23.5.7 Code analysis attributes
 
