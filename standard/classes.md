@@ -5811,7 +5811,7 @@ It is a compile-time error for the parameter list of an async function to specif
 
 The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.15.3](classes.md#15153-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such builder types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
-An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.14.5](classes.md#15145-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function's return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
+An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.14.5](classes.md#15145-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function’s return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
 
 An async method returning a task type is said to be ***task-returning***.
 
@@ -5921,12 +5921,12 @@ The ability to provide an alternate builder type shall not be used when the synt
 The builder type of a task-returning async function is determined by:
 
 1. Using the builder type from `AsyncMethodBuilderAttribute`, if one is present;
-1. Otherwise, falling back to the builder type determined by the async function's *return_type* ([§15.14.1](classes.md#15141-general)).
+1. Otherwise, falling back to the builder type determined by the async function’s *return_type* ([§15.14.1](classes.md#15141-general)).
 
 If an `AsyncMethodBuilderAttribute` is present on the function, its argument shall specify a class or struct type, and the builder type is determined as follows:
 
-- If the async function's return type is nongeneric, the specified builder type shall be nongeneric and shall not be nested in a generic type. That type is the builder type.
-- Otherwise, the specified builder type shall be an unbound generic type with exactly one type parameter, and shall not be nested in a generic type. The builder type is constructed by substituting the single type argument of the async function's return type for that parameter.
+- If the async function’s return type is nongeneric, the specified builder type shall be nongeneric and shall not be nested in a generic type. That type is the builder type.
+- Otherwise, the specified builder type shall be an unbound generic type with exactly one type parameter, and shall not be nested in a generic type. The builder type is constructed by substituting the single type argument of the async function’s return type for that parameter.
 
 A constructed generic builder type is not permitted as the attribute argument.
 
