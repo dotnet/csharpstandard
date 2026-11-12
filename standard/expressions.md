@@ -770,7 +770,7 @@ During the process of inference each type parameter `Xᵢ` is either *fixed* to
 
 Type inference takes place in phases. Each phase will try to infer type arguments for more type variables based on the findings of the previous phase. The first phase makes some initial inferences of bounds, whereas the second phase fixes type variables to specific types and infers further bounds. The second phase may have to be repeated a number of times.
 
-> *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.15](expressions.md#126315-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
+> *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.16](expressions.md#126316-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
 
 #### 12.6.3.2 The first phase
 
@@ -815,8 +815,8 @@ An *unfixed* type variable `Xᵢ` *depends directly on* an *unfixed* type varia
 An *input type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
 - If `E` is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
-- Otherwise, if `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) and an *explicit return type inference* (§exprettypeinf) are made *from* `E` *to* `T`.
-- Otherwise, if `E` has an anonymous function type `F` (§anon-func-type) and either the corresponding parameter is a value parameter, or it is an input parameter for which `E` is not an input argument, a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `F` *to* `T`.
+- Otherwise, if `E` is an anonymous function and `T` is a delegate type or expression tree type, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) and an *explicit return type inference* ([§12.6.3.15](expressions.md#126315-explicit-return-type-inference)) are made *from* `E` *to* `T`.
+- Otherwise, if `E` has an anonymous function type `F` ([§12.22.8](expressions.md#12228-anonymous-function-type)) and either the corresponding parameter is a value parameter, or it is an input parameter for which `E` is not an input argument, a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `F` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
 - Otherwise, if `E` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `E` is an input argument, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
@@ -832,7 +832,7 @@ An *output type inference* is made *from* an expression `E` *to* a type `T` in
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is an address-of method group and `T` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) then with parameter types `T₁..Tₖ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁..Tₖ` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tₓ`.
   > *Note*: This is only applicable in unsafe code. *end note*
-- Otherwise, if `E` has an anonymous function type `F` (§anon-func-type), then a *lower-bound inference* is made *from* `F` *to* `T`.
+- Otherwise, if `E` has an anonymous function type `F` ([§12.22.8](expressions.md#12228-anonymous-function-type)), then a *lower-bound inference* is made *from* `F` *to* `T`.
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
 
@@ -860,7 +860,7 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of lower bounds for `Xᵢ`.
-- Otherwise, if `U` is an anonymous function type (§anon-func-type), no inference is made.
+- Otherwise, if `U` is an anonymous function type ([§12.22.8](expressions.md#12228-anonymous-function-type)), no inference is made.
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
 - Otherwise, sets `U₁...Uₑ` and `V₁...Vₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
@@ -922,15 +922,15 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
-- If any bound is not an anonymous function type (§anon-func-type), anonymous function types are removed from the lower bounds for `Xᵢ`.
+- If any bound is not an anonymous function type ([§12.22.8](expressions.md#12228-anonymous-function-type)), anonymous function types are removed from the lower bounds for `Xᵢ`.
 - The set of *candidate types* `Uₑ` starts out as the set of all types in the remaining set of bounds for `Xᵢ`.
 - Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
 - If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then:
   - If `V` is not an anonymous function type, `Xᵢ` is fixed to `V`.
-  - Otherwise, let `D` be the corresponding delegate type (§anon-func-type). If `Xᵢ` has an effective base class ([§15.2.5](classes.md#1525-type-parameter-constraints)) of `System.Linq.Expressions.Expression` or a type derived from it, `Xᵢ` is fixed to `Expression<D>`; otherwise, it is fixed to `D`. This is inference from an anonymous function type for the purposes of overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)).
+  - Otherwise, let `D` be the corresponding delegate type ([§12.22.8](expressions.md#12228-anonymous-function-type)). If `Xᵢ` has an effective base class ([§15.2.5](classes.md#1525-type-parameter-constraints)) of `System.Linq.Expressions.Expression` or a type derived from it, `Xᵢ` is fixed to `Expression<D>`; otherwise, it is fixed to `D`. This is inference from an anonymous function type for the purposes of overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)).
 - Otherwise, type inference fails.
 
-> *Note*: Fixing to `Expression<D>` does not by itself guarantee that the argument can be converted to an expression tree. The conversion and expression-tree restrictions are checked separately (§anon-func-type-conversion). *end note*
+> *Note*: Fixing to `Expression<D>` does not by itself guarantee that the argument can be converted to an expression tree. The conversion and expression-tree restrictions are checked separately ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion)). *end note*
 
 #### 12.6.3.14 Inferred return type
 
@@ -939,7 +939,7 @@ The inferred return type of an anonymous function `F` is used during type infer
 The ***inferred effective return type*** is determined as follows:
 
 - If the body of `F` is an *expression* that has a type, then the inferred effective return type of `F` is the type of that expression.
-- If the body of `F` is a *block* and the set of expressions in the block’s `return` statements has a best common type `T` ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)), then the inferred effective return type of `F` is `T`.
+- If the body of `F` is a *block* and the set of expressions in the block’s `return` statements has a best common type `T` ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)), then the inferred effective return type of `F` is `T`.
 - Otherwise, an effective return type cannot be inferred for `F`.
 
 The ***inferred return type*** is determined as follows:
@@ -1013,13 +1013,13 @@ The ***inferred return type*** is determined as follows:
 >
 > *end example*
 
-#### §exprettypeinf Explicit return type inference
+#### 12.6.3.15 Explicit return type inference
 
 An *explicit return type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
 - If `E` is an anonymous function with explicit return type `Uᵣ`, and `T` is a delegate type or expression tree type with return type `Vᵣ`, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `Uᵣ` *to* `Vᵣ`.
 
-#### 12.6.3.15 Type inference for conversion of method groups
+#### 12.6.3.16 Type inference for conversion of method groups
 
 Similar to calls of generic methods, type inference shall also be applied when a method group `M` containing a generic method is converted to a given delegate type `D` ([§10.8](conversions.md#108-method-group-conversions)). Given a method
 
@@ -1035,7 +1035,7 @@ Unlike the type inference algorithm for generic method calls, in this case, ther
 
 Instead, all `Xᵢ` are considered *unfixed*, and a *lower-bound inference* is made *from* each argument type `Uₑ` of `D` *to* the corresponding parameter type `Tₑ` of `M`. If for any of the `Xᵢ` no bounds were found, type inference fails. Otherwise, all `Xᵢ` are *fixed* to corresponding `Sᵢ`, which are the result of type inference.
 
-#### 12.6.3.16 Finding the best common type of a set of expressions
+#### 12.6.3.17 Finding the best common type of a set of expressions
 
 In some cases, a common type needs to be inferred for a set of expressions. In particular, the element types of implicitly typed arrays and the return types of anonymous functions with *block* bodies are found in this way.
 
@@ -1181,7 +1181,7 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
 - `E` is a non-constant *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), `C₁` is an implicit interpolated string handler conversion, `T₁` is an applicable interpolated string handler type, and `C₂` is not an implicit interpolated string handler conversion.
-- `C₁` is not an *anonymous function type conversion* (§anon-func-type-conversion) and `C₂` is an *anonymous function type conversion*, or
+- `C₁` is not an *anonymous function type conversion* ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion)) and `C₂` is an *anonymous function type conversion*, or
 - `E` does not exactly match `T₂` and at least one of the following holds:
   - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
   - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
@@ -1298,7 +1298,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.4.12](structs.md#16412-methods)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.6.12](structs.md#16612-methods)), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
@@ -1561,7 +1561,7 @@ other tokens in the language. *end note*
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this specification. *end note*
 
-An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), it has that type. If it is converted to a custom interpolated string handler type, the handler conversion produces a value of that type (§custInterpStrExpHandler). Otherwise, the expression has type `string`, including when used in an implicitly typed local, a return expression, or another expression without a handler target.
+An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), it has that type. If it is converted to a custom interpolated string handler type, the handler conversion produces a value of that type ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)). Otherwise, the expression has type `string`, including when used in an implicitly typed local, a return expression, or another expression without a handler target.
 
 A handler conversion applies whenever a handler target is selected, even if the *interpolated_string_handler_expression* is constant or has no interpolations. A constant interpolated string of type `string` is evaluated at compile time. For other string-valued interpolations, when `System.Runtime.CompilerServices.DefaultInterpolatedStringHandler` is available and the context supports its use, the compiler may use the handler pattern and obtain the string by calling `ToStringAndClear` on the handler. Otherwise, the formatting semantics below apply.
 
@@ -1582,7 +1582,7 @@ SomeInterpolatedStringHandler str2 = $"{val}";   // custom handler used
 M(str2);                // invokes M(SomeInterpolatedStringHandler)
 ```
 
-The remainder of this subclause specifies string formatting, `FormattableString` construction, and constant interpolation. Custom handler append methods define their own processing of literal segments and interpolations (§custInterpStrExpHandler).
+The remainder of this subclause specifies string formatting, `FormattableString` construction, and constant interpolation. Custom handler append methods define their own processing of literal segments and interpolations ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)).
 
 The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
@@ -1701,7 +1701,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
 
-For the namespace lookup steps in this subclause and [§7.7.1](basic-concepts.md#771-general), let *D* be the set of directives considered at namespace `N`. If `N` is the global namespace, *D* consists of the *extern_alias_directive*s and *using_directive*s in the containing compilation unit, together with the *global_using_directive*s in all compilation units in the program. Otherwise, *D* consists of the *extern_alias_directive*s and *using_directive*s in the enclosing namespace declaration for `N`, if any. Only directives whose scope includes the location of the name being resolved are considered. The exclusions when resolving directive targets are specified in §global-using-directives and [§14.5](namespaces.md#145-using-directives).
+For the namespace lookup steps in this subclause and [§7.7.1](basic-concepts.md#771-general), let *D* be the set of directives considered at namespace `N`. If `N` is the global namespace, *D* consists of the *extern_alias_directive*s and *using_directive*s in the containing compilation unit, together with the *global_using_directive*s in all compilation units in the program. Otherwise, *D* consists of the *extern_alias_directive*s and *using_directive*s in the enclosing namespace declaration for `N`, if any. Only directives whose scope includes the location of the name being resolved are considered. The exclusions when resolving directive targets are specified in [§14.5](namespaces.md#145-global-using-directives) and [§14.6](namespaces.md#146-using-directives).
 
 > *Note*: Global using directives participate at the global-namespace step, not at each inner-namespace step. Their scope includes nested namespaces, but lookup in an inner namespace can find a declaration or import before reaching the global namespace. *end note*
 
@@ -1826,7 +1826,7 @@ predefined_type
     ;
 ```
 
-The *qualified_alias_member* production is defined in [§14.8](namespaces.md#148-qualified-alias-member).
+The *qualified_alias_member* production is defined in [§14.9](namespaces.md#149-qualified-alias-member).
 
 A *member_access* is either of the form `E.I` or of the form `E.I<A₁, ..., Aₑ>`, where `E` is a *primary_expression*, *predefined_type* or *qualified_alias_member,* `I` is a single identifier, and `<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
 
@@ -1984,7 +1984,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 #### 12.8.9.1 General
 
 A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
-and safe-context ([§16.4.15](structs.md#16415-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
+and safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
@@ -3129,7 +3129,7 @@ exactly corresponds to
 var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
-An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
+An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
 
 Array initializers are described further in [§17.7](arrays.md#177-array-initializers).
 
@@ -3314,7 +3314,7 @@ The first form of *typeof_expression* consists of a `typeof` keyword followed by
 
 The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
-> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
+> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)) and *qualified_alias_member* ([§14.9.1](namespaces.md#1491-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
 
 When recognising the operand of a *typeof_expression* if both *unbound_type_name* and *type_name* are applicable, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, then *type_name* shall be chosen.
 
@@ -3574,7 +3574,7 @@ A *default_value_expression* is a constant expression ([§12.26](expressions.md#
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.4.15.7](structs.md#164157-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.6.15.7](structs.md#166157-stackalloc).
 
 ```ANTLR
 stackalloc_expression
@@ -3603,7 +3603,7 @@ At runtime if the number of items to be allocated is a negative value then the b
 
 When a *stackalloc_initializer* is present:
 
-- If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
+- If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
 - If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s.
 - If *constant_expression* is present it shall equal the number of *stackalloc_element_initializer*s.
 
@@ -4159,7 +4159,7 @@ switch_expression_arm_expression
     ;
 ```
 
-The type of a *switch_expression* is the best common type [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and if each *switch_expression_arm_expression* can be implicitly converted to that type. Otherwise, the *switch_expression* has no type, but may still be subject to *switch expression conversions* ([§10.2.18](conversions.md#10218-switch-expression-conversion)).
+The type of a *switch_expression* is the best common type [§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)) of the *switch_expression_arm_expression*s of the *switch_expression_arm*s, if such a type exists, and if each *switch_expression_arm_expression* can be implicitly converted to that type. Otherwise, the *switch_expression* has no type, but may still be subject to *switch expression conversions* ([§10.2.18](conversions.md#10218-switch-expression-conversion)).
 <!-- The best common type is the “natural type” when we add natural types for lambda expressions and other typeless expressions -->
 
 It is an error if the pattern of any *switch_expression_arm* is *subsumed* by ([§11.1](patterns.md#111-general)) the set of patterns of earlier *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) *switch_expression_arm*s of the switch expression.
@@ -5526,7 +5526,7 @@ If `ref` is present:
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
-  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)). ***placeholder for words somehow referring to “12.6.4.5 Better conversion from expression.”*** If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
+  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)). ***placeholder for words somehow referring to “12.6.4.5 Better conversion from expression.”*** If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
   - Otherwise, if an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from `X` to `Y`, but not from `Y` to `X`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `X` to `Y`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `Y` to `X`, then `X` is the type of the conditional expression.
@@ -6105,7 +6105,7 @@ Separate non-`static` anonymous functions can capture the same instance of an ou
 
 An anonymous function `F` shall always be converted to a delegate type `D` or an expression-tree type `E`, either directly or through the execution of a delegate creation expression `new D(F)`. This conversion determines the result of the anonymous function, as described in [§10.7](conversions.md#107-anonymous-function-conversions).
 
-### §anon-func-type Anonymous function type
+### 12.22.8 Anonymous function type
 
 The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a method signature: the parameter types and ref kinds, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
 
@@ -6144,7 +6144,7 @@ var read = Console.Read;   // Just one overload; Func<int> inferred
 var write = Console.Write; // error: multiple overloads, can't choose
 ```
 
-An anonymous function type conversion to `LambdaExpression` or `Expression` (§anon-func-type-conversion), when successfully realized, produces an expression tree of type `Expression<D>`, where `D` is the corresponding delegate type. Such realization requires an eligible lambda expression ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)):
+An anonymous function type conversion to `LambdaExpression` or `Expression` ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion)), when successfully realized, produces an expression tree of type `Expression<D>`, where `D` is the corresponding delegate type. Such realization requires an eligible lambda expression ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)):
 
 ```csharp
 LambdaExpression parseLambda = (string s) => int.Parse(s);
@@ -6156,7 +6156,7 @@ Expression parseExpression = (string s) => int.Parse(s);
 Anonymous function types are used in a few specific contexts only:
 
 - Implicit and explicit conversions.
-- Method type inference ([§12.6.3](expressions.md#1263-type-inference)) and best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)).
+- Method type inference ([§12.6.3](expressions.md#1263-type-inference)) and best common type ([§12.6.3.17](expressions.md#126317-finding-the-best-common-type-of-a-set-of-expressions)).
 - The initializer *expression* in an *implicitly_typed_local_variable_declarator* ([§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)).
 
 The delegate type for the anonymous function or method group with parameter types `P1, ..., Pn` and return type `R` is, as follows:
@@ -6206,7 +6206,7 @@ If two anonymous functions or method groups in the same compilation require synt
 >
 > *end example*
 
-### 12.22.8 Implementation Example
+### 12.22.9 Implementation Example
 
 **This subclause is informative.**
 

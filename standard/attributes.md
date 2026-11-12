@@ -156,7 +156,7 @@ The types of positional and named parameters for an attribute class are limited 
 
 ## 23.3 Attribute specification
 
-Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.7](namespaces.md#147-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), *local_function_declaration*s ([§13.6.4](statements.md#1364-local-function-declarations)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)), *lambda_expression*s ([§12.22.1](expressions.md#12221-general)), and elements of *explicit_anonymous_function_parameter*s and *implicit_anonymous_function_parameter*s ([§12.22.1](expressions.md#12221-general)).
+Application of a previously defined attribute to a program entity is called ***attribute specification***. An attribute is a piece of additional declarative information that is specified for a program entity. Attributes can be specified at global scope (to specify attributes on the containing assembly or module) and for *type_declaration*s ([§14.8](namespaces.md#148-type-declarations)), *class_member_declaration*s ([§15.3](classes.md#153-class-members)), *interface_member_declaration*s ([§19.4](interfaces.md#194-interface-members)), *struct_member_declaration*s ([§16.3](structs.md#163-struct-members)), *enum_member_declaration*s ([§20.2](enums.md#202-enum-declarations)), *accessor_declaration*s ([§15.7.3](classes.md#1573-accessors)), *event_accessor_declaration*s ([§15.8](classes.md#158-events)), *local_function_declaration*s ([§13.6.4](statements.md#1364-local-function-declarations)), elements of *parameter_list*s ([§15.6.2](classes.md#1562-method-parameters)), elements of *type_parameter_list*s ([§15.2.3](classes.md#1523-type-parameters)), *lambda_expression*s ([§12.22.1](expressions.md#12221-general)), and elements of *explicit_anonymous_function_parameter*s and *implicit_anonymous_function_parameter*s ([§12.22.1](expressions.md#12221-general)).
 
 Attributes are specified in ***attribute section***s. An attribute section consists of a pair of square brackets, which surround a comma-separated list of one or more attributes. The order in which attributes are specified in such a list, and the order in which sections attached to the same program entity are arranged, is not significant. For instance, the attribute specifications `[A][B]`, `[B][A]`, `[A, B]`, and `[B, A]` are equivalent.
 
@@ -500,10 +500,10 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Diagnostics.ConditionalAttribute` ([§23.5.3](attributes.md#2353-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§23.5.4](attributes.md#2354-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
-- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` (§callargexpattr), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), and `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` ([§23.5.6.5](attributes.md#23565-the-callerargumentexpression-attribute)), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
 - `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
-- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler (§custInterpStrExpHandler) and to call one of its constructors, respectively.
+- `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -890,7 +890,7 @@ For an invocation that occurs within a local function or an anonymous function, 
 >
 > This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of that invocation of `F2` is also `Main`. Similarly, when `F2` is called by the anonymous function assigned to `anonymousFunction`, the reported caller is the method `Main`, which calls that anonymous function. *end example*
 
-#### §callargexpattr The CallerArgumentExpression attribute
+#### 23.5.6.5 The CallerArgumentExpression attribute
 
 The attribute `CallerArgumentExpressionAttribute` is applied to a *target parameter*, and can result in the capture of the source-code text of a sibling parameter’s argument as a string, referred to here as the *captured string*.
 
@@ -1378,9 +1378,9 @@ A module initializer shall have the following characteristics:
 - Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
 - Not be a local function.
 
-#### §custInterpStrExpHandler Custom interpolated string expression handlers
+#### 23.5.9.1 Custom interpolated string expression handlers
 
-##### §custInterpStrExpCustHandling Declaring a custom handler
+##### 23.5.9.1.1 Declaring a custom handler
 
 Consider the following program, which implements a simple message logger:
 
@@ -1489,7 +1489,7 @@ An implicit interpolated string handler conversion ([§10.2.5](conversions.md#10
 The constructor argument list consists of:
 
 - Two `int` constants: the sum of the lengths of the literal segments and the number of interpolations in the *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). Literal lengths are calculated after decoding escapes, including replacing `{{` and `}}` with single braces. For `$"val = {{{val,4:X}}}; 2 * val = {2 * val}."`, these values are 21 and 2, respectively.
-- Any additional arguments specified by `InterpolatedStringHandlerArgumentAttribute`, in the specified order (§custInterpStrExpPassInfo).
+- Any additional arguments specified by `InterpolatedStringHandlerArgumentAttribute`, in the specified order ([§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler)).
 - A final `out` argument of type `bool`.
 
 Constructor binding is performed on `T` using this argument list and the ordinary rules for object creation ([§12.8.17.2](expressions.md#128172-object-creation-expressions)), including overload resolution, accessibility, and final validation. If this binding fails, including because it is ambiguous, binding is retried without the final `out bool` argument. It is a compile-time error if neither attempt selects a valid constructor.
@@ -1525,7 +1525,7 @@ Member lookup and overload resolution use the ordinary rules for invocation thro
 
 Evaluation of a successfully bound conversion proceeds as follows:
 
-1. Previously evaluated receiver and argument values or storage locations are retained as specified in §custInterpStrExpPassInfo. Earlier components of a containing expression are evaluated first, preserving their ordinary evaluation order.
+1. Previously evaluated receiver and argument values or storage locations are retained as specified in [§23.5.9.1.3](attributes.md#235913-passing-information-tofrom-a-custom-handler). Earlier components of a containing expression are evaluated first, preserving their ordinary evaluation order.
 1. The selected constructor is invoked with the literal length, interpolation count, forwarded arguments, and `out bool` argument, if selected. Its result is stored in a temporary of type `T`.
 1. If an `out bool` argument was selected and its value is `false`, no append call is executed and no interpolation expression is evaluated.
 1. Otherwise, the components are processed in lexical order, across the entire *interpolated_string_handler_expression*. Each literal segment is decoded and supplied to its selected `AppendLiteral` method. Each interpolation expression is evaluated, converted, and supplied with its alignment and format arguments to its selected `AppendFormatted` method. If an append method returns `false`, all subsequent append calls and interpolation expressions are skipped.
@@ -1574,7 +1574,7 @@ Handler conversion does not implicitly invoke `ToString` or require a handler to
 >
 > *end example*
 
-##### §custInterpStrExpInhibCustHandler Inhibiting a custom handler
+##### 23.5.9.1.2 Inhibiting a custom handler
 
 If constructor resolution selects a constructor with an `out bool` argument, that argument's value is tested after construction. If it is `true`, component processing begins. If it is `false`, the handler is *inhibited*: no interpolation expression is evaluated and no append method is called. This test is separate from the short-circuiting performed after each bool-returning append call.
 
@@ -1597,7 +1597,7 @@ public LogInterpolatedStringHandler(int literalLength, int formattedCount,
 
 > *Note*: Interpolation expressions can contain side effects, for example from `++`, `--`, assignments, and method calls. Constructor inhibition skips all such expressions. A false append result skips only the remaining expressions. Definite assignment accounts for these conditional paths ([§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)). *end note*
 
-##### §custInterpStrExpPassInfo Passing information to/from a custom handler
+##### 23.5.9.1.3 Passing information to/from a custom handler
 
 It can be useful to pass other information to, and receive information back from, the custom handler. This is done via the attribute `InterpolatedStringHandlerArgument`. Consider the following new overloads to the message logger program:
 

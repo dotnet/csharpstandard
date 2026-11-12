@@ -13,7 +13,7 @@ Interfaces may contain various kinds of members, as described in [§19.4](interf
 
 ### 19.2.1 General
 
-An *interface_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new interface type.
+An *interface_declaration* is a *type_declaration* ([§14.8](namespaces.md#148-type-declarations)) that declares a new interface type.
 
 ```ANTLR
 interface_declaration
