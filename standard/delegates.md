@@ -214,7 +214,7 @@ The set of methods encapsulated by a delegate instance is called an *invocation 
 
 When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
-Delegates are combined using the binary `+` ([§12.12.5](expressions.md#12125-addition-operator)) and `+=` operators ([§12.23.5](expressions.md#12235-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.12.6](expressions.md#12126-subtraction-operator)) and `-=` operators ([§12.23.5](expressions.md#12235-compound-assignment)). Delegates can be compared for equality ([§12.14.9](expressions.md#12149-delegate-equality-operators)).
+Delegates are combined using the binary `+` ([§12.13.5](expressions.md#12135-addition-operator)) and `+=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator)) and `-=` operators ([§12.24.5](expressions.md#12245-compound-assignment)). Delegates can be compared for equality ([§12.15.9](expressions.md#12159-delegate-equality-operators)).
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >

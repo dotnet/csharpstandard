@@ -236,10 +236,10 @@ Enum members have the type of their containing enum type (except within other en
 
 The following operators can be used on values of enum types:
 
-- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.14.6](expressions.md#12146-enumeration-comparison-operators))
-- binary `+` ([§12.12.5](expressions.md#12125-addition-operator))
-- binary `-` ([§12.12.6](expressions.md#12126-subtraction-operator))
-- `^`, `&`, `|` ([§12.15.3](expressions.md#12153-enumeration-logical-operators))
+- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§12.15.6](expressions.md#12156-enumeration-comparison-operators))
+- binary `+` ([§12.13.5](expressions.md#12135-addition-operator))
+- binary `-` ([§12.13.6](expressions.md#12136-subtraction-operator))
+- `^`, `&`, `|` ([§12.16.3](expressions.md#12163-enumeration-logical-operators))
 - `~` ([§12.9.5](expressions.md#1295-bitwise-complement-operator))
 - `++`, `--` ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators))
 - `sizeof` ([§24.6.9](unsafe-code.md#2469-the-sizeof-operator))
