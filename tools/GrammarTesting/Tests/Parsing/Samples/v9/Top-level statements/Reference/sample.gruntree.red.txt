@@ -262,7 +262,7 @@
 ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ namespace_member_declaration
 ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ class_declaration
+⎜ ⎜ ⎜ ⎜ non_record_class_declaration
 ⎜ ⎜ ⎜ ⎜ partial
 ⎜ ⎜ ⎜ ⎜ class
 ⎜ ⎜ ⎜ ⎜ ⎛
