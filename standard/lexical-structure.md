@@ -608,9 +608,9 @@ contextual_keyword
     | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
     | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
     | 'let'    | 'nameof'     | 'nint'      | 'notnull'   | 'nuint'
-    | 'on'     | 'orderby'    | 'partial'   | 'remove'    | 'select'
-    | 'set'    | 'unmanaged'  | 'value'     | 'var'       | 'when'
-    | 'where'  | 'yield'
+    | 'on'     | 'orderby'    | 'partial'   | 'record'    | 'remove'
+    | 'select' | 'set'        | 'unmanaged' | 'value'     | 'var'
+    | 'when'   | 'where'      | 'yield'
     ;
 ```
 
