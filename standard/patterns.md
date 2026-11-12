@@ -193,8 +193,11 @@ A *declaration_pattern* cannot be used to test that a value has a type named `va
 > {
 >     static void M(object o)
 >     {
->         if (o is @var y) { }    // declaration_pattern; matches instances of type 'var'
->         if (o is v\u0061r z) { } // declaration_pattern; same type, unicode-escape spelling
+>         // declaration_pattern; matches instances of type 'var'
+>         if (o is @var y) { }
+>
+>         // declaration_pattern; same type, unicode-escape spelling
+>         if (o is v\u0061r z) { }
 >     }
 > }
 > ```
@@ -348,7 +351,8 @@ The order in which subpatterns are matched at runtime is unspecified, and a fail
 > var numbers = new List<int> { 10, 20, 30 };
 > if (SumAndAverage(numbers) is (Sum: var sum, Average: var average))
 > {
->     Console.WriteLine($"Sum of [{string.Join(" ", numbers)}] is {sum}; average is {average}");
+>     Console.WriteLine(
+>         $"Sum of [{string.Join(" ", numbers)}] is {sum}; average is {average}");
 > }
 > else
 > {
@@ -428,21 +432,21 @@ The *property_pattern* may be used to pattern-match with anonymous types.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: A run-time type check and a variable declaration can be added to a property pattern, as follow:
+> *Example*: A run-time type check and a variable declaration can be added to a property pattern, as follows:
 >
 > <!-- Example: {template:"standalone-console", name:"PropertyPattern3", inferOutput:true} -->
 > ```csharp
-> Console.WriteLine(TakeFive("Hello, world!"));  // output: Hello
-> Console.WriteLine(TakeFive("Hi!"));            // output: Hi!
-> Console.WriteLine(TakeFive(new[] { '1', '2', '3', '4', '5', '6', '7' }));  // output: 12345
-> Console.WriteLine(TakeFive(new[] { 'a', 'b', 'c' }));  // output: abc
+> Console.WriteLine(TakeFive("Hello, world!"));
+> Console.WriteLine(TakeFive("Hi!"));
+> Console.WriteLine(TakeFive(new[] { '1', '2', '3', '4', '5', '6', '7' }));
+> Console.WriteLine(TakeFive(new[] { 'a', 'b', 'c' }));
 > 
 > static string TakeFive(object input) => input switch
 > {
 >     string { Length: >= 5 } s => s.Substring(0, 5),
 >     string s => s,
->     ICollection<char> { Count: >= 5 } symbols => new string(symbols.Take(5).ToArray()),
->     ICollection<char> symbols => new string(symbols.ToArray()),
+>     ICollection<char> { Count: >= 5 } chars => new string(chars.Take(5).ToArray()),
+>     ICollection<char> chars => new string(chars.ToArray()),
 >     null => throw new ArgumentNullException(nameof(input)),
 >     _ => throw new ArgumentException("Not supported input type."),
 > };

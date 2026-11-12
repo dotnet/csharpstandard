@@ -154,7 +154,11 @@ namespace System
     }
 
     public readonly struct Int16 { }
-    public readonly struct Int32 { }
+    public readonly struct Int32
+    {
+        public const int MinValue;
+        public const int MaxValue; 
+    }
     public readonly struct Int64 { }
     public readonly struct IntPtr { }
 
@@ -248,7 +252,8 @@ namespace System
         public char this [int index] { get; }
         public static string Format(string format, params object?[] args);
         System.Collections.IEnumerator IEnumerable.GetEnumerator();
-        System.Collections.Generic.IEnumerator<char> IEnumerable<char>.GetEnumerator();
+        System.Collections.Generic.IEnumerator<char>
+            IEnumerable<char>.GetEnumerator();
     }
 
     public class SystemException : Exception
@@ -267,7 +272,11 @@ namespace System
     }
 
     public readonly struct UInt16 { }
-    public readonly struct UInt32 { }
+    public readonly struct UInt32
+    {
+        public const int MinValue;
+        public const int MaxValue; 
+    }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
 
@@ -408,7 +417,8 @@ namespace System
     {
         public OperationCanceledException();
         public OperationCanceledException(string? message);
-        public OperationCanceledException(string? message, Exception? innerException);
+        public OperationCanceledException(
+            string? message, Exception? innerException);
     }
 
     /// <summary>
@@ -933,7 +943,8 @@ namespace System.Threading.Tasks
 
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult>
+            GetAwaiter();
     }
 
     public readonly struct ValueTask : System.IEquatable<ValueTask>

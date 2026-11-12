@@ -173,7 +173,7 @@ An instance member definition or accessor of an instance property, indexer, or e
 >     {
 >         if (messages == null)
 >         {
->             throw new InvalidOperationException("Messages collection is not initialized.");
+>             throw new InvalidOperationException("Messages not initialized.");
 >         }
 >         messages.Add(message);
 >     }

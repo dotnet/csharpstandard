@@ -508,7 +508,8 @@ It is an error to declare a class type, struct type, or enum type within the sco
 > ```csharp
 > interface IOuter<out T>
 > {
->     class C { } // error: class declaration within scope of variant type parameter 'T'
+>     // error: class declaration within scope of variant type parameter 'T'
+>     class C { }
 > }
 > ```
 >

@@ -527,11 +527,13 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >     {
 >         // nonnull constraint allows nonnullable struct type argument
 >         A<int> x1;
->         // possible warning: nonnull constraint prohibits nullable struct type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // struct type argument
 >         A<int?> x2;
 >         // nonnull constraint allows nonnullable class type argument
 >         A<C> x3;
->         // possible warning: nonnull constraint prohibits nullable class type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // class type argument
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;
@@ -2087,13 +2089,13 @@ A ***method*** is a member that implements a computation or action that can be p
 
 ```ANTLR
 method_declaration
-    : attributes? method_modifiers 'partial'? return_type method_header method_body
-    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier*
+    : method_modifier* 'partial'?
     ;
 
 ref_kind
@@ -2102,7 +2104,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier*
+    : ref_method_modifier* 'partial'?
     ;
 
 method_header
@@ -3124,6 +3126,7 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2();          // required, impl. required
 >     protected partial bool M3();        // required, impl. required
 >     public partial void M4(out int i);  // required, impl. required
+>     private static partial void M5();   // required, impl. required
 > }
 >
 > // part containing implementing partial method declarations
@@ -3132,8 +3135,15 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2() { ... }
 >     protected partial bool M3() { ... }
 >     public partial void M4(out int i) { ... }
+>
+>     [System.Runtime.InteropServices.DllImport("NativeLibrary")]
+>     private static extern partial void M5();
 > }
 > ```
+>
+> The implementation of `M1` may be omitted. In contrast, `M5` requires an
+> implementing declaration, which uses `extern` and has a semicolon rather
+> than a block body.
 >
 > *end example*
 

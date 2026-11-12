@@ -305,13 +305,13 @@ Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and 
 
 **This subclause is informative.**
 
-Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. Binary numeric promotion consists of applying the following rules, in the order they appear here:
+Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. For each conversion described below, if the operand already has the target type, no conversion is required. Otherwise, if no implicit numeric conversion exists, a binding-time error occurs. Binary numeric promotion consists of applying the following rules, in the order they appear here:
 
-- If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
+- If either operand is of type `decimal`, the other operand is converted to type `decimal`.
 - Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
 - Otherwise, if either operand is of type `float`, the other operand is converted to type `float`.
-- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
-- Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
+- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`.
+- Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
 - Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `int`, or `nint`, both operands are converted to type `long`.
 - Otherwise, if either operand is of type `uint`, the other operand is converted to type `uint`.
@@ -1601,7 +1601,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
   - Otherwise, if `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
     - If `T` is the instance type of the immediately enclosing class or struct type and the lookup identifies one or more methods, the result is a method group with an associated instance expression of `this`. If a type argument list was specified, it is used in calling a generic method ([§12.8.10.2](expressions.md#128102-method-invocations)).
-    - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
+    - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer ([§15.13](classes.md#1513-finalizers)), the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
   - Otherwise, if the declaration of `T` includes a primary constructor parameter `I`, the result is the primary constructor parameter `I`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
@@ -3694,7 +3694,7 @@ For an operation of the form `-x`, unary operator overload resolution ([§12.4.
   long operator -(long x);
   ```
 
-  The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int`, the corresponding value for `nint`, or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
+  The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
 
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
 
@@ -5527,13 +5527,13 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
 > (int x) => { return x + 1; }           // Explicitly typed, block body
-> static (int x) => x + 1                // static anonymous function, explicitly typed, expression body
-> static (int x) => { return x + 1; }    // static anonymous function, explicitly typed, block body
+> static (int x) => x + 1                // Static anonymous function, explicitly typed, expression body
+> static (int x) => { return x + 1; }    // Static anonymous function, explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
 > delegate (int x) { return x + 1; } // Anonymous method expression
-> static delegate (int x) { return x + 1; } // static anonymous method expression
+> static delegate (int x) { return x + 1; } // Static anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
 > ```
 >
@@ -5548,15 +5548,15 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 ### 12.22.2 Anonymous function signatures
 
-If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
+In an anonymous function parameter list, if two or more of the *identifier*s occurring directly in its *explicit_anonymous_function_parameter*s or *implicit_anonymous_function_parameter*s are *discard_token*s, each corresponding parameter is a ***discard parameter*** ([§9.2.9.2](variables.md#9292-discards)). All other parameters are non-discard parameters, whose names are specified by their *identifier*s.
 
-The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
+The *anonymous_function_signature* of an anonymous function defines the names of the non-discard parameters and optionally the types of all the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a non-discard parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
-> *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discards. *end note*
+> *Note*: Because discard parameters do not introduce a name into any scope, they do not conflict with other parameters, local variables, local constants, or other discard parameters. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: In the following code, the local variable `_` is in scope inside the lambda body. Because the lambda has multiple `_` parameters, both are discards and introduce no name. The reference to `_` inside the body therefore resolves to the enclosing local variable, not to any lambda parameter.
+> *Example*: In the following code, the local variable `_` is in scope inside the lambda body. Because the lambda has multiple `_` parameters, both are discard parameters and introduce no name. The reference to `_` inside the body therefore resolves to the enclosing local variable, not to any lambda parameter.
 >
 > <!-- Example: {template:"standalone-console", name:"DiscardParametersVsLocal", inferOutput:true} -->
 > ```csharp
@@ -7117,16 +7117,10 @@ For backward compatibility if any *deconstructor_element* is a *discard_token* t
 
 It is a compile time error if any *variable_reference*, including any reclassified *discard_token*s, occurring as a *deconstructor_element* is not writeable.
 
-<!--
-[TODO] For C#10 the second of these restrictions is removed. This requires minor text changes here and the removal of the corresponding semantic check in the grammar checker
--->
 There are restrictions on which *deconstructor_element*s are valid in a given context which are not expressed in the grammar:
 
 - a simple discard (a *discard_token* that is *not* reclassified as a *variable_reference*, see above) is treated as neither a *declaration_expression* nor a *variable_reference*; it may occur as a *deconstructor_element* in any context and does not affect the restrictions applied to the other elements;
-- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*; and
-- a *variable_reference* can only occur if the containing *deconstructor*:
-  - **is not** at the start of a statement, or
-  - **is** at the start of a statement and contains no *declaration_expression*
+- a *declaration_expression* can only occur if the containing *deconstructor* is at the start of a *statement* or a member of a *for_initializer*.
 
 For these restrictions:
 
@@ -7168,6 +7162,21 @@ The run-time processing of a deconstructing assignment, now `d = e`, proceeds as
 > int x = 0;
 > (x, _) = (1, 2); // assigns 1 to the existing variable x; the discard ignores 2
 > Console.WriteLine(x);
+> ```
+>
+> *end example*
+
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: A deconstructing assignment can combine an existing variable with a declaration:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingAssignmentMixed1", expectedOutput:["1","2"]} -->
+> ```csharp
+> int x = 0;
+> (x, int y) = (1, 2);
+> Console.WriteLine(x);
+> Console.WriteLine(y);
 > ```
 >
 > *end example*
@@ -7386,12 +7395,21 @@ constant_expression
     ;
 ```
 
-A constant expression shall have the value `null`, or be of a value type or a reference type. If a constant expression has a value type, that type shall be one of the following: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, the expression shall:
+A constant expression shall either have the value `null` or have one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, or any enumeration type.
 
-- have a value of type `string`; or
-- be a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) of reference type.
+> *Example*: The `null` literal is a constant expression and can be used as the default argument for a nullable value type parameter:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"NullConstantDefaultArguments"} -->
+> ```csharp
+> class C
+> {
+>     public static void M(int? x = null, nint? y = null) { }
+> }
+> ```
+>
+> *end example*
 
-A *constant_expression* of type `nint` shall have a value in the range \[-2147483648, 2147483647\]. A *constant_expression* of type `nuint` shall have a value in the range \[0, 4294967295\].
+A *constant_expression* of type `nint` shall have a value in the range `[int.MinValue, int.MaxValue]`. A *constant_expression* of type `nuint` shall have a value in the range `[uint.MinValue, uint.MaxValue]`.
 
 Only the following constructs are permitted in constant expressions:
 
@@ -7408,7 +7426,7 @@ Only the following constructs are permitted in constant expressions:
 - The `?:` conditional operator.
 - The `!` null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)).
 - `sizeof` expressions, provided the unmanaged-type is one of the types specified in [§24.6.9](unsafe-code.md#2469-the-sizeof-operator) for which `sizeof` returns a constant value.
-- Default value expressions, provided the type is one of the types listed above.
+- Default value expressions, provided the type is one of the types listed above, a reference type, or a type parameter that is known to be a reference type ([§12.8.21](expressions.md#12821-default-value-expressions)).
 
 The following conversions are permitted in constant expressions:
 
@@ -7439,27 +7457,15 @@ The following conversions are permitted in constant expressions:
 
 Whenever an expression fulfills the requirements listed above, the expression is evaluated at compile-time. This is true even if the expression is a subexpression of a larger expression that contains non-constant constructs.
 
-The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
-
 The compile-time evaluation of a *constant_expression* shall:
 
 - treat all values of type `nint` as `System.Int32`;
 - treat all values of type `nuint` as `System.UInt32`;
 - and otherwise use the same evaluation rules as for run-time non-constant expressions.
 
-If any `nint`/`nuint` values are not representable as `Int32`/`UInt32`, or the run-time evaluation of the whole expression would throw an exception, then a compile-time error shall be produced.
+If the run-time evaluation of a constant expression would throw an exception, a compile-time error shall be produced.
 
-> *Example*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"ConstantOverflow", expectedErrors:["CS0220"]} -->
-> ```csharp
-> public class C
-> {
->     private const nint hugeNumber = int.MaxValue + 1;
-> }
-> ```
->
-> The preceding example emits an error because the result of the expression `int.MaxValue + 1` isn’t representable as `Int32`. On machines where the size of a `nint` is greater than 32 bits, the expression would succeed at runtime. *end example*
+> *Note*: These rules mean that an expression involving native integers which is superficially valid as a *constant_expression* may only be valid as an *expression* evaluated at runtime using the full implementation-defined native integer precision.
 
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
@@ -7474,7 +7480,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - Attributes ([§23](attributes.md#23-attributes))
 - In a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern))
 
-An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
+An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
 ## 12.27 Boolean expressions
 
