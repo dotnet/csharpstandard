@@ -213,15 +213,15 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'     | 'alias'    | 'and'     | 'ascending'  | 'async'
-    | 'await'   | 'by'       | 'Cdecl'   | 'descending' | 'dynamic'
-    | 'equals'  | 'Fastcall' | 'file'    | 'from'       | 'get'
-    | 'global'  | 'group'    | 'init'    | 'into'       | 'join'
-    | 'let'     | 'managed'  | 'nameof'  | 'nint'       | 'not'
-    | 'notnull' | 'nuint'    | 'on'      | 'or'         | 'orderby'
-    | 'partial' | 'record'   | 'remove'  | 'required'   | 'scoped'
-    | 'select'  | 'set'      | 'Stdcall' | 'Thiscall'   | 'unmanaged'
-    | 'value'   | 'var'      | 'when'    | 'where'      | 'yield'
+    : 'add'      | 'alias'      | 'and'        | 'ascending'  | 'async'
+    | 'await'    | 'by'         | 'Cdecl'      | 'descending' | 'dynamic'
+    | 'equals'   | 'Fastcall'   | 'file'       | 'from'       | 'get'
+    | 'global'   | 'group'      | 'init'       | 'into'       | 'join'
+    | 'let'      | 'managed'    | 'nameof'     | 'nint'       | 'not'
+    | 'notnull'  | 'nuint'      | 'on'         | 'or'         | 'orderby'
+    | 'partial'  | 'record'     | 'remove'     | 'required'   | 'scoped'
+    | 'select'   | 'set'        | 'Stdcall'    | 'Thiscall'   | 'unmanaged'
+    | 'value'    | 'var'        | 'when'       | 'where'      | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -1003,6 +1003,18 @@ interpolated_string_expression
     : interpolated_regular_string_expression
     | interpolated_verbatim_string_expression
     | interpolated_raw_string_expression
+    ;
+
+interpolated_string_handler_expression
+    : interpolated_string_handler_operand
+    | interpolated_string_handler_expression '+'
+      interpolated_string_handler_operand
+    ;
+
+interpolated_string_handler_operand
+    : interpolated_string_expression
+    | '(' interpolated_string_handler_expression ')'
+    | interpolated_string_handler_operand '!'
     ;
 
 // interpolated regular string expressions
@@ -2444,13 +2456,13 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : attributes? method_modifiers 'partial'? return_type method_header method_body
-    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier*
+    : method_modifier* 'partial'?
     ;
 
 ref_kind
@@ -2459,7 +2471,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier*
+    : ref_method_modifier* 'partial'?
     ;
 
 method_header
@@ -2752,7 +2764,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
     : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
-      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator

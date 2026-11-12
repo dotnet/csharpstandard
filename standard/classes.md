@@ -544,11 +544,13 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >     {
 >         // nonnull constraint allows nonnullable struct type argument
 >         A<int> x1;
->         // possible warning: nonnull constraint prohibits nullable struct type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // struct type argument
 >         A<int?> x2;
 >         // nonnull constraint allows nonnullable class type argument
 >         A<C> x3;
->         // possible warning: nonnull constraint prohibits nullable class type argument
+>         // possible warning: nonnull constraint prohibits nullable
+>         // class type argument
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;
@@ -1580,7 +1582,7 @@ The following method names are reserved. While many have corresponding operators
 | `op_True` | `true` |
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
-| `op_UnsignedRightShift` | (reserved for future use) |
+| `op_UnsignedRightShift` | `>>>` |
 | `op_UnsignedRightShiftAssignment` | (reserved) |
 
 ## 15.4 Constants
@@ -2113,13 +2115,13 @@ A ***method*** is a member that implements a computation or action that can be p
 
 ```ANTLR
 method_declaration
-    : attributes? method_modifiers 'partial'? return_type method_header method_body
-    | attributes? ref_method_modifiers 'partial'? ref_kind ref_return_type method_header
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
       ref_method_body
     ;
 
 method_modifiers
-    : method_modifier*
+    : method_modifier* 'partial'?
     ;
 
 ref_kind
@@ -2128,7 +2130,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier*
+    : ref_method_modifier* 'partial'?
     ;
 
 method_header
@@ -2306,10 +2308,34 @@ For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
-- an expression of the form `new S()` where `S` is a value type
+- an expression of the form `new S()` where `S` is a value type and the expression invokes the implicit default constructor, rather than an explicitly declared parameterless instance constructor; the equivalent target-typed `new()` expression is also permitted
 - an expression of the form `default(S)` where `S` is a value type
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
+
+> *Example*: A struct with an explicitly declared parameterless constructor can use `default(S)` or `default` as a parameter default, but not `new S()` or `new()`:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"StructConstructorParameterDefaults", expectedErrors:["CS1736", "CS1736"]} -->
+> ```csharp
+> struct S
+> {
+>     public S() { }
+> }
+>
+> struct Z { }
+>
+> class C
+> {
+>     public void M(S value = default(S)) { }
+>     public void N(S value = default) { }
+>     public void P(Z value = new Z()) { }
+>     public void Q(Z value = new()) { }
+>     public void R(S value = new S()) { } // Error
+>     public void T(S value = new()) { }   // Error
+> }
+> ```
+>
+> *end example*
 
 If optional parameters occur in an implementing partial method declaration, a compiler should give a warning, since any default arguments are removed per [§15.6.9](classes.md#1569-partial-methods). If optional parameters occur in an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
@@ -2369,7 +2395,7 @@ Input, output, and reference parameters are ***by-reference parameter***s. A by-
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
-When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. However, when the parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. However, when the parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A reference parameter of struct type may also receive an *interpolated_string_handler_expression* through an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), without the `ref` keyword; the constructed handler temporary is passed by reference as specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
 
 By-reference parameters are not allowed on functions declared as an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)).
 
@@ -3161,6 +3187,7 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2();          // required, impl. required
 >     protected partial bool M3();        // required, impl. required
 >     public partial void M4(out int i);  // required, impl. required
+>     private static partial void M5();   // required, impl. required
 > }
 >
 > // part containing implementing partial method declarations
@@ -3169,8 +3196,15 @@ For a required partial method both the definition and implementation shall exist
 >     private partial void M2() { ... }
 >     protected partial bool M3() { ... }
 >     public partial void M4(out int i) { ... }
+>
+>     [System.Runtime.InteropServices.DllImport("NativeLibrary")]
+>     private static extern partial void M5();
 > }
 > ```
+>
+> The implementation of `M1` may be omitted. In contrast, `M5` requires an
+> implementing declaration, which uses `extern` and has a semicolon rather
+> than a block body.
 >
 > *end example*
 
@@ -5023,7 +5057,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
     : 'checked'? '+'  | 'checked'? '-'  | 'checked'? '*'  | 'checked'? '/'  | '%'  | '&' | '|' | '^'  | '<<'
-      | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    | right_shift | unsigned_right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator
@@ -5868,7 +5902,9 @@ A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.22](expre
 
 It is a compile-time error for the parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
-The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.15.3](classes.md#15153-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
+The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.15.3](classes.md#15153-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such builder types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
+
+An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.14.5](classes.md#15145-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function's return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
 
 An async method returning a task type is said to be ***task-returning***.
 
@@ -5895,9 +5931,9 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type ([§15.14.2](classes.md#15142-task-type-builder-pattern)). The task builder type shall exactly match the declared accessibility of its corresponding task type.
+A task builder type is a class or struct type that implements the task-type builder pattern ([§15.14.2](classes.md#15142-task-type-builder-pattern)). A builder associated with a task type by an attribute on that type shall exactly match the declared accessibility of the task type. A builder specified by an attribute on an async function need only be accessible where the function is declared.
 
-> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task builder type must also be nested in that same type. *end note*
+> *Note:* For a builder associated with a task type, if the task type is declared `internal`, the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task builder type must also be nested in that same type. These requirements do not apply to a builder specified by an attribute on an async function. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.9](expressions.md#1299-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
@@ -5947,6 +5983,8 @@ A compiler shall generate code that uses the «TaskBuilderType» to implement th
 
 ### 15.14.3 Evaluation of a task-returning async function
 
+For an async function whose return type is treated as a task type only because of an attribute on the function ([§15.14.1](classes.md#15141-general)), evaluation uses the selected builder as specified in [§15.14.2](classes.md#15142-task-type-builder-pattern). The state descriptions below apply to return types that are task types independently of such an attribute.
+
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
 
 The async function body is then evaluated until it is either suspended (by reaching an await expression) or terminates, at which point control is returned to the caller, along with the return task.
@@ -5963,30 +6001,29 @@ If the return type of the async function is `void`, evaluation differs from the 
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
 
-Rather than using a task builder type based on the *return_type* of an async function, the attribute `AsyncMethodBuilderAttribute` can be applied to that async function to indicate a different task builder type.
+### 15.14.5 Task builder selection
+
+Rather than using a task builder type based on the *return_type* of a task-returning async function, the attribute `AsyncMethodBuilderAttribute` can be applied to that async function to indicate a different task builder type.
+
+An attribute on a `void`-returning async function or an asynchronous iterator does not affect its builder selection. Their evaluation is specified in [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function) and [§15.15](classes.md#1515-synchronous-and-asynchronous-iterators), respectively. The selection and compatibility rules below apply only to task-returning async functions.
 
 It is an error to apply this attribute to a lambda with an implicit return type.
 
 The ability to provide an alternate builder type shall not be used when the synthesized entry-point for top-level statements is async ([§7.1.3](basic-concepts.md#713-using-top-level-statements)). For that, an explicit entry-point is needed.
 
-When an async function is compiled, the builder type is determined by:
+The builder type of a task-returning async function is determined by:
 
 1. Using the builder type from `AsyncMethodBuilderAttribute`, if one is present;
-1. Otherwise, falling back to the builder type determined by the async function’s *return_type* ([§15.14.2](classes.md#15142-task-type-builder-pattern)).
+1. Otherwise, falling back to the builder type determined by the async function's *return_type* ([§15.14.1](classes.md#15141-general)).
 
-If an `AsyncMethodBuilderAttribute` is present, the builder type specified by that attribute is constructed, if necessary.
+If an `AsyncMethodBuilderAttribute` is present on the function, its argument shall specify a class or struct type, and the builder type is determined as follows:
 
-If the override type is an open generic type, take the single type argument of the async function’s return type and substitute it into the override type.
+- If the async function's return type is nongeneric, the specified builder type shall be nongeneric and shall not be nested in a generic type. That type is the builder type.
+- Otherwise, the specified builder type shall be an unbound generic type with exactly one type parameter, and shall not be nested in a generic type. The builder type is constructed by substituting the single type argument of the async function's return type for that parameter.
 
-If the override type is a bound generic type, then an error results.
+A constructed generic builder type is not permitted as the attribute argument.
 
-If the async function’s return type does not have a single type argument, an error results.
-
-To verify that the builder type is compatible with *return_type* of the async function:
-
-1. Look for the public `Create` method with no type parameters and no parameters on the constructed builder type. It is an error if the method is not found, or if the method returns a type other than the constructed builder type.
-1. Look for the public `Task` property. It is an error if the property is not found.
-1. Consider the type of that `Task` property (a task-like type). It is an error if the task-like type does not match the *return_type* of the async function. (It is not necessary for *return_type* to be a task-like type.)
+The selected builder shall satisfy the task-type builder pattern ([§15.14.2](classes.md#15142-task-type-builder-pattern)). The type of its `Task` property shall be identity convertible to the *return_type* of the async function. The return type need not be a task type independently of the attribute on the function.
 
 > *Example*: Consider the following code fragment:
 >
@@ -6034,6 +6071,78 @@ To verify that the builder type is compatible with *return_type* of the async fu
 >     return stateMachine.<>t__builder.Task;
 > }
 > ```
+>
+> *end example*
+>
+> *Example*: A method-level builder can be private even when the method and its return type are public. The return type need not itself have an associated builder or be awaitable:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"AsyncMethodBuilderOverride1", expectedOutput:["private-builder", "complete", "7"]} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+> using System.Threading.Tasks;
+>
+> public class Program
+> {
+>     static async Task Main()
+>     {
+>         await RunAsync().Operation;
+>         Console.WriteLine("complete");
+>         Console.WriteLine(await GetValueAsync());
+>     }
+>
+>     [AsyncMethodBuilder(typeof(Builder))]
+>     public static async Completion RunAsync()
+>     {
+>         await Task.Yield();
+>     }
+>
+>     [AsyncMethodBuilder(typeof(AsyncTaskMethodBuilder<>))]
+>     static async Task<int> GetValueAsync()
+>     {
+>         await Task.Yield();
+>         return 7;
+>     }
+>
+>     public readonly struct Completion
+>     {
+>         public Task Operation { get; }
+>         public Completion(Task operation) => Operation = operation;
+>     }
+>
+>     private struct Builder
+>     {
+>         private AsyncTaskMethodBuilder inner;
+>
+>         public static Builder Create()
+>         {
+>             Console.WriteLine("private-builder");
+>             return new Builder { inner = AsyncTaskMethodBuilder.Create() };
+>         }
+>
+>         public Completion Task => new Completion(inner.Task);
+>         public void SetResult() => inner.SetResult();
+>         public void SetException(Exception exception) => inner.SetException(exception);
+>         public void SetStateMachine(IAsyncStateMachine stateMachine) =>
+>             inner.SetStateMachine(stateMachine);
+>         public void Start<TStateMachine>(ref TStateMachine stateMachine)
+>             where TStateMachine : IAsyncStateMachine =>
+>             inner.Start(ref stateMachine);
+>         public void AwaitOnCompleted<TAwaiter, TStateMachine>(
+>             ref TAwaiter awaiter, ref TStateMachine stateMachine)
+>             where TAwaiter : INotifyCompletion
+>             where TStateMachine : IAsyncStateMachine =>
+>             inner.AwaitOnCompleted(ref awaiter, ref stateMachine);
+>         public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(
+>             ref TAwaiter awaiter, ref TStateMachine stateMachine)
+>             where TAwaiter : ICriticalNotifyCompletion
+>             where TStateMachine : IAsyncStateMachine =>
+>             inner.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine);
+>     }
+> }
+> ```
+>
+> `RunAsync` uses a nongeneric builder and has effective return type `void`. Its return type, `Completion`, is not awaitable; the caller instead awaits its `Operation` property. `GetValueAsync` uses the unbound generic builder argument, constructed as `AsyncTaskMethodBuilder<int>`, and has effective return type `int`.
 >
 > *end example*
 
@@ -6498,15 +6607,15 @@ If the record class has no printable members, the method shall call the base `Pr
 
 The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed.
 
-The record class shall include a provided method method declared as follows:
+Unless a base record class declares a sealed override of `object.ToString()`, the record class shall include a provided method declared as follows:
 
 ```csharp
 public override string ToString();
 ```
 
-The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn’t allow overriding it in a derived type and the record class type is not sealed. It is an error if either the provided or explicitly declared method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
+The method may be declared explicitly. When no base record class declares a sealed override of `object.ToString()`, it is an error if the explicit declaration does not match the expected signature or accessibility, or if either the provided or explicitly declared method doesn’t override `object.ToString()` (for example, due to shadowing in intermediate base types).
 
-Sealing an explicitly declared `ToString` method prevents the compiler from providing a `ToString` method for any derived record types. However, this does not prevent the compiler from providing `PrintMembers`.
+When a base record class declares a sealed override of `object.ToString()`, the implementation shall not provide a `ToString` method for the derived record class. An explicitly declared `ToString` member in such a derived record class is subject to the ordinary rules for member hiding and overriding. Sealing `ToString` does not prevent the implementation from providing `PrintMembers`.
 
 The provided method:
 
@@ -6516,6 +6625,34 @@ The provided method:
 1. Appends `}`,
 1. Returns the builder’s contents with `builder.ToString()`.
 
+> *Example*: An unsealed record class can seal its `ToString` override. A derived record class inherits that implementation instead of receiving a provided override:
+>
+> <!-- Example: {template:"standalone-console", name:"PrintingMembers4", inferOutput:true} -->
+> ```csharp
+> record Base
+> {
+>     public sealed override string ToString() => "Base";
+> }
+>
+> record Derived(int Value) : Base;
+>
+> class Program
+> {
+>     static void Main()
+>     {
+>         Console.WriteLine(new Derived(1));
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> Base
+> ```
+>
+> *end example*
+>
 > *Example*: Given the following:
 >
 > <!-- Example: {template:"standalone-console", name:"PrintingMembers1", inferOutput:true} -->

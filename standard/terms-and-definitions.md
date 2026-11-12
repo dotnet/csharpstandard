@@ -8,6 +8,7 @@ For the purposes of this specification, the following definitions apply. Other t
 - **assembly** – one or more files output by the compiler as a result of program compilation
 - **behavior** – external appearance or action
 - **behavior, implementation-defined** – unspecified behavior where each implementation documents how the choice is made
+- **behavior, implementation-specific** – optional behavior or feature support that does not invalidate conformance and for which no documentation is required
 - **behavior, undefined** – behavior, upon use of a non-portable or erroneous construct or of erroneous data, for which this specification imposes no requirements
 - **behavior, unspecified** – behavior where this specification provides two or more possibilities and imposes no further requirements on which is chosen in any instance
 - **character** (when used without a qualifier)
