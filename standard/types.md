@@ -452,7 +452,8 @@ Tuple elements are public fields with the names `Item1` … `ItemN`, where `N` i
 > (int, string word) pair2 = (2, "Two");
 > (int number, string word) pair3 = (3, "Three");
 > (int Item1, string Item2) pair4 = (4, "Four");
-> (int Item2, string Item123) pair5 = (5, "Five"); // Error: “Item” names do not match position
+> // Error: “Item” names do not match position
+> (int Item2, string Item123) pair5 = (5, "Five");
 > Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
 > ```
 >
@@ -563,9 +564,12 @@ Though tuple and `System.ValueTuple<...>` values may be treated as equivalent, s
 >
 > <!-- Example: {template:"standalone-console", name:"TupleTypes5", expectedOutput:["Bert is 42 years old"]} -->
 > ```csharp
-> var a = new ValueTuple<string, int>("Bert", 42);     // Construct a ValueTuple
-> (string name, int age) b = a;                        // Treat as a tuple with named elements
-> Console.WriteLine($"{b.name} is {b.age} years old"); // Access using element names
+> // Construct a ValueTuple
+> var a = new ValueTuple<string, int>("Bert", 42);
+> // Treat as a tuple with named elements
+> (string name, int age) b = a;
+> // Access using element names
+> Console.WriteLine($"{b.name} is {b.age} years old");
 > ```
 >
 > *end example*
@@ -1154,8 +1158,8 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length; // No warning. A compiler can
->                                                      // assume property is stateful
+>              // No warning. A compiler can assume property is stateful
+>             int len = t.DisappearingProperty.Length;
 >         }
 >     }
 > }

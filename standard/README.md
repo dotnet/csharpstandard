@@ -834,8 +834,9 @@
   - [§B.1](portability-issues.md#b1-general)  General
   - [§B.2](portability-issues.md#b2-undefined-behavior)  Undefined behavior
   - [§B.3](portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
-  - [§B.4](portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
-  - [§B.5](portability-issues.md#b5-other-issues)  Other issues
+  - [§B.4](portability-issues.md#b4-implementation-specific-behavior)  Implementation-specific behavior
+  - [§B.5](portability-issues.md#b5-unspecified-behavior)  Unspecified behavior
+  - [§B.6](portability-issues.md#b6-other-issues)  Other issues
 - [§C](standard-library.md#annex-c-standard-library)  Standard library
   - [§C.1](standard-library.md#c1-general)  General
   - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271
