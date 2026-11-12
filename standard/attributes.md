@@ -505,6 +505,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.ModuleInitializerAttribute` ([§23.5.9](attributes.md#2359-the-moduleinitializer-attribute)), which is used to mark a method as a module initializer.
 - `System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute` and `System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute`, which are used to declare a custom interpolated string expression handler ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)) and to call one of its constructors, respectively.
 - System.Diagnostics.CodeAnalysis.UnscopedRefAttribute (§UnscopedRefAttribute), which allows an otherwise implicitly scoped ref to be treated as not being scoped.
+- `System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute` (§SetsRequiredMembers) and `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember), which are used in required-member contexts ([§15.7.1](classes.md#1571-general)).
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1672,6 +1673,65 @@ At a use of the handler conversion, each forwarded argument shall occur lexicall
 Constructor overload resolution uses the parameter types of the containing member after substitution of its type arguments, not the original argument expressions. Forwarded arguments retain their parameter-passing modes. At run time, the already evaluated receiver and the already converted argument values or evaluated storage locations are reused by the handler construction and the containing invocation, preserving reference semantics. Additional conversions needed by the constructor are applied to these retained values; the original expressions are not evaluated or bound again.
 
 > *Note*: In particular, a forwarded lambda is not independently bound to a different delegate type for the constructor. Handler constructor parameter types do not contribute to generic inference for the containing invocation. Nullable analysis of constructor arguments does not flow changes back to the original receiver or argument slots. *end note*
+
+### §Required-Member-Attributes Required member attributes
+
+#### §SetsRequiredMembers The SetsRequiredMembers attribute
+
+This attribute indicates that the constructor it decorates sets all required members for the current type, so callers do not need to set any required members themselves. However, the compiler doesn't verify that the constructor actually initializes all required members.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib", name:"SetsRequiredMembers", expectedErrors:["CS9035","CS9035"]} -->
+> ```csharp
+> public class Person
+> {
+>     public Person() { }
+>
+>     [SetsRequiredMembers]
+>     public Person(string firstName, string lastName) =>
+>         (FirstName, LastName) = (firstName, lastName);
+>
+>     public required string FirstName { get; init; }
+>     public required string LastName { get; init; }
+>
+>     public int? Age { get; set; }
+> }
+>
+> public class Student : Person
+> {
+>     public Student() : base()
+>     {
+>     }
+>
+>     [SetsRequiredMembers]
+>     public Student(string firstName, string lastName) :
+>         base(firstName, lastName)
+>     {
+>     }
+>
+>     public double GPA { get; set; }
+> }
+>
+> public class Test
+> {
+>     public static void M()
+>     {
+>         var p1 = new Student(); // error: doesn't set required members
+>         var p2 = new Student("Jane", "Williams"); // OK
+>     }
+> }
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: As the derived-type constructor `Student(string, string)` chains to the base-type constructor `Person(string, string)`, which has this attribute, the derived-type constructor must also have that attribute ([§15.11.1](classes.md#15111-general)). *end note*
+
+#### §RequiredMember The RequiredMember attribute
+
+This attribute indicates that the current type has one or more required members ([§15.7.1](classes.md#1571-general)), or that a specific member of that type is required. However, it is an error for this attribute to be used explicitly. Instead, the presence of the modifier `required` results in the type or member being treated as if it were decorated with this attribute.
 
 ## 23.6 Attributes for interoperation
 
