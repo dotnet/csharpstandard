@@ -1592,7 +1592,13 @@ simple_name
     ;
 ```
 
-A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
+A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
+
+For the namespace lookup steps in this subclause and [§7.7.1](basic-concepts.md#771-general), let *D* be the set of directives considered at namespace `N`. If `N` is the global namespace, *D* consists of the *extern_alias_directive*s and *using_directive*s in the containing compilation unit, together with the *global_using_directive*s in all compilation units in the program. Otherwise, *D* consists of the *extern_alias_directive*s and *using_directive*s in the enclosing namespace declaration for `N`, if any. Only directives whose scope includes the location of the name being resolved are considered. The exclusions when resolving directive targets are specified in §global-using-directives and [§14.5](namespaces.md#145-using-directives).
+
+> *Note*: Global using directives participate at the global-namespace step, not at each inner-namespace step. Their scope includes nested namespaces, but lookup in an inner namespace can find a declaration or import before reaching the global namespace. *end note*
+
+The *simple_name* is evaluated and classified as follows:
 
 - If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.2](basic-concepts.md#72-declarations)) that directly contains a local variable, parameter (with the exception of discard parameters ([§12.22.2](expressions.md#12222-anonymous-function-signatures))), or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -1609,16 +1615,18 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - The access is invalid and a compiler-time error shall be generated.
       > *Note*: This rule means that a declaration of some *simple_name* in a top-level statement can hide a global declaration if referenced using the same *simple_name*. *end note*
   - Otherwise, if `e` is zero and `I` is the name of a namespace in `N`, then:
-    - If the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
+    - If *D* contains an *extern_alias_directive*, *using_alias_directive*, or *global_using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
     - Otherwise, the *simple_name* refers to the namespace named `I` in `N`.
   - Otherwise, if `N` contains an accessible type having name `I` and `e` type parameters, then:
-    - If `e` is zero and the location where the *simple_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
-    - Otherwise, the *namespace_or_type_name* refers to the type constructed with the given type arguments.
-  - Otherwise, if the location where the *simple_name* occurs is enclosed by a namespace declaration for `N`:
-    - If `e` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then the *simple_name* refers to that namespace or type.
-    - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
-    - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.
-  > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)). *end note*
+    - If `e` is zero and *D* contains an *extern_alias_directive*, *using_alias_directive*, or *global_using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* is ambiguous and a compile-time error occurs.
+    - Otherwise, the *simple_name* refers to the type constructed with the given type arguments.
+  - Otherwise, if `e` is zero and *D* contains an *extern_alias_directive*, *using_alias_directive*, or *global_using_alias_directive* that associates the name `I` with a namespace or type, then the *simple_name* refers to that namespace or type.
+  - Otherwise, form a set of distinct candidates imported by the *using_namespace_directive*s, *using_static_directive*s, *global_using_namespace_directive*s, and *global_using_static_directive*s in *D*. Include accessible types having name `I` and `e` type parameters, accessible non-extension static methods having name `I` (and, if a type argument list is specified, `e` type parameters), and, if `e` is zero, accessible non-method static members having name `I`. For a static import, only members declared directly in the imported type are included.
+    - If the set contains exactly one type and no other members, the *simple_name* refers to that type constructed with the given type arguments.
+    - If the set contains only methods and is nonempty, the result is a method group with no associated instance expression. Any specified type argument list is used in calling a generic method ([§12.8.10.2](expressions.md#128102-method-invocations)); overload resolution considers the methods in the group.
+    - If the set contains exactly one member, which is neither a type nor a method, the result is the same as a member access ([§12.8.7](expressions.md#1287-member-access)) of the form `T.I`, where `T` is the member's declaring type.
+    - Otherwise, if the set is nonempty, the *simple_name* is ambiguous and a compile-time error occurs.
+  > *Note*: The namespace, type, and alias lookup steps parallel those for a *namespace_or_type_name* ([§7.7](basic-concepts.md#77-namespace-and-type-names)). Simple-name lookup additionally considers imported static members. Extension methods are considered separately for extension method invocation ([§12.8.10.3](expressions.md#128103-extension-method-invocations)). *end note*
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression ([§12.20](expressions.md#1220-declaration-expressions)).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
@@ -2099,7 +2107,7 @@ The search for `C` proceeds as follows:
 
 - Starting with the closest enclosing namespace declaration, continuing with each enclosing namespace declaration, and ending with the containing compilation unit, successive attempts are made to find a candidate set of extension methods:
   - If the given namespace or compilation unit directly contains non-generic type declarations `Cᵢ` with eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
-  - If namespaces imported by using namespace directives in the given namespace or compilation unit directly contain non-generic type declarations `Cᵢ` with eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
+  - If types `Cᵢ` imported by *using_static_directive*s and directly declared in namespaces imported by *using_namespace_directive*s in the given namespace or compilation unit, and, if the containing compilation unit is reached, imported by *global_using_static_directive*s and directly declared in namespaces imported by *global_using_namespace_directive*s in the program, directly contain eligible extension methods `Mₑ`, then the set of those extension methods is the candidate set.
 - If no candidate set is found in any enclosing namespace declaration or compilation unit, a compile-time error occurs.
 - Otherwise, overload resolution is applied to the candidate set as described in [§12.6.4](expressions.md#1264-overload-resolution). If no single best method is found, a compile-time error occurs.
 - `C` is the type within which the best method is declared as an extension method.
