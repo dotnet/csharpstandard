@@ -213,12 +213,13 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
-    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
-    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'    | 'nameof'     | 'nint'      | 'notnull'   | 'nuint'
+    | 'on'     | 'orderby'    | 'partial'   | 'remove'    | 'select'
+    | 'set'    | 'unmanaged'  | 'value'     | 'var'       | 'when'
+    | 'where'  | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -684,6 +685,8 @@ integral_type
     | 'ushort'
     | 'int'
     | 'uint'
+    | 'nint'
+    | 'nuint'
     | 'long'
     | 'ulong'
     | 'char'
