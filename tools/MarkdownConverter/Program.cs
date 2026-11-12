@@ -13,11 +13,28 @@ static class Program
 {
     static async Task<int> Main(string[] args)
     {
+        var reporter = new Reporter();
+        var reportPath = Environment.GetEnvironmentVariable("DIAGNOSTICS_REPORT_PATH");
+        int exitCode = 1;
+        try
+        {
+            exitCode = Execute(args, reporter);
+            return exitCode;
+        }
+        finally
+        {
+            if (reportPath is not null)
+            {
+                await reporter.WriteReportAsync(reportPath, exitCode == 0);
+            }
+        }
+    }
+
+    private static int Execute(string[] args, Reporter reporter)
+    {
         // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
         var ifiles = new List<string>();
         var ofiles = new List<string>();
-        var head_sha = Environment.GetEnvironmentVariable("HEAD_SHA");
-        var token = Environment.GetEnvironmentVariable("GH_TOKEN");
         string argserror = "";
         for (int i = 0; i < args.Length; i++)
         {
@@ -113,8 +130,6 @@ static class Program
 
         Console.WriteLine("Reading markdown files");
 
-        var reporter = new Reporter();
-
         // Read input file. If it contains a load of linked filenames, then read them instead.
         var md = MarkdownSpec.ReadFiles(imdfiles, reporter);
 
@@ -144,12 +159,6 @@ static class Program
         }
         Console.WriteLine($"Errors: {reporter.Errors}");
         Console.WriteLine($"Warnings: {reporter.Warnings}");
-        if ((head_sha is not null) &&
-            (token is not null))
-        {
-            await reporter.WriteCheckStatus(token, head_sha);
-
-        }
         return reporter.Errors == 0 ? 0 : 1;
     }
 }
