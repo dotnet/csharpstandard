@@ -873,6 +873,10 @@ namespace System.Runtime.CompilerServices
         ///    <c>[0, Length)</c>.
         /// </exception>
         object? this[int index] { get; }
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class ModuleInitializerAttribute : Attribute
+    {
+        public ModuleInitializerAttribute() { }
     }
 
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
@@ -1430,6 +1434,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
 - `global::System.Runtime.CompilerServices.ITuple`
+- `global::System.Runtime.CompilerServices.ModuleInitializerAttribute`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
 - `global::System.Runtime.CompilerServices.TaskAwaiter<TResult>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
