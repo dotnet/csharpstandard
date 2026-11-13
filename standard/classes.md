@@ -6369,13 +6369,13 @@ Extension properties are resolved like extension methods, with a single paramete
 
 A *using_static_directive* ([§14.6.4]( namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.  
 
-Extension members are subject to overload resolution prioritization ([§23.5.14](attributes.md#23514-the-overloadresolutionpriority-attribute)). The enclosing static class is considered to be the “containing type” consider by prioritization rules. Any `OverloadResolutionPriority` attribute present on an extension property applies to that property's accessors, so that the prioritization is respected when those accessors are used via disambiguation syntax.
+Extension members are subject to overload resolution prioritization ([§23.5.15](attributes.md#23515-the-overloadresolutionpriority-attribute)). The enclosing static class is considered to be the “containing type” consider by prioritization rules. Any `OverloadResolutionPriority` attribute present on an extension property applies to that property's accessors, so that the prioritization is respected when those accessors are used via disambiguation syntax.
 
 For an extension member declared inside a namespace to be accessed from outside that namespace, that namespace needs to be the imported via a *global_using_static_directive* or *using_static_directive*.
 
 ### §Extension-methods Extension methods
 
-[There are two ways to declare an extension method. The original approach is described in [§15.6.10](classes.md#15610-extension-methods). The newer, alternative approach is described here.]
+There are two ways to declare an extension method. The original approach is described in [§15.6.10](classes.md#15610-extension-methods). The newer, alternative approach is described here.
 
 An original-style extension method can be rewritten in the new style.
 
