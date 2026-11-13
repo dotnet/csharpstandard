@@ -4090,7 +4090,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 A set accessor is permitted in a readonly context for a property that uses `field`.
 
-> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet"} -->
 > ```csharp
 > readonly struct S1
 > {
@@ -4393,7 +4393,7 @@ P7 { get; set { field = value; } } // field-backed, 1 auto accessor, 1 full acce
 `P2` and `P3` are equivalent and their (user-written) full accessors ([§15.7.3.1](classes.md#15731-general)) explicitly do what `P1`’s (implementation-generated) auto accessors do. (Of course, the full accessors could do more or different things!) However, because at least one accessor of `P2` and `P3` contains `field`, those are not auto-properties. And as `P1` has only auto-accessors, it’s an auto-property.
 
 `P4` and `P5` are equivalent, as are `P6` and `P7`, but none of them are auto-properties.
- 
+
 The backing field is read-only when the containing type is a struct and the property or containing type is declared `readonly`.
 
 It is a compile-time error to declare a local constant or variable called `field` in a full accessor.
