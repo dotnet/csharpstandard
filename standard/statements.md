@@ -2019,14 +2019,21 @@ non_ref_local_variable_declaration
 
 A ***resource type*** is one of the following:
 
-- A class or non-ref struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`.
+- A class or struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`.
 - A ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`.
-- A class or non-ref struct that has an accessible instance `DisposeAsync()` method with an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
-- A class or non-ref struct that implements the `System.IAsyncDisposable` interface, which includes a single parameterless method named `DisposeAsync`.
+- A class or struct that has an accessible instance `DisposeAsync()` method with an awaitable return type ([§12.9.9.2](expressions.md#12992-awaitable-expressions)).
+- A class or struct that implements the `System.IAsyncDisposable` interface, which includes a single parameterless method named `DisposeAsync`.
+- A type parameter that has `System.IDisposable` or `System.IAsyncDisposable` in its effective interfaces set.
+
+For a ref struct resource, preference is given to a `Dispose` method that implements the pattern, and only if one is not found, shall `IDisposable` be used.
+
+A using statement shall recognize and use an implementation of `IDisposable` when the resource is a type parameter that has the `ref struct` anti-constraint, and `IDisposable` is in its effective interfaces set. When `await` is present, an implementation of `IAsyncDisposable` in the type parameter's effective interfaces set is recognized instead.
+
+> *Note*: A pattern `Dispose` method will not be recognized on a type parameter that has the `ref struct` anti-constraint because an interface is not a ref struct. *end note*
 
 Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall have an accessible instance `DisposeAsync()` method with an awaitable return type or implement `System.IAsyncDisposable`. A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
+If the form of *resource_acquisition* is *non_ref_local_variable_declaration* then the type of the *non_ref_local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall have an accessible instance `DisposeAsync()` method with an awaitable return type or implement `System.IAsyncDisposable`. A ref-struct resource shall not be used, including implicitly by synthesized disposal, after an intervening `await` expression or `yield return` statement.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
@@ -2038,7 +2045,7 @@ A `using` statement of the form
 using (ResourceType resource = «expression») «statement»
 ```
 
-corresponds to one of three possible formulations. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to:
+corresponds to one of three possible formulations. For class and struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to:
 
 ```csharp
 {

@@ -138,7 +138,7 @@ namespace System
         void Dispose();
     }
 
-    public interface IEquatable<T>
+    public interface IEquatable<T> where T : allows ref struct
     {
         bool Equals(T? other);
     }
