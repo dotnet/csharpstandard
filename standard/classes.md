@@ -5424,7 +5424,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 >     private int val;
 >     public MyNumber(int val = 0)
 >     {
->         this.val = val; 
+>         this.val = val;
 >     }
 >     public static MyNumber operator-(MyNumber x) => new MyNumber(-x.val);
 > }
@@ -5616,7 +5616,7 @@ The purpose of the method is to adjust the value of the instance to the result o
 >     private int val;
 >     public MyNumber(int val = 0)
 >     {
->         this.val = val; 
+>         this.val = val;
 >     }
 >     public void operator++()
 >     {
@@ -5653,7 +5653,7 @@ A checked-operator declaration requires a pair-wise declaration of a regular ope
 >     private int val;
 >     public MyNumber(int val = 0)
 >     {
->         this.val = val; 
+>         this.val = val;
 >     }
 >     public void operator+=(int x)
 >     {

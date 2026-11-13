@@ -4443,7 +4443,7 @@ Otherwise, `«op»x` is evaluated as follows:
 
   - If the result of increment is used, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance, `x₀` is assigned to `x`, and `x₀` is returned as the result of the assignment.
   - Otherwise, the operator method is invoked on `x`.
-  
+
 Side effects in `x` are evaluated only once in the process.
 
 ### 12.9.8 Cast expressions
@@ -8204,7 +8204,7 @@ If the type of `x` is not known to be a reference type:
 
 - If the result of compound assignment is used, the `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance with `y` as the argument, `x₀` is assigned to `x` and `x₀` is returned as the result of the compound assignment.
 - Otherwise, the operator method is invoked on `x` with `y` as the argument.
-  
+
 Side effects in `x` are evaluated only once in the process.
 
 #### §CompAssignOpOver Compound assignment operator overload resolution
