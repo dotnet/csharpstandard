@@ -150,7 +150,7 @@ An implicit enumeration conversion permits a *constant_expression* ([§12.26](ex
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`). When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.8.3](expressions.md#1283-interpolated-string-expressions).
 
-For any type `T` that is an applicable interpolated string handler type ([§23.5.11.1.1](attributes.md#2351111-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from an *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), including a constant interpolated string. This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn't change based on the content of an interpolated string.
+For any type `T` that is an applicable interpolated string handler type ([§23.5.11.1.1](attributes.md#2351111-declaring-a-custom-handler)), there exists an implicit interpolated string handler conversion to `T` from an *interpolated_string_handler_expression* ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), including a constant interpolated string. This conversion exists, regardless of whether errors are found later when attempting to lower the interpolation using the handler pattern. This ensures that there are predictable and useful errors, and that runtime behavior doesn’t change based on the content of an interpolated string.
 
 ### 10.2.6 Implicit nullable conversions
 
@@ -1054,7 +1054,7 @@ Conversion of an anonymous function to a delegate type produces a delegate insta
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
-When a delegate is produced from a lambda expression, attributes explicitly specified on the lambda whose target is the method shall be emitted in metadata on the method referenced by the delegate's `Method` property. Attributes with a `return` target shall be emitted on that method's return parameter, and attributes on lambda parameters shall be emitted on the corresponding method parameters. These requirements do not specify a synthesized method name or the representation of captured variables.
+When a delegate is produced from a lambda expression, attributes explicitly specified on the lambda whose target is the method shall be emitted in metadata on the method referenced by the delegate’s `Method` property. Attributes with a `return` target shall be emitted on that method’s return parameter, and attributes on lambda parameters shall be emitted on the corresponding method parameters. These requirements do not specify a synthesized method name or the representation of captured variables.
 
 > *Example*: Explicit lambda attributes can be inspected through the resulting delegate:
 >
