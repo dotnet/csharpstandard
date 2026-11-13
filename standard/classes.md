@@ -6256,6 +6256,8 @@ A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.22](expre
 
 It is a compile-time error for the parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
+It is a compile-time error for an unsafe context to contain an `await` expression or a `yield return` statement.
+
 The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.15.3](classes.md#15153-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such builder types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
 An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.14.5](classes.md#15145-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function's return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
@@ -6510,7 +6512,7 @@ An async function ([§15.14](classes.md#1514-async-functions)) or local function
 
 An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
 
-When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
+When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type, or a pointer type.
 
 An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute).
 
