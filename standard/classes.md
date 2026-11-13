@@ -6363,11 +6363,11 @@ A full generic type inference is attempted between the type of the arguments (in
 
 When explicit type arguments are provided, they are used to substitute the type parameters of the extension declaration and the extension member declaration.
 
-Static extension methods are resolved like instance extension methods.  
+Static extension methods are resolved like instance extension methods.
 
 Extension properties are resolved like extension methods, with a single parameter (the extension receiver parameter) and a single argument (the actual extension receiver value).
 
-A *using_static_directive* ([§14.6.4]( namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.  
+A *using_static_directive* ([§14.6.4]( namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.
 
 Extension members are subject to overload resolution prioritization ([§23.5.15](attributes.md#23515-the-overloadresolutionpriority-attribute)). The enclosing static class is considered to be the “containing type” consider by prioritization rules. Any `OverloadResolutionPriority` attribute present on an extension property applies to that property's accessors, so that the prioritization is respected when those accessors are used via disambiguation syntax.
 
