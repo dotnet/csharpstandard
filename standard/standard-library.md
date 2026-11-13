@@ -384,6 +384,7 @@ namespace System.Runtime.CompilerServices
     public static class Unsafe
     {
         public static ref T NullRef<T>();
+        public static bool IsNullRef<T>(ref T source);
     }
 }
 
@@ -777,6 +778,15 @@ namespace System.Diagnostics.CodeAnalysis
     {
         public NotNullWhenAttribute(bool returnValue);
     }
+
+    [System.AttributeUsage(System.AttributeTargets.Method
+      | System.AttributeTargets.Parameter
+      | System.AttributeTargets.Property,
+      AllowMultiple=false, Inherited=false)]
+    public sealed class UnscopedRefAttribute : Attribute
+    {
+        public UnscopedRefAttribute();
+    }
 }
 
 namespace System.Linq.Expressions
@@ -798,11 +808,11 @@ namespace System.Runtime.CompilerServices
             int formattedCount, IFormatProvider? provider);
         public DefaultInterpolatedStringHandler(int literalLength,
             int formattedCount, IFormatProvider? provider, Span<char> initialBuffer);
-        public void AppendFormatted(ReadOnlySpan<char> value);
+        public void AppendFormatted(scoped ReadOnlySpan<char> value);
         public void AppendFormatted(string? value);
         public void AppendFormatted(object? value, int alignment = 0,
             string? format = default);
-        public void AppendFormatted(ReadOnlySpan<char> value,
+        public void AppendFormatted(scoped ReadOnlySpan<char> value,
             int alignment = 0, string? format = default);
         public void AppendFormatted(string? value, int alignment = 0,
             string? format = default);
@@ -1479,6 +1489,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
