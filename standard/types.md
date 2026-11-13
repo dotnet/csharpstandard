@@ -274,7 +274,7 @@ The `new` operator invokes the public parameterless instance constructor when it
 >
 > *end example*
 
-A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.6.9](structs.md#1669-constructors)).
+A struct type is permitted to declare instance constructors, including a parameterless instance constructor. An explicitly declared parameterless instance constructor shall have public accessibility ([§16.8.9](structs.md#1689-constructors)).
 
 > *Example*: Direct and constrained generic creation invoke the explicitly declared constructor, whereas default values and array elements are zero-initialized:
 >

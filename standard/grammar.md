@@ -996,6 +996,7 @@ primary_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
     | stackalloc_expression
+    | collection_expression
     ;
 
 // Source: §12.8.3 Interpolated string expressions
@@ -1466,6 +1467,24 @@ named_entity_target
     | qualified_alias_member
     ;
 
+// Source: §12.8.25 Collection expressions
+collection_expression
+    : '[' (collection_element (',' collection_element)*)? ']'
+    ;
+
+collection_element
+    : expression_element
+    | spread_element
+    ;
+
+expression_element
+    : expression
+    ;
+
+spread_element
+    : '..' expression
+    ;
+
 // Source: §12.9.1 General
 unary_expression
     : primary_expression
@@ -1650,22 +1669,7 @@ anonymous_function_signature
     ;
 
 explicit_anonymous_function_signature
-    : '(' explicit_anonymous_function_parameter_list? ')'
-    ;
-
-explicit_anonymous_function_parameter_list
-    : explicit_anonymous_function_parameter
-      (',' explicit_anonymous_function_parameter)*
-    ;
-
-explicit_anonymous_function_parameter
-    : attributes? 'scoped'? anonymous_function_parameter_modifier? type identifier
-    ;
-
-anonymous_function_parameter_modifier
-    : 'ref'
-    | 'out'
-    | 'in'
+    : '(' parameter_list? ')'
     ;
 
 implicit_anonymous_function_signature
@@ -2283,7 +2287,7 @@ using_directive
 
 // Source: §14.6.2 Using alias directives
 using_alias_directive
-    : 'using' identifier '=' namespace_or_type_name ';'
+    : 'using' 'unsafe'? identifier '=' (namespace_name | type) ';'
     ;
 
 // Source: §14.6.3 Using namespace directives
@@ -2293,7 +2297,7 @@ using_namespace_directive
 
 // Source: §14.6.4 Using static directives
 using_static_directive
-    : 'using' 'static' type_name ';'
+    : 'using' 'static' 'unsafe'? type_name ';'
     ;
 
 // Source: §14.7 Namespace member declarations
@@ -2323,9 +2327,20 @@ class_declaration
     ;
 
 non_record_class_declaration
+    : non_record_class_without_positional_members
+    | non_record_class_with_positional_members
+    ;
+
+non_record_class_without_positional_members
     : attributes? class_modifier* 'partial'? 'class' identifier
-        type_parameter_list? class_base? type_parameter_constraints_clause*
-        class_body
+        type_parameter_list? class_base?
+        type_parameter_constraints_clause* class_body
+    ;
+
+non_record_class_with_positional_members
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? delimited_parameter_list class_base?
+        type_parameter_constraints_clause* class_body
     ;
 
 // Source: §15.2.2.1 General
@@ -2356,6 +2371,10 @@ class_base
     : ':' class_type base_argument_list?
     | ':' interface_type_list
     | ':' class_type base_argument_list? ',' interface_type_list
+    ;
+
+base_argument_list
+    : '(' argument_list? ')'
     ;
 
 interface_type_list
@@ -2398,6 +2417,7 @@ constructor_constraint
 // Source: §15.2.6 Class body
 class_body
     : '{' class_member_declaration* '}' ';'?
+    | ';'
     ;
 
 // Source: §15.3.1 General
@@ -2559,7 +2579,7 @@ parameter_modifier
     ;
 
 parameter_mode_modifier
-    : 'ref'
+    : ref_kind
     | 'out'
     | 'in'
     ;
@@ -2848,18 +2868,7 @@ finalizer_body
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
-    ;
-
-// Source: §15.16.2 Class base specification
-base_argument_list
-    : '(' argument_list? ')'
-    ;
-
-// Source: §15.16.3 Record class body
-record_class_body
-    : class_body
-    | ';'
+      type_parameter_constraints_clause* class_body
     ;
 
 // Source: §16.2.1 General
@@ -2869,20 +2878,20 @@ struct_declaration
     ;
 
 non_record_struct_declaration
+    : non_record_struct_without_positional_members
+    | non_record_struct_with_positional_members
+    ;
+
+non_record_struct_without_positional_members
     : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* struct_body ';'?
+      type_parameter_constraints_clause* struct_body
     ;
 
-record_struct_declaration
-    : attributes? struct_modifier* 'partial'? 'record' 'struct'
-      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
-      type_parameter_constraints_clause* record_struct_body
-    ;
-
-record_struct_body
-    : struct_body ';'?
-    | ';'
+non_record_struct_with_positional_members
+    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
+      identifier type_parameter_list? delimited_parameter_list struct_interfaces?
+      type_parameter_constraints_clause* struct_body
     ;
 
 // Source: §16.2.2 Struct modifiers
@@ -2904,7 +2913,8 @@ struct_interfaces
 
 // Source: §16.2.6 Struct body
 struct_body
-    : '{' struct_member_declaration* '}'
+    : '{' struct_member_declaration* '}' ';'?
+    | ';'
     ;
 
 // Source: §16.3.1 General
@@ -2922,7 +2932,14 @@ struct_member_declaration
     | fixed_size_buffer_declaration   // unsafe code support
     ;
 
-// Source: §16.6.8.2 Ref fields
+// Source: §16.5.1 General
+record_struct_declaration
+    : attributes? struct_modifier* 'partial'? 'record' 'struct'
+      identifier type_parameter_list? delimited_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* struct_body
+    ;
+
+// Source: §16.8.8.2 Ref fields
 struct_field_declaration
     : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
       variable_declarators ';'
@@ -2947,7 +2964,7 @@ variable_initializer
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface'
       identifier variant_type_parameter_list? interface_base?
-      type_parameter_constraints_clause* interface_body ';'?
+      type_parameter_constraints_clause* interface_body
     ;
 
 // Source: §19.2.2 Interface modifiers
@@ -2982,7 +2999,8 @@ interface_base
 
 // Source: §19.3 Interface body
 interface_body
-    : '{' interface_member_declaration* '}'
+    : '{' interface_member_declaration* '}' ';'?
+    | ';'
     ;
 
 // Source: §19.4.1 General
@@ -3000,7 +3018,7 @@ interface_member_declaration
 
 // Source: §20.2 Enum declarations
 enum_declaration
-    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body
     ;
 
 enum_base
@@ -3013,8 +3031,9 @@ integral_type_name
     ;
 
 enum_body
-    : '{' enum_member_declarations? '}'
-    | '{' enum_member_declarations ',' '}'
+    : '{' enum_member_declarations? '}' ';'?
+    | '{' enum_member_declarations ',' '}' ';'?
+    | ';'
     ;
 
 // Source: §20.3 Enum modifiers

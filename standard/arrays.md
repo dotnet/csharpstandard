@@ -314,5 +314,5 @@ When an array creation expression includes both explicit dimension lengths and a
 
 A warning shall be produced for a *variable_initializer* when all the following conditions are true:
 
-- The variable initializer represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
+- The variable initializer represents an implicit or explicit identity conversion of a primary constructor parameter ([§15.11.6](classes.md#15116-primary-constructors));
 - The primary constructor parameter is captured into the state of the enclosing type.
