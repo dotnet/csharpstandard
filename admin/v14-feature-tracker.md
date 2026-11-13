@@ -10,12 +10,12 @@ Feature | PR | Status | Effort | Annotation | Notes
 ------- | -- | ------ | ------ | ---------- | ------
 Extension operators ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extension-operators.md)) | -- | | | | Combined with "Extension members" PR
 Extension members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md)) | [1833](https://github.com/dotnet/csharpstandard/pull/1833) | SPEC'D | medium | N/A | 
-`field` keyword ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/field-keyword.md)) | | | | | 
+`field` keyword ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/field-keyword.md)) | [1870](https://github.com/dotnet/csharpstandard/pull/1870) | SPEC'D | | | Authoring draft PR; not merged
 First-class span types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/first-class-span-types.md)) | | | | | 
 Ignored directives ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/ignored-directives.md)) | [1826](https://github.com/dotnet/csharpstandard/pull/1826) | SPEC'D | small | N/A | 
 null conditional assigmment ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/null-conditional-assignment.md)) | [1838](https://github.com/dotnet/csharpstandard/pull/1838) | SPEC'D | small | N/A |
 Optional and named parameters in expression trees ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/optional-and-named-parameters-in-expression-trees.md)) | | | | | See [Issue 1799](https://github.com/dotnet/csharpstandard/issues/1799); might be a no-op!
 Partial events and constructors ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/partial-events-and-constructors.md)) | [1795](https://github.com/dotnet/csharpstandard/pull/1795) | SPEC'D | medium | N/A |
-Simple lambda parameters with modifiers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/simple-lambda-parameters-with-modifiers.md)) | | | | | 
+Simple lambda parameters with modifiers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/simple-lambda-parameters-with-modifiers.md)) | [1854](https://github.com/dotnet/csharpstandard/pull/1854) | SPEC'D | | |
 Unbound generic types in nameof ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/unbound-generic-types-in-nameof.md)) | [1841](https://github.com/dotnet/csharpstandard/pull/1841) | SPEC'D | small | N/A |
-User-defined compound assignment ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/user-defined-compound-assignment.md)) | | | | | 
+User-defined compound assignment ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/user-defined-compound-assignment.md)) | [1851](https://github.com/dotnet/csharpstandard/pull/1851) | SPEC'D | | |

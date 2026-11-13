@@ -19,12 +19,9 @@ jobs:
   word-converter:
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      pull-requests: write
+      contents: read
     env:
       DOTNET_NOLOGO: true
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   
     steps:
     - name: Check out our repo
@@ -36,6 +33,16 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Run converter
+      env:
+        DIAGNOSTICS_REPORT_PATH: ${{ runner.temp }}/reports/word-converter.json
       run: |
         cd tools
         ./run-converter.sh
+
+    - name: Upload diagnostics
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: word-converter-diagnostics
+        path: ${{ runner.temp }}/reports/
+        if-no-files-found: warn

@@ -67,9 +67,10 @@ For example, this order worked best for V10:
      - classes.md**
      - structs.md*
 1. *combined assignment and declaration*
-   - https://github.com/dotnet/csharpstandard/pull/1544.patch
-   - small - 1 file
-     - expressions.md*****
+   - https://github.com/dotnet/csharpstandard/pull/1544#issuecomment-3792114353
+   - Closed without merge; apply the C# 10 change described in this comment to the TODO from merged #1538 on the owning draft.
+   - The standard restriction and TODO are already removed on `draft-v10`; retain this historical slot, but never replay the obsolete closed feature branch.
+   - Grammar-testing checker maintenance is tracked separately.
 1. *record class*
    - https://github.com/dotnet/csharpstandard/pull/1536.patch
    - tiny - 1 file

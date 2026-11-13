@@ -87,6 +87,6 @@ public class Reporter
         parent?.IncrementErrors();
     }
 
-    internal async Task WriteCheckStatus(string token, string head_sha) =>
-        await githubLogger.BuildCheckRunResult(token, "dotnet", "csharpstandard", head_sha);
+    internal Task WriteReportAsync(string outputPath, bool completedSuccessfully) =>
+        githubLogger.WriteReportAsync(outputPath, completedSuccessfully);
 }

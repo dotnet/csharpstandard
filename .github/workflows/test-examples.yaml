@@ -22,12 +22,9 @@ jobs:
   test-extraction-and-runner:
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      pull-requests: write
+      contents: read
     env:
       DOTNET_NOLOGO: true
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
     steps:
     - name: Check out our repo
@@ -45,6 +42,16 @@ jobs:
           10.0.x
 
     - name: Extract and validate tests
+      env:
+        DIAGNOSTICS_REPORT_PATH: ${{ runner.temp }}/reports/example-tests.json
       run: |
         cd tools
         ./test-examples.sh
+
+    - name: Upload diagnostics
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: example-test-diagnostics
+        path: ${{ runner.temp }}/reports/
+        if-no-files-found: warn
