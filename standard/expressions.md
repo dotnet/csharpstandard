@@ -1125,6 +1125,55 @@ When the implicit conversion from the argument type to the parameter type of an 
 >
 > *end example*
 
+> *Example*: Identity conversions permit both `ref` and `in` arguments for a `ref readonly` parameter. An unmodified argument may instead undergo an implicit conversion. These rules also apply to fixed parameters in expanded form:
+>
+> <!-- Example: {template:"standalone-console", name:"RefReadonlyArgumentMatrix", expectedOutput:["42","42","7","42:2","42:2","8:2"], ignoredWarnings:["CS9192","CS9193"]} -->
+> ```csharp
+> using System;
+> class C
+> {
+>     static void Normal(ref readonly long value) => Console.WriteLine(value);
+>     static void Expanded(ref readonly long value, params int[] extras) =>
+>         Console.WriteLine($"{value}:{extras.Length}");
+>     static void Main()
+>     {
+>         long sameType = 42;
+>         Normal(ref sameType);
+>         Normal(in sameType);
+>         Normal(7);
+>         Expanded(ref sameType, 1, 2);
+>         Expanded(in sameType, 1, 2);
+>         Expanded(8, 1, 2);
+>     }
+> }
+> ```
+>
+> *end example*
+
+> *Example*: An implicit conversion from `int` to `long` does not suffice for an explicit `ref` or `in` argument. An `out` argument does not match a `ref readonly` parameter:
+>
+> <!-- Example: {template:"standalone-lib", name:"RefReadonlyArgumentMatrixErrors", expectedErrors:["CS1503","CS1503","CS1615","CS1503","CS1503","CS1615"]} -->
+> ```csharp
+> class C
+> {
+>     static void Normal(ref readonly long value) { }
+>     static void Expanded(ref readonly long value, params int[] extras) { }
+>     static void Test()
+>     {
+>         int differentType = 7;
+>         long sameType = 42;
+>         Normal(ref differentType);
+>         Normal(in differentType);
+>         Normal(out sameType);
+>         Expanded(ref differentType, 1, 2);
+>         Expanded(in differentType, 1, 2);
+>         Expanded(out sameType, 1, 2);
+>     }
+> }
+> ```
+>
+> *end example*
+
 - A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
 - An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
   - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§12.8.14](expressions.md#12814-this-access).
