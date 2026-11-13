@@ -4090,7 +4090,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 A set accessor is permitted in a readonly context for a property that uses `field`.
 
-> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet", expectedWarnings:["CS9266","CS9266"]} -->
 > ```csharp
 > readonly struct S1
 > {
