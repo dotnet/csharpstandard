@@ -3646,7 +3646,7 @@ A *property_body* may either consist of a statement body or an expression body. 
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
-A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
+A *property_initializer* may only be given for a field-backed property (§field-backed-property), and causes the initialization of the underlying field of such a property with the value given by the *expression*.
 
 A *ref_property_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
 
@@ -3758,15 +3758,19 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
+For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon (such an accessor is called an ***auto accessor***), in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
+
+Such an accessor is called a ***full accessor***.
 
 For `abstract` and `extern` ref-valued properties the *ref_accessor_body* is simply a semicolon. For the accessor of any other non-abstract, non-extern property, the *ref_accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the get accessor is invoked; or
 - an expression body, which consists of `=>` followed by `ref`, a *variable_reference* and a semicolon. The variable reference is evaluated when the get accessor is invoked.
+
+Such an accessor is also a full accessor.
 
 A get accessor for a non-ref-valued property corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when such a property is referenced in an expression its get accessor is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -3779,16 +3783,16 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 > ```csharp
 > class Program
 > {
->     static int field;
->     static ref int Property => ref field;
+>     static int aField;
+>     static ref int Property => ref aField;
 >
 >     static void Main()
 >     {
->         field = 10;
+>         aField = 10;
 >         Console.WriteLine(Property); // Prints 10
 >         Property = 20;               // This invokes the get accessor, then assigns
 >                                      // via the resulting variable reference
->         Console.WriteLine(field);    // Prints 20
+>         Console.WriteLine(aField);   // Prints 20
 >     }
 > }
 > ```
@@ -3859,7 +3863,7 @@ Based on the presence or absence of get, set, and init accessors, a property is 
 
 For more information about set and get accessors, see [§15.7.3.2](classes.md#15732-set-and-get-accessors).
 
-> *Example*: Consider the following, immutable type, which has auto-implemented properties:
+> *Example*: Consider the following, immutable type, which has automatically implemented properties:
 >
 > <!-- Example: {template:"standalone-lib", name:"AccessorsInit1"} -->
 > ```csharp
@@ -4084,6 +4088,22 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > *end example*
 
+A set accessor is permitted in a readonly context for a property that uses `field`.
+
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet", expectedWarnings:["CS9266","CS9266"]} -->
+> ```csharp
+> readonly struct S1
+> {
+>     object P1 { get => field; set { } }
+> }
+> struct S2
+> {
+>     readonly object P2 { get => field; set { } }
+> }
+> ```
+>
+> *end example*
+
 #### 15.7.3.3 Init accessors
 
 An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
@@ -4250,7 +4270,7 @@ However, there are restrictions:
 - A property cannot contain both an init accessor and a set accessor
 - All overrides of a property shall have `init` if the base has `init`. This rule also applies to interface implementation.
 
-Init accessors (both auto- and manually-implemented) are permitted on properties of `readonly struct`s, as well as `readonly` properties. Init accessors are not permitted to be marked `readonly` themselves, in both `readonly` and non-`readonly struct` types.
+Init accessors—both auto- and full ([§15.7.3.1](classes.md#15731-general))—are permitted on properties of `readonly struct`s, as well as `readonly` properties. Init accessors are not permitted to be marked `readonly` themselves, in both `readonly` and non-`readonly struct` types.
 
 > *Example*:
 >
@@ -4272,9 +4292,9 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
+An ***automatically implemented property*** (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property. An auto-property shall have a get accessor and may optionally have a set or init accessor all of which shall be auto accessors ([§15.7.3.1](classes.md#15731-general)).
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
+When a property is specified as an automatically implemented property, a hidden backing field (§field-backed-property) is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible; it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
@@ -4347,11 +4367,42 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
-Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§15.7.1](classes.md#1571-general)).
+### §field-backed-property Field-backed property
+
+An implementation shall provide a backing field for a property when:
+
+- That property is an auto-property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), or
+- Any of its accessor bodies contains the contextual keyword `field`.
+
+Such a property is a ***field-backed property***.
+
+The backing field can be read and written through the automatically implemented property accessors or via `field`.
+
+While every auto-property is a field-backed property, not every field-backed property is an auto-property. Consider the following property declaration fragments:
+
+```csharp
+P1 { get; set; }                 // field-backed and auto property, 2 auto accessors
+P2 { get => field; set => field = value; } // field-backed, 2 full accessors
+P3 { get { return field; } set { field = value; } } // field-backed, 2 full accessors
+P4 { get => field; set; }          // field-backed, 1 full accessor, 1 auto accessor
+P5 { get { return field; } set; }  // field-backed, 1 full accessor, 1 auto accessor
+P6 { get; set => field = value; }  // field-backed, 1 auto accessor, 1 full accessor
+P7 { get; set { field = value; } } // field-backed, 1 auto accessor, 1 full accessor
+```
+
+`P2` and `P3` are equivalent and their (user-written) full accessors ([§15.7.3.1](classes.md#15731-general)) explicitly do what `P1`’s (implementation-generated) auto accessors do. (Of course, the full accessors could do more or different things!) However, because at least one accessor of `P2` and `P3` contains `field`, those are not auto-properties. And as `P1` has only auto-accessors, it’s an auto-property.
+
+`P4` and `P5` are equivalent, as are `P6` and `P7`, but none of them are auto-properties.
+
+The backing field is read-only when the containing type is a struct and the property or containing type is declared `readonly`.
+
+It is a compile-time error to declare a local constant or variable called `field` in a full accessor.
+
+The backing field may have field-targeted attributes applied directly to it via the property’s *property_declaration* ([§15.7.1](classes.md#1571-general)).
 
 > *Example*: The following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties5"} -->
+> <!-- Example: {template:"standalone-lib", name:"BackingField1A"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
@@ -4363,7 +4414,7 @@ Although the backing field is hidden, that field may have field-targeted attribu
 >
 > results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
 >
-> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties6"} -->
+> <!-- Example: {template:"standalone-lib", name:"BackingField1B"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
@@ -4378,7 +4429,9 @@ Although the backing field is hidden, that field may have field-targeted attribu
 > }
 > ```
 >
-> *end example*
+> The same approach is used for a property having one or more full accessors. *end example*
+
+If a field-targeted attribute is applied to a property that has no backing field, that attribute shall be ignored.
 
 ### 15.7.5 Accessibility
 
@@ -4615,9 +4668,9 @@ When a *property_declaration* includes `partial`, that property is said to be a 
 
 Partial properties may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
 
-There are two kinds of partial property declarations: If the body of each of the property’s accessors is a semicolon and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
+There are two kinds of partial property declarations: If the property’s accessors are auto accessors ([§15.7.3.1](classes.md#15731-general)) and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
 
-*Note*: As the syntactic form of a property with semicolon accessor bodies is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
+*Note*: As the syntactic form of a property with auto accessors is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
 
 Partial properties are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
 
@@ -4645,6 +4698,10 @@ Partial properties are useful for allowing one part of a type declaration to cus
 > *end example*
 
 Across the parts of a type declaration, there shall be only one defining partial property declaration with a given signature, and there shall be only one implementing partial property declaration with a given signature.
+
+At least one implementing partial property accessor shall be a full accessor.
+
+A defining partial property declaration or an implementing partial property may contain a *property_initializer*; however, it is compile-time error if both do.
 
 The signature-matching requirements are as follows:
 
