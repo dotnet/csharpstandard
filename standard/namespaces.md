@@ -27,7 +27,7 @@ The *extern_alias_directive*s ([§14.4](namespaces.md#144-extern-alias-directive
 
 The *using_directive*s ([§14.6](namespaces.md#146-using-directives)) of a compilation unit affect the *global_attributes* and *compilation_unit_body* of that compilation unit, but have no effect on other compilation units.
 
-The *global_using_directive*s of a compilation unit affect the *global_attributes* and *namespace_member_declaration*s of all compilation units in the program.
+The *global_using_directive*s of a compilation unit affect the *global_attributes*, *statement_list*, and *namespace_member_declaration*s of all compilation units in the program.
 
 The *global_attributes* ([§23.3](attributes.md#233-attribute-specification)) of a compilation unit permit the specification of attributes for the target assembly and module. Assemblies and modules act as physical containers for types. An assembly may consist of several physically separate modules.
 
@@ -178,7 +178,7 @@ extern_alias_directive
     ;
 ```
 
-The scope of an *extern_alias_directive* is described in [§7.7.1](basic-concepts.md#771-general).
+The scope of an *extern_alias_directive* is described in [§7.6](basic-concepts.md#76-scopes).
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
@@ -221,9 +221,61 @@ global_using_directive
     ;
 ```
 
-> *Note*: The scope of a *global_using_directive* extends over the *namespace_member_declaration*s of all compilation units within the program. The scope of a *global_using_directive* specifically does not include other *global_using_directive*s. Thus, peer *global_using_directive*s or those from a different compilation unit do not affect each other, and the order in which they are written is insignificant. The scope of a *global_using_directive* specifically does not include *using_directive*s immediately contained in any compilation unit of the program.
+> *Note*: The scope of a *global_using_directive* extends over the *global_attributes*, *statement_list*, and *namespace_member_declaration*s of all compilation units within the program. The scope of a *global_using_directive* specifically does not include other *global_using_directive*s. Thus, peer *global_using_directive*s or those from a different compilation unit do not affect each other, and the order in which they are written is insignificant. The scope of a *global_using_directive* specifically does not include *using_directive*s immediately contained in any compilation unit of the program.
 >
 > The effect of adding a *global_using_directive* to a program can be thought of as the effect of adding a similar *using_directive* that resolves to the same target namespace or type to every compilation unit of the program. However, the target of a *global_using_directive* is resolved in the context of the compilation unit that contains it. *end note*
+>
+> *Example*: Global imports in one file are available to top-level statements in another file. Imported static methods with the same name form a method group, so overload resolution can select methods from different imported types. The namespace-local `Text` alias in `Helpers` hides the global alias there: `Text` names `int` inside `Helpers`, but `string` in the top-level statements.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"GlobalUsingDirectives1", inferOutput:true} -->
+> ```csharp
+> // File Imports.cs:
+> global using System;
+> global using Text = System.String;
+> global using static Helpers.Numbers;
+> global using static Helpers.Words;
+>
+> // File Main.cs:
+> Console.WriteLine(typeof(Text).Name);
+> Console.WriteLine(Value);
+> Console.WriteLine(Describe(3));
+> Console.WriteLine(Describe("word"));
+> Console.WriteLine(Echo(4));
+> Console.WriteLine(Echo<Text>("text"));
+> Console.WriteLine(typeof(Box<int>).Name);
+>
+> namespace Helpers
+> {
+>     using Text = System.Int32;
+>
+>     public static class Numbers
+>     {
+>         public static Text Value => Text.Parse("7");
+>         public static int Describe(int value) => value;
+>         public static T Echo<T>(T value) => value;
+>         public class Box<T> { }
+>     }
+>
+>     public static class Words
+>     {
+>         public static string Describe(string value) => value;
+>     }
+> }
+> ```
+>
+> The output is:
+>
+> ```console
+> String
+> 7
+> 3
+> word
+> 4
+> text
+> Box`1
+> ```
+>
+> *end example*
 
 ### 14.5.2 Global using alias directives
 
@@ -235,7 +287,7 @@ global_using_alias_directive
     ;
 ```
 
-Within member declarations in any compilation unit of a program that contains a *global_using_alias_directive*, the *identifier* introduced by the *global_using_alias_directive* can be used to reference the given namespace or type.
+Within global attributes, top-level statements, and member declarations in any compilation unit of a program that contains a *global_using_alias_directive*, the *identifier* introduced by the *global_using_alias_directive* can be used to reference the given namespace or type.
 
 The *identifier* of a *global_using_alias_directive* shall be unique within the declaration space of any compilation unit of a program that contains the *global_using_alias_directive*.
 
@@ -259,7 +311,7 @@ global_using_namespace_directive
     ;
 ```
 
-Within member declarations in a program that contains a *global_using_namespace_directive*, the types contained in the given namespace can be referenced directly.
+Within global attributes, top-level statements, and member declarations in a program that contains a *global_using_namespace_directive*, the types contained in the given namespace can be referenced directly.
 
 A *global_using_namespace_directive* imports the types contained in the given namespace, but specifically does not import nested namespaces.
 
@@ -267,7 +319,38 @@ Unlike a *global_using_alias_directive*, a *global_using_namespace_directive* ma
 
 When more than one namespace or type imported by *global_using_namespace_directive*s or *global_using_static_directive*s in the same program contain types by the same name, references to that name as a *type_name* are considered ambiguous.
 
-Furthermore, when more than one namespace or type imported by *global_using_namespace_directive*s or *global_using_static_directive*s in the same program contain types or members by the same name, references to that name as a *simple_name* are considered ambiguous.
+Furthermore, when more than one namespace or type imported by *global_using_namespace_directive*s or *global_using_static_directive*s in the same program contain types or members by the same name, references to that name as a *simple_name* are resolved as described in [§12.8.4](expressions.md#1284-simple-names). Imported methods may form a method group; other conflicting candidates make the reference ambiguous.
+
+> *Example*: A type name ignores imported non-type members, but a simple name considers them. Methods imported from different types participate in overload resolution, which may itself be ambiguous:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"GlobalUsingDirectives2", expectedErrors:["CS0229", "CS0121"]} -->
+> ```csharp
+> global using Models;
+> global using static First;
+> global using static Second;
+>
+> Item item = new Item();
+> System.Console.WriteLine(Item); // Error: imported type and property
+> Pick(1);                       // Error: equally applicable methods
+>
+> namespace Models
+> {
+>     public class Item { }
+> }
+>
+> static class First
+> {
+>     public static int Item => 1;
+>     public static void Pick(int value) { }
+> }
+>
+> static class Second
+> {
+>     public static void Pick(int value) { }
+> }
+> ```
+>
+> *end example*
 
 The *namespace_name* referenced by a *global_using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *global_using_alias_directive*. Thus, *global_using_namespace_directive*s in the same program do not affect each other and can be written in any order.
 
@@ -281,7 +364,7 @@ global_using_static_directive
     ;
 ```
 
-Within member declarations in a program that contains a *global_using_static_directive*, the accessible nested types and static members (except extension methods) contained directly in the declaration of the given type can be referenced directly.
+Within global attributes, top-level statements, and member declarations in a program that contains a *global_using_static_directive*, the accessible nested types and static members (except extension methods) contained directly in the declaration of the given type can be referenced directly.
 
 A *global_using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation.
 
@@ -311,7 +394,7 @@ A *using_namespace_directive* ([§14.6.3](namespaces.md#1463-using-namespace-dir
 
 A *using_static_directive* ([§14.6.4](namespaces.md#1464-using-static-directives)) imports the nested types and static members of a type.
 
-The scope of a *using_directive* is described in [§7.7.1](basic-concepts.md#771-general).
+The scope of a *using_directive* is described in [§7.6](basic-concepts.md#76-scopes).
 
 ### 14.6.2 Using alias directives
 
@@ -757,7 +840,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >
 > *end example*
 
-Furthermore, when more than one namespace or type imported by *using_namespace_directive*s or *using_static_directive*s in the same compilation unit or namespace body contain types or members by the same name, references to that name as a *simple_name* are considered ambiguous.
+Furthermore, when more than one namespace or type imported by *using_namespace_directive*s or *using_static_directive*s in the same compilation unit or namespace body contain types or members by the same name, references to that name as a *simple_name* are resolved as described in [§12.8.4](expressions.md#1284-simple-names). Imported methods may form a method group; other conflicting candidates make the reference ambiguous.
 
 > *Example*:
 >

@@ -670,6 +670,7 @@
     - [§15.14.2](classes.md#15142-task-type-builder-pattern)  Task-type builder pattern
     - [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
     - [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+    - [§15.14.5](classes.md#15145-task-builder-selection)  Task builder selection
   - [§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)  Synchronous and asynchronous iterators
     - [§15.15.1](classes.md#15151-general)  General
     - [§15.15.2](classes.md#15152-enumerator-interfaces)  Enumerator interfaces
@@ -720,16 +721,15 @@
     - [§16.5.2](structs.md#1652-struct-members)  Struct members
     - [§16.5.3](structs.md#1653-implicit-record-struct-members)  Implicit record struct members
       - [§16.5.3.1](structs.md#16531-general)  General
-      - [§16.5.3.2](structs.md#16532-primary-constructors)  Primary constructors
-      - [§16.5.3.3](structs.md#16533-equality-members)  Equality members
-      - [§16.5.3.4](structs.md#16534-printing-members)  Printing members
-      - [§16.5.3.5](structs.md#16535-positional-record-struct-members)  Positional record struct members
-        - [§16.5.3.5.1](structs.md#165351-general)  General
-        - [§16.5.3.5.2](structs.md#165352-primary-constructor)  Primary constructor
-        - [§16.5.3.5.3](structs.md#165353-properties)  Properties
-        - [§16.5.3.5.4](structs.md#165354-deconstruct)  Deconstruct
+      - [§16.5.3.2](structs.md#16532-equality-members)  Equality members
+      - [§16.5.3.3](structs.md#16533-printing-members)  Printing members
+      - [§16.5.3.4](structs.md#16534-positional-record-struct-members)  Positional record struct members
+        - [§16.5.3.4.1](structs.md#165341-general)  General
+        - [§16.5.3.4.2](structs.md#165342-primary-constructor)  Primary constructor
+        - [§16.5.3.4.3](structs.md#165343-properties)  Properties
+        - [§16.5.3.4.4](structs.md#165344-deconstruct)  Deconstruct
   - [§16.6](structs.md#166-inline-arrays)  Inline arrays
-  - [§16.7](structs.md#167-record-struct-and-non-record-struct-differences)  Record struct and non-record struct differences
+  - [§16.7](structs.md#167-record-struct-and-struct-differences)  Record struct and struct differences
   - [§16.8](structs.md#168-class-and-struct-differences)  Class and struct differences
     - [§16.8.1](structs.md#1681-general)  General
     - [§16.8.2](structs.md#1682-value-semantics)  Value semantics
@@ -924,8 +924,9 @@
   - [§B.1](portability-issues.md#b1-general)  General
   - [§B.2](portability-issues.md#b2-undefined-behavior)  Undefined behavior
   - [§B.3](portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
-  - [§B.4](portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
-  - [§B.5](portability-issues.md#b5-other-issues)  Other issues
+  - [§B.4](portability-issues.md#b4-implementation-specific-behavior)  Implementation-specific behavior
+  - [§B.5](portability-issues.md#b5-unspecified-behavior)  Unspecified behavior
+  - [§B.6](portability-issues.md#b6-other-issues)  Other issues
 - [§C](standard-library.md#annex-c-standard-library)  Standard library
   - [§C.1](standard-library.md#c1-general)  General
   - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271

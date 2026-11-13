@@ -154,7 +154,11 @@ namespace System
     }
 
     public readonly struct Int16 { }
-    public readonly struct Int32 { }
+    public readonly struct Int32
+    {
+        public const int MinValue;
+        public const int MaxValue;
+    }
     public readonly struct Int64 { }
     public readonly struct IntPtr { }
 
@@ -248,7 +252,8 @@ namespace System
         public char this [int index] { get; }
         public static string Format(string format, params object?[] args);
         System.Collections.IEnumerator IEnumerable.GetEnumerator();
-        System.Collections.Generic.IEnumerator<char> IEnumerable<char>.GetEnumerator();
+        System.Collections.Generic.IEnumerator<char>
+            IEnumerable<char>.GetEnumerator();
     }
 
     public class SystemException : Exception
@@ -267,7 +272,11 @@ namespace System
     }
 
     public readonly struct UInt16 { }
-    public readonly struct UInt32 { }
+    public readonly struct UInt32
+    {
+        public const int MinValue;
+        public const int MaxValue;
+    }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
 
@@ -418,7 +427,8 @@ namespace System
     {
         public OperationCanceledException();
         public OperationCanceledException(string? message);
-        public OperationCanceledException(string? message, Exception? innerException);
+        public OperationCanceledException(
+            string? message, Exception? innerException);
     }
 
     /// <summary>
@@ -778,6 +788,13 @@ namespace System.Diagnostics.CodeAnalysis
         public NotNullWhenAttribute(bool returnValue);
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Constructor,
+      AllowMultiple=false, Inherited=false)]
+    public sealed class SetsRequiredMembersAttribute : Attribute
+    {
+        public SetsRequiredMembersAttribute() {}
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Method
       | System.AttributeTargets.Parameter
       | System.AttributeTargets.Property,
@@ -785,13 +802,6 @@ namespace System.Diagnostics.CodeAnalysis
     public sealed class UnscopedRefAttribute : Attribute
     {
         public UnscopedRefAttribute();
-    }
-
-    [System.AttributeUsage(System.AttributeTargets.Constructor,
-      AllowMultiple=false, Inherited=false)]
-    public sealed class SetsRequiredMembersAttribute : Attribute
-    {
-        public SetsRequiredMembersAttribute() {}
     }
 }
 
@@ -825,6 +835,7 @@ namespace System.Runtime.CompilerServices
         public string MethodName { get; }
     }
 
+    [InterpolatedStringHandler]
     public ref struct DefaultInterpolatedStringHandler
     {
         public DefaultInterpolatedStringHandler(int literalLength,
@@ -833,11 +844,11 @@ namespace System.Runtime.CompilerServices
             int formattedCount, IFormatProvider? provider);
         public DefaultInterpolatedStringHandler(int literalLength,
             int formattedCount, IFormatProvider? provider, Span<char> initialBuffer);
-        public void AppendFormatted(scoped ReadOnlySpan<char> value);
+        public void AppendFormatted(ReadOnlySpan<char> value);
         public void AppendFormatted(string? value);
         public void AppendFormatted(object? value, int alignment = 0,
             string? format = default);
-        public void AppendFormatted(scoped ReadOnlySpan<char> value,
+        public void AppendFormatted(ReadOnlySpan<char> value,
             int alignment = 0, string? format = default);
         public void AppendFormatted(string? value, int alignment = 0,
             string? format = default);
@@ -1042,7 +1053,8 @@ namespace System.Threading.Tasks
 
     public class Task<TResult> : Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<TResult> GetAwaiter();
+        public new System.Runtime.CompilerServices.TaskAwaiter<TResult>
+            GetAwaiter();
     }
 
     public readonly struct ValueTask : System.IEquatable<ValueTask>
@@ -1530,8 +1542,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
-- `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
 - `global::System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute`
+- `global::System.Diagnostics.CodeAnalysis.UnscopedRefAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
