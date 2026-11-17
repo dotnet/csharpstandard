@@ -1019,7 +1019,7 @@ A *String_Literal* that contains a *Utf8_Suffix* is a ***UTF-8 string literal***
 >
 > *end example*
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each UTF-16 string literal does not necessarily result in a new string instance. When two or more UTF-16 string literals that are equivalent according to the string equality operator ([§12.15.8](expressions.md#12158-string-equality-operators)), appear in the same assembly, these UTF-16 string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >

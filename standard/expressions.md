@@ -4481,7 +4481,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   This overload of the binary `+` operator performs concatenation of UTF-8 string literals and the results of other applications of this operator (which is much more restrictive than UTF-16 string concatenation). It is applicable if and only if both operands are *semantically UTF-8 byte representations*. An operand is *semantically a UTF-8 byte representation* if it is a UTF-8 string literal, the result of an application of this operator, or a parenthesized expression whose enclosed expression is *semantically a UTF-8 byte representation*.
 
-  The result of the operator is a `ReadOnlySpan<byte>` that consists of the bytes of the left operand followed by the bytes of the right operand. The result is itself *semantically a UTF-8 byte representation*, and so may be used as an operand to a further application of this operator.
+  The result of the operator is a `ReadOnlySpan<byte>` that consists of the bytes of the left operand followed by the bytes of the right operand. A null terminator (a byte with value zero) is placed immediately beyond the last byte in memory (and outside the length of the `ReadOnlySpan<byte>`). The result is itself *semantically a UTF-8 byte representation*, and so may be used as an operand to a further application of this operator.
 
   > *Example*:
   >
