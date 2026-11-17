@@ -1552,6 +1552,8 @@ Six of the lexical rules defined above are *context sensitive* as follows:
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
 | *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
 
+Expressions within a *regular_interpolation* follow the ordinary lexical rules ([§6.3](lexical-structure.md#63-lexical-analysis)), so line terminators, white space, and comments are permitted as in other expressions.
+
 > *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
 <!-- markdownlint-disable MD028 -->
