@@ -1600,7 +1600,7 @@ For mapping a source span whose start is in the scope of an enhanced directive, 
 
 All line and column numbers in the following rules are 1-based. Source spans and mapped spans use an inclusive start position and an exclusive end position. Column numbers and the offset are measured in UTF-16 code units.
 
-If a source span starts on line *F* at a column less than or equal to *O*, the entire source span maps to the span from (*startLine*, *startColumn*) to (*endLine*, *endColumn* + 1), regardless of the source span's end position.
+If a source span starts on line *F* at a column less than or equal to *O*, the entire source span maps to the span from (*startLine*, *startColumn*) to (*endLine*, *endColumn* + 1), regardless of the source span’s end position.
 
 Otherwise, the start and end positions of the source span are each mapped as follows. A position (*l*, *c*) maps to:
 

@@ -964,7 +964,7 @@ The captured string is then passed as the argument corresponding to the target p
 >
 > *end example*
 >
-> *Example*: An optional target parameter can capture an extension method's receiver by naming the first parameter. Both invocation forms below capture `value`:
+> *Example*: An optional target parameter can capture an extension method’s receiver by naming the first parameter. Both invocation forms below capture `value`:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"CallerArgumentAttr3", inferOutput:true} -->
 > ```csharp
@@ -1517,7 +1517,7 @@ Constructor binding is performed on `T` using this argument list and the ordinar
 Append methods are resolved only for components present in the *interpolated_string_handler_expression*:
 
 - For each nonempty literal segment, an invocation of `AppendLiteral` is resolved with one value argument of type `string`.
-- For each interpolation, an invocation of `AppendFormatted` is resolved. Its first argument is the interpolation's *expression*, passed by value. If an *interpolation_minimum_width* is present, its constant value is supplied as a named argument `alignment`. If a format specifier is present, its text is supplied as a named argument `format`.
+- For each interpolation, an invocation of `AppendFormatted` is resolved. Its first argument is the interpolation’s *expression*, passed by value. If an *interpolation_minimum_width* is present, its constant value is supplied as a named argument `alignment`. If a format specifier is present, its text is supplied as a named argument `format`.
 
 Member lookup and overload resolution use the ordinary rules for invocation through an instance of `T` ([§12.8.10.2](expressions.md#128102-method-invocations)). Each selected append method shall be an accessible instance method; extension methods are not considered. Optional parameters, generic inference, and argument conversions apply as usual. Every selected append method shall return either `void` or `bool` by value, and all selected append methods shall return the same type. A missing, ambiguous, or otherwise invalid required method is a compile-time error.
 
@@ -1576,7 +1576,7 @@ Handler conversion does not implicitly invoke `ToString` or require a handler to
 
 ##### 23.5.9.1.2 Inhibiting a custom handler
 
-If constructor resolution selects a constructor with an `out bool` argument, that argument's value is tested after construction. If it is `true`, component processing begins. If it is `false`, the handler is *inhibited*: no interpolation expression is evaluated and no append method is called. This test is separate from the short-circuiting performed after each bool-returning append call.
+If constructor resolution selects a constructor with an `out bool` argument, that argument’s value is tested after construction. If it is `true`, component processing begins. If it is `false`, the handler is *inhibited*: no interpolation expression is evaluated and no append method is called. This test is separate from the short-circuiting performed after each bool-returning append call.
 
 ``` csharp
 public LogInterpolatedStringHandler(int literalLength, int formattedCount,
@@ -1626,9 +1626,9 @@ public ref struct LogInterpolatedStringHandler
 
 `InterpolatedStringHandlerArgumentAttribute` is applied to the handler parameter. Its arguments specify an ordered list of parameter names to forward to the handler constructor. An empty list forwards nothing. An empty string designates the receiver of the containing invocation.
 
-Each nonempty name shall identify another parameter of the containing member. An unknown name, the handler parameter's own name, or a request for an unavailable receiver, including that of a static method, is a compile-time error. A declaration may produce a warning if a named parameter is declared after the handler parameter; this does not make the declaration invalid.
+Each nonempty name shall identify another parameter of the containing member. An unknown name, the handler parameter’s own name, or a request for an unavailable receiver, including that of a static method, is a compile-time error. A declaration may produce a warning if a named parameter is declared after the handler parameter; this does not make the declaration invalid.
 
-At a use of the handler conversion, each forwarded argument shall occur lexically before the *interpolated_string_handler_expression* in the invocation's argument list. A forwarded argument cannot be omitted and supplied by a parameter's default value. These requirements depend on call-site order, not declaration order; named arguments can therefore make a warned declaration usable. A request to forward an indexer receiver when the indexer is an *initializer_target* in a *member_initializer* is a compile-time error.
+At a use of the handler conversion, each forwarded argument shall occur lexically before the *interpolated_string_handler_expression* in the invocation’s argument list. A forwarded argument cannot be omitted and supplied by a parameter’s default value. These requirements depend on call-site order, not declaration order; named arguments can therefore make a warned declaration usable. A request to forward an indexer receiver when the indexer is an *initializer_target* in a *member_initializer* is a compile-time error.
 
 Constructor overload resolution uses the parameter types of the containing member after substitution of its type arguments, not the original argument expressions. Forwarded arguments retain their parameter-passing modes. At run time, the already evaluated receiver and the already converted argument values or evaluated storage locations are reused by the handler construction and the containing invocation, preserving reference semantics. Additional conversions needed by the constructor are applied to these retained values; the original expressions are not evaluated or bound again.
 
