@@ -15,6 +15,8 @@ The value against which a pattern is tested is called the ***pattern input value
 
 A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
 
+The length and element-position constraints and shape assumptions for list and slice patterns are specified in §list-pattern-new-clause.
+
 In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.12](expressions.md#1212-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
 
 A set of patterns is exhaustive if, for every possible input value, some pattern in the set is applicable. When an implementation detects that a set of patterns is not exhaustive, it shall issue a warning.
@@ -85,7 +87,7 @@ Each pattern form defines the set of types for input values that the pattern may
 
 Each pattern form defines the set of values for which the pattern *matches* the value at runtime.
 
-The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
+The order of evaluation of operations and side effects during pattern-matching (calls to `Deconstruct`, property accesses, indexer accesses, slicing operations, and invocations of members of `System.Runtime.CompilerServices.ITuple`) is not specified.
 
 ### 11.2.2 Declaration pattern
 
@@ -690,6 +692,7 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 - If `P` is a type pattern, the *narrowed type* is the type of the type pattern’s type.
 - Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern’s type.
 - Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
+- Otherwise, if `P` is a list pattern whose *input type* is a nullable value type, the *narrowed type* is the underlying type of the *input type*.
 - Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)), the *narrowed type* is the type `System.ITuple`.
 - Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
@@ -819,17 +822,33 @@ list_pattern_clause
     ;
 ```
 
-A *list_pattern* is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *indexable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support)  for details of implicit index support.)
+Let `T` be the input type, or its underlying type if it is a nullable value type. A *list_pattern* is applicable to its input type if `T` is *countable* ([§18.1](ranges.md#181-general)) as well as *indexable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes an `Index` as an argument, or an accessible indexer with a single `int` parameter. If both indexers are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support) for details of implicit index support.) The countable property and indexer selected by these rules are used for matching.
 
-A pattern of the form `expr is [1, 2, 3]` is equivalent to the following code:
+The expression supplying the input value is evaluated only once. A *list_pattern* matches a non-null input value when all of the following conditions are satisfied:
 
-```csharp
-expr.Length is 3
-&& expr[new Index(0, fromEnd: false)] is 1
-&& expr[new Index(1, fromEnd: false)] is 2
-&& expr[new Index(2, fromEnd: false)] is 3
-```
+- The length represented by the selected countable property is equal to the number of patterns in the *list_pattern_clause* if there is no *slice_pattern*, or at least the number of patterns other than the *slice_pattern* otherwise.
+- Each element pattern matches its corresponding element. Elements before a *slice_pattern*, or in a list pattern without one, are indexed from the start, beginning at zero. Elements after a *slice_pattern* are indexed from the end, with the last element at from-end index one. The element input value and type are those provided by the selected indexer at that position.
+- The *slice_pattern*, if present, matches as specified in §slice-pattern-new-clause.
 
+For a nullable value type input, matching uses its underlying value. If the *simple_designation* is a *single_variable_designation*, it declares a local variable of type `T` that is assigned the matched input value when the pattern matches. Scope and definite assignment follow the rules for pattern variables ([§7.6](basic-concepts.md#76-scopes), [§9.4](variables.md#94-definite-assignment)).
+
+For pattern matching on a countable, indexable type, the selected countable property is assumed to return a non-negative value. The selected slicing member is assumed to return a non-null slice containing exactly the elements in the requested range, in their original order. The behavior of a pattern-matching operation is undefined if these assumptions do not hold.
+
+Subsumption checking ([§11.1](patterns.md#111-general)) may rely on these assumptions and the constraints on length and element positions. Positions indexed from the start and from the end refer to the same element when the length makes their offsets equal. When a slice subpattern is a list pattern, its length and element constraints apply to the corresponding range of the containing input. A constraint on the selected countable property of a slice constrains the length of that range.
+
+> *Note*: For a non-null input stored in `expr`, with selected `Length` and `Index` members, the following illustrates the tests for `expr is [1, 2, 3]`. The displayed order of tests is illustrative; the order of pattern-matching operations is unspecified ([§11.2.1](patterns.md#1121-general)).
+>
+> ```csharp
+> expr.Length is 3
+> && expr[new Index(0, fromEnd: false)] is 1
+> && expr[new Index(1, fromEnd: false)] is 2
+> && expr[new Index(2, fromEnd: false)] is 3
+> ```
+>
+> *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console", name:"ListPattern1", expectedOutput:["True", "False", "False", "True"]} -->
@@ -844,7 +863,7 @@ expr.Length is 3
 >
 > *end example*
 
-The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any single element.
+The discard pattern ([§11.2.7](patterns.md#1127-discard-pattern)) matches any single element without accessing it.
 
 > *Example*:
 >
@@ -870,19 +889,25 @@ slice_pattern
     ;
 ```
 
-A *slice_pattern* without a subpattern is compatible with any type that is compatible with a *list_pattern*. A *slice_pattern* with a subpattern is compatible with any type that is *countable* ([§18.1](ranges.md#181-general)) as well as *sliceable* ([§18.1](ranges.md#181-general))—it has an accessible indexer that takes a `Range` as an argument, or an accessible `Slice` method with two `int` parameters. If both are present, the former is preferred. (See [§18.4.2](ranges.md#1842-implicit-index-support) for details of implicit index support.)
+A *slice_pattern* without a subpattern is applicable to any type to which a *list_pattern* is applicable. With a subpattern, the containing list pattern's type `T` shall also be *sliceable* ([§18.1](ranges.md#181-general)). It has an accessible indexer that takes a `Range` as an argument, or an accessible instance `Slice` method with two required `int` parameters. If both are present, the former is preferred. (See [§18.4.3](ranges.md#1843-implicit-range-support) for details of implicit range support.)
 
-A *slice_pattern* acts like a proper discard; that is, no tests shall be made for such pattern. Rather, it only affects other nodes, namely the length and indexer. For instance, a pattern of the form `expr is [1, .. var s, 3]`  is equivalent to the following code (if compatible via explicit `Index` and `Range` support):
+A *slice_pattern* without a subpattern, or with a discard subpattern, matches without accessing a slice. When it is the only pattern in the containing *list_pattern_clause*, the countable property is not accessed.
 
-```csharp
-expr.Length is >= 2
-&& expr[new Index(0, fromEnd: false)] is 1
-&& expr[new Range(new Index(1, fromEnd: false), new Index(1, fromEnd: true))] is var s
-&& expr[new Index(1, fromEnd: true)] is 3
-```
+Otherwise, let `p` and `q` be the numbers of element patterns before and after the slice pattern, respectively, and let `n` be the input length. The slice subpattern is tested against the value returned by the selected slicing member for the range starting at from-start index `p` and ending at from-end index `q`. For an `int`-based `Slice` method, the arguments are `p` and `n - p - q`. The slice pattern matches when its subpattern matches that value. The input type of the subpattern is the return type of the selected member. For strings and arrays, the slice subpattern is tested against the corresponding substring or subarray, with input types `string` and the input array type, respectively.
 
-The input type for a *slice_pattern* is the return type of the underlying `this[Range]` or `Slice` method with two exceptions: For `string`s and arrays, `string.Substring` and `RuntimeHelpers.GetSubArray`, respectively, shall be used.
+> *Note*: With the same illustrative conventions as in §list-pattern-new-clause, and selected `Length`, `Index`, and `Range` members, the tests for `expr is [1, .. var s, 3]` can be illustrated as follows:
+>
+> ```csharp
+> expr.Length is >= 2
+> && expr[new Index(0, fromEnd: false)] is 1
+> && expr[new Range(new Index(1, fromEnd: false), new Index(1, fromEnd: true))] is var s
+> && expr[new Index(1, fromEnd: true)] is 3
+> ```
+>
+> *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: A slice pattern  can be used to match elements only at the start or/and the end of an input sequence.
 >
 > <!-- Example: {template:"standalone-console", name:"SlicePattern1", expectedOutput:[ "True", "True", "False", "False", "True", "False", "True", "True", "True", "False"]} -->
