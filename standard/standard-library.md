@@ -372,6 +372,16 @@ namespace System.Reflection
     {
         protected MemberInfo();
     }
+
+    public abstract class MethodBase : MemberInfo
+    {
+        protected MethodBase();
+    }
+
+    public abstract class MethodInfo : MethodBase
+    {
+        protected MethodInfo();
+    }
 }
 
 namespace System.Runtime.CompilerServices
@@ -781,9 +791,36 @@ namespace System.Diagnostics.CodeAnalysis
 
 namespace System.Linq.Expressions
 {
-    public sealed class Expression<TDelegate>
+    public class BinaryExpression : Expression
+    {
+        public System.Reflection.MethodInfo? Method { get; }
+    }
+
+    public abstract class Expression
+    {
+        protected Expression();
+        public static UnaryExpression NegateChecked(Expression expression,
+            System.Reflection.MethodInfo? method);
+        public static BinaryExpression AddChecked(Expression left,
+            Expression right, System.Reflection.MethodInfo? method);
+        public static BinaryExpression SubtractChecked(Expression left,
+            Expression right, System.Reflection.MethodInfo? method);
+        public static BinaryExpression MultiplyChecked(Expression left,
+            Expression right, System.Reflection.MethodInfo? method);
+        public static UnaryExpression ConvertChecked(Expression expression,
+            System.Type type, System.Reflection.MethodInfo? method);
+    }
+
+    public sealed class Expression<TDelegate> : LambdaExpression
     {
         public TDelegate Compile();
+    }
+
+    public abstract class LambdaExpression : Expression { }
+
+    public sealed class UnaryExpression : Expression
+    {
+        public System.Reflection.MethodInfo? Method { get; }
     }
 }
 
