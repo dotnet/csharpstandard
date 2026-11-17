@@ -141,9 +141,9 @@ public class MarkdownSourceConverter
                         {
                             // The number of null-forgiving operators here is alarming, but ultimately it's simpler to accept
                             // an NRE being thrown if we have a malformed document than to try to guard against it.
-                            var numbering = wordDocument.MainDocumentPart!.NumberingDefinitionsPart!.Numbering.OfType<NumberingInstance>().First(ni => ni.NumberID!.Value == numberingId);
+                            var numbering = wordDocument.MainDocumentPart!.NumberingDefinitionsPart!.Numbering!.OfType<NumberingInstance>().First(ni => ni.NumberID!.Value == numberingId);
                             var abstractNumberingId = numbering.AbstractNumId!.Val;
-                            var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<AbstractNum>().First(ani => ani.AbstractNumberId!.Value == abstractNumberingId!);
+                            var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering!.OfType<AbstractNum>().First(ani => ani.AbstractNumberId!.Value == abstractNumberingId!);
                             foreach (var level in abstractNumbering.OfType<Level>())
                             {
                                 var paragraphProperties = level.GetFirstChild<ParagraphProperties>();
@@ -353,7 +353,7 @@ public class MarkdownSourceConverter
             foreach (var line in lines)
             {
                 int lineLength = line.Words.Sum(w => w.Text.Length);
-                if (lineLength > MaximumCodeLineLength)
+                if (lineLength > MaximumCodeLineLength && !HardCodedConfig.AcceptedLongLines.Contains(line.ToString()))
                 {
                     reporter.Warning(DiagnosticIDs.MDC032, $"Line length {lineLength} > maximum {MaximumCodeLineLength};\r\n{line}", lineOffset: lineOffset);
                 }
