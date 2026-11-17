@@ -146,7 +146,8 @@ A declaration defines a name in the ***declaration space*** to which the declara
     > *Note*: However, these declarations could introduce ambiguities if included in the same application. *end note*
 - Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.5](basic-concepts.md#75-signatures-and-overloading)).
 - Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.7.2](basic-concepts.md#772-unqualified-names)).
-- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, record class, struct, record struct, or interface). The keywords `record` and `record class` specify the same classification. In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-type-declarations)).
+- A file-local type ([§15.2.2.1](classes.md#15221-general)) may share a name with a namespace or type declared entirely in other compilation units. Such entities are distinct.
+- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, record class, struct, record struct, or interface). The keywords `record` and `record class` specify the same classification. Such declarations are combined as specified in [§15.2.7](classes.md#1527-partial-type-declarations), sharing a declaration space for each resulting type.
 - A namespace declaration and a type declaration in the same declaration space can share the same name as long as the type declaration has at least one type parameter ([§7.7.2](basic-concepts.md#772-unqualified-names)).
 
 There are several different types of declaration spaces, as described in the following.
@@ -947,6 +948,11 @@ A declaration of a new member hides an inherited member only within the scope of
 
 Several contexts in a C# program require a *namespace_name* or a *type_name* to be specified.
 
+Namespace and type name resolution, simple-name resolution ([§12.8.4](expressions.md#1284-simple-names)), member access ([§12.8.7](expressions.md#1287-member-access)), and qualified alias member resolution ([§14.9.1](namespaces.md#1491-general)) apply the following filtering rules. At each lookup step that considers namespace members or a set of imported members, candidates with the required name and number of type parameters are filtered before namespace or type selection and ambiguity checks:
+
+- A file-local type is a candidate only in the compilation unit in which it is declared.
+- If the candidate set includes a file-local type, only file-local types are retained.
+
 ```ANTLR
 namespace_name
     : namespace_or_type_name
@@ -1081,7 +1087,7 @@ Every namespace and type declaration has a ***fully qualified name,*** which uni
 - If `N` is a member of the global namespace, its fully qualified name is `N`.
 - Otherwise, its fully qualified name is `S.N`, where `S` is the fully qualified name of the namespace or type declaration in which `N` is declared.
 
-In other words, the fully qualified name of `N` is the complete hierarchical path of identifiers and *generic_dimension_specifier*s that lead to `N`, starting from the global namespace. Because every member of a namespace or type shall have a unique name, it follows that the fully qualified name of a namespace or type declaration is always unique. It is a compile-time error for the same fully qualified name to refer to two distinct entities. In particular:
+In other words, the fully qualified name of `N` is the complete hierarchical path of identifiers and *generic_dimension_specifier*s that lead to `N`, starting from the global namespace. Subject to the file-local type exception in [§7.2](basic-concepts.md#72-declarations), it is a compile-time error for the same fully qualified name to refer to two distinct entities. This exception also applies to types nested within those distinct types. In particular, for declarations to which the exception does not apply:
 
 - It is an error for both a namespace declaration and a type declaration to have the same fully qualified name.
 - It is an error for two different kinds of type declarations to have the same fully qualified name (for example, if both a struct and class declaration have the same fully qualified name).

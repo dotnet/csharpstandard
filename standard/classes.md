@@ -49,6 +49,7 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
+    | 'file'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -61,9 +62,37 @@ The `new` modifier is permitted on nested classes. It specifies that the class h
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.4.2](basic-concepts.md#742-declared-accessibility)).
 
+No declaration of a file-local type shall include an accessibility modifier.
+
 When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
+
+The `file` modifier specifies that the type being declared is local to its parent compilation unit. Declaration identity and name conflicts for file-local types are specified in [§7.2](basic-concepts.md#72-declarations). (`file` is a contextual keyword (§6.4.4) that has special meaning when used as a top-level type modifier.)
+
+The `file` modifier shall only appear in a type declaration for a top-level type.
+
+When a type declaration contains the `file` modifier, that type is said to be a ***file-local type***.
+
+Distinct types under the rules of [§7.2](basic-concepts.md#72-declarations) shall be distinct at runtime, including file-local types with the same fully qualified name. The name and accessibility of a file-local type in metadata are implementation-defined.
+
+A type ***involves a file-local type*** if it is a file-local type, is nested in a type that involves a file-local type, or has any of the following that involves a file-local type:
+
+- An element type, for an array or pointer type.
+- An underlying type, for a nullable value type.
+- A type argument, for a constructed type.
+- An element type, for a tuple type.
+- A parameter or return type, for a function pointer type.
+
+For a type that is neither file-local nor nested within a file-local type, the following types shall not involve a file-local type:
+
+- Its direct base class, if it is a class, or its explicit base interfaces, if it is an interface.
+- The constraint types specified for its type parameters or for the type parameters of its members.
+- The types of constants, fields, properties, events, and indexers declared in it.
+- The parameter and return types of function members declared in it.
+- Its parameter and return types, if it is a delegate.
+
+A file-local class that is an attribute type may be used as an attribute within both file-local types and non-file-local types, just as if the attribute type were a non-file-local class.
 
 #### 15.2.2.2 Abstract classes
 
@@ -248,6 +277,8 @@ The base class specified in a class declaration can be a constructed class type 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
 The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§23.2.1](attributes.md#2321-general)).
+
+The file-local type restrictions ([§15.2.2.1](classes.md#15221-general)) apply to the direct base class.
 
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself. Given this definition, the complete set of types upon which a class depends is the transitive closure of the *directly depends on* relationship.
 
@@ -785,6 +816,8 @@ The modifier `partial` is used when defining a class, struct, or interface type 
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
+For top-level partial type declarations with the same namespace, name, number of type parameters, and classification ([§7.2](basic-concepts.md#72-declarations)), each compilation unit containing a declaration with the `file` modifier contributes a distinct file-local type consisting of the matching declarations in that compilation unit. Matching declarations in compilation units containing no such `file` declaration contribute to a separate non-file-local type. The modifier restrictions for file-local types apply to all parts of a file-local type.
+
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
 
 Nested types may be declared in multiple parts by using the `partial` modifier. Typically, the containing type is declared using `partial` as well, and each part of the nested type is declared in a different part of the containing type.
@@ -862,6 +895,8 @@ class_member_declaration
     | type_declaration
     ;
 ```
+
+The file-local type restrictions ([§15.2.2.1](classes.md#15221-general)) apply to members declared in a class.
 
 The members of a class are divided into the following categories:
 

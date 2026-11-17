@@ -372,6 +372,8 @@ A *global_using_static_directive* only imports members and types declared direct
 
 Ambiguities between multiple *global_using_namespace_directive*s and *global_using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-global-using-namespace-directives).
 
+It is a compile-time error to use a file-local type in a *global_using_static_directive*.
+
 ## 14.6 Using directives
 
 ### 14.6.1 General
@@ -1018,7 +1020,7 @@ A *qualified_alias_member* has one of two forms:
 - `N::I<A₁, ..., Aₑ>`, where `N` and `I` represent identifiers, and `<A₁, ..., Aₑ>` is a type argument list. (`e` is always at least one.)
 - `N::I`, where `N` and `I` represent identifiers. (In this case, `e` is considered to be zero.)
 
-Using this notation, the meaning of a *qualified_alias_member* is determined as follows:
+Using this notation, the meaning of a *qualified_alias_member* is determined as follows. The namespace searched for the right-hand identifier is subject to the file-local type filtering rules in [§7.7.1](basic-concepts.md#771-general).
 
 - If `N` is the identifier `global`, then the global namespace is searched for `I`:
   - If the global namespace contains a namespace named `I` and `e` is zero, then the *qualified_alias_member* refers to that namespace.
