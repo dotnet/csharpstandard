@@ -1485,8 +1485,8 @@ fragment Interpolated_Regular_String_Element
 
 fragment Interpolated_Regular_String_Character
     // Any character except " (U+0022), \\ (U+005C),
-    // { (U+007B), and } (U+007D).
-    : ~["\\{}]
+    // { (U+007B), } (U+007D), and New_Line_Character.
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
     ;
 
 // interpolated verbatim string expressions
@@ -1551,6 +1551,8 @@ Six of the lexical rules defined above are *context sensitive* as follows:
 | *Regular_Interpolation_Format* | Only recognised within a *regular_interpolation* and when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). |
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
 | *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
+
+Expressions within a *regular_interpolation* follow the ordinary lexical rules ([§6.3](lexical-structure.md#63-lexical-analysis)), so line terminators, white space, and comments are permitted as in other expressions.
 
 > *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
