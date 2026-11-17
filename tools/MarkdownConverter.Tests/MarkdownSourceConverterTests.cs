@@ -1,11 +1,12 @@
-﻿using DocumentFormat.OpenXml;
+﻿using System.Xml.Linq;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Packaging;
 using MarkdownConverter.Converter;
 using MarkdownConverter.Spec;
 using Org.XmlUnit;
 using Org.XmlUnit.Builder;
 using Org.XmlUnit.Diff;
-using System.Xml.Linq;
 using Xunit;
 
 namespace MarkdownConverter.Tests;
@@ -92,6 +93,25 @@ public class MarkdownSourceConverterTests
             reporter);
 
         Assert.Equal(expectedWarningCount, reporter.Warnings);
+    }
+
+    [Fact]
+    public void LongLineWarnings_AcceptedList()
+    {
+        foreach (var acceptedLine in HardCodedConfig.AcceptedLongLines)
+        {
+            string text = $"# 1 Heading\r\n```csharp\r\n{acceptedLine}\r\n```\r\n";
+            var reporter = new Reporter(null, "test.md");
+            var spec = MarkdownSpec.ReadFiles(["test.md"], reporter, _ => new StringReader(text));
+            var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
+            var source = spec.Sources.Single();
+            var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
+                spec: spec,
+                filename: "test.md",
+                reporter);
+
+            Assert.Equal(0, reporter.Warnings);
+        }
     }
 
     [Theory]
