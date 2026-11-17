@@ -216,7 +216,10 @@ constant_pattern
     ;
 ```
 
-A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
+A constant pattern `P` is *applicable to* a type `T` if the corresponding condition holds:
+
+- If `T` is `System.Span<char>` or `System.ReadOnlySpan<char>`, the constant expression of `P` is of type `string` and has a non-null constant value.
+- Otherwise, there is an implicit conversion from the constant expression of `P` to the type `T`.
 
 For a constant pattern `P`, its *converted value* is
 
@@ -227,6 +230,7 @@ For a constant pattern `P`, its *converted value* is
 Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
 
 - if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
+- if *e* is of type `System.Span<char>` or `System.ReadOnlySpan<char>`, and *v* is a constant string, and *v* does not have a constant value of `null`, the pattern `P` *matches* the value *e* if `System.MemoryExtensions.SequenceEqual<char>(e, System.MemoryExtensions.AsSpan(v))` returns `true`; otherwise
 - the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
 
 > *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
@@ -689,6 +693,7 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 - Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern’s type.
 - Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
 - Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* ([§11.2.5](patterns.md#1125-positional-pattern)), the *narrowed type* is the type `System.ITuple`.
+- Otherwise, if `P` is a constant pattern applicable to its *input type* by the first applicability alternative in [§11.2.3](patterns.md#1123-constant-pattern), the *narrowed type* is the *input type*.
 - Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
