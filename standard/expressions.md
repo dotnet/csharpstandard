@@ -4615,7 +4615,7 @@ If an operand of a *shift_expression* has the compile-time type `dynamic`, then 
 
 Dynamic binding uses values of type `enum System.Linq.Expressions.ExpressionType` to communicate binary operator kind to the runtime binder. As there is no enum member specifically representing an unsigned right shift operator, dynamic binding for `>>>` is not supported.
 
-For an operation of the form `x << count`, `x >> count`, or `x >>> count`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The left operand is converted to type `T`, where `T` is the first of `int`, `uint`, `long`, and `ulong` that can fully represent all possible values of the operand. The operation is then performed using the precision of type `T`, and the type of the result is `T`.
+For an operation of the form `x << count`, `x >> count`, or `x >>> count`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator.
 
 When declaring an overloaded shift operator, the type of the first operand shall always be the class or struct containing the operator declaration, and the type of the second operand shall always be `int`.
 
