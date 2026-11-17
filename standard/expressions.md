@@ -2806,6 +2806,8 @@ A member initializer that specifies an object initializer after the equals sign 
 
 A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.2.3](expressions.md#1281723-collection-initializers).
 
+When the invoked constructor requires a member to be initialized ([§15.11.1](classes.md#15111-general)), the object initializer shall include an assignment to that member, whether a simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) or, for a ref field, a ref assignment ([§12.24.4](expressions.md#12244-ref-assignment)). A nested object initializer or collection initializer for that member is a compile-time error. If the constructor is decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), this requirement does not apply.
+
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
 > *Example*: The following class represents a point with two coordinates:
@@ -3569,6 +3571,25 @@ A *default_value_expression* is a constant expression ([§12.26](expressions.md#
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`; or
 - any enumeration type.
+
+When an instance of a struct `S` having a required member list ([§15.7.1](classes.md#1571-general)) is created with a value of `default` or `default(S)`, required-member setting is not enforced. However, such setting is enforced for an instance created with `new S()`, even when `S` has no parameterless constructor and the default struct constructor is used.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"RequiredMembers", expectedErrors:["CS9035"], expectedWarnings:["CS0219","CS0219","CS0219"]} -->
+> ```csharp
+> S v1 = default;     // OK: no checking for required members
+> S v2 = default(S);  // OK: no checking for required members
+> S v3 = new S();     // error: required member must be set
+> S v4 = new S() { reqInt = default };  // OK: required member is set
+>
+> public struct S
+> {
+>     public required int reqInt;
+> }
+> ```
+>
+> *end example*
 
 ### 12.8.22 Stack allocation
 
