@@ -5032,9 +5032,9 @@ Additional information on unary and binary operators can be found in [§12.4](e
 
 Additional information on conversion operators can be found in [§10.5](conversions.md#105-user-defined-conversions).
 
-An *operator_declaration* containing `checked` declares a ***checked operator***. For each checked operator declared in a type there shall be a corresponding declaration of a ***regular operator*** in that same type whose signature differs only by the absence of `checked`, and whose return type is the same.
+An *operator_declaration* containing `checked` declares a ***checked operator***. An *operator_declaration* without `checked` declares a ***regular operator***. For each checked operator declared in a type there shall be a corresponding declaration of a regular operator in that same type whose signature differs only by the absence of `checked`, and whose return type is the same.
 
-> *Note*: The opposite is not required. Specifically, an *operator_declaration* without `checked` need not have a matching checked operator. When this is the case, the operator is neither a checked operator nor a regular operator. *end note*
+> *Note*: The opposite is not required. A regular operator need not have a matching checked operator, including when the operator has no checked form. *end note*
 
 It is suggested that a user-defined checked operator throw an exception (such as `System.OverflowException`) when the result of an operation is too large to represent in the destination type, whatever that might mean for that type.
 
@@ -5052,7 +5052,7 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 - A unary `++` or `--` operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
 - A unary `true` or `false` operator shall take a single parameter of type `T` or `T?` and shall return type `bool`.
 
-The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
+The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`), whether the operator is checked or regular, and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.27](expressions.md#1227-boolean-expressions).
 
@@ -5104,7 +5104,7 @@ The following rules apply to binary operator declarations, where `T` denotes the
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
 - A binary `<<` or `>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
 
-The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
+The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`), whether the operator is checked or regular, and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
 

@@ -813,7 +813,7 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
 - Find the set of conversion operators, `U₀` (see [§15.10.1](classes.md#15101-general), [§15.10.4](classes.md#15104-conversion-operators)). This set consists of:
   - In an `unchecked` evaluation context, the user-defined implicit or regular explicit conversion operators declared by the classes or structs in `D`.
   - In a `checked` evaluation context, the user-defined implicit conversion operators and the checked and regular explicit conversion operators declared by the classes or structs in `D`, except for regular explicit conversion operators that have a pair-wise matching checked operator declaration within the same declaring type.
-- Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the operators in `U₀` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
+- Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the operators in `U₀` and their lifted forms that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If `S` exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
   - Otherwise, if any of the operators in `U` convert from types that encompass `E`, then `Sₓ` is the most-encompassed type in the combined set of source types of those operators. If no most-encompassed type can be found, then the conversion is ambiguous and a compile-time error occurs.
@@ -1104,9 +1104,11 @@ Not every lambda expression can be converted to expression tree types. The conve
 >
 > *end note*
 
-The addition of support for checked operators resulted in the addition of the following factory methods to `System.Linq.Expressions.Expression`: `NegateChecked`, `AddChecked`, `SubtractChecked`, `MultiplyChecked`, and `ConvertChecked`. (There is no factory method for checked division.)
+A lambda expression that contains an application of a checked user-defined division operator shall not be converted to an expression tree type; a compile-time error occurs.
 
-> *Note*: As assignment is not supported in an expression tree, there are no such factory methods for checked increment or checked decrement. *end note*
+Checked user-defined unary negation, addition, subtraction, multiplication, and explicit conversions are represented using the existing `System.Linq.Expressions.Expression` factory methods `NegateChecked`, `AddChecked`, `SubtractChecked`, `MultiplyChecked`, and `ConvertChecked`, respectively, with a `System.Reflection.MethodInfo` identifying the selected operator. The `Method` property of the resulting `System.Linq.Expressions.UnaryExpression` or `System.Linq.Expressions.BinaryExpression` identifies that operator.
+
+> *Note*: The restriction on division does not exclude predefined division or regular user-defined division in a checked context. As assignment is not supported in an expression tree, there are no such factory methods for checked increment or checked decrement. *end note*
 
 ## 10.8 Method group conversions
 

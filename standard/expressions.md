@@ -267,7 +267,7 @@ Given a type `T` and an operation `operator «op»(A)`, where «op» is an ove
 - Find the set of user-defined operators, `U`. This set consists of:
   - In an `unchecked` evaluation context, all regular `operator «op»` declarations in `T₀`.
   - In a `checked` evaluation context, all checked and regular `operator «op»` declarations in `T₀` (see [§15.10.1](classes.md#15101-general)) except regular declarations that have a pair-wise matching checked operator declaration.
-- For all `operator «op»` declarations in `T₀` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators in `T₀`.
+- For all operators in `U` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators.
 - Otherwise, if `T₀` is `object`, the set of candidate operators is empty.
 - Otherwise, the set of candidate operators provided by `T₀` is the set of candidate operators provided by the direct base class of `T₀`, or the effective base class of `T₀` if `T₀` is a type parameter.
 
@@ -3455,10 +3455,12 @@ The following operations are affected by the overflow checking context establish
 - User-defined `++`, `--`, unary `-`, and binary `+`, `-`, `*`, and `/` operators ([§15.10.1](classes.md#15101-general)), when a checked form of the operator is declared on the operand type.
 - User-defined explicit conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), when a checked form of the conversion operator is declared.
 
-When one of the above operations produces a result that is too large to represent in the destination type, the context in which the operation is performed controls the resulting behavior:
+When one of the predefined operators or explicit numeric conversions listed above produces a result that is too large to represent in the destination type, the context in which the operation is performed controls the resulting behavior:
 
 - In a `checked` context, if the operation is a constant expression ([§12.26](expressions.md#1226-constant-expressions)), a compile-time error occurs. Otherwise, when the operation is performed at run-time, a `System.OverflowException` is thrown.
 - In an `unchecked` context, the result is truncated by discarding any high-order bits that do not fit in the destination type.
+
+For user-defined operators and conversions, the overflow checking context affects the selection of the operator ([§12.4.6](expressions.md#1246-candidate-user-defined-operators), [§10.5.5](conversions.md#1055-user-defined-explicit-conversions)). It does not impose overflow behavior on the selected operator or change the overflow checking context of its body ([§15.10.1](classes.md#15101-general)).
 
 For non-constant expressions ([§12.26](expressions.md#1226-constant-expressions)) (expressions that are evaluated at run-time) that are not enclosed by any `checked` or `unchecked` operators or statements, the default overflow checking context is unchecked, unless external factors (such as compiler switches and execution environment configuration) call for checked evaluation.
 
