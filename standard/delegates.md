@@ -46,6 +46,8 @@ The `public`, `protected`, `internal`, and `private` modifiers control the acces
 
 The modifier `file` has the same meaning as that for a class declaration ([§15.2.2](classes.md#1522-class-modifiers)).
 
+The file-local type restrictions ([§15.2.2.1](classes.md#15221-general)) apply to the delegate's parameter types, return type, and type parameter constraints.
+
 The delegate’s type name is *identifier*.
 
 As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate return-by-ref; otherwise, if *return_type* is `void`, the delegate return-no-value; otherwise, the delegate return-by-value.

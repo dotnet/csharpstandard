@@ -149,6 +149,8 @@ For a constructed interface type, the explicit base interfaces are formed by tak
 
 The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
+The file-local type restrictions ([§15.2.2.1](classes.md#15221-general)) apply to the explicit base interfaces.
+
 > *Note*: For example, it is a compile-time error to specify a `private` or `internal` interface in the *interface_base* of a `public` interface. *end note*
 
 It is a compile-time error for an interface to directly or indirectly inherit from itself.

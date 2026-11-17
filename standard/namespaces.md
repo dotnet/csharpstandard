@@ -1020,7 +1020,7 @@ A *qualified_alias_member* has one of two forms:
 - `N::I<A₁, ..., Aₑ>`, where `N` and `I` represent identifiers, and `<A₁, ..., Aₑ>` is a type argument list. (`e` is always at least one.)
 - `N::I`, where `N` and `I` represent identifiers. (In this case, `e` is considered to be zero.)
 
-Using this notation, the meaning of a *qualified_alias_member* is determined as follows:
+Using this notation, the meaning of a *qualified_alias_member* is determined as follows. The namespace searched for the right-hand identifier is subject to the file-local type filtering rules in [§7.7.1](basic-concepts.md#771-general).
 
 - If `N` is the identifier `global`, then the global namespace is searched for `I`:
   - If the global namespace contains a namespace named `I` and `e` is zero, then the *qualified_alias_member* refers to that namespace.

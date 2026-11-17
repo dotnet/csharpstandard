@@ -368,6 +368,8 @@ A ***lifted operator*** permits predefined and user-defined operators that opera
 
 A member lookup is the process whereby the meaning of a name in the context of a type is determined. A member lookup can occur as part of evaluating a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)) in an expression. If the *simple_name* or *member_access* occurs as the *primary_expression* of an *invocation_expression* ([§12.8.10.2](expressions.md#128102-method-invocations)), the member is said to be *invoked*.
 
+Lookup of namespace members follows [§7.7.1](basic-concepts.md#771-general) and [§12.8.7](expressions.md#1287-member-access), including the file-local type filtering rules.
+
 If a member is a method or event, or if it is a constant, field or property of either a delegate type ([§21](delegates.md#21-delegates)) or the type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)), then the member is said to be *invocable.*
 
 Member lookup considers not only the name of a member but also the number of type parameters the member has and whether the member is accessible. For the purposes of member lookup, generic methods and nested generic types have the number of type parameters indicated in their respective declarations and all other members have zero type parameters.
@@ -378,8 +380,6 @@ A member lookup of a name `N` with `K` type arguments in a type `T` is proces
   - If `T` is a type parameter, then the set is the union of the sets of accessible members named `N` in each of the types specified as a primary constraint or secondary constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)) for `T`, along with the set of accessible members named `N` in `object`.
   - Otherwise, the set consists of all accessible ([§7.4](basic-concepts.md#74-member-access)) members named `N` in `T`, including inherited members and the accessible members named `N` in `object`. If `T` is a constructed type, the set of members is obtained by substituting type arguments as described in [§15.3.3](classes.md#1533-members-of-constructed-types). Members that include an `override` modifier are excluded from the set.
 - Next, if `K` is zero, all nested types whose declarations include type parameters are removed. If `K` is not zero, all members with a different number of type parameters are removed. When `K` is zero, methods having type parameters are not removed, since the type inference process ([§12.6.3](expressions.md#1263-type-inference)) might be able to infer the type arguments.
-- Next, let *F* be the compilation unit that contains the expression where member lookup is occurring. All members that are file-local types and are not declared in *F* are removed from the set.
-- Next, if the set of accessible members contains file-local types, all members that are not file-local types are removed from the set.
 - Next, if the member is invoked, all non-invocable members are removed from the set.
 - Next, members that are hidden by other members are removed from the set. For every member `S.M` in the set, where `S` is the type in which the member `M` is declared, the following rules are applied:
   - If `M` is a constant, field, property, event, or enumeration member, then all members declared in a base type of `S` are removed from the set.
@@ -1705,6 +1705,8 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
 
 For the namespace lookup steps in this subclause and [§7.7.1](basic-concepts.md#771-general), let *D* be the set of directives considered at namespace `N`. If `N` is the global namespace, *D* consists of the *extern_alias_directive*s and *using_directive*s in the containing compilation unit, together with the *global_using_directive*s in all compilation units in the program. Otherwise, *D* consists of the *extern_alias_directive*s and *using_directive*s in the enclosing namespace declaration for `N`, if any. Only directives whose scope includes the location of the name being resolved are considered. The exclusions when resolving directive targets are specified in [§14.5](namespaces.md#145-global-using-directives) and [§14.6](namespaces.md#146-using-directives).
 
+Namespace members and imported members are subject to the file-local type filtering rules in [§7.7.1](basic-concepts.md#771-general).
+
 > *Note*: Global using directives participate at the global-namespace step, not at each inner-namespace step. Their scope includes nested namespaces, but lookup in an inner namespace can find a declaration or import before reaching the global namespace. *end note*
 
 The *simple_name* is evaluated and classified as follows:
@@ -1834,7 +1836,7 @@ A *member_access* is either of the form `E.I` or of the form `E.I<A₁, ..., A�
 
 A *member_access* with a *primary_expression* of type `dynamic` is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the member access is classified as a property access of type `dynamic`. The rules below to determine the meaning of the *member_access* are then applied at run-time, using the run-time type instead of the compile-time type of the *primary_expression*. If this run-time classification leads to a method group, then the member access shall be the *primary_expression* of an *invocation_expression*.
 
-The *member_access* is evaluated and classified as follows:
+The *member_access* is evaluated and classified as follows, subject to the file-local type filtering rules in [§7.7.1](basic-concepts.md#771-general) when `E` is a namespace:
 
 - If `e` is zero and `E` is a namespace and `E` contains a nested namespace with name `I`, then the result is that namespace.
 - Otherwise, if `E` is a namespace and `E` contains an accessible type having name `I` and `K` type parameters, then the result is that type constructed with the given type arguments.
