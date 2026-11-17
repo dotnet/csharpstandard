@@ -242,7 +242,7 @@ Definite assignment is a requirement in the following contexts:
   > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling a compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
-- The `this` variable of a *struct_type* instance constructor shall be definitely assigned at each location where that instance constructor returns.
+- The `this` variable of a *struct_type* instance constructor that has a constructor initializer shall be definitely assigned at each location where that instance constructor returns. For a *struct_type* instance constructor that does not have a constructor initializer, see [§12.8.14](expressions.md#12814-this-access): unassigned instance variables of `this` do not produce a compile-time error, but are instead implicitly initialized to their default values before the body of the constructor runs.
 
 ### 9.4.2 Initially assigned variables
 
@@ -262,7 +262,7 @@ The following categories of variables are classified as initially assigned:
 The following categories of variables are classified as initially unassigned:
 
 - Instance variables of initially unassigned struct variables.
-- Output parameters, including the `this` variable of struct instance constructors without a constructor initializer.
+- Output parameters, including the `this` variable of struct instance constructors without a constructor initializer (see [§12.8.14](expressions.md#12814-this-access) for the consequences of failing to satisfy the definite-assignment requirement for such a `this` variable).
 - Local variables, except those declared in a `catch` clause or a `foreach` statement.
 
 ### 9.4.4 Precise rules for determining definite assignment
