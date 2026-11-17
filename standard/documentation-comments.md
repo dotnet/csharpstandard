@@ -984,7 +984,7 @@ IDs:
 "M:Acme.Widget.op_Addition(Acme.Widget,Acme.Widget)"
 ```
 
-The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
+The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_UnsignedRightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
 **Conversion operators** have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the “`<`” and “`">`” characters are replaced by the “`{`” and “`}`” characters, respectively.
 
