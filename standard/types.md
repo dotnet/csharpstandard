@@ -338,6 +338,8 @@ The simple types are aliases for predefined `struct` types in the `System` names
   `bool`    |   `System.Boolean`
   `decimal` |   `System.Decimal`
 
+An implementation shall support the predefined conversions and operators specified for `nint` and `nuint` on their aliased types.
+
 Every simple type has members. Each simple type has its aliased struct type’s members.
 
 > *Example*: `int` has any implementation-specific members declared in `System.Int32` and the members (required and implementation specific) inherited from `System.Object`, and the following statements are permitted:

@@ -787,20 +787,14 @@ In an unsafe context, the `+` operator ([§12.13.5](expressions.md#12135-additio
 ```csharp
 T* operator +(T* x, int y);
 T* operator +(T* x, uint y);
-T* operator +(T* x, nint y);
-T* operator +(T* x, nuint y);
 T* operator +(T* x, long y);
 T* operator +(T* x, ulong y);
 T* operator +(int x, T* y);
 T* operator +(uint x, T* y);
-T* operator +(nint x, T* y);
-T* operator +(nuint x, T* y);
 T* operator +(long x, T* y);
 T* operator +(ulong x, T* y);
 T* operator –(T* x, int y);
 T* operator –(T* x, uint y);
-T* operator -(T* x, nint y);
-T* operator -(T* x, nuint y);
 T* operator –(T* x, long y);
 T* operator –(T* x, ulong y);
 long operator –(T* x, T* y);
