@@ -2806,6 +2806,8 @@ A member initializer that specifies an object initializer after the equals sign 
 
 A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.2.3](expressions.md#1281723-collection-initializers).
 
+When the invoked constructor requires a member to be initialized ([§15.11.1](classes.md#15111-general)), the object initializer shall include an assignment to that member, whether a simple assignment ([§12.24.2](expressions.md#12242-simple-assignment)) or, for a ref field, a ref assignment ([§12.24.4](expressions.md#12244-ref-assignment)). A nested object initializer or collection initializer for that member is a compile-time error. If the constructor is decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), this requirement does not apply.
+
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
 > *Example*: The following class represents a point with two coordinates:

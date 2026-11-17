@@ -1693,7 +1693,7 @@ variable_declarator
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *field_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. A *field_declaration* may also include a `required` modifier ([§15.7.1](classes.md#1571-general)), provided it does not have a `readonly`, `ref`, or `fixed` modifier, and provided the field is not a `ref readonly` field or a constant. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
+A *field_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. A *field_declaration* may also include a `required` modifier ([§15.7.1](classes.md#1571-general)), provided it does not have a `readonly` or `fixed` modifier, and provided the field is not a constant. For a ref field, this restriction on `readonly` applies to the field itself, not to the variable it references. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
 The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an “`=`” token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
 
@@ -3516,12 +3516,14 @@ The modifier `required` indicates the instance member being declared is required
 A ***required member list*** is a list of all the members of a type that are required. A type automatically inherits this list from its base type.
 To build the required member list `R` for a type `T`, the following steps are used:
 
-1. For every type `Tb`, starting with `T` and working through the base type chain until `object` is reached.
-1. If `Tb` is decorated with the `RequiredMember` attribute (§RequiredMember), then all members of `Tb` marked with that attribute are gathered into `Rb`
-
-    1. For every `Ri` in `Rb`, if `Ri` is overridden by any member of `R`, it is skipped.
-    1. Otherwise, if any `Ri` is hidden by a member of `R`, then the lookup of required members fails, and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` is an error.
-    1. Otherwise, `Ri` is added to `R`.
+1. Initialize `R` to an empty list.
+1. For each type `Tb`, starting with `T` and proceeding through its base types up to, but not including, `object`:
+   1. If `Tb` is decorated with the `RequiredMember` attribute (§RequiredMember), gather into `Rb` all members declared in `Tb` that are marked with that attribute.
+   1. Otherwise, continue with the next base type.
+   1. For each member `Ri` in `Rb`:
+      1. If `Ri` is overridden by any member of `R`, skip `Ri`.
+      1. Otherwise, if `Ri` is hidden by a member of `R`, the lookup of required members fails and no further steps are taken. Calling any constructor of `T` not decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers) is an error.
+      1. Otherwise, add `Ri` to `R`.
 
 A required member shall be treated as if it were decorated with the attribute `System.Runtime.CompilerServices.RequiredMemberAttribute` (§RequiredMember).
 With regard to nullable reference type analysis ([§8.9](types.md#89-reference-types-and-nullability)), a required member need not be initialized to a valid nullable state when any of its instance constructors returns. Any required member in a type and its base types is considered by nullable analysis to have its default value at the beginning of any instance constructor in that type, unless it chains to a `this` or `base` constructor that is decorated with the `SetsRequiredMembersAttribute` attribute.
@@ -4322,7 +4324,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 >
 > *end example*
 
-The set or init accessor of a required property ([§15.7.1](classes.md#1571-general)) shall be at least as accessible as that property’s containing type.
+A required property ([§15.7.1](classes.md#1571-general)) shall not be ref-valued. A required property shall have a set or init accessor and that accessor shall be at least as accessible as the property’s containing type.
 
 ### 15.7.6 Virtual, sealed, override, and abstract accessors
 
@@ -5305,11 +5307,11 @@ Each of the types referenced in the *parameter_list* of an instance constructor 
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
-All instance constructors on a type that has a required member list ([§15.7.1](classes.md#1571-general)) automatically advertise a contract that consumers of the type shall initialize all of the members in the list. It is an error for an instance constructor to advertise a contract that requires a member that is not at least as accessible as the constructor itself.
+All instance constructors on a type that has a required member list ([§15.7.1](classes.md#1571-general)), except those decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), automatically advertise a contract that consumers of the type shall initialize all of the members in the list. It is an error for an instance constructor to advertise a contract that requires a member that is not at least as accessible as the constructor itself.
 An instance constructor whose *constructor_initializer* chains to another constructor decorated with the `SetsRequiredMembers` attribute (§SetsRequiredMembers), shall also be decorated with that attribute.
 For every instance constructor `Ci` in type `T` with required members `R`, unless `Ci` is decorated with the attribute `SetsRequiredMembers`, consumers calling `Ci` shall do one of the following:
 
-- Set all members of `R` in an *object_initializer* on the *object_creation_expression*,
+- Assign to each member of `R` in an *object_initializer* on the *object_creation_expression*, as specified in [§12.8.17.2.2](expressions.md#1281722-object-initializers),
 - Or set all members of `R` via the *named_argument_list* of an *attribute*.
 
 If the current context does not permit an *object_initializer* or is not an *attribute* with *named_argument_list*, and `Ci` is not decorated with `SetsRequiredMembers`, then it is an error to call `Ci`.
@@ -6337,7 +6339,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 
 In certain circumstances ([§15.16.6.4](classes.md#151664-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
-A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute (§SetsRequiredMembers).
+A copy constructor provided by the implementation for a record class that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with `SetsRequiredMembersAttribute` (§SetsRequiredMembers).
 
 #### 15.16.6.3 Equality members
 

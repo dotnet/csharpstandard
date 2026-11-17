@@ -734,6 +734,8 @@ The attribute `ObsoleteAttribute` is used to mark types and members of types tha
 
 If a program uses a type or member that is decorated with `ObsoleteAttribute`, a compiler shall issue a warning or an error. Specifically, a compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. A compiler shall issue an error if the error parameter is specified and has the value `true`.
 
+A compiler may issue a warning when a required member ([§15.7.1](classes.md#1571-general)) is decorated with `ObsoleteAttribute`, unless its containing type is also decorated with `ObsoleteAttribute` or every instance constructor of that type is decorated with either `ObsoleteAttribute` or `SetsRequiredMembersAttribute` (§SetsRequiredMembers).
+
 > *Example*: In the following code
 >
 > <!-- Example: {template:"standalone-console", name:"ObsoleteAttribute", expectedWarnings:["CS0618","CS0618"]} -->
