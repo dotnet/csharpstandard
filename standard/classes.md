@@ -2200,7 +2200,7 @@ A generic *method_declaration*, either with an `override` modifier, or for an ex
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§19.6.2](interfaces.md#1962-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
-For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. The permitted modifiers are specified in [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations).
 
 The optional *parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
@@ -4976,7 +4976,8 @@ operator_declarator
     ;
 
 unary_operator_declarator
-    : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
+    : type (interface_type '.')? 'operator' overloadable_unary_operator
+      '(' fixed_parameter ')'
     ;
 
 logical_negation_operator
@@ -4988,7 +4989,7 @@ overloadable_unary_operator
     ;
 
 binary_operator_declarator
-    : type 'operator' overloadable_binary_operator
+    : type (interface_type '.')? 'operator' overloadable_binary_operator
         '(' fixed_parameter ',' fixed_parameter ')'
     ;
 
@@ -4998,8 +4999,8 @@ overloadable_binary_operator
     ;
 
 conversion_operator_declarator
-    : 'implicit' 'operator' type '(' fixed_parameter ')'
-    | 'explicit' 'operator' type '(' fixed_parameter ')'
+    : 'implicit' (interface_type '.')? 'operator' type '(' fixed_parameter ')'
+    | 'explicit' (interface_type '.')? 'operator' type '(' fixed_parameter ')'
     ;
 
 operator_body
@@ -5021,10 +5022,12 @@ For `extern` operators, the *operator_body* consists simply of a semicolon. For 
 
 The following rules apply to all operator declarations:
 
-- An operator declaration shall include both a `public` and a `static` modifier.
+- An operator declaration shall include a `static` modifier. Except in an explicit interface member implementation, an operator declared in a class or struct shall also include a `public` modifier. Operators declared in interfaces are subject to [§19.4.7](interfaces.md#1947-interface-operators).
+- The `abstract`, `virtual`, and `sealed` modifiers are permitted only on operators declared in interfaces.
+- An operator declarator that includes an *interface_type* followed by a “`.`” is an explicit interface member implementation and is subject to [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations). The operand and result type restrictions in [§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), and [§15.10.4](classes.md#15104-conversion-operators) apply to the implemented interface declaration rather than to its explicit implementation.
 - The parameters of an operator shall have no modifiers other than `in`.
-- The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
-- All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
+- Except in an explicit interface member implementation, the signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other non-explicitly implemented operators declared in the same type.
+- Except in an explicit interface member implementation, all types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.
 
 Each operator category imposes additional restrictions, as described in the following subclauses.
@@ -5109,17 +5112,17 @@ A conversion operator declaration that includes the `explicit` keyword introduce
 
 A conversion operator converts from a source type, indicated by the parameter type of the conversion operator, to a target type, indicated by the return type of the conversion operator.
 
-For a given source type `S` and target type `T`, if `S` or `T` are nullable value types, let `S₀` and `T₀` refer to their underlying types; otherwise, `S₀` and `T₀` are equal to `S` and `T` respectively. A class or struct is permitted to declare a conversion from a source type `S` to a target type `T` only if all of the following are true:
+For a given source type `S` and target type `T`, if `S` or `T` are nullable value types, let `S₀` and `T₀` refer to their underlying types; otherwise, `S₀` and `T₀` are equal to `S` and `T` respectively. A class, struct, or interface is permitted to declare a conversion from a source type `S` to a target type `T` only if all of the following are true, except for explicit interface member implementations as specified in [§15.10.1](classes.md#15101-general):
 
 - `S₀` and `T₀` are different types.
 
-- Either `S₀` or `T₀` is the instance type of the class or struct that contains the operator declaration.
+- Either `S₀` or `T₀` is the instance type of the class or struct that contains the operator declaration, or is a type parameter that counts as the instance type of the containing interface as specified in [§19.4.7](interfaces.md#1947-interface-operators).
 
 - Neither `S₀` nor `T₀` is an *interface_type*.
 
 - Excluding user-defined conversions, a conversion does not exist from `S` to `T` or from `T` to `S`.
 
-For the purposes of these rules, any type parameters associated with `S` or `T` are considered to be unique types that have no inheritance relationship with other types, and any constraints on those type parameters are ignored.
+For the purposes of these rules, any type parameters associated with `S` or `T` are considered to be unique types that have no inheritance relationship with other types. Their constraints are considered only to determine whether a type parameter counts as the instance type of the containing interface.
 
 > *Example*: In the following:
 >
@@ -5139,7 +5142,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 >
 > *end example*
 
-From the second rule, it follows that a conversion operator shall convert either to or from the class or struct type in which the operator is declared.
+From the second rule, it follows that a conversion operator declared in a class or struct, other than an explicit interface member implementation, shall convert either to or from that class or struct type.
 
 > *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`. *end example*
 

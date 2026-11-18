@@ -716,6 +716,8 @@ type_argument
 
 Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A reference type argument whose nullability does not match the nullability of the type parameter satisfies the constraint; however a warning may be issued.
 
+An interface type argument shall satisfy the most specific implementation requirement for static abstract and virtual members ([§19.4.10](interfaces.md#19410-most-specific-implementation)).
+
 ### 8.4.3 Open and closed types
 
 A type is either an ***open type*** or a ***closed type***. An open type is a type that involves type parameters. More specifically:
@@ -795,7 +797,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.15.7](expressions.md#12157-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute ([§23.2.1](attributes.md#2321-general)).
-> - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.7](basic-concepts.md#77-namespace-and-type-names)) to identify a static member or a nested type.
+> - A type parameter can identify a static abstract or virtual interface member in a member access as specified in [§12.8.7](expressions.md#1287-member-access). It cannot identify other static members or nested types.
 > - A type parameter can only be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) if the type parameter is constrained by the unmanaged constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - Except when a type parameter is explicitly constrained to value types, the nullable type annotation (`?`) can only be applied to an occurrence of a type parameter when the nullable annotations flag is enabled ([§6.5.9](lexical-structure.md#659-nullable-directive), [§15.2.5](classes.md#1525-type-parameter-constraints)).
 >

@@ -982,6 +982,14 @@ namespace System.Threading
     }
 }
 
+namespace System.Numerics
+{
+    public interface INumberBase<TSelf>
+        where TSelf : INumberBase<TSelf>
+    {
+    }
+}
+
 namespace System.Threading.Tasks
 {
     public class Task

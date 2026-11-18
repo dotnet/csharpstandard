@@ -218,6 +218,8 @@ constant_pattern
 
 A constant pattern `P` is *applicable to* a type `T` if there is an implicit conversion from the constant expression of `P` to the type `T`.
 
+For a numeric constant, if the input type is, implements, or inherits a constructed `System.Numerics.INumberBase<TSelf>` interface ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)), or is a type parameter whose effective interface set includes such an interface, there shall be an identity conversion, implicit numeric conversion, or implicit constant expression conversion from the constant expression to the input type.
+
 For a constant pattern `P`, its *converted value* is
 
 - if the pattern input value’s type is an integral type or an enum type, the pattern’s constant value converted to that type; otherwise
@@ -617,7 +619,7 @@ The *relational_expression* in a *relational_pattern* is required to evaluate to
 
 Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
 
-A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
+A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression. If `T` is, implements, or inherits a constructed `System.Numerics.INumberBase<TSelf>` interface, or is a type parameter whose effective interface set includes such an interface, the suitable built-in binary relational operator is required.
 
 It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
 
