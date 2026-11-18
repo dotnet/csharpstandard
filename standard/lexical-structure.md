@@ -979,13 +979,17 @@ fragment Raw_String_Literal_Delimiter
     ;
 
 fragment Raw_String_Literal_Content
+    : Raw_String_Literal_Character+
+    ;
+
+fragment Raw_String_Literal_Character
     // anything except New_Line
     : ~[\u000D\u000A\u0085\u2028\u2029]
     ;
 
 fragment Multi_Line_Raw_String_Literal
     : Raw_String_Literal_Delimiter Whitespace* New_Line
-      (Raw_String_Literal_Content | New_Line)* New_Line
+      (Raw_String_Literal_Content? New_Line)+
       Whitespace* Raw_String_Literal_Delimiter
     ;
 ```
@@ -998,7 +1002,7 @@ For any *Raw_String_Literal*:
   > *Example*: The string `""" """` is well-formed; it has 3-character start and end delimiters, and its content is a single space. However, the string `""""""` is ill-formed, as it is seen as a 6-character start delimiter, with no content, and no end delimiter, not as 3-character start and end delimiters and empty content. *end example*
 - The beginning and end delimiters shall have the same raw string literal delimiter length.
   > *Example*: The string `""""X""""` is well-formed; it has 4-character start and end delimiters. However, the strings `"""X""""` and `""""X"""` are ill-formed, as the start and end delimiters in each pair do not have the same length. *end example*
-- A *Raw_String_Literal_Content* shall not contain a set of contiguous `"` characters whose length is equal to or greater than the raw string literal delimiter length.
+- Each sequence of contiguous `"` characters within a *Raw_String_Literal_Content* shall be shorter than the raw string literal delimiter length.
   > *Example*: The strings `"""" """ """"` and `""""""" """""" """"" """" """ """""""`are well-formed. However, the strings `""" """ """` and `""" """" """` are ill-formed. *end example*
 - As text sequences that have the form of *Comment*s are not processed within string literals ([§6.3.3](lexical-structure.md#633-comments)), they appear verbatim in their corresponding *Raw_String_Literal_Content*.
 
@@ -1010,11 +1014,10 @@ For a *Single_Line_Raw_String_Literal* only:
 
 For a *Multi_Line_Raw_String_Literal* only:
 
-- If *Whitespace* precedes the end delimiter on the same line, the exact number and kind of whitespace characters (e.g., spaces vs. tabs) shall exist at the beginning of each *Raw_String_Literal_Content*, and that leading whitespace shall be discarded from those *Raw_String_Literal_Content*s.
-- A *Raw_String_Literal_Content* shall not appear on the same line as a start or end delimiter.
-- A *Multi_Line_Raw_String_Literal* can be empty (by having no *Raw_String_Literal_Content*s and one or more *New_Line*s).
-- A *Raw_String_Literal_Content* can begin or end with `"`.
-- The value of the literal is the lexical concatenation of all of its *Raw_String_Literal_Content*s and *New_Line*s after any whitespace at the beginning of each *Raw_String_Literal_Content* has been discarded based on whitespace preceding the ending delimiter. Whitespace following the start delimiter and preceding the end delimiter are not included.
+- The start delimiter is followed only by *Whitespace* before the first *New_Line*. The end delimiter is preceded only by *Whitespace* on its line. This latter sequence of whitespace characters is the ***indentation whitespace***.
+- The initial *Whitespace*\* *New_Line* and the final *New_Line* *Whitespace*\* are excluded from the value. These are distinct *New_Line*s, even when the value is empty.
+- The remaining text is divided into content lines at each *New_Line*, preserving those *New_Line*s exactly. Each content line, including a line consisting entirely of whitespace, shall begin with the entire indentation whitespace, matching both the number and kind of characters. The indentation whitespace is removed from each content line; any remaining characters, including whitespace on a blank line, are retained.
+- The value is the concatenation, in textual order, of the resulting content lines and the preserved *New_Line*s. If the remaining text is empty, the value is the empty string.
 
 > *Example*: The example
 >

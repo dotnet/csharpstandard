@@ -1566,7 +1566,7 @@ Interpolated_Raw_String_Start
 // the following two lexical rules are context sensitive, see details below
 
 Interpolated_Raw_String_Mid
-    : Raw_String_Literal_Content+
+    : Raw_String_Literal_Character+
     ;
 
 Interpolated_Raw_String_End
@@ -1591,12 +1591,12 @@ raw_interpolation_end
 
 Raw_Interpolation_Format
     : ':' Interpolated_Raw_String_Character+
-;
+    ;
 
 fragment Interpolated_Raw_String_Character
-    // Any character except " (U+0022), \\ (U+005C),
+    // Any character except " (U+0022),
     // { (U+007B), } (U+007D), and New_Line_Character.
-    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
+    : ~["{}\u000D\u000A\u0085\u2028\u2029]
     ;
 
 multi_line_interpolated_raw_string_expression
@@ -1614,7 +1614,9 @@ A number of the lexical rules defined above are *context sensitive* as follows:
 | *Regular_Interpolation_Format* | Only recognised within a *regular_interpolation* and when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). |
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
 | *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding first three rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
-| *Interpolated_Raw_String_Mid* *Raw_Interpolation_Format* *Interpolated_Raw_String_End* | Recognition of these three rules follows that of the corresponding first three rules above with each mentioned *regular* grammar rule replaced by the corresponding *raw* one. |
+| *Interpolated_Raw_String_Mid* | Only recognised in the literal text after an *Interpolated_Raw_String_Start*, between any following *raw_interpolation*s, and before the corresponding *Interpolated_Raw_String_End*, subject to the delimiter and brace rules below. |
+| *Raw_Interpolation_Format* | Only recognised within a *raw_interpolation* when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). The first `}` following the format text begins the *raw_interpolation_end*. |
+| *Interpolated_Raw_String_End* | Only recognised outside a *raw_interpolation*, with the quote count and position required below. |
 
 > *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
@@ -1624,6 +1626,18 @@ other tokens in the language. *end note*
 > *Note*: The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this specification. *end note*
+
+For an *interpolated_raw_string_expression*, let *N* be the number of `$` characters in its *Interpolated_Raw_String_Prefix*:
+
+- Each *raw_interpolation_start* consists of exactly *N* `{` characters, and its corresponding *raw_interpolation_end* consists of exactly *N* `}` characters.
+- Each sequence of contiguous `{` characters or contiguous `}` characters in a literal segment has fewer than *N* characters. A sequence adjoining an interpolation delimiter therefore has at most 2 × *N* − 1 characters: the last *N* opening braces start the interpolation, and the first *N* closing braces end it. The remaining braces belong to the adjoining literal segment.
+- The quote-delimiter rules for raw string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)) apply to the outer quote delimiters and to quote sequences in the literal segments. In particular, the start delimiter is the longest contiguous quote sequence after the prefix, the end delimiter has the same length, and quote sequences in literal segments are shorter. A single-line form has nonempty content, counting an interpolation as content, and its literal text contains no *New_Line*s.
+
+The literal segments of a raw interpolated string expression are decoded using the raw string literal value rules ([§6.4.5.6](lexical-structure.md#6456-string-literals)), with each *raw_interpolation* treated as an indivisible non-whitespace content item. In a multi-line form, this includes removal of the distinct opening and final *New_Line*s and the entire indentation whitespace from each content line, including blank lines. An interpolation starting a content line shall be preceded by the entire indentation whitespace. Line breaks within an interpolation are not content-line separators; literal text following its closing braces continues the same content line. Indentation removal affects only literal segments, not the contents or results of interpolations.
+
+The format-specifier text of a *Raw_Interpolation_Format* is the exact sequence of characters following its colon, excluding the closing interpolation delimiter. Backslashes are retained, and no C# escape sequences are processed in either raw literal segments or raw format-specifier text. The character restrictions in the grammar for *Raw_Interpolation_Format* apply independently of the quote and dollar counts; in particular, a quote or opening brace is not raw format text, and a closing brace begins the closing interpolation delimiter.
+
+These delimiter and decoding rules apply before string formatting, `FormattableString` construction, or handler processing. Any interpretation of a raw format specifier by the selected formatting operation is separate from C# decoding.
 
 An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), it has that type. If it is converted to a custom interpolated string handler type, the handler conversion produces a value of that type ([§23.5.9.1](attributes.md#23591-custom-interpolated-string-expression-handlers)). Otherwise, the expression has type `string`, including when used in an implicitly typed local, a return expression, or another expression without a handler target.
 
