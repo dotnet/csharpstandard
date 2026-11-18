@@ -245,7 +245,7 @@ The descriptions of individual operators in [§12.9](expressions.md#129-unary-op
 
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
-- The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
+- The set of class or struct candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using [§12.4.6](expressions.md#1246-candidate-user-defined-operators). If that set is empty, the interface candidates provided by `X` are used instead.
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined unary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
 
@@ -253,7 +253,7 @@ An operation of the form `«op» x` or `x «op»`, where «op» is an overloada
 
 An operation of the form `x «op» y`, where «op» is an overloadable binary operator, `x` is an expression of type `X`, and `y` is an expression of type `Y`, is processed as follows:
 
-- The set of candidate user-defined operators provided by `X` and `Y` for the operation `operator «op»(x, y)` is determined. The set consists of the union of the candidate operators provided by `X` and the candidate operators provided by `Y`, each determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators). For the combined set, candidates are merged as follows:
+- The set of class or struct candidate user-defined operators provided by `X` and `Y` for the operation `operator «op»(x, y)` is determined using [§12.4.6](expressions.md#1246-candidate-user-defined-operators). If their union is empty, the union of the interface candidates provided by `X` and `Y` is used instead. For shift operators, only `X` provides candidates in either phase. For the combined set, candidates are merged as follows:
   - If `X` and `Y` are identity convertible, or if `X` and `Y` are derived from a common base type, then shared candidate operators only occur in the combined set once.
   - If there is an identity conversion between `X` and `Y`, an operator `«op»Y` provided by `Y` has the same return type as an `«op»X` provided by `X` and the operand types of `«op»Y` have an identity conversion to the corresponding operand types of `«op»X` then only `«op»X` occurs in the set.
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. For predefined enum and delegate operators, the only operators considered are those provided by an enum or delegate type that is the binding-time type of one of the operands.
@@ -261,12 +261,21 @@ An operation of the form `x «op» y`, where «op» is an overloadable binary 
 
 ### 12.4.6 Candidate user-defined operators
 
-Given a type `T` and an operation `operator «op»(A)`, where «op» is an overloadable operator and `A` is an argument list, the set of candidate user-defined operators provided by `T` for operator `«op»(A)` is determined as follows:
+Given a type `T` and an operation `operator «op»(A)`, where «op» is an overloadable operator and `A` is an argument list, the set of class or struct candidate user-defined operators provided by `T` for operator `«op»(A)` is determined as follows:
 
 - Determine the type `T₀`. If `T` is a nullable value type, `T₀` is its underlying type; otherwise, `T₀` is equal to `T`.
-- For all `operator «op»` declarations in `T₀` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators in `T₀`.
+- If `T₀` is a type parameter, replace it with its effective base class ([§15.2.5](classes.md#1525-type-parameter-constraints)). If `T₀` is an interface, the class or struct candidate set is empty.
+- Otherwise, for all non-explicitly implemented `operator «op»` declarations in `T₀` and all lifted forms of such operators, if at least one operator is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the argument list `A`, then the set of candidate operators consists of all such applicable operators in `T₀`.
 - Otherwise, if `T₀` is `object`, the set of candidate operators is empty.
-- Otherwise, the set of candidate operators provided by `T₀` is the set of candidate operators provided by the direct base class of `T₀`, or the effective base class of `T₀` if `T₀` is a type parameter.
+- Otherwise, repeat the class or struct candidate search with the direct base class of `T₀`.
+
+The set of interface candidates provided by `T` is determined as follows:
+
+- If `T` is a type parameter, let `D` be its effective interface set ([§15.2.5](classes.md#1525-type-parameter-constraints)) together with all base interfaces of those interfaces. If `T` is an interface, let `D` consist of `T` and all its base interfaces. Otherwise, the interface candidate set is empty.
+- For each interface `I` in `D`, determine the applicable `operator «op»` declarations in `I`, including their lifted forms. Abstract and virtual declarations are considered only when `T` is a type parameter. Explicit interface member implementations are not candidates.
+- The candidate set is the union of those applicable operators, excluding operators declared in a base interface of an interface in `D` that declares an applicable operator for this operation. An inapplicable declaration does not exclude base-interface candidates.
+
+An abstract or virtual operator selected through a type parameter invokes the implementation for the type argument as specified in [§12.8.7](expressions.md#1287-member-access).
 
 ### 12.4.7 Numeric promotions
 
@@ -375,7 +384,7 @@ Member lookup considers not only the name of a member but also the number of typ
 A member lookup of a name `N` with `K` type arguments in a type `T` is processed as follows:
 
 - First, a set of accessible members named `N` is determined:
-  - If `T` is a type parameter, then the set is the union of the sets of accessible members named `N` in each of the types specified as a primary constraint or secondary constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)) for `T`, along with the set of accessible members named `N` in `object`.
+  - If `T` is a type parameter, then the set is the union of the sets of accessible members named `N` in its effective base class and effective interface set ([§15.2.5](classes.md#1525-type-parameter-constraints)), including their inherited members. This includes static abstract and virtual interface members.
   - Otherwise, the set consists of all accessible ([§7.4](basic-concepts.md#74-member-access)) members named `N` in `T`, including inherited members and the accessible members named `N` in `object`. If `T` is a constructed type, the set of members is obtained by substituting type arguments as described in [§15.3.3](classes.md#1533-members-of-constructed-types). Members that include an `override` modifier are excluded from the set.
 - Next, if `K` is zero, all nested types whose declarations include type parameters are removed. If `K` is not zero, all members with a different number of type parameters are removed. When `K` is zero, methods having type parameters are not removed, since the type inference process ([§12.6.3](expressions.md#1263-type-inference)) might be able to infer the type arguments.
 - Next, if the member is invoked, all non-invocable members are removed from the set.
@@ -1836,6 +1845,7 @@ The *member_access* is evaluated and classified as follows:
 
 - If `e` is zero and `E` is a namespace and `E` contains a nested namespace with name `I`, then the result is that namespace.
 - Otherwise, if `E` is a namespace and `E` contains an accessible type having name `I` and `K` type parameters, then the result is that type constructed with the given type arguments.
+- If `E` is classified as a type parameter and member lookup of `I` in `E` with `K` type arguments produces a match, then a static abstract or virtual interface property or event is classified as a property or event access with no associated instance expression. One or more methods are classified as a method group with no associated instance expression; only static abstract or virtual interface methods may be accessed through this form. Other matches are invalid in this form of access.
 - If `E` is classified as a type, if `E` is not a type parameter, and if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `E` with `K` type parameters produces a match, then `E.I` is evaluated and classified as follows:
   > *Note*: When the result of such a member lookup is a method group and `K` is zero, the method group can contain methods having type parameters. This allows such methods to be considered for type argument inferencing. *end note*
   - If `I` identifies a type, then the result is that type constructed with any given type arguments.
@@ -1865,6 +1875,8 @@ The *member_access* is evaluated and classified as follows:
     - If the reference occurs within the class or struct in which the event is declared, and the event was declared without *event_accessor_declarations* ([§15.8.1](classes.md#1581-general)), and the reference does not occur as the left-hand side of `a +=` or `-=` operator, then `E.I` is processed exactly as if `I` was an instance field.
     - Otherwise, the result is an event access with an associated instance expression of `E`.
 - Otherwise, an attempt is made to process `E.I` as an extension method invocation ([§12.8.10.3](expressions.md#128103-extension-method-invocations)). If this fails, `E.I` is an invalid member reference, and a binding-time error occurs.
+
+A static abstract or virtual interface member shall be accessed only through a type parameter constrained by an interface that declares or inherits that member. It cannot be accessed directly through an interface name or an instance expression. For such an access through a type parameter, the implementation invoked is the most specific implementation for the actual type argument ([§19.4.10](interfaces.md#19410-most-specific-implementation)), including an explicit implementation or a default implementation supplied by an interface. The same dispatch rule applies to abstract or virtual operators and conversions selected through a type parameter.
 
 #### 12.8.7.2 Identical simple names and type names
 
@@ -6409,6 +6421,8 @@ The same technique applied here to capture local variables can also be used when
 ### 12.23.1 General
 
 ***Query expressions*** provide a language-integrated syntax for queries that is similar to relational and hierarchical query languages such as SQL and XQuery.
+
+A type parameter shall not be used as the source expression of a query expression.
 
 ```ANTLR
 query_expression

@@ -94,7 +94,7 @@ If a generic interface is declared in multiple parts ([§15.2.3](classes.md#1523
 
 #### 19.2.3.2 Variance safety
 
-The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration. However, these restrictions do not apply to occurrences of types within a declaration of a static member.
+The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration. However, these restrictions do not apply to occurrences of types within a declaration of a non-virtual, non-abstract static member.
 
 A type `T` is ***output-unsafe*** if one of the following holds:
 
@@ -233,17 +233,18 @@ interface_member_declaration
     ;
 ```
 
-This clause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with the differences and restrictions for interfaces:
+This subclause augments the description of members in classes ([§15.3](classes.md#153-class-members)) with the differences and restrictions for interfaces:
 
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
-- All interface members implicitly have public access; however, an explicit access modifier ([§7.4.2](basic-concepts.md#742-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)).
-- The `abstract` modifier is implied for interface function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly.
-- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly.
+- Interface members other than explicit interface member implementations implicitly have public access; however, an explicit access modifier ([§7.4.2](basic-concepts.md#742-declared-accessibility)) is permitted except on static constructors ([§15.12](classes.md#1512-static-constructors)). Explicit interface member implementations are subject to [§19.6.2](interfaces.md#1962-explicit-interface-member-implementations).
+- The `abstract` modifier is implied for interface instance function members ([§12.6](expressions.md#126-function-members)) without bodies; that modifier may be given explicitly. For non-extern interface static function members without bodies the `abstract` modifier shall be present.
+- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be given explicitly. An interface static member whose declaration includes a body may have a `virtual` modifier.
 - A `private` or `sealed` function member of an interface shall have a body.
-- A `private` function member shall not have the modifier `sealed`.
+- A `private` instance function member shall not have the modifier `sealed`.
 - A derived interface may override an abstract or virtual member declared in a base interface.
 - An explicitly implemented function member shall not have the modifier `sealed`.
+- A static method, property, event, or operator may combine `static` with one of `abstract`, `virtual`, or `sealed`; these three modifiers are mutually exclusive. An abstract member has no implementation and shall not be declared `extern`, a virtual member provides an implementation, and a sealed member is non-virtual. A static member without any of these three modifiers is also non-virtual.
 
 Some declarations, such as *constant_declaration* ([§15.4](classes.md#154-constants)) have no restrictions in interfaces.
 
@@ -348,11 +349,11 @@ This clause augments the description of methods in classes [§15.6](classes.md#1
 Interface methods are declared using *method_declaration*s ([§15.6](classes.md#156-methods))). The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class. Interface methods have the following additional rules:
 
 - *method_modifier* shall not include `override`.
-- A method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed.
-- An interface method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed.
+- A non-extern instance method whose body is a semi-colon (`;`) is `abstract`; the `abstract` modifier is not required, but is allowed. A non-extern static method whose body is a semi-colon (`;`) shall include the `abstract` modifier.
+- An interface instance method declaration that has a block body or expression body as a *method_body* is `virtual`; the `virtual` modifier is not required, but is allowed. For a static method the `virtual` modifier is permitted.
 - A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 - The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
-  - A static declaration that is not extern shall have a block body or expression body as a *method_body*.
+  - A static declaration that is not extern shall have a block body or expression body as a *method_body*, or shall be declared `abstract`.
   - A virtual declaration that is not extern shall have a block body or expression body as a *method_body*.
   - A private declaration that is not extern shall have a block body or expression body as a *method_body*.
   - A sealed declaration that is not extern shall have a block body or expression body as a *method_body*.
@@ -429,36 +430,38 @@ A virtual method with implementation declared in an interface may be overridden 
 
 ### 19.4.4 Interface properties
 
-This clause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
+This subclause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
 
 Interface properties are declared using *property_declaration*s ([§15.7.1](classes.md#1571-general)) with the following additional rules:
 
 - *property_modifier* shall not include `override`.
 - An explicit interface member implementation shall not contain an *accessor_modifier* ([§15.7.3](classes.md#1573-accessors)).
-- A derived interface may explicitly implement an abstract interface property declared in a base interface.
+- A derived interface may explicitly implement an abstract or virtual interface property declared in a base interface.
 
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
-- An interface property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed.
-- An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- An interface instance property or interface property accessor declaration that has a block body or expression body is `virtual`; the `virtual` modifier is not required, but is allowed. For a static property or property accessor the `virtual` modifier is permitted.
+- An instance *property_declaration* that has no implementation is `abstract`; the `abstract` modifier is not required, but is allowed. It is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)). However, the `abstract` modifier shall be present if a static property is to be abstract.
+- A *property_declaration* may contain the `sealed` modifier.
 
 ### 19.4.5 Interface events
 
-This clause augments the description of events in classes [§15.8](classes.md#158-events) for events declared in interfaces.
+This subclause augments the description of events in classes [§15.8](classes.md#158-events) for events declared in interfaces.
 
 Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#1581-general)), with the following additional rules:
 
 - *event_modifier* shall not include `override`.
-- A derived interface may implement an abstract interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
-- It is a compile-time error for *variable_declarators* in an interface *event_declaration* to contain any *variable_initializer*s.
-- An interface event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
-- An interface event with the `abstract` modifier must not declare accessors.
+- A derived interface may implement an abstract or virtual interface event declared in a base interface ([§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)).
+- It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
+- An instance event with the `virtual` or `sealed` modifiers shall declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An abstract event shall not declare accessors or variable initializers.
+- A static event may have the `abstract`, `virtual`, or `sealed` modifier.
 - The type of an interface event shall be input-safe.
 
 ### 19.4.6 Interface indexers
 
-This clause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
+This subclause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
 
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
@@ -474,15 +477,22 @@ Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.m
 
 ### 19.4.7 Interface operators
 
-This clause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
+This subclause augments the description of *operator_declaration* members in classes [§15.10](classes.md#1510-operators) for operators declared in interfaces.
 
-For an *operator_declaration* in an interface the *operator_body* shall only be a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)).
+For an abstract *operator_declaration* in an interface the *operator_body* shall be a semicolon. For a non-abstract, non-extern operator it shall be a block body or an expression body ([§15.6.1](classes.md#1561-general)).
 
-It is a compile-time error for an interface to declare a conversion, equality, or inequality operator.
+A static *operator_declaration* may have the `abstract`, `virtual`, or `sealed` modifier. An operator without one of these modifiers is non-virtual. An operator other than an explicit interface member implementation shall be public, either implicitly or explicitly.
+
+For an interface operator other than an explicit interface member implementation, the operand type requirements in [§15.10.2](classes.md#15102-unary-operators) and [§15.10.3](classes.md#15103-binary-operators) may be satisfied by the instance type of the containing interface or by a type parameter that counts as that instance type. In order for a type parameter `T` to count as the instance type it shall meet the following requirements:
+
+- `T` is a direct type parameter on the interface in which the operator declaration occurs, and
+- `T` is directly constrained by the instance type; i.e., the surrounding interface with its own type parameters used as type arguments.
+
+For an equality operator (`==` or `!=`) other than an explicit interface member implementation, at least one operand shall be such a type parameter, rather than the containing interface type. Equality and conversion operator declarations in interfaces shall be abstract or virtual, or shall explicitly implement an inherited abstract or virtual operator. Conversion operators are additionally subject to [§15.10.4](classes.md#15104-conversion-operators).
 
 ### 19.4.8 Interface static constructors
 
-This clause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
+This subclause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
 
 The static constructor for a closed ([§8.4.3](types.md#843-open-and-closed-types)) interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
@@ -498,7 +508,7 @@ To initialize a new closed interface type, first a new set of static fields for 
 
 ### 19.4.9 Interface nested types
 
-This clause augments the description of nested types in classes [§15.3.9](classes.md#1539-nested-types) for nested types declared in interfaces.
+This subclause augments the description of nested types in classes [§15.3.9](classes.md#1539-nested-types) for nested types declared in interfaces.
 
 It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§19.2.3.1](interfaces.md#19231-general)).
 
@@ -517,7 +527,11 @@ It is an error to declare a class type, struct type, or enum type within the sco
 
 ### 19.4.10 Most specific implementation
 
-Every class and struct shall have a most specific implementation for every virtual member declared in all interfaces implemented by that type among the implementations appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique implementation that is more specific than every other implementation.
+Every class and struct shall have a most specific implementation for every instance or static abstract or virtual member declared in all interfaces implemented by that type among the implementations appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique implementation that is more specific than every other implementation.
+
+These specificity rules also apply when determining the most specific implementation in an interface among that interface and its direct and indirect base interfaces. An explicit implementation in a derived interface is more specific than the declaration or implementation it overrides, including when that explicit implementation reabstracts the member. A most specific reabstraction supplies no implementation body.
+
+An interface is permitted as a type argument only if each static abstract or virtual member it declares or inherits has a most specific implementation in that interface that is not abstract. This requirement does not apply to instance members.
 
 > *Note*: The most specific implementation rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
 
@@ -794,7 +808,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 ### 19.6.2 Explicit interface member implementations
 
 <!-- The statement on class or structs implementing a non-public member requiring explicit interface member implementation is removed in C# 10. -->
-For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementation***s. An explicit interface member implementation is a method, property, event, indexer, or operator declaration that references a qualified interface member name. A class or struct that implements a non-public member in a base interface must declare an explicit interface member implementation. An interface that implements a member in a base interface must declare an explicit interface member implementation.
 
 A derived interface member that satisfies interface mapping ([§19.6.5](interfaces.md#1965-interface-mapping)) hides the base interface member ([§7.6.2](basic-concepts.md#762-name-hiding)). The compiler shall issue a warning unless the `new` modifier is present.
 
@@ -850,9 +864,9 @@ A derived interface member that satisfies interface mapping ([§19.6.5](interfac
 >
 > *end example*
 
-It is not possible to access an explicit interface member implementation through its qualified interface member name in a method invocation, property access, event access, or indexer access. An explicit interface instance member implementation can only be accessed through an interface instance, and is in that case referenced simply by its member name. An explicit interface static member implementation can only be accessed through the interface name.
+It is not possible to access an explicit interface member implementation through its qualified interface member name in a method invocation, property access, event access, or indexer access. An explicit interface instance member implementation can only be accessed through an interface instance, and is in that case referenced simply by its member name. An explicit interface static member implementation is accessed through the interface contract using a constrained type parameter ([§12.8.7](expressions.md#1287-member-access)), or through the corresponding operator or conversion on such a type parameter.
 
-It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
+It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern`, `async`, or `static`, except that an explicit implementation in an interface may include `abstract` to reabstract the member. An explicit interface member implementation shall be static if and only if the implemented member is static.
 
 An explicit interface member implementation inherits any type parameter constraints from the interface.
 
@@ -1097,12 +1111,12 @@ When a generic method implicitly implements an interface method, the constraints
 
 A class or struct shall provide implementations for all abstract members of the interfaces that are listed in the base class list of the class or struct which do not have a reachable implementation; where an implementation can become unreachable due to reabstraction [§19.4.3](interfaces.md#1943-interface-methods). The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
 
-Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class, interface, or struct `S`, starting with `C` and repeating for each successive base class and implemented interface of `C`, until a match is located:
+Interface mapping for a class or struct `C` locates an implementation for each instance or static abstract or virtual member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class or struct `S`, starting with `C` and repeating for each successive base class of `C`, until a match is located:
 
 - If `S` contains a declaration of an explicit interface member implementation that matches `I` and `M`, then this member is the implementation of `I.M`.
-- Otherwise, if `S` contains a declaration of a non-static public member that matches `M`, then this member is the implementation of `I.M`. If more than one member matches, it is unspecified which member is the implementation of `I.M`. This situation can only occur if `S` is a constructed type where the two members as declared in the generic type have different signatures, but the type arguments make their signatures identical.
+- Otherwise, if `M` is public and `S` contains a declaration of a public member that matches `M`, then this member is the implementation of `I.M`. If more than one member matches, it is unspecified which member is the implementation of `I.M`. This situation can only occur if `S` is a constructed type where the two members as declared in the generic type have different signatures, but the type arguments make their signatures identical.
 
-A compile-time error occurs if implementations cannot be located for all members of all interfaces specified in the base class list of `C`. The members of an interface include those members that are inherited from base interfaces.
+If no class or struct member is located, the most specific implementation in the implemented interfaces is used ([§19.4.10](interfaces.md#19410-most-specific-implementation)). A compile-time error occurs if there is no unique most specific implementation, or if that implementation is abstract and no class or struct member implements it. An abstract class may implement an instance member with an abstract member as specified in [§19.6.8](interfaces.md#1968-abstract-classes-and-interfaces). Non-virtual static interface members do not require or participate in interface mapping.
 
 Members of a constructed interface type are considered to have any type parameters replaced with the corresponding type arguments as specified in [§15.3.3](classes.md#1533-members-of-constructed-types).
 
@@ -1126,17 +1140,23 @@ Members of a constructed interface type are considered to have any type paramete
 >
 > *end example*
 
-For purposes of interface mapping, a class, interface, or struct member `A` matches an interface member `B` when:
+For purposes of interface mapping, a class, interface, or struct member `A` matches an interface member `B` as follows. The members shall both be static or both be instance members. In addition, one of the following conditions shall be satisfied:
 
 - `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical.
 - `A` and `B` are properties, the name and type of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
 - `A` and `B` are indexers, the type and parameter lists of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
+- `A` and `B` are unary or binary operators with the same operator token, return type, and parameter types.
+- `A` and `B` are conversion operators with the same conversion kind (`implicit` or `explicit`), source type, and target type.
+
+For an explicit implementation, the qualified interface member name identifies `B`; for other implementations, the unqualified member names are compared.
+
+For operator matching, `A` and `B` shall agree in whether the `checked` modifier is present.
 
 Notable implications of the interface-mapping algorithm are:
 
 - Explicit interface member implementations take precedence over other members in the same class or struct when determining the class or struct member that implements an interface member.
-- Neither non-public nor static members participate in interface mapping.
+- Non-public class or struct members participate in interface mapping only as explicit interface member implementations.
 
 > *Example*: In the following code
 >
