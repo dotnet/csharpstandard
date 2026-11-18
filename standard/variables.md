@@ -190,15 +190,21 @@ A discard introduced by a declaration expression is not initially assigned, so i
 The following categories of variables are automatically initialized to their default values:
 
 - Static variables.
-- Instance variables of class instances.
+- Instance variables of class and struct instances.
 - Array elements.
 
 The default value of a variable depends on the type of the variable and is determined as follows:
 
 - For a variable of a *value_type*, the default value is the default value of that type ([§8.3.3](types.md#833-default-constructors)), without invoking an explicitly declared instance constructor.
-- For a variable of a *reference_type*, the default value is `null`.
+- For a variable of a *reference_type* or a reference variable, the default value is `null`.
+
+Reading or writing the referent of a reference variable whose stored reference is null throws `System.NullReferenceException`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: To test if a ref variable has been assigned a referent, call `System.Runtime.CompilerServices.Unsafe.IsNullRef(ref fieldName)`. One cannot test a ref variable to see if it has been assigned a referent by using `fieldName == null`, as that tests the value of the (potentially non-existent) referent, not the reference itself. *end note*
 
 ## 9.4 Definite assignment
 
@@ -1208,7 +1214,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### 9.7.1 General
 
-A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable or ref struct field declared with the `ref` modifier.
 
 A reference variable stores a *variable_reference* ([§9.5](variables.md#95-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 
@@ -1257,13 +1263,17 @@ A ***reference return*** is the *variable_reference* returned from a return-by-r
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
+Ref-safety behavior across module boundaries involving different versions of C# is undefined.
+
 > *Note*: The related notion of a *safe-context* is defined in ([§16.6.15](structs.md#16615-safe-context-constraint)), along with associated constraints. *end note*
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: A compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
 
-There are three ref-safe-contexts:
+The classifications below are subject to the local and parameter rules in [§9.7.2.2](variables.md#9722-local-variable-ref-safe-context) and [§9.7.2.3](variables.md#9723-parameter-ref-safe-context), including explicit `scoped` modifiers and applicable `[UnscopedRef]` attributes.
+
+There are four ref-safe-contexts:
 
 - ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9.1](variables.md#9291-general)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
 
@@ -1271,14 +1281,21 @@ There are three ref-safe-contexts:
 
 - ***function-member***: Within a function a *variable_reference* to any of the following has a ref-safe-context of function-member:
 
-  - Value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
-  - The implicit reference (`ref`) parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) `this` of a struct member function, along with its fields.
+  - Value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) on a function member declaration, including the implicit `this` of class member functions;
+  - Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)), which are implicitly `scoped ref`; and
+  - The implicit reference (`ref`) parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) `this` of a struct member function, which is implicitly `scoped ref`, along with its fields.
 
-   A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
+  A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
 
-- ***caller-context***:  Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
-  - Reference parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function;
-  - Member fields and elements of such parameters;
+- ***return-only***: Within a function a *variable_reference* to any of the following has a ref-safe-context of return-only:
+
+  - Reference parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function and other than output parameters; and
+  - Input parameters ([§15.6.2.3.2](classes.md#156232-input-parameters)).
+
+  A *variable_reference* with ref-safe-context of return-only can be the referent of a reference return.
+
+- ***caller-context***: Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
+  - Member fields and elements of reference or input parameters;
   - Member fields of parameters of class type; and
   - Elements of parameters of array type.
   
@@ -1296,7 +1313,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     // ref safe context of arr[i] is "caller-context".
 >     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; 
 > 
->     // ref safe context is "caller-context"
+>     // ref safe context is "return-only"
 >     public ref int M1(ref int r1)
 >     {
 >         return ref r1; // r1 is safe to ref return
@@ -1363,28 +1380,74 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
+A reference variable that is a local variable or parameter can be scoped explicitly; see §scoped-modifier.
+
 #### 9.7.2.2 Local variable ref safe context
 
 For a local variable `v`:
 
-- If `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
+- If `v` is a reference variable explicitly declared `scoped`, its ref-safe-context is declaration-block.
+- Otherwise, if `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
 - Otherwise its ref-safe-context is declaration-block.
 
 #### 9.7.2.3 Parameter ref safe context
 
-For a parameter `p`:
+For a parameter `p`, an explicit `scoped` modifier takes precedence over the defaults below. It gives a reference, input, or output parameter a ref-safe-context of function-member. An applicable `[UnscopedRef]` attribute instead determines the ref-safe-context according to the table in [§UnscopedRefAttribute](attributes.md#unscopedrefattribute-the-unscopedref-attribute). Otherwise:
 
-- If `p` is a reference or input parameter, its ref-safe-context is the caller-context. If `p` is an input parameter, it cannot be returned as a writable `ref` but can be returned as `ref readonly`.
-- If `p` is an output parameter, its ref-safe-context is the caller-context.
-- Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
+- If `p` is the `this` parameter of a struct instance member, its ref-safe-context is function-member. This parameter is implicitly `scoped ref`.
+- If `p` is a reference or input parameter, its ref-safe-context is return-only. If `p` is an input parameter, it cannot be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an output parameter, its ref-safe-context is function-member. An output parameter is implicitly `scoped ref`.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
+
+> *Example*: The following illustrates how the implicit `this` parameter of a struct instance method is `scoped ref` (ref-safe-context of *function-member*), and how `[UnscopedRef]` widens it to *return-only*, enabling ref returns of fields:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ParameterRefSafeContext", expectedErrors:["CS8170"]} -->
+> ```csharp
+> using System.Diagnostics.CodeAnalysis;
+>
+> struct S
+> {
+>     private int _field;
+>
+>     // Error: ref-safe-context of `this` is function-member,
+>     // so ref-safe-context of `_field` is also function-member,
+>     // which does not satisfy the return-only requirement.
+>     public ref int Bad() => ref _field;
+>
+>     // OK: [UnscopedRef] widens `this` from function-member to
+>     // return-only, so `_field` also has ref-safe-context of
+>     // return-only, satisfying the ref return requirement.
+>     [UnscopedRef]
+>     public ref int Good() => ref _field;
+> }
+> ```
+>
+> *end example*
 
 #### 9.7.2.4 Field ref safe context
 
 For a variable designating a reference to a field, `e.F`:
 
-- If `e` is of a reference type, its ref-safe-context is the caller-context.
+- If `F` is a reference variable, its ref-safe-context is the safe-context of `e`.
+- Else if `e` is of a reference type, its ref-safe-context is the caller-context.
 - Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
+
+As a result, a field that is a reference variable may be returned as a reference variable from a `ref struct` or `readonly ref struct`, but a non-reference variable field may not.
+
+> *Example*:
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldsSafeContext", expectedErrors:["CS8170"]} -->
+>
+> ```csharp
+> ref struct RS
+> {
+>     ref int _refField;
+>     int _field;
+>     public ref int Prop1 => ref _refField;  // OK
+>     public ref int Prop2 => ref _field;     // Error
+> }
+> ```
+>
+> *end example*
 
 #### 9.7.2.5 Operators
 
@@ -1392,14 +1455,22 @@ The conditional operator ([§12.21](expressions.md#1221-conditional-operator)), 
 
 #### 9.7.2.6 Function invocation
 
-For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
+For these invocation rules, including the method-arguments-must-match and declaration-expression inference rules, a reference argument includes an argument corresponding to an `in` parameter or an `[UnscopedRef] out` parameter, except where a rule explicitly distinguishes parameter-passing modes. For an input argument that is a *variable_reference*, its ref-safe-context is that of the variable; otherwise it is function-member.
+
+An argument, including the receiver, contributes contexts as follows:
+
+- It contributes safe-context if its corresponding parameter is not an output parameter and is not a value parameter declared `scoped`. In particular, `scoped ref` and `scoped in` do not suppress safe-context contribution.
+- It contributes ref-safe-context if its corresponding parameter is a reference or input parameter not declared `scoped`, or is an output parameter annotated `[UnscopedRef]`. An ordinary output parameter and the implicitly scoped `this` parameter of a struct do not contribute ref-safe-context.
+
+For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, where `M()` does not return ref-to-ref-struct, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
-- For each input parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
-- The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of all argument expressions (including the receiver).
+- The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) contributed by all argument expressions.
+- The ref-safe-context contributed by all reference arguments.
 
-> *Example*: the last bullet is necessary to handle code such as
+If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
+
+> *Example*: A reference argument can restrict the ref-safe-context of a result:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"FunctionInvocation", expectedErrors:["CS8168","CS8347"], ignoredWarnings:["CS8321"]} -->
 > ```csharp
@@ -1438,4 +1509,121 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a reference parameter, nor an output parameter, nor an input parameter, nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
 - For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
-- For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be the caller-context.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be at least return-only.
+
+### §scoped-modifier The scoped modifier
+
+The contextual keyword `scoped` is used as a modifier to restrict the ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) or safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of a variable. The presence of this modifier requires that related code doesn’t extend the lifetime of the variable.
+
+`scoped` shall only be applied to reference variables (which includes non-value parameters) and to variables of a ref struct type. `scoped` shall not be applied to fields, array elements, or return types.
+
+The effect on ref-safe-context is specified in [§9.7.2.2](variables.md#9722-local-variable-ref-safe-context) and [§9.7.2.3](variables.md#9723-parameter-ref-safe-context). The effect on safe-context is specified in [§16.6.15.2](structs.md#166152-parameter-safe-context) and [§16.6.15.3](structs.md#166153-local-variable-safe-context). These rules take precedence over initializer and default-context inference.
+
+The following table illustrates local declarations whose initializers have caller-context for both safe-context and, where applicable, ref-safe-context:
+
+| Local Variable              | ref-safe-context | safe-context |
+|---|---|---|
+| `Span<int> s`               | *declaration-block* | *caller-context* |
+| `scoped Span<int> s`        | *declaration-block* | *declaration-block* |
+| `ref Span<int> s`           | *caller-context*   | *caller-context* |
+| `scoped ref Span<int> s`    | *declaration-block* | *caller-context* |
+
+In this relationship the *ref-safe-context* of a value can never be wider than the *safe-context*.
+
+> *Example*: The following illustrates how `scoped` restricts the lifetime of a local and prevents it from escaping its enclosing function:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedLocalCannotEscape", expectedErrors:["CS8352"]} -->
+> ```csharp
+> using System;
+>
+> class C
+> {
+>     static Span<int> Bad()
+>     {
+>         // Without `scoped`, the safe-context of `s` would be caller-context
+>         // because the right-hand side has safe-context of caller-context.
+>         // The `scoped` modifier forces the safe-context to function-member,
+>         // so `s` cannot be returned.
+>         scoped Span<int> s = default;
+>         return s;   // Error: s has safe-context of function-member
+>     }
+> }
+> ```
+>
+> *end example*
+
+<!-- markdownlint-disable MD028 -->
+
+> *Example*: The following illustrates how `scoped ref` on a parameter prevents the parameter from being captured by a constructed `ref struct` value that the method returns:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopedRefParameter", expectedErrors:["CS8347","CS9075"]} -->
+> ```csharp
+> ref struct RS
+> {
+>     public ref int RefField;
+>     public RS(ref int i) { RefField = ref i; }
+> }
+>
+> class C
+> {
+>     // `scoped ref` means `value` does not contribute ref-safe-context
+>     // to the return value. The `RS` constructor requires a ref argument
+>     // with ref-safe-context of caller-context, but `value` only contributes
+>     // function-member, so the call is rejected.
+>     static RS CreateWithoutCapture(scoped ref int value)
+>         => new RS(ref value);
+> }
+> ```
+>
+> *end example*
+
+In summary, two `ref` locations are implicitly `scoped`: the `this` parameter of a struct instance method, and every `out` parameter. See §9.7.2.3.
+
+### §parameter-scope-variance Parameter scope variance
+
+The `scoped` modifier (§scoped-modifier) and `[UnscopedRef]` attribute (§UnscopedRefAttribute) on parameters affect overriding, interface implementation, and `delegate` conversion. The signature for an override, interface implementation, or `delegate` conversion may:
+
+- Add `scoped` to a `ref` or `in` parameter.
+- Add `scoped` to a parameter of a `ref struct` type.
+- Remove `[UnscopedRef]` from an `out` parameter.
+- Remove `[UnscopedRef]` from a `ref` parameter of a `ref struct` type.
+
+Any other difference with respect to `scoped` or `[UnscopedRef]` between the base and the overriding, implementing, or converting signature is a mismatch.
+
+A mismatch is unsafe when any of the following holds:
+
+- The mismatch adds `[UnscopedRef]` to a `ref` or `out` parameter of ref struct type.
+- The signature returns a ref struct or returns by `ref` or `ref readonly`, and has a `ref`, `in`, or `out` parameter or a value parameter of ref struct type.
+- The signature has a `ref` or `out` parameter of ref struct type and at least one other `ref`, `in`, or `out` parameter or value parameter of ref struct type.
+
+An unsafe mismatch is a compile-time error. Other parameter-scope mismatches do not require a diagnostic.
+
+The `scoped` modifier and `[UnscopedRef]` attribute do not affect hiding.
+
+Overloads shall not differ only on `scoped` or `[UnscopedRef]`.
+
+> *Example*: The following illustrates valid and invalid scope variance in overrides:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ParameterScopeVariance", expectedErrors:["CS0111"]} -->
+> ```csharp
+> using System;
+>
+> class Base
+> {
+>     public virtual void M(ref Span<int> x) { }
+> }
+>
+> class Derived : Base
+> {
+>     // OK: adds scoped to a ref parameter
+>     public override void M(scoped ref Span<int> x) { }
+> }
+>
+> class C
+> {
+>     void N(Span<int> x) { }
+>     void N(scoped Span<int> x) { }  // Error: overloads differ only on scoped
+> }
+> ```
+>
+> *end example*
