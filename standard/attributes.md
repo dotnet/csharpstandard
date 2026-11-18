@@ -1318,35 +1318,20 @@ Specifies that a nullable argument will not be `null` when the method returns th
 
 ### §UnscopedRefAttribute The UnscopedRef attribute
 
-There are several cases in which a ref is treated as being implicitly scoped (§scoped-modifier); that is, the ref is not allowed to escape a method. For example:
-
-- `this` for struct instance methods.
-- ref parameters that refer to ref struct types.
-- out parameters.
-
-This attribute is used in those situations where the ref should be allowed to escape.
-
-This attribute may can be applied to any `ref` and it changes the ref-safe-context to be one level wider than its default. For example:
+`System.Diagnostics.CodeAnalysis.UnscopedRefAttribute` widens the ref-safe-context of a parameter, including the implicit `this` parameter, according to the following table:
 
 | UnscopedRef applied to | Original ref-safe-context | New ref-safe-context |
 | --- | --- | --- |
-| instance member | function-member | return-only |
+| struct instance method or property (applies to `this`) | function-member | return-only |
 | `in` / `ref` parameter | return-only | caller-context |
 | `out` parameter | function-member | return-only |
 
-When applying this attribute to an instance method of a struct it modifies the implicit `this` parameter; that is, `this` acts as an unannotated `ref` of the same type.
+The permitted targets are:
 
-An instance method or property annotated with `UnscopedRefAttribute` has the ref-safe-context of `this` set to the *caller-context*.
+- A struct instance method or property, other than an `init` accessor or constructor, that does not implement an interface member.
+- A `ref`, `in`, or `out` parameter that is not explicitly declared `scoped`, including an ordinary `ref` or `in` parameter.
 
-A member annotated with `UnscopedRefAttribute` may not implement an interface.
-
-It is an error to use `UnscopedRefAttribute` on
-
-- A member that is not declared on a `struct`.
-- A `static` member, `init` member, or constructor on a `struct`.
-- A parameter marked `scoped`.
-- A parameter passed by value.
-- A parameter passed by reference that is not implicitly scoped.
+An application to any other target is a compile-time error.
 
 See §scoped-modifier for more information.
 

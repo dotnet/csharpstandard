@@ -601,7 +601,7 @@ When a property or indexer of a struct is the target of an assignment, the insta
 
 ### 16.6.5 Default values
 
-As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, as well as reference variable fields, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference variable fields and reference type fields to `null`.
+As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, as well as reference variable fields, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all instance fields to their default values as specified in that subclause.
 
 > *Example*: Referring to the `Point` struct declared above, the example
 >
@@ -746,7 +746,7 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 
 #### §field-initializers Field initializers
 
-As described in [§16.6.5](structs.md#1665-default-values), the default value of a struct consists of the value that results from setting all value type and reference variable fields to their default value and all reference type fields to `null`. Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
+The default value of a struct is described in [§16.6.5](structs.md#1665-default-values). Static and instance fields of a struct are permitted to include variable initializers; however, in the case of an instance field initializer, at least one instance constructor shall also be declared, or for a record struct, a *delimited_parameter_list* shall be present.
 
 > *Example*:
 >
@@ -774,9 +774,9 @@ As described in [§16.6.5](structs.md#1665-default-values), the default value of
 >
 > *end example*
 
-When a struct instance constructor has no constructor initializer, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor.
+When a struct instance constructor has no constructor initializer, that constructor implicitly performs the initializations specified by the *variable_initializer*s and *ref_field_initializer*s of the instance fields declared in its struct. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor.
 
-When a struct instance constructor has a `this()` constructor initializer that represents the default parameterless constructor, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all value type fields are set to their default value and all reference type fields are set to `null`. Immediately after that, a sequence of assignments corresponding to the *variable_initializer*s are executed.
+When a struct instance constructor has a `this()` constructor initializer that represents the default parameterless constructor, the declared constructor implicitly clears all instance fields and performs the initializations specified by the *variable_initializer*s and *ref_field_initializer*s of the instance fields declared in its struct. Immediately upon entry to the constructor, all instance fields are set to their default values ([§9.3](variables.md#93-default-values)). Immediately after that, a sequence of assignments corresponding to the field initializers are executed.
 
 A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
 
@@ -784,21 +784,38 @@ A *field_declaration* declared directly inside a *struct_declaration* having the
 
 ```ANTLR
 struct_field_declaration
-    : attributes? field_modifier* ('readonly'? 'ref' 'readonly'?)? type
-      variable_declarators ';'
+    : field_declaration
+    | attributes? field_modifier* 'ref' 'readonly'? type
+      ref_field_declarators ';'
+    ;
+
+ref_field_declarators
+    : ref_field_declarator (',' ref_field_declarator)*
+    ;
+
+ref_field_declarator
+    : identifier ('=' ref_field_initializer)?
+    ;
+
+ref_field_initializer
+    : 'ref' variable_reference
     ;
 ```
 
 *field_modifier* is described in [§15.5.1](classes.md#1551-general).
 
-A *struct_field_declaration* without `ref`, `readonly ref`, or `ref readonly` is as described in [§15.5](classes.md#155-fields).
+A *struct_field_declaration* that is a *field_declaration* is as described in [§15.5](classes.md#155-fields).
 
-A `ref` or `readonly ref` field is a reference variable and is subject to the following constraints:
+A field declared with `ref`, optionally preceded or followed by `readonly`, is a reference variable and is subject to the following constraints:
 
 - It shall only be declared in a `ref struct`.
 - It shall not be declared `static`, `volatile`, or `const`.
 - Its type shall not itself be a `ref struct` type.
 - In a `readonly ref struct`, every `ref` field shall be declared `readonly ref` (it may additionally be declared `readonly ref readonly`).
+
+A *ref_field_initializer* establishes the initial referent of a ref field. Its *variable_reference* shall be definitely assigned, and its ref-safe-context shall permit assignment to the field. An identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist from the type of the *variable_reference* to the field type without applying, directly or recursively, the rule for identity conversions between `object` and `dynamic`. For a field declared without `readonly` after `ref`, the *variable_reference* shall be writable. Subsequent assignments of a value through the field modify its referent; ref assignments ([§12.24.4](expressions.md#12244-ref-assignment)) change its referent.
+
+> *Note*: The restriction on identity conversions between `object` and `dynamic` is applied recursively to prohibit identity conversions between tuple element types, array element types, or corresponding generic type arguments with identity conversions between `object` and `dynamic`. *end note*
 
 Consider the following ref struct declaration:
 
@@ -819,7 +836,7 @@ ref struct RwS
 
 `rwRefToRwData` is a writable reference variable, whose referent is seen as a writable `int`. `rwRefToRoData` is a writable reference variable, whose referent is seen as a read-only `int`. `roRefToRwData` is a read-only reference variable, whose referent is seen as a writable `int`. `roRefToRoData` is a read-only reference variable, whose referent is seen as a read-only `int`. The read/write field `rwField` can be written directly, and via the reference variables `rwRefToRwData` and `roRefToRwData`.
 
-A readonly reference variable may take on a value via an initializer, or via an assignment inside a constructor or an init-only setter.
+For a ref field, `readonly` before `ref` restricts changing its referent to its initializer or a ref assignment to the field on `this` within an instance constructor or `init` accessor of the declaring type. `readonly` after `ref` makes access to its referent read-only.
 
 Consider the following readonly ref struct declaration:
 
@@ -840,7 +857,7 @@ readonly ref struct RoS
 
 ### 16.6.9 Constructors
 
-A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the value that results from setting all value type fields to their default value, all reference variable fields to null references, and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). In such a case, any instance field initializers are ignored when that constructor executes.
+A struct can declare instance constructors, with zero or more parameters. If a struct has no explicitly declared parameterless instance constructor, one is synthesized, with public accessibility, which always returns the default value of the struct ([§16.6.5](structs.md#1665-default-values)). In such a case, any instance field initializers are ignored when that constructor executes.
 
 An explicitly declared parameterless instance constructor shall have public accessibility.
 
@@ -1024,7 +1041,7 @@ There are four different safe-context values, the same as the ref-safe-context v
 
 #### 16.6.15.2 Parameter safe context
 
-A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
+A value parameter of ref struct type declared `scoped` has a safe-context of function-member. Otherwise, a parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context, subject to the following exceptions.
 
 An `out` parameter of a ref struct type has a safe-context of return-only.
 
@@ -1034,7 +1051,8 @@ A `this` parameter in a struct constructor has a safe-context of return-only.
 
 A local variable of a ref struct type has a safe-context as follows:
 
-- If the variable is an iteration variable of a `foreach` loop, then the variable’s safe-context is the same as the safe-context of the `foreach` loop’s expression.
+- If the variable is declared `scoped` without `ref`, its safe-context is declaration-block.
+- Otherwise if the variable is an iteration variable of a `foreach` loop, then the variable’s safe-context is the same as the safe-context of the `foreach` loop’s expression.
 - Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
 
@@ -1057,16 +1075,12 @@ For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the saf
 A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P`, where `M()` does not return ref-to-ref-struct, has safe-context of the smallest of the following contexts:
 
 - The caller-context.
-- When the return is a `ref struct`, the safe-context contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
-- When the return is a `ref struct`, the ref-safe-context contributed by all `ref` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+- When the return is a `ref struct`, the safe-context contributed by all argument expressions (including the receiver).
+- When the return is a `ref struct`, the ref-safe-context contributed by all reference arguments.
 
 If `M()` does return ref-to-ref-struct, the safe-context is the same as the safe-context of all arguments which are ref-to-ref-struct. It is an error if there are multiple such arguments with different safe-contexts.
 
-For the purpose of these rules, a given argument `expr` passed to parameter `p`:
-
-1. If `p` is `scoped ref`, then `expr` does not contribute ref-safe-context.
-2. If `p` is `scoped`, then `expr` does not contribute safe-context.
-3. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
+Argument contributions and the generalization of reference arguments to input and annotated output parameters are specified in [§9.7.2.6](variables.md#9726-function-invocation). They also apply to §method-arguments-must-match and §declaration-expression-safe-context.
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
@@ -1107,8 +1121,8 @@ For any method invocation `e.M(a1, a2, ... aN)`:
 
 1. Calculate the narrowest safe-context from:
    - caller-context.
-   - The safe-context of all arguments.
-   - The ref-safe-context of all `ref` arguments whose corresponding parameters have a ref-safe-context of caller-context.
+   - The safe-context contributed by all arguments.
+   - The ref-safe-context contributed by all reference arguments whose corresponding parameters have a ref-safe-context of caller-context.
 
 2. All `ref` arguments of `ref struct` types shall be assignable by a value with that safe-context. In this rule, `ref` does **not** generalize to include `in` and `out`.
 
@@ -1116,12 +1130,12 @@ For any method invocation `e.M(a1, a2, ... aN)`:
 
 1. Calculate the narrowest safe-context from:
    - caller-context.
-   - The safe-context of all arguments.
-   - The ref-safe-context of all `ref` arguments whose corresponding parameters are not `scoped`.
+   - The safe-context contributed by all arguments.
+   - The ref-safe-context contributed by all reference arguments.
 
 2. All `out` arguments of `ref struct` types shall be assignable by a value with that safe-context.
 
-The presence of `scoped` allows developers to reduce the friction this rule creates by marking parameters which are not returned as `scoped`. This removes their arguments from (1) in both cases above and provides greater flexibility to callers.
+The `scoped` modifier restricts the contributions in (1) as specified in [§9.7.2.6](variables.md#9726-function-invocation).
 
 > *Example*: The following illustrates how the method-arguments-must-match rule prevents a value with a narrower safe-context from being stored into a `ref` argument with a wider safe-context:
 >
@@ -1148,13 +1162,12 @@ The presence of `scoped` allows developers to reduce the friction this rule crea
 
 #### §declaration-expression-safe-context Infer safe-context of declaration expressions
 
-The safe-context of a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`) is the narrowest of the following:
+The safe-context of a declaration variable explicitly declared `scoped` is declaration-block. Otherwise, for a declaration variable from an `out` argument (`M(x, out var y)`) or deconstruction (`(var x, var y) = M()`), it is the narrowest of the following:
 
 - caller-context.
-- If the out variable is marked `scoped`, then declaration-block (i.e., function-member or narrower).
 - If the out variable's type is a `ref struct`, consider all arguments to the containing invocation, including the receiver:
-  - The safe-context of any argument where its corresponding parameter is not `out` and has safe-context of return-only or wider.
-  - The ref-safe-context of any argument where its corresponding parameter has ref-safe-context of return-only or wider.
+  - The safe-context contributed by any argument where its corresponding parameter has safe-context of return-only or wider.
+  - The ref-safe-context contributed by any argument where its corresponding parameter has ref-safe-context of return-only or wider.
 
 > *Example*: The following illustrates how the safe-context of an `out` declaration variable is inferred from the other arguments to the invocation:
 >
@@ -1237,4 +1250,4 @@ The result of a stackalloc expression has safe-context of function-member.
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present. See §object-initializer-safe-context for details.
+If an object initializer is present, the resulting safe-context is determined by §object-initializer-safe-context.

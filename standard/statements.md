@@ -1146,7 +1146,7 @@ foreach_statement
       'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // asynchronous foreach
-      'await' 'foreach' '(' 'scoped'? ref_kind? local_variable_type identifier 'in' expression ')'
+      'await' 'foreach' '(' local_variable_type identifier 'in' expression ')'
           embedded_statement
     | // deconstructing foreach
       'await'? 'foreach' '(' deconstructor 'in' expression ')'
@@ -1158,9 +1158,7 @@ There are three forms of the *foreach_statement*: *synchronous*, *asynchronous* 
 
 It is a compile-time error for `scoped` to be present in a *foreach_statement* unless a *ref_kind* is also present or the *local_variable_type* denotes a ref struct type.
 
-It is a compile-time error for an *asynchronous* *foreach_statement* to omit the `scoped` modifier if *ref_kind* is present or the *local_variable_type* denotes a ref struct type.
-
-The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
+The prohibition on ref locals and locals of ref struct type in an `async` method ([§13.6.2.4](statements.md#13624-explicitly-typed-ref-local-variable-declarations)) applies to iteration variables as well.
 
 The deconstructing foreach supports both synchronous and asynchronous forms and is described in [§13.9.5.4](statements.md#13954-deconstructing-foreach).
 
@@ -1462,6 +1460,8 @@ A deconstructing foreach replaces the declaration and initialisation of a single
 
 All variables assigned to by the *deconstructor* must be declared within the *deconstructor*, it is a compile time error for any *deconstructor_element* to be a *variable_reference*.
 
+> *Note*: Consequently, a deconstructing `foreach` can discard ([§9.2.9.2](variables.md#9292-discards)) every component, as in `foreach ((_, _) in e)`, and therefore declare no iteration variables. This differs from an ordinary single-variable `foreach` statement, whose iteration variable is introduced by a declaration; a bare `_` in `foreach (_ in e)` is not such a declaration. The equivalent “values are not needed” intent can be written as `foreach (var _ in e)`. *end note*
+
 A foreach statement of the form:
 
 ```csharp
@@ -1493,7 +1493,7 @@ except that no copy of `x` is made when `GetEnumerator()` is called.
 This follows the behavior of synchronous foreach ([§13.9.5.2](statements.md#13952-synchronous-foreach)), differing by replacing the declaration and initialisation of a single iteration variable with a *deconstructing_assignment* in which the *deconstructor* contains the iteration-variable declarations: each *declaration_expression* other than a discard declares one iteration variable, and each discard ([§9.2.9.2](variables.md#9292-discards)) declares none:
 
 - `C` and `E` are determined as for synchronous foreach
-- `e` is not visible or accessible anywhere in the program accept as indicated in the above code
+- `e` is not visible or accessible anywhere in the program except as indicated in the above code
 - the variables declared by the «deconstructor» are read-only to the «embedded_statement»
 - the code in the `finally` block is determined as for synchronous foreach
 
@@ -1508,6 +1508,19 @@ uses the same expansions as asynchronous foreach ([§13.9.5.3](statements.md#139
 - `enumerator` is not visible or accessible anywhere in the program except as indicated in those expansions
 - the variables declared within the «deconstructor» are read-only to the «embedded_statement»
 - the conditions for using the `await using` expansion are the same as for asynchronous foreach
+
+> *Example*: A deconstructing foreach uses discards as placeholders for elements that are not needed. Here each element of the collection is a tuple whose second element is discarded:
+>
+> <!-- Example: {template:"standalone-console", name:"DeconstructingForeach1", expectedOutput:["1","3"]} -->
+> ```csharp
+> var points = new List<(int X, int Y)> { (1, 2), (3, 4) };
+> foreach (var (x, _) in points)
+> {
+>     Console.WriteLine(x);
+> }
+> ```
+>
+> *end example*
 
 ## 13.10 Jump statements
 

@@ -246,7 +246,7 @@ Every value type has a ***default value***, which is independent of any explicit
   - For `decimal`, the default value is `0m` (that is, value zero with scale 0).
   - For `bool`, the default value is `false`.
   - For an *enum_type* `E`, the default value is `0`, converted to the type `E`.
-- For a *struct_type*, the default value is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
+- For a *struct_type*, the default value is the value produced by setting all instance fields to their default values ([§9.3](variables.md#93-default-values)), including null references for fields that are reference variables.
 - For a *nullable_value_type* the default value is an instance for which the `HasValue` property is false. The default value is also known as the ***null value*** of the nullable value type. Attempting to read the `Value` property of such a value causes an exception of type `System.InvalidOperationException` to be thrown ([§8.3.12](types.md#8312-nullable-value-types)).
 
 All value types have a public parameterless instance constructor. For a value type that does not explicitly declare one, an implicit parameterless instance constructor, called the ***default constructor***, produces the default value and does not execute instance field initializers. An explicitly declared parameterless instance constructor is not required to produce the default value.
@@ -883,11 +883,11 @@ unmanaged_type
     ;
 ```
 
-An *unmanaged_type* is any type that is neither a *reference_type* nor a *type_parameter* that is not constrained to be unmanaged, and contains no instance fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
+An *unmanaged_type* is any type that is neither a *reference_type* nor a *type_parameter* that is not constrained to be unmanaged, and contains neither instance fields that are reference variables nor instance fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
 
 - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
 - Any *enum_type*.
-- Any user-defined *struct_type* that contains instance fields of *unmanaged_type*s only.
+- Any user-defined *struct_type* that contains instance fields of *unmanaged_type*s only, none of which are reference variables.
 - Any type parameter which is constrained to be unmanaged.
 - Any *pointer_type* ([§24.3](unsafe-code.md#243-pointer-types)).
 

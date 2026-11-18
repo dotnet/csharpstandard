@@ -565,9 +565,10 @@ argument_name
 
 argument_value
     : expression
-    | 'in' 'scoped'? variable_reference
-    | 'ref' 'scoped'? variable_reference
-    | 'out' 'scoped'? variable_reference
+    | 'in' variable_reference
+    | 'ref' variable_reference
+    | 'out' variable_reference
+    | 'out' declaration_expression
     ;
 ```
 
@@ -576,10 +577,10 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by [§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). An *interpolated_string_handler_expression* converted to a struct handler can also be passed to a reference parameter through a temporary, as specified in those clauses.
-- The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `out`, optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see §scoped-modifier.
-- The keyword `out`, optionally followed by `scoped`, followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation. For a discussion of `scoped`, see §scoped-modifier.
+- The keyword `in`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
+- The keyword `ref`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
+- The keyword `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `out`, followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation. A `scoped` modifier, if present, is part of the declaration expression (§scoped-modifier).
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, an argument with value passing mode might be passed to an input parameter or, for an interpolated string handler conversion, to a reference parameter as described above.
 
@@ -2777,7 +2778,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : initializer_target '=' 'ref'? initializer_value
+    : initializer_target '=' initializer_value
     ;
 
 initializer_target
@@ -2786,7 +2787,8 @@ initializer_target
     ;
 
 initializer_value
-    : 'ref'? expression
+    : expression
+    | 'ref' variable_reference
     | object_or_collection_initializer
     ;
 ```
@@ -2795,11 +2797,13 @@ An object initializer consists of a sequence of member initializers, enclosed by
 
 > *Note*: While an object initializer is not permitted to set the same field or property more than once, there are no such restrictions for indexers. An object initializer may contain multiple initializer targets referring to indexers, and may even use the same indexer arguments multiple times. *end note*
 
-Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
+Each *initializer_target* is followed by an equals sign and either an expression, `ref` followed by a *variable_reference*, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
 
 In the *argument_list* of an *initializer_target* there is no implicit support for arguments of type `Index` ([§18.4.2](ranges.md#1842-implicit-index-support)) or `Range` ([§18.4.3](ranges.md#1843-implicit-range-support)).
 
 A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.24.2](expressions.md#12242-simple-assignment)) to the target.
+
+A member initializer that specifies `ref` followed by a *variable_reference* retargets a ref field of the object being initialized. It is processed as a ref assignment ([§12.24.4](expressions.md#12244-ref-assignment)) to that field, including the requirements on the target, identity conversion, writability, and safe-contexts.
 
 A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
 
@@ -4048,6 +4052,10 @@ The receiver is the *switch_expression* preceding `with`. Its compile-time type 
 Each *identifier* in the *member_initializer_list* shall name an accessible instance field or property of the receiver's type. A member shall not be initialized more than once.
 
 For a receiver other than an anonymous type, each member initializer is subject to the same rules as an assignment to the corresponding member of a variable of the receiver's type. A property assignment requires an accessible `set` or `init` accessor, but does not require a `get` accessor. An `init` accessor is permitted in this context ([§15.7.3](classes.md#1573-accessors)); the usual accessibility and readonly-field restrictions apply.
+
+A member initializer specifying `ref` followed by a *variable_reference* is processed as a ref assignment to a ref field of the copy, as specified for object initializers ([§12.8.17.2.2](expressions.md#1281722-object-initializers)).
+
+For a ref struct receiver, the safe-context of the result is determined by §object-initializer-safe-context, using the safe-context of the receiver in place of that of a constructor invocation.
 
 For an anonymous-type receiver, each initializer shall specify an expression implicitly convertible to the type of the named property. The absence of a setter on that property does not prevent its initialization by a *with_expression*.
 
@@ -5714,7 +5722,6 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
-- Only *lambda_expression* parameters may contain 'scoped'.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
 
 The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
@@ -7523,6 +7530,8 @@ The operator `= ref`  is called the ***ref assignment operator***. The expressio
 
 The left operand shall be an expression that binds to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)), a reference parameter (other than `this`), an output parameter, an input parameter, or a discard. When the left operand is a discard, the right operand is evaluated but no variable reference is stored. Otherwise, the right operand shall be an expression that yields a *variable_reference* ([§9.5](variables.md#95-variable-references)) designating a value of the same type as the left operand.
 
+When the left operand designates a ref field, ref assignment is subject to the readonly-field restrictions in §Ref-Fields. An identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist from the type of the right operand to the field type.
+
 The ref-safe-context of the right operand shall be at least as wide as the ref-safe-context of the left operand, and the left operand shall have the same safe-context as the right operand (§9.7.2).
 
 > *Note*: This requirement exists because the lifetime of the value pointed to by a ref location is invariant. The indirection prevents one from allowing any kind of variance here, even to narrower lifetimes. *end note*
@@ -7531,7 +7540,7 @@ The right operand shall be definitely assigned at the point of the ref assignmen
 
 When the left operand binds to an output parameter, it is an error if that output parameter has not been definitely assigned at the beginning of the ref assignment operator.
 
-If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  input parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be a writeable or read-only ref.
+If the left operand designates a writable referent (rather than a `ref readonly` local, a `ref readonly` field, or an input parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may designate a writable or read-only referent.
 
 The operation makes the left operand an alias of the right operand variable. The alias may be made read-only even if the right operand variable is writeable.
 
