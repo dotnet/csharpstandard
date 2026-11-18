@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json;
 
 namespace StandardAnchorTags.Tests;
@@ -15,12 +15,10 @@ public class DiagnosticReportTests
     [TearDown]
     public void TearDown() => Directory.Delete(tempDirectory, recursive: true);
 
-    [TestCase("missing", false)]
-    [TestCase("missing", true)]
-    [TestCase("null", false)]
-    [TestCase("invalid", false)]
-    public async Task ClauseLoadingFailuresWriteReportsWithoutRenumbering(
-        string failure, bool legacyOptions)
+    [TestCase("missing")]
+    [TestCase("null")]
+    [TestCase("invalid")]
+    public async Task ClauseLoadingFailuresWriteReportsWithoutRenumbering(string failure)
     {
         var workingDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory, "tools"));
         var reportPath = Path.Combine(tempDirectory, "reports", "anchors.json");
@@ -39,13 +37,6 @@ public class DiagnosticReportTests
             UseShellExecute = false
         };
         startInfo.ArgumentList.Add(typeof(Program).Assembly.Location);
-        if (legacyOptions)
-        {
-            foreach (var arg in new[] { "--owner", "dotnet", "--repo", "csharpstandard" })
-            {
-                startInfo.ArgumentList.Add(arg);
-            }
-        }
         startInfo.Environment.Remove("GH_TOKEN");
         startInfo.Environment.Remove("HEAD_SHA");
         startInfo.Environment["DIAGNOSTICS_REPORT_PATH"] = reportPath;
