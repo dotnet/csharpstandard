@@ -1016,7 +1016,9 @@ For a *Multi_Line_Raw_String_Literal* only:
 
 - The start delimiter is followed only by *Whitespace* before the first *New_Line*. The end delimiter is preceded only by *Whitespace* on its line. This latter sequence of whitespace characters is the ***indentation whitespace***.
 - The initial *Whitespace*\* *New_Line* and the final *New_Line* *Whitespace*\* are excluded from the value. These are distinct *New_Line*s, even when the value is empty.
-- The remaining text is divided into content lines at each *New_Line*, preserving those *New_Line*s exactly. Each content line, including a line consisting entirely of whitespace, shall begin with the entire indentation whitespace, matching both the number and kind of characters. The indentation whitespace is removed from each content line; any remaining characters, including whitespace on a blank line, are retained.
+- The remaining text is divided into content lines at each *New_Line*, preserving those *New_Line*s exactly.
+- Each content line containing a non-whitespace character shall begin with the entire indentation whitespace, matching its characters exactly. That prefix is removed from the content line.
+- For a whitespace-only content line, the shorter of the line and the indentation whitespace shall be a prefix of the longer. Their longest common prefix is removed from the content line, and any remaining whitespace is retained.
 - The value is the concatenation, in textual order, of the resulting content lines and the preserved *New_Line*s. If the remaining text is empty, the value is the empty string.
 
 > *Example*: The example
