@@ -5721,22 +5721,7 @@ anonymous_function_signature
     ;
 
 explicit_anonymous_function_signature
-    : '(' explicit_anonymous_function_parameter_list? ')'
-    ;
-
-explicit_anonymous_function_parameter_list
-    : explicit_anonymous_function_parameter
-      (',' explicit_anonymous_function_parameter)*
-    ;
-
-explicit_anonymous_function_parameter
-    : attributes? 'scoped'? anonymous_function_parameter_modifier? type identifier
-    ;
-
-anonymous_function_parameter_modifier
-    : 'ref'
-    | 'out'
-    | 'in'
+    : '(' parameter_list? ')'
     ;
 
 implicit_anonymous_function_signature
@@ -5772,6 +5757,10 @@ A non-`static` local function or non-`static` anonymous function can capture sta
 
 > *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See [§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types). *end note*
 <!-- markdownlint-enable MD028 -->
+
+A *lambda_expression* shall not contain any *parameter_modifier*s with the `this` modifier.
+
+An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_array*s.
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
@@ -5834,6 +5823,8 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > delegate (int x) { return x + 1; } // Anonymous method expression
 > static delegate (int x) { return x + 1; } // Static anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
+> var addWithDefault = (int addTo = 2) => addTo + 1;
+> var counter = (params int[] xs) => xs.Length;
 > var concat = string ([DisallowNull] string a, [DisallowNull] string b) => a + b;
 > Func<string, int?> parse = [X][return: Y] ([Z] s)
 >   => (s is not null) ? int.Parse(s) : null;
@@ -5851,6 +5842,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 - Only *lambda_expression* parameters may contain ‘scoped’.
 - Only *lambda_expression*s may have *attributes* and explicit return types.
+- An *anonymous_method_expression* may not contain any *default_argument*s or *parameter_array*s.
 
 The contextual keyword `var` shall not be used as an explicit return type in a *lambda_expression*.
 
@@ -5884,9 +5876,7 @@ The *anonymous_function_signature* of an anonymous function defines the names of
 
 If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
 
-Note that an *anonymous_function_signature* cannot include a parameter array. Nevertheless, an *anonymous_function_signature* may be compatible with a delegate type whose parameter list contains a parameter array.
-
-Note also that conversion to an expression tree type, even if compatible, may still fail at compile-time ([§8.6](types.md#86-expression-tree-types)).
+Note that conversion to an expression tree type, even if compatible, may still fail at compile-time ([§8.6](types.md#86-expression-tree-types)).
 
 ### 12.22.3 Anonymous function bodies
 
@@ -6252,11 +6242,11 @@ An anonymous function `F` shall always be converted to a delegate type `D` or 
 
 ### 12.22.8 Anonymous function type
 
-The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a method signature: the parameter types and ref kinds, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
+The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a method signature: the parameter types and ref kinds, default values, `params` modifiers, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
 
 An anonymous function expression has a ***natural type*** if its parameter list is present, its parameter types are explicit, and its return type is either explicit or can be inferred ([§12.6.3.14](expressions.md#126314-inferred-return-type)). For this purpose, a non-async anonymous function whose body is an expression classified as nothing, or a block with no `return` statements specifying expressions, has inferred return type `void`.
 
-A method group has a natural type if all candidate methods (including extension methods) in the method group have a common signature.
+A method group has a natural type if all candidate methods (including extension methods) in the method group have a common signature including default values and `params` modifiers.
 
 An anonymous function type is determined independently of a conversion. When a delegate type is needed, the corresponding delegate type is determined from this signature as specified below. In particular, that delegate type, not the anonymous function type, is used as the type of an implicitly typed local variable ([§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)).
 
@@ -6306,7 +6296,7 @@ Anonymous function types are used in a few specific contexts only:
 
 The delegate type for the anonymous function or method group with parameter types `P1, ..., Pn` and return type `R` is, as follows:
 
-- If any parameter or return value is not by value, or there are more than 16 parameters, or any of the parameter types or return type are not valid type arguments (e.g., `(int* p) => { }`), then the delegate is a synthesized `internal` anonymous delegate type with a signature that matches the anonymous function or method group, and with parameter names `arg1, ..., argn`, or `arg` if a single parameter;
+- If any parameter or return value is not by value, or any parameter is optional or `params`, or there are more than 16 parameters, or any of the parameter types or return type are not valid type arguments (e.g., `(int* p) => { }`), then the delegate is a synthesized `internal` anonymous delegate type with a signature that matches the anonymous function or method group, and with parameter names `arg1, ..., argn`, or `arg` if a single parameter;
 - If `R` is `void`, then the delegate type is `System.Action<P1, ..., Pn>`;
 - Otherwise, the delegate type is `System.Func<P1, ..., Pn, R>`.
 
