@@ -10,7 +10,7 @@ Feature | PR | Status | Effort | Annotation | Notes
 ------- | -- | ------ | ------ | ---------- | ------
 Extension operators ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extension-operators.md)) | -- | | | | Combined with "Extension members" PR
 Extension members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md)) | [1833](https://github.com/dotnet/csharpstandard/pull/1833) | SPEC'D | medium | N/A | 
-`field` keyword ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/field-keyword.md)) | [1870](https://github.com/dotnet/csharpstandard/pull/1870) | SPEC'D | medium | done | Authoring draft PR; not merged
+`field` keyword ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/field-keyword.md)) | [1870](https://github.com/dotnet/csharpstandard/pull/1870) | SPEC'D | medium | done |
 First-class span types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/first-class-span-types.md)) | [1876](https://github.com/dotnet/csharpstandard/pull/1876)| SPEC'D | small | N/A | 
 Ignored directives ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/ignored-directives.md)) | [1826](https://github.com/dotnet/csharpstandard/pull/1826) | SPEC'D | small | N/A | 
 null conditional assigmment ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/null-conditional-assignment.md)) | [1838](https://github.com/dotnet/csharpstandard/pull/1838) | SPEC'D | small | N/A |
