@@ -861,6 +861,8 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of exact bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]` and `U` is an array type `U₁[...]` of the same rank
+  - `V` is a `Span<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>`
+  - `V` is a `ReadOnlySpan<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>` or `ReadOnlySpan<U₁>`
   - `V` is the type `V₁?` and `U` is the type `U₁`
   - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`
 
@@ -876,6 +878,8 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
 - Otherwise, sets `U₁...Uₑ` and `V₁...Vₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
+  - `V` is a `Span<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>`
+  - `V` is a `ReadOnlySpan<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>` or `ReadOnlySpan<U₁>`
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
   - `V` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) `delegate*<V₂..Vₖ, V₁>` and there is a function pointer type `delegate*<U₂..Uₖ, U₁>` such that `U` is identical to `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
@@ -884,7 +888,13 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Uᵢ` is not known to be a reference type, or if `U` is a function pointer type and `Uᵢ` is not known to be a function pointer type or a reference type, then an exact inference is made
     > *Note*: This is only applicable in unsafe code. *end note*
-  - Otherwise, if `U` is an array type then a *lower-bound inference* is made
+  - Otherwise, if `U` is an array type then inference depends on the type of `V`:
+    - If `V` is a `Span<Vᵢ>`, then an *exact inference* is made
+    - If `V` is an array type or a `ReadOnlySpan<Vᵢ>`, then a *lower-bound inference* is made
+  - Otherwise, if `U` is a `Span<Uᵢ>` then inference depends on the type of `V`:
+    - If `V` is a `Span<Vᵢ>`, then an *exact inference* is made
+    - If `V` is a `ReadOnlySpan<Vᵢ>`, then a *lower-bound inference* is made
+  - Otherwise, if `U` is a `ReadOnlySpan<Uᵢ>` and `V` is a `ReadOnlySpan<Vᵢ>` a *lower-bound inference* is made
   - Otherwise, if `V` is `C<V₁...Vₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then a *lower-bound inference* is made.
     - If it is contravariant then an *upper-bound inference* is made.
@@ -1260,8 +1270,9 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
   - `C₁` is not an *anonymous function type conversion* ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion)) and `C₂` is an *anonymous function type conversion*, or
   - `E` does not exactly match `T₂` and at least one of the following holds:
     - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression)).
+    - `E` exactly matches neither of `T₁` and `T₂`, and `C₁` is an implicit span conversion and `C₂` is not an implicit span conversion
     - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-    - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+    - `E` exactly matches both or neither of `T₁` and `T₂`, both or neither of `C₁` and `C₂` are an implicit span conversion, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
       - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
         > *Note*: This is only applicable in unsafe code. *end note*
     - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`.
@@ -1339,7 +1350,9 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
-- An implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
+- `T₁` is `System.ReadOnlySpan<E₁>`, `T₂` is `System.Span<E₂>`, and an identity conversion from `E₁` to `E₂` exists
+- `T₁` is `System.ReadOnlySpan<E₁>`, `T₂` is `System.ReadOnlySpan<E₂>`, and an implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
+- At least one of `T₁` or `T₂` is not `System.ReadOnlySpan<Eᵢ>` and is not `System.Span<Eᵢ>`, and an implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
@@ -2417,7 +2430,7 @@ An extension method `Cᵢ.Mₑ` is ***eligible*** if:
 - `Cᵢ` is a non-generic, non-nested class
 - The name of `Mₑ` is *identifier*
 - `Mₑ` is accessible and applicable when applied to the arguments as a static method as shown above
-- An implicit identity, reference or boxing conversion exists from *expr* to the type of the first parameter of `Mₑ`.
+- An implicit identity, reference, boxing, or span conversion exists from *expr* to the type of the first parameter of `Mₑ`. Span conversion is not considered when overload resolution is performed for a method group conversion.
 
 The search for `C` proceeds as follows:
 
