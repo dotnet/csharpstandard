@@ -541,6 +541,7 @@ The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ig
 ### §implicit-scan-conversions Implicit scan conversions
 
 An implicit span conversion permits expressions of type *array_type*, `System.Span<T>`, `System.ReadOnlySpan<T>`, and `string` to be converted between each other, as follows:
+
 - From any single-dimensional *array_type* with element type `Eᵢ` to `System.Span<Eᵢ>`
 - From any single-dimensional *array_type* with element type `Eᵢ` to `System.ReadOnlySpan<Uᵢ>`, provided that `Eᵢ` is covariance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `Ui`
 - From `System.Span<Tᵢ>` to `System.ReadOnlySpan<Uᵢ>`, provided that `Tᵢ` is covariance-convertible to `Uᵢ`
@@ -778,6 +779,7 @@ A user-defined explicit conversion consists of an optional standard explicit con
 ### §explicit-scan-conversions Explicit span conversions
 
 The explicit span conversions are, as follows:
+
 - All implicit span conversions (§implicit-scan-conversions).
 - From an *array_type* with element type `Tᵢ` to `System.Span<Uᵢ>` or `System.ReadOnlySpan<Uᵢ>` provided an explicit reference conversion exists from `Tᵢ` to `Uᵢ`.
 
