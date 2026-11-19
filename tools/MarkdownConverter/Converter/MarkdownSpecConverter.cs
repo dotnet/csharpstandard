@@ -17,7 +17,7 @@ internal static class MarkdownSpecConverter
                 resultDoc.AddPart(part.OpenXmlPart, part.RelationshipId);
             }
 
-            var body = resultDoc.MainDocumentPart!.Document.Body!;
+            var body = resultDoc.MainDocumentPart!.Document!.Body!;
 
             ReplaceTableOfContents(spec, body);
 
