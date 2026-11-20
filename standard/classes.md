@@ -5005,7 +5005,7 @@ The signature-matching requirements are as follows:
    - Nullable context differences (such as oblivious vs. annotated) do not cause warnings.
 1. Nullability differences which do not involve oblivious nullability result in warnings.
 
-In *event_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the event’s type. A partial event cannot explicitly implement interface events.
+In *event_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the `event` keyword. A partial event cannot explicitly implement interface events.
 
 Only a defining partial event participates in lookup.
 
