@@ -6265,7 +6265,7 @@ extension_declaration
     ;
 
 extension_receiver_parameter
-    : attributes? parameter_modifiers? type identifier?
+    : attributes? parameter_modifier? type identifier?
     ;
 
 extension_body
