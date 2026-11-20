@@ -6086,7 +6086,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : attributes? identifier
+    : attributes? parameter_modifier? identifier
     ;
 
 anonymous_function_body
