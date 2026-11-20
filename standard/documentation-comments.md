@@ -963,7 +963,7 @@ IDs:
 "M:Acme.Widget.op_UnaryPlus(Acme.Widget)"
 ```
 
-The complete set of unary operator function names used is as follows: `op_UnaryPlus`, `op_UnaryNegation`, `op_CheckedUnaryNegation`, `op_LogicalNot`, `op_OnesComplement`, `op_Increment`, `op_CheckedIncrement`, `op_Decrement`, `op_CheckedDecrement`, `op_True`, and `op_False`.
+The complete set of unary operator function names used is as follows: `op_UnaryPlus`, `op_UnaryNegation`, `op_CheckedUnaryNegation`, `op_LogicalNot`, `op_OnesComplement`, `op_True`, and `op_False`.
 
 **Binary operators**
 
@@ -986,7 +986,9 @@ IDs:
 
 The complete set of binary operator function names used is as follows: `op_Addition`, `op_CheckedAddition`, `op_Subtraction`, `op_CheckedSubtraction`, `op_Multiply`, `op_CheckedMultiply`, `op_Division`, `op_CheckedDivision`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_UnsignedRightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
-**Conversion operators** have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the “`<`” and “`">`” characters are replaced by the “`{`” and “`}`” characters, respectively.
+**Conversion operators**
+
+These have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the “`<`” and “`">`” characters are replaced by the “`{`” and “`}`” characters, respectively.
 
 The complete set of conversion operator function names used is as follows: `op_Explicit`, `op_CheckedExplicit`, and `op_Implicit`.
 
@@ -1008,6 +1010,59 @@ IDs:
 "M:Acme.Widget.op_Explicit(Acme.Widget)~System.Int32"
 "M:Acme.Widget.op_Implicit(Acme.Widget)~System.Int64"
 ```
+
+**Increment operators**
+
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsIncOps", replaceEllipsis:true, customEllipsisReplacements:["", "return default;"]} -->
+```csharp
+namespace Acme
+{
+    class Widget
+    {
+        public void operator ++()
+        {
+            ...
+        }
+        public static Widget operator ++(Widget n)
+        {
+           ...
+        }
+    }
+}
+```
+
+IDs:
+
+```console
+"M:Acme.Widget.op_IncrementAssignment"
+"M:Acme.Widget.op_Increment(Acme.Widget)"
+```
+
+The complete set of increment operator function names used is as follows:  `op_CheckedDecrement`, `op_CheckedDecrementAssignment`, `op_CheckedIncrement`, `op_CheckedIncrementAssignment`, `op_Decrement`, `op_DecrementAssignment`, `op_Increment`, and `op_IncrementAssignment`.
+
+**Compound assignment operators**
+
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsCompAssignOps", replaceEllipsis:true, customEllipsisReplacements:[""]} -->
+```csharp
+namespace Acme
+{
+    class Widget
+    {
+        public void operator +=(int x)
+        {
+            ...
+        }
+    }
+}
+```
+
+IDs:
+
+```console
+"M:Acme.Widget.op_AdditionAssignment(System.Int32)"
+```
+
+The complete set of increment operator function names used is as follows: `op_AdditionAssignment`, `op_BitwiseAndAssignment`, `op_BitwiseOrAssignment`, `op_CheckedAdditionAssignment`, `op_CheckedDivisionAssignment`, `op_CheckedMultiplicationAssignment`, `op_CheckedSubtractionAssignment`, `op_DivisionAssignment`, `op_ExclusiveOrAssignment`, `op_LeftShiftAssignment`, `op_ModulusAssignment`, `op_MultiplicationAssignment`, `op_RightShiftAssignment`, `op_SubtractionAssignment`, and `op_UnsignedRightShiftAssignment`.
 
 ## D.5 An example
 
