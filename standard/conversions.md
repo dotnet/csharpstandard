@@ -64,6 +64,7 @@ The following conversions are classified as implicit conversions:
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 - Anonymous function type conversions ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion))
+- Implicit scan conversions (§implicit-scan-conversions)
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
@@ -537,6 +538,18 @@ The implicit inline array ([§16.6](structs.md#166-inline-arrays)) conversions a
 
 The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See [§16.6](structs.md#166-inline-arrays) for more information.
 
+### §implicit-scan-conversions Implicit scan conversions
+
+An implicit span conversion permits expressions of type *array_type*, `System.Span<T>`, `System.ReadOnlySpan<T>`, and `string` to be converted between each other, as follows:
+
+- From any single-dimensional *array_type* with element type `Eᵢ` to `System.Span<Eᵢ>`
+- From any single-dimensional *array_type* with element type `Eᵢ` to `System.ReadOnlySpan<Uᵢ>`, provided that `Eᵢ` is covariance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `Ui`
+- From `System.Span<Tᵢ>` to `System.ReadOnlySpan<Uᵢ>`, provided that `Tᵢ` is covariance-convertible to `Uᵢ`
+- From `System.ReadOnlySpan<Tᵢ>` to `System.ReadOnlySpan<Uᵢ>`, provided that `Tᵢ` is covariance-convertible to `Uᵢ`
+- From `string` to `System.ReadOnlySpan<char>`
+
+Any Span/ReadOnlySpan type is considered applicable for the conversion if it is a ref struct and it matches by its fully-qualified name.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
@@ -763,6 +776,13 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 
 A user-defined explicit conversion consists of an optional standard explicit conversion, followed by execution of a user-defined implicit or explicit conversion operator, followed by another optional standard explicit conversion. The exact rules for evaluating user-defined explicit conversions are described in [§10.5.5](conversions.md#1055-user-defined-explicit-conversions).
 
+### §explicit-scan-conversions Explicit span conversions
+
+The explicit span conversions are, as follows:
+
+- All implicit span conversions (§implicit-scan-conversions).
+- From an *array_type* with element type `Tᵢ` to `System.Span<Uᵢ>` or `System.ReadOnlySpan<Uᵢ>` provided an explicit reference conversion exists from `Tᵢ` to `Uᵢ`.
+
 ## 10.4 Standard conversions
 
 ### 10.4.1 General
@@ -782,6 +802,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
 - Implicit inline array conversions ([§10.2.23](conversions.md#10223-implicit-inline-array-conversions))
+- Implicit scan conversions (§implicit-scan-conversions)
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
@@ -791,11 +812,15 @@ The standard explicit conversions are all standard implicit conversions plus the
 
 > *Note*: In other words, if a standard implicit conversion exists from a type `A` to a type `B`, then a standard explicit conversion exists from type `A` to type `B` and from type `B` to type `A`. *end note*
 
+However, unlike other standard explicit conversions, which always exist given the opposite standard implicit conversion, there is no standard explicit span conversion.
+
 ## 10.5 User-defined conversions
 
 ### 10.5.1 General
 
 C# allows the pre-defined implicit and explicit conversions to be augmented by user-defined conversions. User-defined conversions are introduced by declaring conversion operators ([§15.10.4](classes.md#15104-conversion-operators)) in class and struct types.
+
+User-defined conversions are not considered when converting between types for which an implicit or an explicit span conversion exists.
 
 ### 10.5.2 Permitted user-defined conversions
 
