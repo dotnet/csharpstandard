@@ -4,7 +4,7 @@
 
 ## D.1 General
 
-C\# provides a mechanism for programmers to document their code using a comment syntax that contains XML text. In source code files, comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Comments using such syntax are called ***documentation comments***. They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as a field, event, property, or method). The XML generation tool is called the ***documentation generator***. (This generator could be, but need not be, the C\# compiler itself.) The output produced by the documentation generator is called the ***documentation file***. A documentation file is used as input to a ***documentation viewer***; a tool intended to produce some sort of visual display of type information and its associated documentation.
+C\# provides a mechanism for programmers to document their code using a comment syntax that contains XML text. In source code files, comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Comments using such syntax are called ***documentation comments***. They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as an extension block, field, event, property, or method). The XML generation tool is called the ***documentation generator***. (This generator could be, but need not be, the C\# compiler itself.) The output produced by the documentation generator is called the ***documentation file***. A documentation file is used as input to a ***documentation viewer***; a tool intended to produce some sort of visual display of type information and its associated documentation.
 
 A conforming C\# compiler is not required to check the syntax of documentation comments; such comments are simply ordinary comments. A conforming compiler is permitted to do such checking, however.
 
@@ -54,7 +54,7 @@ Although developers are free to create their own set of tags, a recommended set 
 
 - The `<param>` tag is used to describe parameters. If such a tag is used, the documentation generator must verify that the specified parameter exists and that all parameters are described in documentation comments. If such verification fails, the documentation generator issues a warning.
 
-- The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”).
+- The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”). A code element that is an extension member within an extension block needs special notation. For example, an extension method `M` in an extension block `extension(int value)` inside type `T` must be referenced using `T.extension(int).M` (or `T.extension(System.Int32).M`).
 
 - The `<summary>` tag is intended to be used by a documentation viewer to display additional information about a type or member.
 - The `<include>` tag includes information from an external XML file.
@@ -86,7 +86,7 @@ The documentation generator must accept and process any tag that is valid accord
 `<include>`       | [§D.3.6](documentation-comments.md#d36-include)         | Includes XML from an external file
 `<list>`          | [§D.3.7](documentation-comments.md#d37-list)         | Create a list or table
 `<para>`          | [§D.3.8](documentation-comments.md#d38-para)         | Permit structure to be added to text
-`<param>`         | [§D.3.9](documentation-comments.md#d39-param)         | Describe a parameter for a method or constructor
+`<param>`         | [§D.3.9](documentation-comments.md#d39-param)         | Describe a parameter for a method, constructor, or extension block
 `<paramref>`      | [§D.3.10](documentation-comments.md#d310-paramref)        | Identify that a word is a parameter name
 `<permission>`    | [§D.3.11](documentation-comments.md#d311-permission)        | Document the security accessibility of a member
 `<remarks>`       | [§D.3.12](documentation-comments.md#d312-remarks)        | Describe additional information about a type
@@ -94,7 +94,7 @@ The documentation generator must accept and process any tag that is valid accord
 `<see>`           | [§D.3.14](documentation-comments.md#d314-see)        | Specify a link
 `<seealso>`       | [§D.3.15](documentation-comments.md#d315-seealso)        | Generate a *See Also* entry
 `<summary>`       | [§D.3.16](documentation-comments.md#d316-summary)        | Describe a type or a member of a type
-`<typeparam>`     | [§D.3.17](documentation-comments.md#d317-typeparam)        | Describe a type parameter for a generic type or method
+`<typeparam>`     | [§D.3.17](documentation-comments.md#d317-typeparam)        | Describe a type parameter for a generic type or method, or extension block
 `<typeparamref>`  | [§D.3.18](documentation-comments.md#d318-typeparamref)        | Identify that a word is a type parameter name
 `<value>`         | [§D.3.19](documentation-comments.md#d319-value)        | Describe a property
 
@@ -344,7 +344,7 @@ public class Point
 
 ### D.3.9 \<param\>
 
-This tag is used to describe a parameter for a method, constructor, or indexer.
+This tag is used to describe a parameter for a method, constructor, indexer, or extension block.
 
 **Syntax:**
 
@@ -377,6 +377,8 @@ public class Point
 ### D.3.10 \<paramref\>
 
 This tag is used to indicate that a word is a parameter. The documentation file can be processed to format this parameter in some distinct way.
+
+The documentation comments on an extension member can refer to that member’s parent extension parameter via this tag.
 
 **Syntax:**
 
@@ -598,7 +600,7 @@ public class Point
 
 ### D.3.17 \<typeparam\>
 
-This tag is used to describe a type parameter for a generic type or method.
+This tag is used to describe a type parameter for a generic type or method, or extension block
 
 **Syntax:**
 
@@ -624,6 +626,8 @@ public class MyList<T>
 ### D.3.18 \<typeparamref\>
 
 This tag is used to indicate that a word is a type parameter. The documentation file can be processed to format this type parameter in some distinct way.
+
+The documentation comments on an extension member can refer to that member’s parent extension parameter’s type parameters via this tag.
 
 **Syntax:**
 
@@ -698,10 +702,10 @@ The documentation generator observes the following rules when it generates the I
   M             | Method (including constructors, finalizers, and operators)
   N             | Namespace
   P             | Property (including indexers)
-  T             | Type (such as class, delegate, enum, interface, and struct)
+  T             | Type (such as class, delegate, enum, interface, and struct) or extension block
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
-- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing types, and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the “`<`” and “`>`” surrounding them with the “`{`” and “`}`” characters.
+- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. (For an extension member the fully qualified name is implementation-specific.) The name of the element, its enclosing types, and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the “`<`” and “`>`” surrounding them with the “`{`” and “`}`” characters.
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters

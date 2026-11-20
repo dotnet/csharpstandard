@@ -37,6 +37,7 @@ A method qualifies as a canditate entry point by satisfying the following requir
 - If the `async` modifier is present, the method’s return type shall be `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - It shall not be an optional partial method ([§15.6.9.2](classes.md#15692-optional-partial-methods)) without an implementing declaration.
 - The parameter list shall either be empty, or have a single value parameter of type `string[]`.
+- It shall not be an extension method ([§15.6.10](classes.md#15610-extension-methods) and §Extension-members).
 
 The declared accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)) of a method is ignored for the purposes of qualifying as a candidate entry point. At application startup the selected entry point is invoked regardless of its declared accessibility. However any declared accessibility continues to apply if the selected candidate entry point is invoked after application startup.
 
