@@ -75,9 +75,9 @@ The behaviors listed in this subclause need not be documented. The following are
 1. The layout of arrays, except in an unsafe context ([§12.8.17.4](expressions.md#128174-array-creation-expressions)).
 1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.22.3](expressions.md#12223-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
-1. The result of invoking `MoveNext` when an enumerator object is running ([§15.15.5.2](classes.md#151552-advance-the-enumerator)).
-1. The result of accessing `Current` when an enumerator object is in the before, running, or after states ([§15.15.5.3](classes.md#151553-retrieve-the-current-value)).
-1. The result of invoking `Dispose` when an enumerator object is in the running state ([§15.15.5.4](classes.md#151554-dispose-of-resources)).
+1. The result of invoking `MoveNext` when an enumerator object is running ([§15.16.5.2](classes.md#151652-advance-the-enumerator)).
+1. The result of accessing `Current` when an enumerator object is in the before, running, or after states ([§15.16.5.3](classes.md#151653-retrieve-the-current-value)).
+1. The result of invoking `Dispose` when an enumerator object is in the running state ([§15.16.5.4](classes.md#151654-dispose-of-resources)).
 1. The attributes of a type declared in multiple parts are determined by combining, in an unspecified order, the attributes of each of its parts ([§23.3](attributes.md#233-attribute-specification)).
 1. The order in which members are packed into a struct ([§24.6.9](unsafe-code.md#2469-the-sizeof-operator)).
 1. An exception occurs during finalizer execution, and that exception is not caught ([§22.4](exceptions.md#224-how-exceptions-are-handled)).

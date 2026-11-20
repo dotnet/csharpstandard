@@ -36,7 +36,7 @@ non_record_class_with_positional_members
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.16](classes.md#1516-record-classes). The differences between the two kinds are discussed in [§15.18](classes.md#1518-record-class-and-non-record-class-differences).
+There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in [§15.17](classes.md#1517-record-classes). The differences between the two kinds are discussed in [§15.19](classes.md#1519-record-class-and-non-record-class-differences).
 
 A *non_record_class_declaration* can have one of two almost identical forms: *non_record_class_without_positional_members* and *non_record_class_with_positional_members*.
 
@@ -863,7 +863,7 @@ The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{�
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations ([§15.7.7](classes.md#1577-partial-properties)), and partial indexer declarations ([§15.9.3](classes.md#1593-partial-indexers))).
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)), partial property declarations ([§15.7.8](classes.md#1578-partial-properties)), partial indexer declarations ([§15.9.3](classes.md#1593-partial-indexers)), partial event declarations ([§15.8.6](classes.md#1586-partial-events)), and partial instance constructor declarations ([§15.11.7](classes.md#15117-partial-constructors))).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
@@ -929,7 +929,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.16.4](classes.md#15164-implicit-record-class-members)).
+The members of a class consist of the members introduced by its *class_member_declaration*s, the members inherited from the direct base class, and any members implicitly provided by the implementation ([§15.17.4](classes.md#15174-implicit-record-class-members)).
 
 ```ANTLR
 class_member_declaration
@@ -944,6 +944,7 @@ class_member_declaration
     | finalizer_declaration
     | static_constructor_declaration
     | type_declaration
+    | extension_declaration
     ;
 ```
 
@@ -962,6 +963,7 @@ The members of a class are divided into the following categories:
 - Finalizers, which implement the actions to be performed before instances of the class are permanently discarded ([§15.13](classes.md#1513-finalizers)).
 - Static constructors, which implement the actions required to initialize the class itself ([§15.12](classes.md#1512-static-constructors)).
 - Types, which represent the types that are local to the class ([§14.8](namespaces.md#148-type-declarations)).
+- Extensions, which allow members to be added conceptually to existing types without modifying their original source code ([§15.14](classes.md#1514-extension-members)).
 
 A *class_declaration* creates a new declaration space ([§7.2](basic-concepts.md#72-declarations)), and the *type_parameter*s and the *class_member_declaration*s immediately contained by the *class_declaration* introduce new members into this declaration space. The following rules apply to *class_member_declaration*s:
 
@@ -1595,37 +1597,44 @@ The following method names are reserved. While many have corresponding operators
 | **Method Name** | **C# Operator** |
 |--------------|----------------------|
 | `op_Addition` | `+` (binary) |
-| `op_AdditionAssignment` | (reserved) |
+| `op_AdditionAssignment` | `+=` |
 | `op_AddressOf` | (reserved) |
 | `op_Assign` | (reserved) |
 | `op_BitwiseAnd` | `&` (binary) |
-| `op_BitwiseAndAssignment` | (reserved) |
+| `op_BitwiseAndAssignment` | `&=` |
 | `op_BitwiseOr` | `\|` |
-| `op_BitwiseOrAssignment` | (reserved) |
+| `op_BitwiseOrAssignment` | `\|=` |
 | `op_CheckedAddition` | checked addition `+` |
-| `op_CheckedDecrement` | checked decrement `--` |
+| `op_CheckedAdditionAssignment` | checked `+=` |
+| `op_CheckedDecrement` | static checked decrement `--` |
+| `op_CheckedDecrementAssignment` | instance checked decrement `--` |
 | `op_CheckedDivision` | checked division `/` |
 | `op_CheckedExplicit` | checked explicit (narrowing) coercion |
-| `op_CheckedIncrement` | checked increment `++` |
+| `op_CheckedIncrement` | static checked increment `++` |
+| `op_CheckedIncrementAssignment` | instance checked increment `++` |
 | `op_CheckedMultiply` | checked multiply `*` |
 | `op_CheckedSubtraction` | checked subtraction `-` |
+| `op_CheckedSubtractionAssignment` | checked `-=` |
 | `op_CheckedUnaryNegation` | checked unary negation `-` |
 | `op_Comma` | (reserved) |
-| `op_Decrement` | `--` (prefix and postfix) |
+| `op_Decrement` | static `--` |
+| `op_DecrementAssignment` | instance `--` |
 | `op_Division` | `/` |
-| `op_DivisionAssignment` | (reserved) |
+| `op_DivisionAssignment` | `/=` |
+| `op_CheckedDivisionAssignment` | checked `/=` |
 | `op_Equality` | `==` |
 | `op_ExclusiveOr` | `^` |
-| `op_ExclusiveOrAssignment` | (reserved) |
+| `op_ExclusiveOrAssignment` | `^=` |
 | `op_Explicit` | explicit (narrowing) coercion |
 | `op_False` | `false` |
 | `op_GreaterThan` | `>` |
 | `op_GreaterThanOrEqual` | `>=` |
 | `op_Implicit` | implicit (widening) coercion |
-| `op_Increment` | `++` (prefix and postfix) |
+| `op_Increment` | static `++` |
+| `op_IncrementAssignment` | instance `++` |
 | `op_Inequality` | `!=` |
 | `op_LeftShift` | `<<` |
-| `op_LeftShiftAssignment` | (reserved) |
+| `op_LeftShiftAssignment` | `<<=` |
 | `op_LessThan` | `<` |
 | `op_LessThanOrEqual` | `<=` |
 | `op_LogicalAnd` | (reserved) |
@@ -1633,22 +1642,23 @@ The following method names are reserved. While many have corresponding operators
 | `op_LogicalOr` | (reserved) |
 | `op_MemberSelection` | (reserved) |
 | `op_Modulus` | `%` |
-| `op_ModulusAssignment` | (reserved) |
-| `op_MultiplicationAssignment` | (reserved) |
+| `op_ModulusAssignment` | `%=` |
+| `op_MultiplicationAssignment` | `*=` |
+| `op_CheckedMultiplicationAssignment` | checked `*=` |
 | `op_Multiply` | `*` (binary) |
 | `op_OnesComplement` | `~` |
 | `op_PointerDereference` | (reserved) |
 | `op_PointerToMemberSelection` | (reserved) |
 | `op_RightShift` | `>>` |
-| `op_RightShiftAssignment` | (reserved) |
+| `op_RightShiftAssignment` | `>>=` |
 | `op_SignedRightShift` | (reserved) |
 | `op_Subtraction` | `-` (binary) |
-| `op_SubtractionAssignment` | (reserved) |
+| `op_SubtractionAssignment` | `-=` |
 | `op_True` | `true` |
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
 | `op_UnsignedRightShift` | `>>>` |
-| `op_UnsignedRightShiftAssignment` | (reserved) |
+| `op_UnsignedRightShiftAssignment` | `>>>=` |
 
 ## 15.4 Constants
 
@@ -2260,7 +2270,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.14](classes.md#1514-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
+A *method_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers. Additionally a *method_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.12](structs.md#16812-methods)).
 
 A *method_declaration* has a valid combination of modifiers if all of the following are true. (These rules are modified slightly in the context of an interface; see [§19.4.1](interfaces.md#1941-general).):
 
@@ -2281,7 +2291,7 @@ Methods are classified according to what, if anything, they return:
 - Otherwise, if *return_type* is `void`, the method is ***return-no-value*** and does not return a value;
 - Otherwise, the method is ***return-by-value*** and returns a value.
 
-The *return_type* of a return-by-value or return-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method return-by-value and the return type shall be a *task type* ([§15.14.1](classes.md#15141-general)).
+The *return_type* of a return-by-value or return-no-value method declaration specifies the type of the result, if any, returned by the method. If the declaration includes the `async` modifier then *return_type* shall be `void` or the method return-by-value and the return type shall be a *task type* ([§15.15.1](classes.md#15151-general)).
 
 The *ref_return_type* of a return-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
@@ -2364,7 +2374,7 @@ parameter_collection
 
 The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_collection*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)); an optional `this` modifier; an optional `scoped` modifier; an optional `in`, `out`, `ref` modifier, or `ref readonly`; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class, and that method is not declared inside an extension block ([§15.14](classes.md#1514-extension-members)). If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with the `ref`, `ref readonly`, or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
 An output parameter implicitly has the `scoped` modifier.
 
@@ -2411,7 +2421,7 @@ A *parameter_collection* consists of an optional set of *attributes* ([§23](att
   - `System.Span<T>`
   - `System.ReadOnlySpan<T>`
   in which cases the element type is `T`
-- A type with an appropriate collection-creation method ([§15.17.2](classes.md#15172-collection-construction)) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
+- A type with an appropriate collection-creation method ([§15.18.2](classes.md#15182-collection-construction)) that can be invoked with no additional arguments, which is at least as accessible as the declaring member, and with a corresponding element type resulting from that determination
 - A struct or class type that implements `System.Collections.IEnumerable` where:
   - The type has a constructor that can be invoked with no arguments, and the constructor is at least as accessible as the declaring member.
   - The type has an instance (not an extension) method `Add` where:
@@ -2486,7 +2496,7 @@ Input, output, and reference parameters are ***by-reference parameter***s. A by-
 
 When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. For a `ref readonly` parameter, either `ref` or `in` may precede that variable reference. However, when the parameter is a `ref readonly` or `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A writable reference parameter of struct type may also receive an *interpolated_string_handler_expression* through an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), without the `ref` keyword; the constructed handler temporary is passed by reference as specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
 
-By-reference parameters are not allowed on functions declared as an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)).
+By-reference parameters are not allowed on functions declared as an iterator ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
 
 In a method that has multiple by-reference parameters, it is possible for multiple parameter names to represent the same storage location.
 
@@ -3461,7 +3471,9 @@ The implementing declaration for a required partial method may be an external me
 
 ### 15.6.10 Extension methods
 
-When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
+\[There are two ways to declare an extension method. The original approach is described in this subclause. The newer alternate approach is described in [§15.14.2](classes.md#15142-extension-methods).\]
+
+When the first parameter of a method includes the `this` modifier, and that method is not declared inside an extension block ([§15.14](classes.md#1514-extension-members)), that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
 - It may only be an input parameter if it has a value type.
 - It may only be a reference parameter if it has a value type or has a generic type constrained to struct.
@@ -3536,7 +3548,7 @@ The method body of a method declaration consists of either a block body, an expr
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
-The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§15.14.1](classes.md#15141-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§15.14.1](classes.md#15141-general)) is `T`.
+The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§15.15.1](classes.md#15151-general)) is `T`.
 
 When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
@@ -3629,12 +3641,12 @@ ref_property_body
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.11](structs.md#16811-properties)). However, a partial property ([§15.7.7](classes.md#1577-partial-properties)) shall not have an `abstract` modifier.
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)) and `extern` ([§15.6.8](classes.md#1568-external-methods)). Additionally a *property_declaration* that is contained directly by a *struct_declaration* may include the `readonly` modifier ([§16.8.11](structs.md#16811-properties)). However, a partial property ([§15.7.8](classes.md#1578-partial-properties)) shall not have an `abstract` modifier.
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
 - The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
 
-A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
+A *property_declaration* may include a set of *attributes* ([§23](attributes.md#23-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
@@ -3646,7 +3658,7 @@ A *property_body* may either consist of a statement body or an expression body. 
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
-A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
+A *property_initializer* may only be given for a field-backed property ([§15.7.5](classes.md#1575-field-backed-property)), and causes the initialization of the underlying field of such a property with the value given by the *expression*.
 
 A *ref_property_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
 
@@ -3758,15 +3770,19 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
+For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon (such an accessor is called an ***auto accessor***), in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
+
+Such an accessor is called a ***full accessor***.
 
 For `abstract` and `extern` ref-valued properties the *ref_accessor_body* is simply a semicolon. For the accessor of any other non-abstract, non-extern property, the *ref_accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the get accessor is invoked; or
 - an expression body, which consists of `=>` followed by `ref`, a *variable_reference* and a semicolon. The variable reference is evaluated when the get accessor is invoked.
+
+Such an accessor is also a full accessor.
 
 A get accessor for a non-ref-valued property corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when such a property is referenced in an expression its get accessor is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -3779,16 +3795,16 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 > ```csharp
 > class Program
 > {
->     static int field;
->     static ref int Property => ref field;
+>     static int aField;
+>     static ref int Property => ref aField;
 >
 >     static void Main()
 >     {
->         field = 10;
+>         aField = 10;
 >         Console.WriteLine(Property); // Prints 10
 >         Property = 20;               // This invokes the get accessor, then assigns
 >                                      // via the resulting variable reference
->         Console.WriteLine(field);    // Prints 20
+>         Console.WriteLine(aField);   // Prints 20
 >     }
 > }
 > ```
@@ -3859,7 +3875,7 @@ Based on the presence or absence of get, set, and init accessors, a property is 
 
 For more information about set and get accessors, see [§15.7.3.2](classes.md#15732-set-and-get-accessors).
 
-> *Example*: Consider the following, immutable type, which has auto-implemented properties:
+> *Example*: Consider the following, immutable type, which has automatically implemented properties:
 >
 > <!-- Example: {template:"standalone-lib", name:"AccessorsInit1"} -->
 > ```csharp
@@ -4084,6 +4100,22 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > *end example*
 
+A set accessor is permitted in a readonly context for a property that uses `field`.
+
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReadOnlyWithSet", expectedWarnings:["CS9266","CS9266"]} -->
+> ```csharp
+> readonly struct S1
+> {
+>     object P1 { get => field; set { } }
+> }
+> struct S2
+> {
+>     readonly object P2 { get => field; set { } }
+> }
+> ```
+>
+> *end example*
+
 #### 15.7.3.3 Init accessors
 
 An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
@@ -4250,7 +4282,7 @@ However, there are restrictions:
 - A property cannot contain both an init accessor and a set accessor
 - All overrides of a property shall have `init` if the base has `init`. This rule also applies to interface implementation.
 
-Init accessors (both auto- and manually-implemented) are permitted on properties of `readonly struct`s, as well as `readonly` properties. Init accessors are not permitted to be marked `readonly` themselves, in both `readonly` and non-`readonly struct` types.
+Init accessors—both auto- and full ([§15.7.3.1](classes.md#15731-general))—are permitted on properties of `readonly struct`s, as well as `readonly` properties. Init accessors are not permitted to be marked `readonly` themselves, in both `readonly` and non-`readonly struct` types.
 
 > *Example*:
 >
@@ -4272,9 +4304,9 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property with semicolon-only *accessor_body*s. An auto-property shall have a get accessor and may optionally have a set or init accessor.
+An ***automatically implemented property*** (or auto-property for short), is a non-abstract, non-extern, non-partial, non-ref-valued property. An auto-property shall have a get accessor and may optionally have a set or init accessor all of which shall be auto accessors ([§15.7.3.1](classes.md#15731-general)).
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
+When a property is specified as an automatically implemented property, a hidden backing field ([§15.7.5](classes.md#1575-field-backed-property)) is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible; it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object ([§15.7.3.3](classes.md#15733-init-accessors)).
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
@@ -4347,11 +4379,42 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
-Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§15.7.1](classes.md#1571-general)).
+### 15.7.5 Field-backed property
+
+An implementation shall provide a backing field for a property when:
+
+- That property is an auto-property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), or
+- Any of its accessor bodies contains the contextual keyword `field`.
+
+Such a property is a ***field-backed property***.
+
+The backing field can be read and written through the automatically implemented property accessors or via `field`.
+
+While every auto-property is a field-backed property, not every field-backed property is an auto-property. Consider the following property declaration fragments:
+
+```csharp
+P1 { get; set; }                 // field-backed and auto property, 2 auto accessors
+P2 { get => field; set => field = value; } // field-backed, 2 full accessors
+P3 { get { return field; } set { field = value; } } // field-backed, 2 full accessors
+P4 { get => field; set; }          // field-backed, 1 full accessor, 1 auto accessor
+P5 { get { return field; } set; }  // field-backed, 1 full accessor, 1 auto accessor
+P6 { get; set => field = value; }  // field-backed, 1 auto accessor, 1 full accessor
+P7 { get; set { field = value; } } // field-backed, 1 auto accessor, 1 full accessor
+```
+
+`P2` and `P3` are equivalent and their (user-written) full accessors ([§15.7.3.1](classes.md#15731-general)) explicitly do what `P1`’s (implementation-generated) auto accessors do. (Of course, the full accessors could do more or different things!) However, because at least one accessor of `P2` and `P3` contains `field`, those are not auto-properties. And as `P1` has only auto-accessors, it’s an auto-property.
+
+`P4` and `P5` are equivalent, as are `P6` and `P7`, but none of them are auto-properties.
+
+The backing field is read-only when the containing type is a struct and the property or containing type is declared `readonly`.
+
+It is a compile-time error to declare a local constant or variable called `field` in a full accessor.
+
+The backing field may have field-targeted attributes applied directly to it via the property’s *property_declaration* ([§15.7.1](classes.md#1571-general)).
 
 > *Example*: The following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties5"} -->
+> <!-- Example: {template:"standalone-lib", name:"BackingField1A"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
@@ -4363,7 +4426,7 @@ Although the backing field is hidden, that field may have field-targeted attribu
 >
 > results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
 >
-> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties6"} -->
+> <!-- Example: {template:"standalone-lib", name:"BackingField1B"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
@@ -4378,9 +4441,11 @@ Although the backing field is hidden, that field may have field-targeted attribu
 > }
 > ```
 >
-> *end example*
+> The same approach is used for a property having one or more full accessors. *end example*
 
-### 15.7.5 Accessibility
+If a field-targeted attribute is applied to a property that has no backing field, that attribute shall be ignored.
+
+### 15.7.6 Accessibility
 
 If an accessor has an *accessor_modifier*, the accessibility domain ([§7.4.3](basic-concepts.md#743-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
 
@@ -4471,7 +4536,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 The set or init accessor of a required property ([§15.7.1](classes.md#1571-general)) shall be at least as accessible as that property’s containing type.
 
-### 15.7.6 Virtual, sealed, override, and abstract accessors
+### 15.7.7 Virtual, sealed, override, and abstract accessors
 
 *Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
@@ -4609,15 +4674,15 @@ When an init accessor appears in a virtual property, all overrides for it shall 
 >
 > *end example*
 
-### 15.7.7 Partial properties
+### 15.7.8 Partial properties
 
 When a *property_declaration* includes `partial`, that property is said to be a ***partial property***. Partial properties may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
 Partial properties may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
 
-There are two kinds of partial property declarations: If the body of each of the property’s accessors is a semicolon and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
+There are two kinds of partial property declarations: If the property’s accessors are auto accessors ([§15.7.3.1](classes.md#15731-general)) and the property has no `extern` modifier, the declaration is said to be a ***defining partial property declaration***. Otherwise, the declaration is said to be an ***implementing partial property declaration***.
 
-*Note*: As the syntactic form of a property with semicolon accessor bodies is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
+*Note*: As the syntactic form of a property with auto accessors is reserved for a defining partial declaration, a partial property cannot be automatically implemented ([§15.7.4](classes.md#1574-automatically-implemented-properties)). *end note*
 
 Partial properties are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
 
@@ -4645,6 +4710,10 @@ Partial properties are useful for allowing one part of a type declaration to cus
 > *end example*
 
 Across the parts of a type declaration, there shall be only one defining partial property declaration with a given signature, and there shall be only one implementing partial property declaration with a given signature.
+
+At least one implementing partial property accessor shall be a full accessor.
+
+A defining partial property declaration or an implementing partial property may contain a *property_initializer*; however, it is compile-time error if both do.
 
 The signature-matching requirements are as follows:
 
@@ -4706,8 +4775,8 @@ Events are declared using *event_declaration*s:
 
 ```ANTLR
 event_declaration
-    : attributes? event_modifier* 'event' type variable_declarators ';'
-    | attributes? event_modifier* 'event' type member_name
+    : attributes? event_modifier* 'partial'? 'event' type variable_declarators ';'
+    | attributes? event_modifier* 'partial'? 'event' type member_name
         '{' event_accessor_declarations '}'
     ;
 
@@ -4740,6 +4809,8 @@ remove_accessor_declaration
     : attributes? 'remove' block
     ;
 ```
+
+However, a partial event ([§15.8.6](classes.md#1586-partial-events)) shall not have an `abstract` modifier.
 
 *unsafe_modifier* ([§24.2](unsafe-code.md#242-unsafe-contexts)) is only available in unsafe code ([§24](unsafe-code.md#24-unsafe-code)).
 
@@ -4981,6 +5052,34 @@ It is a compile-time error for an overriding event declaration to include a `new
 
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form. Each accessor corresponds to a method with a single value parameter of the event type, a `void` return type, and the same modifiers as the containing event.
 
+### 15.8.6 Partial events
+
+When an *event_declaration* includes `partial`, that event is said to be a ***partial event***. Partial events may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
+
+Partial events may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
+
+There are two kinds of partial event declarations: If the *event_accessor_declarations* are omitted and the event has no `extern` modifier, the declaration is said to be a ***defining partial event declaration***. Otherwise, the declaration is said to be an ***implementing partial event declaration***.
+
+Partial events are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+Across the parts of a type declaration, there shall be only one defining partial event declaration with a given signature, and there shall be only one implementing partial event declaration with a given signature.
+
+The signature-matching requirements are as follows:
+
+1. Type and ref-kind differences between partial event declarations result in a compile-time error.
+1. Differences in tuple element names within partial event declarations result in a compile-time error.
+1. The event declarations shall have the same modifiers, though the modifiers may appear in a different order. However, this does not apply to the `extern` modifier, which may only appear on an implementing partial declaration.
+1. All other syntactic differences in the signatures of partial event declarations result in a compile-time warning, with the following exceptions:
+   - Attribute lists do not need to match.
+   - Nullable context differences (such as oblivious vs. annotated) do not cause warnings.
+1. Nullability differences which do not involve oblivious nullability result in warnings.
+
+In *event_declaration*, the identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) only if it immediately precedes the `event` keyword. A partial event cannot explicitly implement interface events.
+
+Only a defining partial event participates in lookup.
+
+A partial event is not field-like ([§15.8.2](classes.md#1582-field-like-events)).
+
 ## 15.9 Indexers
 
 ### 15.9.1 General
@@ -5207,9 +5306,9 @@ Indexers and properties are very similar in concept, but differ in the following
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer.” It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
 
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.6](classes.md#1576-accessibility) and [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
-This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
+This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.6](classes.md#1576-accessibility) and [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
 
 ### 15.9.3 Partial indexers
 
@@ -5283,6 +5382,9 @@ operator_modifier
     | 'abstract'
     | 'virtual'
     | 'sealed'
+    | 'override'
+    | 'new'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -5290,6 +5392,8 @@ operator_declarator
     : unary_operator_declarator
     | binary_operator_declarator
     | conversion_operator_declarator
+    | increment_operator_declarator
+    | compound_assignment_operator_declarator
     ;
 
 unary_operator_declarator
@@ -5301,7 +5405,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
+    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -5319,6 +5423,28 @@ conversion_operator_declarator
     | 'explicit' 'operator' 'checked'? type '(' fixed_parameter ')'
     ;
 
+increment_operator_declarator
+    : type 'operator' overloadable_increment_operator '(' fixed_parameter ')'
+    | 'void' 'operator' overloadable_increment_operator '(' ')'
+    ;
+
+overloadable_increment_operator
+    : 'checked'? '++'
+    | 'checked'? '--'
+    ;
+
+compound_assignment_operator_declarator
+    : 'void' 'operator' overloadable_compound_assignment_operator
+        '(' fixed_parameter ')'
+    ;
+
+overloadable_compound_assignment_operator
+    : 'checked'? '+=' | 'checked'? '-=' | 'checked'? '*=' | 'checked'? '/=' |
+      '%=' | '&=' | '|=' | '^=' | '<<='
+    | right_shift_assignment
+    | unsigned_right_shift_assignment
+    ;
+
 operator_body
     : block
     | '=>' expression ';'
@@ -5330,15 +5456,15 @@ operator_body
 
 *Note*: The prefix logical negation ([§12.9.4](expressions.md#1294-logical-negation-operator)) and postfix null-forgiving operators ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), while represented by the same lexical token (`!`), are distinct. The latter is not an overloadable operator. *end note*
 
-There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
+The following categories of overloadable operators exist: unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), increment operators ([§15.10.5](classes.md#15105-increment-operators)), and compound assignment operators ([§15.10.6](classes.md#15106-compound-assignment-operators)).
 
-The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for `void` methods when the operator’s return type is `void`, and to the rules for value-returning methods otherwise, as described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
 For `extern` operators, the *operator_body* consists simply of a semicolon. For an abstract operator declaration in an interface ([§19.4.7](interfaces.md#1947-interface-operators)), the *operator_body* is a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 
-- An operator declaration shall include both a `public` and a `static` modifier.
+- An operator declaration shall include a `public` modifier.
 - The parameters of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
@@ -5346,7 +5472,7 @@ The following rules apply to all operator declarations:
 
 Each operator category imposes additional restrictions, as described in the following subclauses.
 
-Like other members, operators declared in a base class are inherited by derived classes. Because operator declarations always require the class or struct in which the operator is declared to participate in the signature of the operator, it is not possible for an operator declared in a derived class to hide an operator declared in a base class. Thus, the `new` modifier is never required, and therefore never permitted, in an operator declaration.
+Like other members, operators declared in a base class are inherited by derived classes.
 
 Additional information on unary and binary operators can be found in [§12.4](expressions.md#124-operators).
 
@@ -5368,52 +5494,32 @@ The presence of `checked` in a checked operator declaration has no effect on the
 
 The following rules apply to unary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 - A unary `+`, `-`, `!` (logical negation only), or `~` operator shall take a single parameter of type `T` or `T?` and can return any type.
-- A unary `++` or `--` operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
 - A unary `true` or `false` operator shall take a single parameter of type `T` or `T?` and shall return type `bool`.
 
-The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
+The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.27](expressions.md#1227-boolean-expressions).
 
-> *Note*: A unary `++`, `--`, or `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
+> *Note*: A unary `-` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 <!-- markdownlint-disable MD028 -->
 
-> *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
+> *Example*: The following example shows an implementation of operator- for an integer scalar class:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;",null]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnaryOperators"} -->
 > ```csharp
-> public class IntVector
+> public class MyNumber
 > {
->     public IntVector(int length) {...}
->     public int Length { get { ... } }                      // Read-only property
->     public int this[int index] { get { ... } set { ... } } // Read-write indexer
->
->     public static IntVector operator++(IntVector iv)
+>     private int val;
+>     public MyNumber(int val = 0)
 >     {
->         IntVector temp = new IntVector(iv.Length);
->         for (int i = 0; i < iv.Length; i++)
->         {
->             temp[i] = iv[i] + 1;
->         }
->         return temp;
+>         this.val = val;
 >     }
-> }
-> 
-> class Test
-> {
->     static void Main()
->     {
->         IntVector iv1 = new IntVector(4); // Vector of 4 x 0
->         IntVector iv2;
->         iv2 = iv1++;              // iv2 contains 4 x 0, iv1 contains 4 x 1
->         iv2 = ++iv1;              // iv2 contains 4 x 2, iv1 contains 4 x 2
->     }
+>     public static MyNumber operator-(MyNumber x) => new MyNumber(-x.val);
 > }
 > ```
->
-> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)).
 >
 > *end example*
 
@@ -5421,6 +5527,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
 - A binary `<<`, `>>`, or `>>>` operator ([§12.14](expressions.md#1214-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?`, and can return any type.
 
@@ -5435,6 +5542,8 @@ Certain binary operators require pair-wise declaration. For every declaration of
 > *Note*: A binary `+`, `-`, `*`, or `/` operator may have a checked form (see [§15.10.1](classes.md#15101-general)). *end note*
 
 ### 15.10.4 Conversion operators
+
+*operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
 
 A conversion operator declaration introduces a ***user-defined conversion*** ([§10.5](conversions.md#105-user-defined-conversions)), which augments the pre-defined implicit and explicit conversions.
 
@@ -5566,6 +5675,88 @@ The signature of a conversion operator consists of the source type and the targe
 >
 > *end example*
 
+### 15.10.5 Increment operators
+
+The following rules apply to static increment operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
+
+- *operator_declaration* shall include a `static` modifier and shall not include an `override` modifier.
+- An operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
+
+The signature of a static increment operator consists of the operator tokens ('checked'? `++`, 'checked'? `--`) and the type of the single parameter. The return type is not part of a static increment operator’s signature, nor is the name of the parameter.
+
+The following rules apply to instance increment operator declarations:
+
+- *operator_declaration* shall not include a `static` modifier.
+- An operator shall take no parameters.
+- An operator shall have `void` return type.
+
+Effectively, an instance increment operator is a void-returning instance method that has no parameters.
+
+The signature of an instance increment operator consists of the operator tokens ('checked'? '++' | 'checked'? '--').
+
+A checked operator declaration requires a pair-wise declaration of an unchecked operator. A compile-time error occurs otherwise.
+
+The purpose of the method is to adjust the value of the instance to the result of the requested increment operation, whatever that means in context of the declaring type.
+
+> *Example*: The following example shows an implementation of operator++ for an integer scalar class:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"IncrementOperators"} -->
+> ```csharp
+> public class MyNumber
+> {
+>     private int val;
+>     public MyNumber(int val = 0)
+>     {
+>         this.val = val;
+>     }
+>     public void operator++()
+>     {
+>         ++val;
+>     }
+> }
+> ```
+>
+> *end example*
+
+An instance increment operator can override an operator with the same signature declared in a base class.
+
+### 15.10.6 Compound assignment operators
+
+The following rules apply to compound assignment operator declarations:
+
+- An operator declaration shall not include a `static` modifier.
+- An operator shall take one parameter.
+- An operator shall have `void` return type.
+
+Effectively, a compound assignment operator is a `void`-returning instance method that takes one parameter.
+
+The signature of a compound assignment operator consists of the operator tokens
+(`'checked'? '+='`, `'checked'? '-='`, `'checked'? '*='`, `'checked'? '/='`, `'%='`, `'&='`, `'|='`, `'^='`, `'<<='`, *right_shift_assignment*, *unsigned_right_shift_assignment*) and the type of the single parameter. The name of the parameter is not part of the signature.
+
+A checked-operator declaration requires a pair-wise declaration of a regular operator. A compile-time error occurs otherwise.
+
+> *Example*: The following example shows an implementation of operator+= for an integer scalar class:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CompAssignOperators"} -->
+> ```csharp
+> public class MyNumber
+> {
+>     private int val;
+>     public MyNumber(int val = 0)
+>     {
+>         this.val = val;
+>     }
+>     public void operator+=(int x)
+>     {
+>         val += x;
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compound assignment operator can override an operator with the same signature declared in a base class.
+
 ## 15.11 Instance constructors
 
 ### 15.11.1 General
@@ -5574,7 +5765,7 @@ An ***instance constructor*** is a member that implements the actions required t
 
 ```ANTLR
 constructor_declaration
-    : attributes? constructor_modifier* constructor_declarator constructor_body
+    : attributes? constructor_modifier* 'partial'? constructor_declarator constructor_body
     ;
 
 constructor_modifier
@@ -5608,7 +5799,7 @@ A *constructor_declaration* may include a set of *attributes* ([§23](attributes
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
+The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods outside extension blocks ([§15.14](classes.md#1514-extension-members) and [§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.5](basic-concepts.md#75-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
 Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.4.5](basic-concepts.md#745-accessibility-constraints)).
 
@@ -5958,6 +6149,36 @@ A warning shall be issued for primary constructor parameters under the following
 - For a ref parameter, if the parameter is not read or written to within any instance initializers or base initializer.
 A *class_declaration* may have a `method:` attribute target, which shall apply to the corresponding primary constructor, if any. If the class has no *delimited_parameter_list*, this attribute shall be ignored and a warning produced.
 
+### 15.11.7 Partial constructors
+
+When a *constructor_declaration* includes a `partial` modifier, that constructor is said to be a ***partial constructor***. Partial constructors may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)), and are subject to a number of restrictions.
+
+Partial constructors may be defined in one part of a type declaration and implemented in another.
+
+The identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a constructor declaration only if it appears immediately before the *constructor_declarator*.
+
+There are two kinds of partial constructor declarations: If the body of the constructor declaration is a semicolon and the event has no `extern` modifier, the declaration is said to be a ***defining partial constructor declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial constructor declaration***. Across the parts of a type declaration, there shall be only one defining partial constructor declaration with a given signature, and there shall be one implementing partial constructor declaration with a given signature. If an implementing partial constructor declaration is given, a corresponding defining partial constructor declaration shall exist, and the declarations shall match as specified in the following:
+
+1. Type and ref kind differences between partial declarations which are significant to the runtime result in a compile-time error.
+2. Differences in tuple element names between partial declarations result in a compile-time error.
+3. The declarations shall have the same modifiers, though the modifiers may appear in a different order; however, this does not apply to the `extern` modifier, which may only appear on the implementing declaration.
+4. All other syntactic differences in the signatures of partial declarations result in a compile-time warning, with the following exceptions:
+   - Attribute lists need not match.
+   - Nullable context differences (such as oblivious vs. annotated) do not cause warnings.
+   - Default parameter values need not match, but a warning shall be reported when the implementing constructor declaration has default parameter values (because those would be ignored since only the defining declaration participates in lookup).
+5. A warning shall occur when parameter names differ across defining and implementing constructor declarations.
+6. Nullability differences which do not involve oblivious nullability result in warnings.
+
+Partial constructors are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool.
+
+The partial constructor gives rise to a constructor declaration similar to the implementing partial constructor declaration except for the following:
+
+- The `partial` modifier is not included.
+
+- The attributes in the resulting constructor declaration are the combined attributes of the defining and the implementing partial constructor declarations in unspecified order. Duplicates are not removed.
+
+- The attributes on the parameters of the resulting method declaration are the combined attributes of the corresponding parameters of the defining and the implementing partial constructor declaration in unspecified order. Duplicates are not removed.
+
 ## 15.12 Static constructors
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
@@ -6248,9 +6469,258 @@ A compiler shall behave as if this method, and overrides of it, do not exist at 
 
 For a discussion of the behavior when an exception is thrown from a finalizer, see [§22.4](exceptions.md#224-how-exceptions-are-handled).
 
-## 15.14 Async Functions
+## 15.14 Extension members
 
 ### 15.14.1 General
+
+An *extension_declaration* allow members to be added to an existing type without modifying that type’s original source code. An *extension_declaration* shall only be declared in a non-generic, non-nested static class.
+
+```ANTLR
+extension_declaration
+    : 'extension' type_parameter_list? '(' extension_receiver_parameter ')'
+      type_parameter_constraints_clause* extension_body
+    ;
+
+extension_receiver_parameter
+    : attributes? parameter_modifier? type identifier?
+    ;
+
+extension_body
+    : '{' extension_member_declaration* '}' ';'?
+    ;
+
+extension_member_declaration
+    : method_declaration
+    | property_declaration
+    | operator_declaration
+    ;
+```
+
+Extension methods are discussed in [§15.14.2](classes.md#15142-extension-methods), extension properties are discussed in [§15.14.3](classes.md#15143-extension-properties), and extension operators are discussed in [§15.14.4](classes.md#15144-extension-operators).
+
+An instance of an *extension_declaration* is referred to as an ***extension block***.
+
+> *Example*: Here are some extension method declarations:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls1"} -->
+> ```csharp
+> using System.Linq;
+> public static class MyExtensions
+> {
+>     extension(string str)
+>     {
+>         public int ToInt32() => Int32.Parse(str);
+>     }
+>
+>     extension<T>(IEnumerable<T> source) where T : IEquatable<T>
+>     {
+>         public IEnumerable<T> ValuesEqualTo(T threshold)
+>             => source.Where(x => x.Equals(threshold));
+>     }
+>
+>     extension(int number)
+>     {
+>         public void ValueIncrement()
+>             => number++;
+>     }
+>
+>     extension(ref int number)
+>     {
+>         public void RefIncrement()
+>             => number++;
+>     }
+> }
+> ```
+>
+> *end example*
+
+The type parameters and extension receiver parameter of an extension declaration are in scope within the body of the extension declaration. It is an error to refer to the extension receiver parameter from within a static member, except within a `nameof` expression. It is an error for members to declare type parameters or parameters (as well as local variables and local functions directly within the member body) with the same name as a type parameter or extension receiver parameter of the extension declaration.
+
+It is not an error for the members themselves to have the same name as the type parameters or extension receiver parameter of the enclosing extension declaration. Member names are not directly found in a simple name lookup from within the extension declaration; lookup will thus find the type parameter or extension receiver parameter of that name, rather than the member.
+
+Extension members give rise to static methods being declared directly on the enclosing static class, and those can be found via simple name lookup; however, an extension declaration type parameter or extension receiver parameter of the same name will be found first.
+
+New-style extension methods can coexist with original-style ones and non-extension static members.
+
+An extension declaration is anonymous, and provides an extension receiver specification with any associated type parameters and constraints, followed by a set of extension member declarations. The extension receiver specification may be in the form of a parameter, or---if only static extension members are declared---a type.
+
+The type in the extension receiver specification is referred to as the ***extension receiver type*** and the parameter name, if present, is referred to as the ***extension receiver parameter***.
+
+If the extension receiver parameter is named, the extension receiver type shall not be static. If the extension receiver parameter is unnamed, it shall not have any modifiers, and it may only have the refness modifiers listed below, and `scoped`, otherwise. The extension receiver parameter has the same restrictions as the first parameter of an original-style extension method.
+
+An `EnumeratorCancellationAttribute` on an extension receiver parameter is ignored.
+
+Extension member declarations are syntactically identical to corresponding instance and static members in class and struct declarations (with the exception of constructors). Instance members refer to the extension receiver via the extension receiver parameter name.
+
+It is an error to specify an instance extension member if the enclosing extension declaration does not specify an extension receiver parameter.
+
+It is an error to specify the following modifiers on a member of an extension declaration: `abstract`, `virtual`, `override`, `new`, `sealed`, `partial`, and `protected` (and related accessibility modifiers).
+
+It is an error to specify the `readonly` modifier on a member of an extension declaration.
+
+The instance members are disallowed if the extension receiver parameter is unnamed.
+
+All members shall have names that differ from the name of the static enclosing class and the name of the extended type if it has one.
+
+It is an error to decorate an extension member with `ModuleInitializerAttribute`.
+
+By default the extension receiver is passed to instance extension members by value, just like other parameters. However, an extension declaration receiver in parameter form can specify `ref`, `ref readonly` and `in`, as long as the extension receiver type is known to be a value type.
+
+Extension receiver types can be, or contain, nullable reference types, and extension receiver specifications that are in the form of parameters may specify attributes.
+
+For each non-method extension member, all the type parameters of its extension block shall be used in the combined set of parameters from the extension and the member.
+
+Within a given enclosing static class, the set of extension member declarations with the same extension receiver type modulo identity conversion and type parameter name substitution) are treated as a single declaration space similar to the members within a class or struct declaration, and are subject to the same rules about uniqueness ([§15.3](classes.md#153-class-members)).
+
+The application of this uniqueness rule includes original extension methods within the same static class. For the purposes of comparison with methods within extension declarations, the `this` parameter is treated as an extension receiver specification along with any type parameters mentioned in that extension receiver type, and the remaining type parameters and method parameters are used for the method signature.
+
+When an extension member lookup is attempted, all extension declarations within static classes that are `using`-imported contribute their members as candidates, regardless of extension receiver type. Only as part of resolution are candidates with incompatible extension receiver types discarded.
+
+A full generic type inference is attempted between the type of the arguments (including the actual extension receiver) and any type parameters (combining those in the extension declaration and in the extension member declaration).
+
+When explicit type arguments are provided, they are used to substitute the type parameters of the extension declaration and the extension member declaration.
+
+Static extension methods are resolved like instance extension methods.
+
+Extension properties are resolved like extension methods, with a single parameter (the extension receiver parameter) and a single argument (the actual extension receiver value).
+
+A *using_static_directive* ([§14.6.4](namespaces.md#1464-using-static-directives)) makes members of extension blocks in the type declaration available for extension access.
+
+Extension members are subject to overload resolution prioritization ([§23.5.15](attributes.md#23515-the-overloadresolutionpriority-attribute)). The enclosing static class is considered to be the “containing type” consider by prioritization rules. Any `OverloadResolutionPriority` attribute present on an extension property applies to that property's accessors, so that the prioritization is respected when those accessors are used via disambiguation syntax.
+
+For an extension member declared inside a namespace to be accessed from outside that namespace, that namespace needs to be the imported via a *global_using_static_directive* or *using_static_directive*.
+
+### 15.14.2 Extension methods
+
+There are two ways to declare an extension method. The original approach is described in [§15.6.10](classes.md#15610-extension-methods). The newer, alternative approach is described here.
+
+An original-style extension method can be rewritten in the new style.
+
+> *Example*: The following original approach
+>
+> <!-- Example: {template:"standalone-lib", name:"OrigialStyleExtensionMethods"} -->
+> ```csharp
+> public static class Extensions
+> {
+>     public static int ToInt32(this string s) => Int32.Parse(s);
+>     public static T[] Slice<T>(this T[] source, int index, int count)
+>     {
+>         if (index < 0 || count < 0 || source.Length - index < count)
+>         {
+>             throw new ArgumentException();
+>         }
+>         T[] result = new T[count];
+>         Array.Copy(source, index, result, 0, count);
+>         return result;
+>     }
+> }
+> ```
+>
+> becomes
+>
+> <!-- Example: {template:"standalone-lib", name:"NewStyleExtensionMethods"} -->
+> ```csharp
+> public static class Extensions
+> {
+>     extension(string s)
+>     {
+>         public int ToInt32() => Int32.Parse(s);
+>     }
+>     extension<T>(T[] source)
+>     {
+>         public T[] Slice(int index, int count)
+>         {
+>             if (index < 0 || count < 0 || source.Length - index < count)
+>             {
+>                 throw new ArgumentException();
+>             }
+>             T[] result = new T[count];
+>             Array.Copy(source, index, result, 0, count);
+>             return result;
+>         }
+>     }
+> }
+> ```
+>
+> Apart from the `this` modifier, the only difference in the method declarations is that as the methods in the new-style approach need access to the extension receiver parameters `s` and `source`, respectively, the methods must not be declared static. *end example*
+
+### 15.14.3 Extension properties
+
+> *Example*: Here is an extension property declaration:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls2"} -->
+> ```csharp
+> public static class MyExtensions
+> {
+>     extension(Person per)
+>     {
+>         public string FullName => $"{per.FirstName} {per.LastName}";
+>     }
+> }
+> public record class Person(string? FirstName, string? LastName) { /*…*/ }
+> ```
+>
+> *end example*
+
+An extension property may not have an `init` accessor.
+
+### 15.14.4 Extension operators
+
+> *Example*: Here is an extension operator declaration:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls3"} -->
+> ```csharp
+> public static class MyExtensions
+> {
+>     extension(ValueTuple<double, double>)
+>     {
+>         public static (double, double) operator +((double, double) left,
+>          (double, double) right) =>
+>            (left.Item1 + right.Item1, left.Item2 + right.Item2);
+>     }
+> }
+> ```
+>
+> *end example*
+
+Although an extension operator has explicit operand types, those types still need to be declared within the operator declaration. (This allows type parameters to be declared and inferred, and is analogous to how a regular user-defined operator must be declared within one of its operand types.)
+
+A static extension operator for the extended type `T` shall take at least one parameter of type `S`, where `S` and `T` are identity convertible. Note that unlike for regular user-defined operators, `Nullable<T>` is not a valid type for `S`.
+
+For operators that require pair-wise declaration, the two declarations may occur in separate extension blocks for extended types `S` and `T`, respectively, as long as `S` and `T` are identity convertible and the extension blocks occur in the same static class.
+
+Instance compound assignment and increment operators are supposed to mutate the instance.
+Therefore, the following restrictions are applied for such extension operators:
+
+- The receiver type shall be either a reference type or a value type. (It cannot be an unconstrained type parameter.)
+- If the receiver type is a value type, the receiver parameter shall be a 'ref' parameter.
+- If the receiver type is a reference type, the receiver parameter shall be a value parameter.
+
+Like other extension members, extension operators are only considered if no applicable predefined or non-extension user-defined operators were found. The search then proceeds outwards scope by scope, starting with the innermost namespace within which the operator application occurs, until at least one applicable extension operator declaration is found. For compound assignment operators, this involves looking for first user-defined compound assignment operators and then, if none are found, non-assignment operators, before moving on to the next scope.
+
+At each scope, overload resolution works the same as other extension members:
+
+- The set of operator declarations for the given name (i.e., operator) is determined
+- Type inference is attempted for each, based on operand expressions
+- Declarations that fail type inference are removed
+- Declarations that are not applicable to the operands are removed
+- If there are no remaining candidates, proceed to the enclosing scope (or, if looking for compound-assignment operators, the corresponding simple operator)
+- Applying overload resolution between the candidate, select the unique best candidate, if it exists
+- If no unique best candidate can be found, overload resolution fails with an ambiguity error.
+
+The following restrictions are used for extension operators: When the operands of `&&` or `||` are of types that declare an applicable user-defined extension `operator &` or extension `operator |`, both of the following shall be true:
+
+- The operator shall compute the logical AND or the logical OR of two operands of type `T`, and shall return a result of type `T`.
+- The enclosing static class shall contain declarations of extension `operator true` and extension `operator false` applicable to an instance of type `T`.
+
+When an expression utilizing a user-defined operator is used in a lambda that is converted to a Linq Expression tree, an expression node that the compiler creates includes a `MethodInfo` pointing to the operator method.
+
+When the operator is an extension operator, a `MethodInfo` referring to the corresponding implementation method in the enclosing class is used.
+Extension operators `true` and `false` shall not be used for `dynamic` `&&` and `||`.
+
+## 15.15 Async Functions
+
+### 15.15.1 General
 
 A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.22](expressions.md#1222-anonymous-function-expressions)), or local function ([§13.6.4](statements.md#1364-local-function-declarations)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
@@ -6258,9 +6728,9 @@ It is a compile-time error for the parameter list of an async function to specif
 
 It is a compile-time error for an unsafe context to contain an `await` expression or a `yield return` statement.
 
-The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.15.3](classes.md#15153-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such builder types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
+The *return_type* of an async method shall be either `void`, a ***task type***, or an ***asynchronous iterator type*** ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)). For an async method that produces a result value, a task type or an asynchronous iterator type ([§15.16.3](classes.md#15163-enumerable-interfaces)) shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` and `System.Threading.Tasks.ValueTask<T>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such builder types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
-An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.14.5](classes.md#15145-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function's return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
+An async function other than an asynchronous iterator may instead specify a task builder type by applying `AsyncMethodBuilderAttribute` to the function ([§15.15.5](classes.md#15155-task-builder-selection)). Its non-`void` return type shall be a class, struct, or interface type, with at most one type parameter and not nested in a generic type. For checking that function's return type, effective return type, body, and anonymous function conversions, this return type is treated as `«TaskType»` if it is nongeneric, or `«TaskType»<T>` if its single type argument is `T`. This does not make the return type a task type in other contexts or require it to be awaitable.
 
 An async method returning a task type is said to be ***task-returning***.
 
@@ -6287,13 +6757,13 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that implements the task-type builder pattern ([§15.14.2](classes.md#15142-task-type-builder-pattern)). A builder associated with a task type by an attribute on that type shall exactly match the declared accessibility of the task type. A builder specified by an attribute on an async function need only be accessible where the function is declared.
+A task builder type is a class or struct type that implements the task-type builder pattern ([§15.15.2](classes.md#15152-task-type-builder-pattern)). A builder associated with a task type by an attribute on that type shall exactly match the declared accessibility of the task type. A builder specified by an attribute on an async function need only be accessible where the function is declared.
 
 > *Note:* For a builder associated with a task type, if the task type is declared `internal`, the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task builder type must also be nested in that same type. These requirements do not apply to a builder specified by an attribute on an async function. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.9](expressions.md#1299-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
-### 15.14.2 Task-type builder pattern
+### 15.15.2 Task-type builder pattern
 
 A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following members (for non-generic task builder types, `SetResult` has no parameters) with declared `public` accessibility:
 
@@ -6337,9 +6807,9 @@ A compiler shall generate code that uses the «TaskBuilderType» to implement th
 
 > *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that are not the same are identity convertible. *end note*
 
-### 15.14.3 Evaluation of a task-returning async function
+### 15.15.3 Evaluation of a task-returning async function
 
-For an async function whose return type is treated as a task type only because of an attribute on the function ([§15.14.1](classes.md#15141-general)), evaluation uses the selected builder as specified in [§15.14.2](classes.md#15142-task-type-builder-pattern). The state descriptions below apply to return types that are task types independently of such an attribute.
+For an async function whose return type is treated as a task type only because of an attribute on the function ([§15.15.1](classes.md#15151-general)), evaluation uses the selected builder as specified in [§15.15.2](classes.md#15152-task-type-builder-pattern). The state descriptions below apply to return types that are task types independently of such an attribute.
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
 
@@ -6351,17 +6821,17 @@ When the body of the async function terminates, the return task is moved out of 
 - If the function body terminates because of an uncaught `OperationCanceledException`, the exception is recorded in the return task which is put into the *canceled* state.
 - If the function body terminates as the result of any other uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
-### 15.14.4 Evaluation of a void-returning async function
+### 15.15.4 Evaluation of a void-returning async function
 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
 
-### 15.14.5 Task builder selection
+### 15.15.5 Task builder selection
 
 Rather than using a task builder type based on the *return_type* of a task-returning async function, the attribute `AsyncMethodBuilderAttribute` can be applied to that async function to indicate a different task builder type.
 
-An attribute on a `void`-returning async function or an asynchronous iterator does not affect its builder selection. Their evaluation is specified in [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function) and [§15.15](classes.md#1515-synchronous-and-asynchronous-iterators), respectively. The selection and compatibility rules below apply only to task-returning async functions.
+An attribute on a `void`-returning async function or an asynchronous iterator does not affect its builder selection. Their evaluation is specified in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function) and [§15.16](classes.md#1516-synchronous-and-asynchronous-iterators), respectively. The selection and compatibility rules below apply only to task-returning async functions.
 
 It is an error to apply this attribute to a lambda with an implicit return type.
 
@@ -6370,7 +6840,7 @@ The ability to provide an alternate builder type shall not be used when the synt
 The builder type of a task-returning async function is determined by:
 
 1. Using the builder type from `AsyncMethodBuilderAttribute`, if one is present;
-1. Otherwise, falling back to the builder type determined by the async function's *return_type* ([§15.14.1](classes.md#15141-general)).
+1. Otherwise, falling back to the builder type determined by the async function's *return_type* ([§15.15.1](classes.md#15151-general)).
 
 If an `AsyncMethodBuilderAttribute` is present on the function, its argument shall specify a class or struct type, and the builder type is determined as follows:
 
@@ -6379,7 +6849,7 @@ If an `AsyncMethodBuilderAttribute` is present on the function, its argument sha
 
 A constructed generic builder type is not permitted as the attribute argument.
 
-The selected builder shall satisfy the task-type builder pattern ([§15.14.2](classes.md#15142-task-type-builder-pattern)). The type of its `Task` property shall be identity convertible to the *return_type* of the async function. The return type need not be a task type independently of the attribute on the function.
+The selected builder shall satisfy the task-type builder pattern ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The type of its `Task` property shall be identity convertible to the *return_type* of the async function. The return type need not be a task type independently of the attribute on the function.
 
 > *Example*: Consider the following code fragment:
 >
@@ -6502,13 +6972,13 @@ The selected builder shall satisfy the task-type builder pattern ([§15.14.2](cl
 >
 > *end example*
 
-## 15.15 Synchronous and asynchronous iterators
+## 15.16 Synchronous and asynchronous iterators
 
-### 15.15.1 General
+### 15.16.1 General
 
-A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.16.2](classes.md#15162-enumerator-interfaces)) or one of the enumerable interfaces ([§15.16.3](classes.md#15163-enumerable-interfaces)).
 
-An async function ([§15.14](classes.md#1514-async-functions)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+An async function ([§15.15](classes.md#1515-async-functions)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interface ([§15.16.2](classes.md#15162-enumerator-interfaces)) or the asynchronous enumerable interface ([§15.16.3](classes.md#15163-enumerable-interfaces)).
 
 An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
 
@@ -6516,7 +6986,7 @@ When a function is implemented using an iterator block, it is a compile-time err
 
 An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in [§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute).
 
-### 15.15.2 Enumerator interfaces
+### 15.16.2 Enumerator interfaces
 
 The ***enumerator interface***s are the non-generic interface `System.Collections.IEnumerator` and the generic interface `System.Collections.Generic.IEnumerator<T>`.
 
@@ -6524,7 +6994,7 @@ The ***asynchronous enumerator interface*** is the generic interface `System.Col
 
 For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerator`, `IEnumerator<T>`, and `IAsyncEnumerator<T>`, respectively.
 
-### 15.15.3 Enumerable interfaces
+### 15.16.3 Enumerable interfaces
 
 The ***enumerable interface***s are the non-generic interface `System.Collections.IEnumerable` and the generic interfaces `System.Collections.Generic.IEnumerable<T>`.
 
@@ -6532,16 +7002,16 @@ The ***asynchronous enumerable interface*** is the generic interface `System.Col
 
 For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerable`, `IEnumerable<T>`, and `IAsyncEnumerable<T>`, respectively.
 
-### 15.15.4 Yield type
+### 15.16.4 Yield type
 
 An iterator produces a sequence of values, all of the same type. This type is called the ***yield type*** of the iterator.
 
 - The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is `object`.
 - The yield type of an iterator that returns an `IEnumerator<T>`, `IAsyncEnumerator<T>`, `IEnumerable<T>`, or `IAsyncEnumerable<T>` is `T`.
 
-### 15.15.5 Enumerator objects
+### 15.16.5 Enumerator objects
 
-#### 15.15.5.1 General
+#### 15.16.5.1 General
 
 When a function member or local function returning an enumerator interface type or an asynchronous enumerator interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerator object*** is created and returned. This object encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` or `MoveNextAsync` method is invoked. An enumerator object has the following characteristics:
 
@@ -6563,11 +7033,11 @@ Enumerator objects do not support the `IEnumerator.Reset` method. Invoking this 
 
 Synchronous and asynchronous iterator blocks differ in that asynchronous iterator members return task types and may be awaited.
 
-#### 15.15.5.2 Advance the enumerator
+#### 15.16.5.2 Advance the enumerator
 
 The `MoveNext` and `MoveNextAsync` methods of an enumerator object encapsulates the code of an iterator block. Invoking the `MoveNext` or `MoveNextAsync` method executes code in the iterator block and sets the `Current` property of the enumerator object as appropriate.
 
-`MoveNext` returns a `bool` value whose meaning is described below. `MoveNextAsync` returns a `ValueTask<bool>` ([§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)). The result value of the task returned from `MoveNextAsync` has the same meaning as the result value from `MoveNext`. In the following description, the actions described for `MoveNext` apply to `MoveNextAsync` with the following difference: Where stated that `MoveNext` returns `true` or `false`, `MoveNextAsync` sets its task to the *completed* state, and sets the task’s result value to the corresponding `true` or `false` value.
+`MoveNext` returns a `bool` value whose meaning is described below. `MoveNextAsync` returns a `ValueTask<bool>` ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)). The result value of the task returned from `MoveNextAsync` has the same meaning as the result value from `MoveNext`. In the following description, the actions described for `MoveNext` apply to `MoveNextAsync` with the following difference: Where stated that `MoveNext` returns `true` or `false`, `MoveNextAsync` sets its task to the *completed* state, and sets the task’s result value to the corresponding `true` or `false` value.
 
 The precise action performed by `MoveNext` or `MoveNextAsync` depends on the state of the enumerator object when invoked:
 
@@ -6604,7 +7074,7 @@ When `MoveNext` executes the iterator block, execution can be interrupted in fou
   - The state of the enumerator object is changed to **after**.
   - The exception propagation continues to the caller of the `MoveNext` method.
 
-#### 15.15.5.3 Retrieve the current value
+#### 15.16.5.3 Retrieve the current value
 
 An enumerator object’s `Current` property is affected by `yield return` statements in the iterator block.
 
@@ -6614,7 +7084,7 @@ When an enumerator object is in the **suspended** state, the value of `Current` 
 
 For an iterator with a yield type other than `object`, the result of accessing `Current` through the enumerator object’s `IEnumerable` implementation corresponds to accessing `Current` through the enumerator object’s `IEnumerator<T>` implementation and casting the result to `object`.
 
-#### 15.15.5.4 Dispose of resources
+#### 15.16.5.4 Dispose of resources
 
 The `Dispose` or `DisposeAsync` method is used to clean up the iteration by bringing the enumerator object to the **after** state.
 
@@ -6626,13 +7096,13 @@ The `Dispose` or `DisposeAsync` method is used to clean up the iteration by brin
   - Changes the state to **after**.
 - If the state of the enumerator object is **after**, invoking `Dispose` has no affect.
 
-### 15.15.6 Enumerable objects
+### 15.16.6 Enumerable objects
 
-#### 15.15.6.1 General
+#### 15.16.6.1 General
 
 When a function member or local function returning an enumerable interface type or an async enumerable interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
 
-A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object ([§15.15.5](classes.md#15155-enumerator-objects)). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  ([§15.15.5](classes.md#15155-enumerator-objects)).
+A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object ([§15.16.5](classes.md#15165-enumerator-objects)). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  ([§15.16.5](classes.md#15165-enumerator-objects)).
 
 An enumerable object is initialized with a copy of the argument values (if any) and instance value passed to the function.
 
@@ -6642,15 +7112,15 @@ An enumerable object may implement more interfaces than those specified above.
 
 > *Note*: For example, an enumerable object may also implement `IEnumerator` and `IEnumerator<T>`, enabling it to serve as both an enumerable and an enumerator. Typically, such an implementation would return its own instance (to save allocations) from the first call to `GetEnumerator`. Subsequent invocations of `GetEnumerator`, if any, would return a new class instance, typically of the same class, so that calls to different enumerator instances will not affect each other. *end note*
 
-#### 15.15.6.2 The GetEnumerator or GetAsyncEnumerator method
+#### 15.16.6.2 The GetEnumerator or GetAsyncEnumerator method
 
-An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
+An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.16.5](classes.md#15165-enumerator-objects).
 
-An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
+An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.16.5](classes.md#15165-enumerator-objects). An asynchronous iterator method can mark one parameter as the cancellation token using `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.10](attributes.md#23510-the-enumeratorcancellation-attribute)). An implementation shall provide a mechanism to combine cancellation tokens such that an asynchronous iterator is canceled when either cancellation token (the argument to `GetAsyncEnumerator` or the argument attributed with the attribute `System.Runtime.CompilerServices.EnumeratorCancellationAttribute`) requests cancellation.
 
-## 15.16 Record classes
+## 15.17 Record classes
 
-### 15.16.1 General
+### 15.17.1 General
 
 A record class is a specialized reference type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record class, such as value-based equality and easy immutability.
 
@@ -6672,25 +7142,25 @@ At most only one partial type declaration of a partial record class may provide 
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
-### 15.16.2 Class members
+### 15.17.2 Class members
 
 It is an error for a member of a record class to be named `Clone`.
 
 It is an error for an instance field of a record class to have an unsafe type.
 
-### 15.16.3 Instance constructors
+### 15.17.3 Instance constructors
 
-A positional record class ([§15.16.1](classes.md#15161-general)) has a primary constructor; see [§15.16.4.6.2](classes.md#1516462-primary-constructor) for more information.
+A positional record class ([§15.17.1](classes.md#15171-general)) has a primary constructor; see [§15.17.4.6.2](classes.md#1517462-primary-constructor) for more information.
 
-### 15.16.4 Implicit record class members
+### 15.17.4 Implicit record class members
 
-#### 15.16.4.1 General
+#### 15.17.4.1 General
 
 Certain members are provided by the implementation unless a member with a matching signature is declared in the *class_body*, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the implementation from providing that member only, not any other provided members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
 
 The members provided by the implementation are described in the following subclauses.
 
-#### 15.16.4.2 Copy constructors
+#### 15.17.4.2 Copy constructors
 
 A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
 
@@ -6721,11 +7191,11 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >
 > the record class is immutable. The provided auto properties `Age` and `Name` are read-init. A copy constructor is provided, as is a primary constructor. *end example*
 
-In certain circumstances ([§15.16.4.4](classes.md#151644-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
+In certain circumstances ([§15.17.4.4](classes.md#151744-copy-and-clone-members)), a copy constructor may be provided by the compiler, and called by provided code.
 
 A copy constructor on a type that has a required member list ([§15.7.1](classes.md#1571-general)) shall be decorated with SetsRequiredMembersAttribute ([§23.5.12.1](attributes.md#235121-the-setsrequiredmembers-attribute)).
 
-#### 15.16.4.3 Equality members
+#### 15.17.4.3 Equality members
 
 If a record class is derived directly from `object`, the record class type has a provided property declared as follows:
 
@@ -6892,18 +7362,18 @@ The provided override of `GetHashCode()` returns an `int` result of combining th
 >
 > *end example*
 
-#### 15.16.4.4 Copy and clone members
+#### 15.17.4.4 Copy and clone members
 
 A record class type contains two copying members:
 
-- A copy constructor ([§15.16.4.2](classes.md#151642-copy-constructors))
+- A copy constructor ([§15.17.4.2](classes.md#151742-copy-constructors))
 - A provided public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be provided by the implementation. If the provided record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn’t fulfill this requirement. After a base copy constructor is invoked, a provided copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
 If a virtual clone method is present in the base record class, the provided clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the provided clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
 
-#### 15.16.4.5 Printing members
+#### 15.17.4.5 Printing members
 
 If a record class is derived directly from `object`, the class includes a provided method declared as follows:
 
@@ -7101,17 +7571,17 @@ The provided method:
 >
 > *end example*
 
-#### 15.16.4.6 Positional record class members
+#### 15.17.4.6 Positional record class members
 
-##### 15.16.4.6.1 General
+##### 15.17.4.6.1 General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) result in the implementation  providing additional members with the same conditions as the other provided members, as described in the following subclauses.
 
-##### 15.16.4.6.2 Primary constructor
+##### 15.17.4.6.2 Primary constructor
 
 The primary constructor of a record class is like that of a non-record class ([§15.11.6](classes.md#15116-primary-constructors)), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
 
-##### 15.16.4.6.3 Properties
+##### 15.17.4.6.3 Properties
 
 For each parameter of a *delimited_parameter_list* that has the same name and type as an explicitly declared instance field, the remainder of this subclause does not apply.
 
@@ -7141,7 +7611,7 @@ For a record class:
 >
 > *end example*
 
-##### 15.16.4.6.4 Deconstruct
+##### 15.17.4.6.4 Deconstruct
 
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be provided a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
@@ -7171,9 +7641,9 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 >
 > *end example*
 
-## 15.17 Declaring a collection type
+## 15.18 Declaring a collection type
 
-### 15.17.1 General
+### 15.18.1 General
 
 There are a number of contexts in which a collection expression ([§12.8.25](expressions.md#12825-collection-expressions)) may be converted to a collection type ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)). One of them is for a target class, struct, or interface type to be made a collection type by annotating it with an attribute, as shown below.
 
@@ -7246,9 +7716,9 @@ For a *collection_expression* with a target type `C<S₀, S₁, …>` where the 
 
 The span parameter for the collection-creation method may be explicitly marked `scoped` or `[UnscopedRef] ([§9.7.3](variables.md#973-the-scoped-modifier))`. If the parameter is implicitly or explicitly `scoped`, the compiler may allocate the storage for the span on the stack rather than the heap.
 
-The construction of an instance of a collection type is described in [§15.17.2](classes.md#15172-collection-construction).
+The construction of an instance of a collection type is described in [§15.18.2](classes.md#15182-collection-construction).
 
-### 15.17.2 Collection construction
+### 15.18.2 Collection construction
 
 The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
 
@@ -7258,7 +7728,7 @@ An unhandled exception thrown from any of the methods used during construction s
 
 `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
 
-If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§15.17.1](classes.md#15171-general)), the construction of the collection instance steps are, as follows:
+If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method ([§15.18.1](classes.md#15181-general)), the construction of the collection instance steps are, as follows:
 
 - The elements are evaluated in order. Some or all elements may be evaluated during the steps below rather than before.
 - The compiler may determine the known length of the collection expression by invoking countable properties ([§18.1](ranges.md#181-general)) or equivalent properties from well-known interfaces or types, on each *spread_element*’s *expression*.
@@ -7322,7 +7792,7 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
 >
 > *end note*
 
-## 15.18 Record class and non-record class differences
+## 15.19 Record class and non-record class differences
 
 A record class differs from a non-record class in several important ways:
 

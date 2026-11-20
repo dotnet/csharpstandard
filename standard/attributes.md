@@ -290,9 +290,9 @@ Certain contexts permit the specification of an attribute on more than one targe
 - For an attribute specified on an event declaration that omits *event_accessor_declarations* the default target is the event declaration. Otherwise when the *attribute_target* is equal to:
   - `event` — the target is the event declaration
   - `field` — the target is the field
-  - `method` — the targets are the methods
+  - `method` — the targets are the methods (however, `method` is ignored on a partial event declaration)
 - In the case of an event declaration that does not omit *event_accessor_declarations* the default target is the method.
-  - `method` — the target is the associated method
+  - `method` — the target is the associated method (however, `method` is ignored on a partial event declaration)
   - `param` — the target is the lone parameter
 - For an attribute on a *lambda_expression* the default target is the method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the method
@@ -775,7 +775,7 @@ If a program uses a type or member that is decorated with `ObsoleteAttribute`, a
 
 ### 23.5.5 The AsyncMethodBuilder attribute
 
-This attribute associates a builder with a task type ([§15.14.1](classes.md#15141-general)) or selects a builder for an async function ([§15.14.5](classes.md#15145-task-builder-selection)).
+This attribute associates a builder with a task type ([§15.15.1](classes.md#15151-general)) or selects a builder for an async function ([§15.15.5](classes.md#15155-task-builder-selection)).
 
 ### 23.5.6 Caller-info attributes
 
@@ -807,7 +807,7 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 Caller-info attributes can occur on optional parameters anywhere, including in delegate declarations. However, the specific caller-info attributes have restrictions on the types of the parameters they can attribute, so that there will always be an implicit conversion from a substituted value to the parameter type.
 
-It is an error to have the same caller-info attribute on a parameter of both the defining and implementing part of a partial method or partial indexer declaration. Only caller-info attributes in the defining part are applied, whereas caller-info attributes occurring only in the implementing part are ignored.
+It is an error to have the same caller-info attribute on a parameter of both the defining and implementing part of a partial method, partial indexer, partial event, or partial constructor declaration. Only caller-info attributes in the defining part are applied, whereas caller-info attributes occurring only in the implementing part are ignored.
 
 Caller information does not affect overload resolution. As the attributed optional parameters are still omitted from the source code of the caller, overload resolution ignores those parameters in the same way it ignores other omitted optional parameters ([§12.6.4](expressions.md#1264-overload-resolution)).
 
@@ -1366,13 +1366,13 @@ The name `System.Runtime.CompilerServices.ScopedRefAttribute` is reserved for co
 
 ### 23.5.10 The EnumeratorCancellation attribute
 
-Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.15.5.2](classes.md#151552-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) in the body of that method.
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` ([§15.16.5.2](classes.md#151652-advance-the-enumerator)). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)) in the body of that method.
 
 It is an error if the `EnumeratorCancellationAttribute` attribute is applied to more than one parameter. The compiler may produce a warning if:
 
 - `EnumeratorCancellationAttribute` is applied to a parameter of a type other than `CancellationToken`,
-- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that is not an asynchronous iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)),
-- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that is not an asynchronous iterator ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)),
+- or if `EnumeratorCancellationAttribute` is applied to a parameter on a method that returns an asynchronous enumerator interface ([§15.16.2](classes.md#15162-enumerator-interfaces)) rather than an asynchronous enumerable interface ([§15.16.3](classes.md#15163-enumerable-interfaces)).
 
 The iterator will not have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 
@@ -1744,7 +1744,7 @@ This attribute indicates that the current type has one or more required members 
 
 ### 23.5.13 The CollectionBuilder attribute
 
-This attribute designates a collection type as having a collection-creation method ([§15.17.1](classes.md#15171-general)).
+This attribute designates a collection type as having a collection-creation method ([§15.18.1](classes.md#15181-general)).
 
 The constructor takes a builder type and the name of the method to be invoked to construct an instance of the collection type.
 

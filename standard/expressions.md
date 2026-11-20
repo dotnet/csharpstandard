@@ -195,17 +195,19 @@ The ***overloadable unary operator***s are:
 
 > `+  -  !` (logical negation only) `~  ++  --  true  false`
 
+A newer, alternate approach to explicit overloading of `++` and `--` is discussed in [§15.10.5](classes.md#15105-increment-operators).
+
 Only the operators listed above can be overloaded. In particular, it is not possible to overload the null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) or the unary index from-end operator (prefix `^`, ([§12.9.6](expressions.md#1296-index-from-end-operator))).
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.27](expressions.md#1227-boolean-expressions)) and expressions involving the conditional ([§12.21](expressions.md#1221-conditional-operator)) and conditional logical operators ([§12.17](expressions.md#1217-conditional-logical-operators)). *end note*
 
 The ***overloadable binary operator***s are:
 
-> `+  -  *  /  %  &  |  ^  <<  >>  >>>  ==  !=  >  <  <=  >=`
+> `+  -  *  /  %  &  |  ^  <<  >>  >>>  ==  !=  >  <  <=  >=  «op»=`
 
 Only the operators listed above can be overloaded. In particular, it is not possible to overload member access, method invocation, or the `..`, `=`, `&&`, `||`, `??`, `?:`, `=>`, `checked`, `unchecked`, `new`, `typeof`, `default`, `as`, and `is` operators.
 
-When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded.
+When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded. Explicit overloading of a compound assignment operator is discussed in [§15.10.6](classes.md#15106-compound-assignment-operators).
 
 > *Example*: An overload of operator `*` is also an overload of operator `*=`. This is described further in [§12.24](expressions.md#1224-assignment-operators). *end example*
 
@@ -243,11 +245,30 @@ The descriptions of individual operators in [§12.9](expressions.md#129-unary-op
 
 ### 12.4.4 Unary operator overload resolution
 
+#### 12.4.4.1 General
+
+\[Instance increment operator overload resolution is discussed in [§12.4.4.2](expressions.md#12442-instance-increment-operator-overload-resolution).\]
+
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
 - The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined unary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### 12.4.4.2 Instance increment operator overload resolution
+
+An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable instance increment operator, and `x` is an expression of type `X`, is processed as follows:
+
+- The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of candidate instance increment operators ([§12.4.4.3](expressions.md#12443-candidate-instance-increment-operators)).
+- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the overload resolution yields no result.
+- The overload resolution rules ([§12.6.4](expressions.md#1264-overload-resolution)) are applied to the set of candidate operators to select the best operator, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### 12.4.4.3 Candidate instance increment operators
+
+Given a type `T` and an operation `«op»`, where `«op»` is an overloadable instance increment operator, the set of candidate user-defined operators provided by `T` is determined as follows:
+
+- In an `unchecked` evaluation context, it is a group of operators that would be produced by the member lookup process ([§12.5.1](expressions.md#1251-general)) when only instance `operator «op»()` operators were considered matching the target name `N`.
+- In a `checked` evaluation context, it is a group of operators that would be produced by the member lookup process when only instance `operator «op»()` and instance `operator checked «op»()` operators were considered matching the target name `N`. The `operator «op»()` operators that have pair-wise matching `operator checked «op»()` declarations are excluded from the group.
 
 ### 12.4.5 Binary operator overload resolution
 
@@ -861,6 +882,8 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of exact bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]` and `U` is an array type `U₁[...]` of the same rank
+  - `V` is a `Span<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>`
+  - `V` is a `ReadOnlySpan<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>` or `ReadOnlySpan<U₁>`
   - `V` is the type `V₁?` and `U` is the type `U₁`
   - `V` is a constructed type `C<V₁...Vₑ>` and `U` is a constructed type `C<U₁...Uₑ>`
 
@@ -876,6 +899,8 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
 - Otherwise, sets `U₁...Uₑ` and `V₁...Vₑ` are determined by checking if any of the following cases apply:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
+  - `V` is a `Span<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>`
+  - `V` is a `ReadOnlySpan<V₁>` and `U` is an array type `U₁[]` or a `Span<U₁>` or `ReadOnlySpan<U₁>`
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
   - `V` is a function pointer type ([§24.3.3](unsafe-code.md#2433-function-pointers)) `delegate*<V₂..Vₖ, V₁>` and there is a function pointer type `delegate*<U₂..Uₖ, U₁>` such that `U` is identical to `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
@@ -884,7 +909,13 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Uᵢ` is not known to be a reference type, or if `U` is a function pointer type and `Uᵢ` is not known to be a function pointer type or a reference type, then an exact inference is made
     > *Note*: This is only applicable in unsafe code. *end note*
-  - Otherwise, if `U` is an array type then a *lower-bound inference* is made
+  - Otherwise, if `U` is an array type then inference depends on the type of `V`:
+    - If `V` is a `Span<Vᵢ>`, then an *exact inference* is made
+    - If `V` is an array type or a `ReadOnlySpan<Vᵢ>`, then a *lower-bound inference* is made
+  - Otherwise, if `U` is a `Span<Uᵢ>` then inference depends on the type of `V`:
+    - If `V` is a `Span<Vᵢ>`, then an *exact inference* is made
+    - If `V` is a `ReadOnlySpan<Vᵢ>`, then a *lower-bound inference* is made
+  - Otherwise, if `U` is a `ReadOnlySpan<Uᵢ>` and `V` is a `ReadOnlySpan<Vᵢ>` a *lower-bound inference* is made
   - Otherwise, if `V` is `C<V₁...Vₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then a *lower-bound inference* is made.
     - If it is contravariant then an *upper-bound inference* is made.
@@ -956,8 +987,8 @@ The ***inferred effective return type*** is determined as follows:
 
 The ***inferred return type*** is determined as follows:
 
-- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `«TaskType»` ([§15.14.1](classes.md#15141-general)).
-- If `F` is async and has an inferred effective return type `T`, the inferred return type is `«TaskType»<T>»`([§15.14.1](classes.md#15141-general)).
+- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)).
+- If `F` is async and has an inferred effective return type `T`, the inferred return type is `«TaskType»<T>»`([§15.15.1](classes.md#15151-general)).
 - If `F` is non-async and has an inferred effective return type `T`, the inferred return type is `T`.
 - Otherwise, a return type cannot be inferred for `F`.
 
@@ -1260,8 +1291,9 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
   - `C₁` is not an *anonymous function type conversion* ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion)) and `C₂` is an *anonymous function type conversion*, or
   - `E` does not exactly match `T₂` and at least one of the following holds:
     - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression)).
+    - `E` exactly matches neither of `T₁` and `T₂`, and `C₁` is an implicit span conversion and `C₂` is not an implicit span conversion
     - `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
-    - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
+    - `E` exactly matches both or neither of `T₁` and `T₂`, both or neither of `C₁` and `C₂` are an implicit span conversion, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion.
       - `V` is a function pointer type `delegate*<V₂..Vₖ, V₁>` and `U` is a function pointer type `delegate*<U₂..Uₖ, U₁>`, and the calling convention of `V` is identical to `U`, and the refness of `Vᵢ` is identical to `Uᵢ`.
         > *Note*: This is only applicable in unsafe code. *end note*
     - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§21.4](delegates.md#214-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`.
@@ -1331,7 +1363,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
   - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.14](expressions.md#126314-inferred-return-type)), and an identity conversion exists from `X` to the return type of `D`
   - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
-  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.14.1](classes.md#15141-general)), and one of the following holds:
+  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.15.1](classes.md#15151-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
 
@@ -1339,9 +1371,11 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
-- An implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
-- `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
-- `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
+- `T₁` is `System.ReadOnlySpan<E₁>`, `T₂` is `System.Span<E₂>`, and an identity conversion from `E₁` to `E₂` exists
+- `T₁` is `System.ReadOnlySpan<E₁>`, `T₂` is `System.ReadOnlySpan<E₂>`, and an implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
+- At least one of `T₁` or `T₂` is not `System.ReadOnlySpan<Eᵢ>` and is not `System.Span<Eᵢ>`, and an implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
+- `T₁` is `«TaskType»<S₁>`([§15.15.1](classes.md#15151-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
+- `T₁` is `«TaskType»<S₁>`([§15.15.1](classes.md#15151-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, `nuint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, `nuint`, or `ulong`
@@ -1892,15 +1926,15 @@ When an *interpolated_string_handler_expression* is converted to a handler, its 
 
 ### 12.8.4 Simple names
 
-A *simple_name* consists of an identifier, optionally followed by a type argument list:
+A *simple_name* consists of an identifier, optionally followed by a *type_argument_list* or a *generic_dimension_specifier*:
 
 ```ANTLR
 simple_name
-    : identifier type_argument_list?
+    : identifier (type_argument_list | generic_dimension_specifier)?
     ;
 ```
 
-A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
+A *simple_name* can be of the form `I` or `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The presence of *generic_dimension_specifier* allows names like `X<>` or `X<,>` to be considered simple names.
 
 For the namespace lookup steps in this subclause and [§7.7.1](basic-concepts.md#771-general), let *D* be the set of directives considered at namespace `N`. If `N` is the global namespace, *D* consists of the *extern_alias_directive*s and *using_directive*s in the containing compilation unit, together with the *global_using_directive*s in all compilation units in the program. Otherwise, *D* consists of the *extern_alias_directive*s and *using_directive*s in the enclosing namespace declaration for `N`, if any. Only directives whose scope includes the location of the name being resolved are considered. The exclusions when resolving directive targets are specified in [§14.5](namespaces.md#145-global-using-directives) and [§14.6](namespaces.md#146-using-directives).
 
@@ -2417,7 +2451,7 @@ An extension method `Cᵢ.Mₑ` is ***eligible*** if:
 - `Cᵢ` is a non-generic, non-nested class
 - The name of `Mₑ` is *identifier*
 - `Mₑ` is accessible and applicable when applied to the arguments as a static method as shown above
-- An implicit identity, reference or boxing conversion exists from *expr* to the type of the first parameter of `Mₑ`.
+- An implicit identity, reference, boxing, or span conversion exists from *expr* to the type of the first parameter of `Mₑ`. Span conversion is not considered when overload resolution is performed for a method group conversion.
 
 The search for `C` proceeds as follows:
 
@@ -2981,7 +3015,7 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
     - When an instance variable *v* within `this` does not meet the requirements, or any instance variable at any level of nesting within *v* does not meet the requirements, then *v* is implicitly initialized to the default value in an *initialization* phase before any other code in the constructor runs.
   - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs.
-  - If the method or accessor is not an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
+  - If the method or accessor is not an iterator ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)) or async function ([§15.15](classes.md#1515-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
     - If the struct is a `readonly struct`, the `this` variable behaves exactly the same as an input parameter of the struct type
     - Otherwise the `this` variable behaves exactly the same as a `ref` parameter of the struct type
   - If the method or accessor is an iterator or async function, the `this` variable represents a *copy* of the struct for which the method or accessor was invoked, and behaves exactly the same as a *value* parameter of the struct type.
@@ -3019,6 +3053,8 @@ post_decrement_expression
     ;
 ```
 
+The following applies when *primary_expression* has a non-user-defined type:
+
 The operand of a postfix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
 If the *primary_expression* has the compile-time type `dynamic` then the operator is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), the *post_increment_expression* or *post_decrement_expression* has the compile-time type `dynamic` and the following rules are applied at run-time using the run-time type of the *primary_expression*.
@@ -3047,6 +3083,25 @@ The run-time processing of a postfix increment or decrement operation of the for
 The `++` and `--` operators also support prefix notation ([§12.9.7](expressions.md#1297-prefix-increment-and-decrement-operators)). The result of `x++` or `x--` is the value of `x` *before* the operation, whereas the result of `++x` or `--x` is the value of `x` *after* the operation. In either case, `x` itself has the same value after the operation.
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
+
+The following applies when *primary_expression* has a user-defined type:
+
+A user-defined type may provide a static form, an instance form, or both forms, of *operator_declaration* for this operator ([§15.10.5](classes.md#15105-increment-operators)).
+
+If the result of the operation is used or `x` in `x «op»` is not classified as a variable, the operation is processed by applying unary operator overload resolution as
+specified earlier in this subclause for non-user-defined types.
+
+> *Note*: Consider a user-defined type, `U`, that declares an instance `operator++` but not a static one. Given an instance of `U` called `x`, `x++` produces an error as the result is used but no unary operator overload resolution is possible. *end note*
+
+Otherwise, priority is given to the instance increment operator, if one exists, as follows:
+
+First, an attempt is made to process the operation by applying
+instance increment operator overload resolution ([§12.4.4.2](expressions.md#12442-instance-increment-operator-overload-resolution)). If the process produces no result and no error, then the operation is processed by applying unary operator overload resolution as specified earlier in this subclause for non-user-defined types.
+
+Otherwise, `x«op»` is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, the operator method is invoked on `x`. If `x` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+- If the type of `x` is not known to be a reference type, the operator method is invoked on `x`.
 
 ### 12.8.17 The new operator
 
@@ -3757,6 +3812,8 @@ The `typeof` operator can be used on a type parameter. It is a compile time erro
 >
 > *end example*
 
+It is an error to use `generic_dimension_specifier` outside of a `typeof` or `nameof` expression.  Within either of those expressions it is an error to use `generic_dimension_specifier` within a `type_argument_list`, `array_type`, `pointer_type`, or `nullable_type`.
+
 ### 12.8.19 The sizeof operator
 
 The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type.
@@ -4054,7 +4111,8 @@ nameof_expression
     ;
     
 named_entity
-    : named_entity_target ('.' identifier type_argument_list?)*
+    : named_entity_target ('.' identifier
+        (type_argument_list | generic_dimension_specifier)?)*
     ;
     
 named_entity_target
@@ -4070,7 +4128,7 @@ Because `nameof` is not a keyword, a *nameof_expression* is always syntactically
 
 Simple name and member access lookups are performed on the *named_entity* at compile time, following the rules described in [§12.8.4](expressions.md#1284-simple-names) and [§12.8.7](expressions.md#1287-member-access). However, where the lookup described in [§12.8.4](expressions.md#1284-simple-names) and [§12.8.7](expressions.md#1287-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
 
-It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
+It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for *named_entity* to be the contextual keyword `field`. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
 
 A *nameof_expression* is a constant expression of type `string`, and has no effect at runtime. Specifically, its *named_entity* is not evaluated, and is ignored for the purposes of definite assignment analysis ([§9.4.4.22](variables.md#94422-general-rules-for-simple-expressions)). Its value is the last identifier of the *named_entity* before the optional final *type_argument_list*, transformed in the following way:
 
@@ -4103,9 +4161,9 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >         string n9 = nameof(Program.InstanceMethod);      // "InstanceMethod"
 >         string n10 = nameof(Program.GenericMethod);      // "GenericMethod"
 >         string n11 = nameof(Program.NestedClass);        // "NestedClass"
-> 
+>         string x1 = nameof(List<>);                      // "List">
+>
 >         // Invalid
->         // string x1 = nameof(List<>);            // Empty type argument list
 >         // string x2 = nameof(List<T>);           // T is not in scope
 >         // string x3 = nameof(GenericMethod<>);   // Empty type argument list
 >         // string x4 = nameof(GenericMethod<T>);  // T is not in scope
@@ -4128,6 +4186,8 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just “Generic” instead of the full namespace, and of `nameof(TestAlias)` to “TestAlias” rather than “String”.
 > *end example*
+
+Member lookup on an unbound type expression within a `nameof` is performed the same way as for a `this` expression within that type declaration (modulo performing accessibility checks at the call site). In other words, lookup off of `List<>` in `nameof(List<>…)` works the same as lookup off of `this` within the `class List<T>` type itself.
 
 ### 12.8.24 Anonymous method expressions
 
@@ -4156,7 +4216,7 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type ([§15.17.1](classes.md#15171-general)).
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted ([§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type ([§15.18.1](classes.md#15181-general)).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
@@ -4356,6 +4416,8 @@ pre_decrement_expression
     ;
 ```
 
+The following applies when *unary_expression* has a non-user-defined type:
+
 The operand of a prefix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
 If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set or init accessor. If this is not the case, a binding-time error occurs.
@@ -4382,6 +4444,25 @@ The `++` and `--` operators also support postfix notation ([§12.8.16](expressio
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined prefix increment and decrement operators defined above are also predefined.
+
+The following applies when *unary_expression* has a user-defined type:
+
+A user-defined type may provide a static form, an instance form, or both forms, of *operator_declaration* for this operator ([§15.10.5](classes.md#15105-increment-operators)).
+
+If `x` in `«op» x` is classified as a variable, priority is given to the instance increment version, if one exists, as follows:
+
+First, an attempt is made to process the operation by applying instance increment operator overload resolution ([§12.4.4.2](expressions.md#12442-instance-increment-operator-overload-resolution)). If the process produces no result and no error, then the operation is processed by applying unary operator overload resolution as specified earlier in this subclause for non-user-defined types.
+
+Otherwise, `«op»x` is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance, and `x₀` is returned as the result of the operation. If `x₀` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+
+- If the type of `x` is not known to be a reference type:
+
+  - If the result of increment is used, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance, `x₀` is assigned to `x`, and `x₀` is returned as the result of the assignment.
+  - Otherwise, the operator method is invoked on `x`.
+
+Side effects in `x` are evaluated only once in the process.
 
 ### 12.9.8 Cast expressions
 
@@ -4424,7 +4505,7 @@ await_expression
     ;
 ```
 
-An *await_expression* is only allowed in the body of an async function ([§15.14](classes.md#1514-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
+An *await_expression* is only allowed in the body of an async function ([§15.15](classes.md#1515-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
 
 - Inside a nested (non-async) anonymous function
 - Inside the block of a *lock_statement*
@@ -4465,7 +4546,7 @@ At run-time, the expression `await t` is evaluated as follows:
 
 - An awaiter `a` is obtained by evaluating the expression `(t).GetAwaiter()`.
 - A `bool` `b` is obtained by evaluating the expression `(a).IsCompleted`.
-- If `b` is `false` then evaluation depends on whether `a` implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.14](classes.md#1514-async-functions)):
+- If `b` is `false` then evaluation depends on whether `a` implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.15](classes.md#1515-async-functions)):
   - If `a` does not implement `ICriticalNotifyCompletion`, then the expression
     `((a) as INotifyCompletion).OnCompleted(r)` is evaluated.
   - If `a` does implement `ICriticalNotifyCompletion`, then the expression
@@ -4502,7 +4583,7 @@ For an anonymous-type receiver, each initializer shall specify an expression imp
 
 The type of the result is the compile-time type of the receiver. At run time, the receiver is evaluated once, before any member initializer expressions. Subsequent evaluation depends on its compile-time type:
 
-- For a record class type, or a type parameter whose effective base class is a record class type, the receiver's clone method ([§15.16.4.4](classes.md#151644-copy-and-clone-members)) is invoked, and its result is converted to the receiver's type. Each *member_initializer* is then processed as an assignment to a field or property of that result, in lexical order.
+- For a record class type, or a type parameter whose effective base class is a record class type, the receiver's clone method ([§15.17.4.4](classes.md#151744-copy-and-clone-members)) is invoked, and its result is converted to the receiver's type. Each *member_initializer* is then processed as an assignment to a field or property of that result, in lexical order.
 - For a value type, or a type parameter constrained to be a value type, the receiver's value is copied. Each *member_initializer* is then processed as an assignment to a field or property of that copy, in lexical order. No record-class clone method is invoked.
 - For an anonymous type, the member initializer expressions are evaluated in lexical order and their converted values are retained. A new instance of the same anonymous type is constructed with those values for the named properties and the values from the evaluated receiver for every remaining property. Its read-only properties are initialized by construction, not by subsequent assignments.
 
@@ -6086,7 +6167,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : attributes? identifier
+    : attributes? parameter_modifier? identifier
     ;
 
 anonymous_function_body
@@ -6137,7 +6218,7 @@ The `=>` operator has the same precedence as assignment (`=`) and is right-asso
 
 > *Note*: It can be deduced from [§23.5.3.2](attributes.md#23532-conditional-methods) that *attributes* in a *lambda_expression* cannot designate that expression as a conditional method. *end note*
 
-An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.14](classes.md#1514-async-functions).
+An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.15](classes.md#1515-async-functions).
 
 The parameters of an anonymous function in the form of a *lambda_expression* can be explicitly or implicitly typed. In an explicitly typed parameter list, the type of each parameter is explicitly stated. In an implicitly typed parameter list, the types of the parameters are inferred from the context in which the anonymous function occurs—specifically, when the anonymous function is converted to a compatible delegate type or expression tree type, that type provides the parameter types ([§10.7](conversions.md#107-anonymous-function-conversions)).
 
@@ -7681,6 +7762,7 @@ assignment
     | simple_assignment
     | compound_assignment
     | ref_assignment
+    | null_conditional_assignment
     ;
 ```
 
@@ -7688,7 +7770,7 @@ If the input can be syntactically recognised as both a *deconstructing_assignmen
 
 > *Note*: ANTLR grammar semantics enforce this requirement due to the ordering of the alternatives. *Semantically* there is no overlap between the four alternatives, this is a syntactic disambiguation.
 
-The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.24.6](expressions.md#12246-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*.
+The *simple_assignment* and *compound_assignment* expressions assign a new value to a variable, a property, or an indexer element. Event assignment ([§12.24.6](expressions.md#12246-event-assignment)), a subset of *compound_assignment*, assigns a new value to an event. The *ref_assignment* expression assigns a variable reference ([§9.5](variables.md#95-variable-references)) to a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)). The *deconstructing_assignment* assigns values to the non-discard targets of a *deconstructor*. *null_conditional_assignment* provides a mechanism for simple and compound assignment to have a null conditional target.
 
 The target of a *simple_assignment*, *ref_assignment*, or any target of a *deconstructing_assignment* may be a discard ([§9.2.9.2](variables.md#9292-discards)). The left operand of a *compound_assignment* shall not be a discard. When the left operand of an assignment is a discard, the corresponding right-side expression is evaluated but no value is stored.
 
@@ -8058,6 +8140,10 @@ The ref assignment operator shall not read the storage location referenced by th
 
 ### 12.24.5 Compound assignment
 
+#### 12.24.5.1 General
+
+[Explicit compound assignment operator overload handling is discussed later in this subsection.]
+
 ```ANTLR
 compound_assignment
     : unary_expression compound_assignment_operator expression
@@ -8121,6 +8207,43 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 <!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
 
+The following discusses the case when an explicit compound assignment operator is declared:
+
+If `x` in `x «op»= y` is classified as a variable, priority is given to compound assignment operators ([§15.10.6](classes.md#15106-compound-assignment-operators)), as follows.
+
+First, an attempt is made to process an operation of the form `x «op»= y` by applying
+compound assignment operator overload resolution ([§12.24.5.2](expressions.md#122452-compound-assignment-operator-overload-resolution)). If the process produces no result and no error, then the operation is processed by applying binary operator overload resolution as the earlier part of this subclause specifies.
+
+Otherwise, the operation is evaluated as follows:
+
+- If the type of `x` is known to be a reference type, `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance with `y` as the argument, and `x₀` is returned as result of the compound assignment.
+- If `x₀` is `null`, the operator method invocation shall throw a `NullReferenceException`.
+
+If the type of `x` is not known to be a reference type:
+
+- If the result of compound assignment is used, the `x` is evaluated to get an instance `x₀`, the operator method is invoked on that instance with `y` as the argument, `x₀` is assigned to `x` and `x₀` is returned as the result of the compound assignment.
+- Otherwise, the operator method is invoked on `x` with `y` as the argument.
+
+Side effects in `x` are evaluated only once in the process.
+
+#### 12.24.5.2 Compound assignment operator overload resolution
+
+An operation of the form `x «op»= y`, where `«op»=` is an overloadable compound assignment operator, `x` is an expression of type `X` is processed as follows:
+
+- The set of candidate user-defined operators provided by `X` for the operation `operator «op»=(y)` is determined using the rules of candidate compound assignment operators ([§12.24.5.3](expressions.md#122453-candidate-compound-assignment-operators)).
+- If at least one candidate user-defined operator in the set is applicable to the argument list `(y)`, then this becomes the set of candidate operators for the operation. Otherwise, the overload resolution yields no result.
+- The overload resolution rules ([§12.6.4](expressions.md#1264-overload-resolution)) are applied to the set of candidate operators to select the best operator with respect to the argument list `(y)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+
+#### 12.24.5.3 Candidate compound assignment operators
+
+Given a type `T` and an operation `«op»=`, where `«op»=` is an overloadable compound assignment operator, the set of candidate user-defined operators provided by `T` is determined as follows:
+
+- In an unchecked evaluation context, it is a group of operators that would be produced
+  by the member lookup process ([§12.5.1](expressions.md#1251-general)) process when only instance `operator «op»=(Y)` operators were considered matching the target name `N`.
+- In a checked evaluation context, it is a group of operators that would be produced
+  by the member lookup process when only instance `operator «op»=(Y)` and instance `operator checked «op»=(Y)` operators were considered matching the target name `N`. The `operator «op»=(Y)` operators that have pair-wise matching `operator checked «op»=(Y)`
+  declarations are excluded from the group.
+
 ### 12.24.6 Event assignment
 
 An event assignment is a subset of *compound_assignment* where the left operand of a `+=` or `-=` operator is classified as an event access. An event assignment is evaluated as follows:
@@ -8130,6 +8253,33 @@ An event assignment is a subset of *compound_assignment* where the left operand 
 - An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the add accessor is invoked; if the operator was `-=`, the remove accessor is invoked.
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+
+### 12.24.7 Null conditional assignment
+
+*null_conditional_assignment* provides a mechanism for simple and compound assignment to have a null conditional target ([§12.8.8](expressions.md#1288-null-conditional-member-access) and [§12.8.13](expressions.md#12813-null-conditional-element-access)).
+
+```ANTLR
+null_conditional_assignment
+    : null_conditional_member_access '=' expression
+    | null_conditional_member_access compound_assignment_operator expression
+    | null_conditional_element_access '=' expression
+    | null_conditional_element_access compound_assignment_operator expression
+    ;
+```
+
+When a *null_conditional_assignment* appears in an *expression_statement*, its semantics are, as follows:
+
+- `P?.A = B` is equivalent to `if (P is not null) P.A = B;`, except that `P` is only evaluated once.
+- `P?[A] = B` is equivalent to `if (P is not null) P[A] = B`, except that `P` is only evaluated once.
+
+Otherwise, its semantics are, as follows:
+
+- `P?.A = B` is equivalent to `(P is null) ? (T?)null : (P.A = B)`, where `T` is the result type of `P.A = B`, except that `P` is only evaluated once.
+- `P?[A] = B` is equivalent to `(P is null) ? (T?)null : (P[A] = B)`, where `T` is the result type of `P[A] = B`, except that `P` is only evaluated once.
+
+*expression* is only evaluated when the receiver of the conditional access is non-null.
+
+If the result of the *null_conditional_assignment* is used, its type shall be known to be of a value type or a reference type.
 
 ## 12.25 Expression
 

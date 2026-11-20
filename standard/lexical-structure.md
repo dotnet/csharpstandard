@@ -623,18 +623,20 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'       | 'alias'      | 'allows'    | 'and'       | 'ascending'
-    | 'async'     | 'await'      | 'by'        | 'Cdecl'     | 'descending'
-    | 'dynamic'   | 'equals'     | 'Fastcall'  | 'file'      | 'from'
-    | 'get'       | 'global'     | 'group'     | 'init'      | 'into'
-    | 'join'      | 'let'        | 'managed'   | 'nameof'    | 'nint'
-    | 'not'       | 'notnull'    | 'nuint'     | 'on'        | 'or'
-    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'required'
-    | 'scoped'    | 'select'     | 'set'       | 'Stdcall'   | 'Thiscall'
-    | 'unmanaged' | 'value'      | 'var'       | 'when'      | 'where'
-    | 'yield'
+    : 'add'      | 'alias'      | 'allows'     | 'and'       | 'ascending'
+    | 'async'    | 'await'      | 'by'         | 'Cdecl'     | 'descending'
+    | 'dynamic'  | 'equals'     | 'extension'  | 'field'     | 'Fastcall'
+    | 'file'     | 'from'       | 'get'        | 'global'    | 'group'
+    | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
+    | 'nameof'   | 'nint'       | 'not'        | 'notnull'   | 'nuint'
+    | 'on'       | 'or'         | 'orderby'    | 'partial'   | 'record'
+    | 'remove'   | 'required'   | 'scoped'     | 'select'    | 'set'
+    | 'Stdcall'  | 'Thiscall'   | 'unmanaged'  | 'value'     | 'var'
+    | 'when'     | 'where'      | 'yield'
     ;
 ```
+
+It is an error for a type or alias to be named `extension`.
 
 > *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)). *end note*
 
@@ -1211,7 +1213,7 @@ unsigned_right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, to delineate distinct regions of source code, and to set the nullable context.
+The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, to delineate distinct regions of source code, to set the nullable context, and to assist tools.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -1228,6 +1230,7 @@ fragment PP_Kind
     | PP_Region
     | PP_Pragma
     | PP_Nullable
+    | PP_Ignored
     ;
 
 // Only recognised at the beginning of a line
@@ -1265,8 +1268,9 @@ The following pre-processing directives are available:
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).
 - `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.10](lexical-structure.md#6510-pragma-directives)).
+- `#!` and `#:`, which designate ignored directives that are intended to assist implementation-specific tools ([§6.5.11](lexical-structure.md#6511-ignored-directives)).
 
-A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
+A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. Except for a `#!`-form ignored directive, white space may occur before the `#` character and between the `#` character and the directive name.
 
 A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, `#endregion`, or `#nullable` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
 
@@ -1860,3 +1864,20 @@ fragment PP_Pragma_Text
 The *Input_Character*s in the *PP_Pragma_Text* are interpreted by a compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If a compiler cannot interpret the *Input_Character*s, a compiler can produce a warning; however, it shall not produce a compile-time error.
 
 > *Note*: *PP_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*
+
+### 6.5.11 Ignored directives
+
+These preprocessing directives are intended for tools whose nature and purpose are outside the scope of this specification.
+
+```ANTLR
+PP_Ignored
+    : PP_IgnoredToken Input_Character*
+    ;
+
+PP_IgnoredToken
+    : '!'
+    | ':'
+    ;
+```
+
+Ignored directives shall occur before the first *token* in a *compilation_unit*.

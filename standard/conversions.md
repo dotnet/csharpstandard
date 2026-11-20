@@ -64,6 +64,7 @@ The following conversions are classified as implicit conversions:
 - Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
 - Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 - Anonymous function type conversions ([§10.2.21](conversions.md#10221-anonymous-function-type-conversion))
+- Implicit span conversions ([§10.2.24](conversions.md#10224-implicit-span-conversions))
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.8](expressions.md#1298-cast-expressions)), and assignments ([§12.24](expressions.md#1224-assignment-operators)).
 
@@ -487,7 +488,7 @@ An implicit collection expression conversion exists from a collection expression
 
 - A single-dimensional array type `T[]`, in which case, the element type is `T`.
 - `System.Span<T>` and `System.ReadOnlySpan<T>`, in which cases, the element type is `T`.
-- A type with an appropriate collection-creation method ([§15.17.1](classes.md#15171-general)), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
+- A type with an appropriate collection-creation method ([§15.18.1](classes.md#15181-general)), in which case, the element type is the iteration type ([§13.9.5](statements.md#1395-the-foreach-statement)) determined from a `GetEnumerator` instance method or enumerable interface, not from an extension method.
 - A struct or class type that implements `System.Collections.IEnumerable` where:
 
   - The type has an applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) constructor that can be invoked with no arguments, and the constructor is accessible at the location of the collection expression.
@@ -536,6 +537,18 @@ The implicit inline array ([§16.6](structs.md#166-inline-arrays)) conversions a
 - From an expression designating a readonly inline array with element type `T` to `System.ReadonlySpan<T>`
 
 The conversion of an inline array to a `System.Span` or `System.ReadonlySpan` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See [§16.6](structs.md#166-inline-arrays) for more information.
+
+### 10.2.24 Implicit span conversions
+
+An implicit span conversion permits expressions of type *array_type*, `System.Span<T>`, `System.ReadOnlySpan<T>`, and `string` to be converted between each other, as follows:
+
+- From any single-dimensional *array_type* with element type `Eᵢ` to `System.Span<Eᵢ>`
+- From any single-dimensional *array_type* with element type `Eᵢ` to `System.ReadOnlySpan<Uᵢ>`, provided that `Eᵢ` is covariance-convertible ([§19.2.3.3](interfaces.md#19233-variance-conversion)) to `Ui`
+- From `System.Span<Tᵢ>` to `System.ReadOnlySpan<Uᵢ>`, provided that `Tᵢ` is covariance-convertible to `Uᵢ`
+- From `System.ReadOnlySpan<Tᵢ>` to `System.ReadOnlySpan<Uᵢ>`, provided that `Tᵢ` is covariance-convertible to `Uᵢ`
+- From `string` to `System.ReadOnlySpan<char>`
+
+Any Span/ReadOnlySpan type is considered applicable for the conversion if it is a ref struct and it matches by its fully-qualified name.
 
 ## 10.3 Explicit conversions
 
@@ -763,6 +776,13 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 
 A user-defined explicit conversion consists of an optional standard explicit conversion, followed by execution of a user-defined implicit or explicit conversion operator, followed by another optional standard explicit conversion. The exact rules for evaluating user-defined explicit conversions are described in [§10.5.5](conversions.md#1055-user-defined-explicit-conversions).
 
+### 10.3.10 Explicit span conversions
+
+The explicit span conversions are, as follows:
+
+- All implicit span conversions ([§10.2.24](conversions.md#10224-implicit-span-conversions)).
+- From an *array_type* with element type `Tᵢ` to `System.Span<Uᵢ>` or `System.ReadOnlySpan<Uᵢ>` provided an explicit reference conversion exists from `Tᵢ` to `Uᵢ`.
+
 ## 10.4 Standard conversions
 
 ### 10.4.1 General
@@ -782,6 +802,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
 - Implicit inline array conversions ([§10.2.23](conversions.md#10223-implicit-inline-array-conversions))
+- Implicit span conversions ([§10.2.24](conversions.md#10224-implicit-span-conversions))
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
@@ -791,11 +812,15 @@ The standard explicit conversions are all standard implicit conversions plus the
 
 > *Note*: In other words, if a standard implicit conversion exists from a type `A` to a type `B`, then a standard explicit conversion exists from type `A` to type `B` and from type `B` to type `A`. *end note*
 
+However, unlike other standard explicit conversions, which always exist given the opposite standard implicit conversion, there is no standard explicit span conversion.
+
 ## 10.5 User-defined conversions
 
 ### 10.5.1 General
 
 C# allows the pre-defined implicit and explicit conversions to be augmented by user-defined conversions. User-defined conversions are introduced by declaring conversion operators ([§15.10.4](classes.md#15104-conversion-operators)) in class and struct types.
+
+User-defined conversions are not considered when converting between types for which an implicit or an explicit span conversion exists.
 
 ### 10.5.2 Permitted user-defined conversions
 
@@ -1015,12 +1040,12 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` is an output parameter.
-- If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F`, ignoring `params` modifiers and default values, and an identity conversion exists between the corresponding parameter in `F`.
-- If `F` has an implicitly typed parameter list, `D` has no reference or output parameters.
+- If `F` has an explicitly or implicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F`, ignoring `params` modifiers and default values.
+- If `F` has an explicitly typed parameter list, an identity conversion shall exist between the type of each parameter in `F` and the type of the corresponding parameter in `D`.
 - If `F` has an explicit return type, an identity conversion shall exist from the return type of `F` to the return type of `D`.
-- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
-- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.14.1](classes.md#15141-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
+- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
 - If the body of `F` is a block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§13.3](statements.md#133-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
 
 > *Example*: The following examples illustrate these rules:

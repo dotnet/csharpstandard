@@ -213,16 +213,16 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'       | 'alias'      | 'allows'    | 'and'       | 'ascending'
-    | 'async'     | 'await'      | 'by'        | 'Cdecl'     | 'descending'
-    | 'dynamic'   | 'equals'     | 'Fastcall'  | 'file'      | 'from'
-    | 'get'       | 'global'     | 'group'     | 'init'      | 'into'
-    | 'join'      | 'let'        | 'managed'   | 'nameof'    | 'nint'
-    | 'not'       | 'notnull'    | 'nuint'     | 'on'        | 'or'
-    | 'orderby'   | 'partial'    | 'record'    | 'remove'    | 'required'
-    | 'scoped'    | 'select'     | 'set'       | 'Stdcall'   | 'Thiscall'
-    | 'unmanaged' | 'value'      | 'var'       | 'when'      | 'where'
-    | 'yield'
+    : 'add'      | 'alias'      | 'allows'     | 'and'       | 'ascending'
+    | 'async'    | 'await'      | 'by'         | 'Cdecl'     | 'descending'
+    | 'dynamic'  | 'equals'     | 'extension'  | 'field'     | 'Fastcall'
+    | 'file'     | 'from'       | 'get'        | 'global'    | 'group'
+    | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
+    | 'nameof'   | 'nint'       | 'not'        | 'notnull'   | 'nuint'
+    | 'on'       | 'or'         | 'orderby'    | 'partial'   | 'record'
+    | 'remove'   | 'required'   | 'scoped'     | 'select'    | 'set'
+    | 'Stdcall'  | 'Thiscall'   | 'unmanaged'  | 'value'     | 'var'
+    | 'when'     | 'where'      | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -448,6 +448,7 @@ fragment PP_Kind
     | PP_Region
     | PP_Pragma
     | PP_Nullable
+    | PP_Ignored
     ;
 
 // Only recognised at the beginning of a line
@@ -633,6 +634,16 @@ fragment PP_Pragma
 
 fragment PP_Pragma_Text
     : PP_Whitespace Input_Character*
+    ;
+
+// Source: §6.5.11 Ignored directives
+PP_Ignored
+    : PP_IgnoredToken Input_Character*
+    ;
+
+PP_IgnoredToken
+    : '!'
+    | ':'
     ;
 ```
 
@@ -1187,7 +1198,7 @@ multi_line_interpolated_raw_string_expression
 
 // Source: §12.8.4 Simple names
 simple_name
-    : identifier type_argument_list?
+    : identifier (type_argument_list | generic_dimension_specifier)?
     ;
 
 // Source: §12.8.5 Parenthesized expressions
@@ -1457,7 +1468,8 @@ nameof_expression
     ;
     
 named_entity
-    : named_entity_target ('.' identifier type_argument_list?)*
+    : named_entity_target ('.' identifier
+        (type_argument_list | generic_dimension_specifier)?)*
     ;
     
 named_entity_target
@@ -1684,7 +1696,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : attributes? identifier
+    : attributes? parameter_modifier? identifier
     ;
 
 anonymous_function_body
@@ -1774,6 +1786,7 @@ assignment
     | simple_assignment
     | compound_assignment
     | ref_assignment
+    | null_conditional_assignment
     ;
 
 // Source: §12.24.2 Simple assignment
@@ -1817,7 +1830,7 @@ ref_assignment
     : unary_expression '=' 'ref' expression
     ;
 
-// Source: §12.24.5 Compound assignment
+// Source: §12.24.5.1 General
 compound_assignment
     : unary_expression compound_assignment_operator expression
     ;
@@ -1826,6 +1839,14 @@ compound_assignment_operator
     : '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
     | unsigned_right_shift_assignment
+    ;
+
+// Source: §12.24.7 Null conditional assignment
+null_conditional_assignment
+    : null_conditional_member_access '=' expression
+    | null_conditional_member_access compound_assignment_operator expression
+    | null_conditional_element_access '=' expression
+    | null_conditional_element_access compound_assignment_operator expression
     ;
 
 // Source: §12.25 Expression
@@ -2451,6 +2472,7 @@ class_member_declaration
     | finalizer_declaration
     | static_constructor_declaration
     | type_declaration
+    | extension_declaration
     ;
 
 // Source: §15.4 Constants
@@ -2692,8 +2714,8 @@ ref_accessor_body
 
 // Source: §15.8.1 General
 event_declaration
-    : attributes? event_modifier* 'event' type variable_declarators ';'
-    | attributes? event_modifier* 'event' type member_name
+    : attributes? event_modifier* 'partial'? 'event' type variable_declarators ';'
+    | attributes? event_modifier* 'partial'? 'event' type member_name
         '{' event_accessor_declarations '}'
     ;
 
@@ -2774,6 +2796,9 @@ operator_modifier
     | 'abstract'
     | 'virtual'
     | 'sealed'
+    | 'override'
+    | 'new'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2781,6 +2806,8 @@ operator_declarator
     : unary_operator_declarator
     | binary_operator_declarator
     | conversion_operator_declarator
+    | increment_operator_declarator
+    | compound_assignment_operator_declarator
     ;
 
 unary_operator_declarator
@@ -2792,7 +2819,7 @@ logical_negation_operator
     ;
 
 overloadable_unary_operator
-    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'checked'? '++' | 'checked'? '--' | 'true' | 'false'
+    : '+' | 'checked'? '-' | logical_negation_operator | '~' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -2810,6 +2837,28 @@ conversion_operator_declarator
     | 'explicit' 'operator' 'checked'? type '(' fixed_parameter ')'
     ;
 
+increment_operator_declarator
+    : type 'operator' overloadable_increment_operator '(' fixed_parameter ')'
+    | 'void' 'operator' overloadable_increment_operator '(' ')'
+    ;
+
+overloadable_increment_operator
+    : 'checked'? '++'
+    | 'checked'? '--'
+    ;
+
+compound_assignment_operator_declarator
+    : 'void' 'operator' overloadable_compound_assignment_operator
+        '(' fixed_parameter ')'
+    ;
+
+overloadable_compound_assignment_operator
+    : 'checked'? '+=' | 'checked'? '-=' | 'checked'? '*=' | 'checked'? '/=' |
+      '%=' | '&=' | '|=' | '^=' | '<<='
+    | right_shift_assignment
+    | unsigned_right_shift_assignment
+    ;
+
 operator_body
     : block
     | '=>' expression ';'
@@ -2818,7 +2867,7 @@ operator_body
 
 // Source: §15.11.1 General
 constructor_declaration
-    : attributes? constructor_modifier* constructor_declarator constructor_body
+    : attributes? constructor_modifier* 'partial'? constructor_declarator constructor_body
     ;
 
 constructor_modifier
@@ -2882,7 +2931,27 @@ finalizer_body
     | ';'
     ;
 
-// Source: §15.16.1 General
+// Source: §15.14.1 General
+extension_declaration
+    : 'extension' type_parameter_list? '(' extension_receiver_parameter ')'
+      type_parameter_constraints_clause* extension_body
+    ;
+
+extension_receiver_parameter
+    : attributes? parameter_modifier? type identifier?
+    ;
+
+extension_body
+    : '{' extension_member_declaration* '}' ';'?
+    ;
+
+extension_member_declaration
+    : method_declaration
+    | property_declaration
+    | operator_declaration
+    ;
+
+// Source: §15.17.1 General
 record_class_declaration
     : attributes? class_modifier* 'partial'? 'record' 'class'? identifier
       type_parameter_list? delimited_parameter_list? class_base?

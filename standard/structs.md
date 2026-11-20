@@ -259,7 +259,7 @@ The members provided by the implementation are described in the following subcla
 
 #### 16.5.3.2 Equality members
 
-The provided equality members are similar to those for a record class ([§15.16.4.3](classes.md#151643-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
+The provided equality members are similar to those for a record class ([§15.17.4.3](classes.md#151743-equality-members)), except for the lack of method `EqualityContract`, null checks, or inheritance.
 
 A record struct `R` implements `System.IEquatable<R>` and includes a synthesized strongly-typed overload of `Equals(R other)`, which is public, as follows:
 

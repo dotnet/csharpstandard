@@ -162,11 +162,11 @@ The statement list of a block is reachable if the block itself is reachable.
 
 The end point of a block is reachable if the block is empty or if the end point of the statement list is reachable.
 
-A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block, even if those `yield` statements are contained only indirectly in nested blocks (excluding nested lambdas and local functions). Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
+A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block, even if those `yield` statements are contained only indirectly in nested blocks (excluding nested lambdas and local functions). Iterator blocks are used to implement function members as iterators ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)).
 
 It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
 
-The iterator block used to implement an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) always defines a safe context, even when the iterator declaration is nested in an unsafe context.
+The iterator block used to implement an iterator ([§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)) always defines a safe context, even when the iterator declaration is nested in an unsafe context.
 
 ### 13.3.2 Statement lists
 
@@ -592,7 +592,7 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
 An external local function shall have the modifier `static`, and its *local_function_body* or *ref_local_function_body* shall be a semicolon.
 
@@ -1725,7 +1725,7 @@ A `return` statement is executed as follows:
 - For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, the *expression* is evaluated, and the result shall be classified as a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
-- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)).
+- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
 
 Because a `return` statement unconditionally transfers control elsewhere, the end point of a `return` statement is never reachable.
 
@@ -1754,8 +1754,8 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function).
-  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
 ## 13.11 The try statement
@@ -2318,7 +2318,7 @@ A *local_using_declaration* shall not appear directly inside a *switch_block*, b
 
 ## 13.15 The yield statement
 
-The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.15.5](classes.md#15155-enumerator-objects)) or enumerable object ([§15.15.6](classes.md#15156-enumerable-objects)) of an iterator or to signal the end of the iteration.
+The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.16.5](classes.md#15165-enumerator-objects)) or enumerable object ([§15.16.6](classes.md#15166-enumerable-objects)) of an iterator or to signal the end of the iteration.
 
 ```ANTLR
 yield_statement
@@ -2378,7 +2378,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 >
 > *end example*
 
-An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.15.4](classes.md#15154-yield-type)) of the iterator.
+An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.16.4](classes.md#15164-yield-type)) of the iterator.
 
 A `yield return` statement is executed as follows:
 

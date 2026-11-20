@@ -47,6 +47,7 @@
     - [§6.5.8](lexical-structure.md#658-line-directives)  Line directives
     - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
     - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
+    - [§6.5.11](lexical-structure.md#6511-ignored-directives)  Ignored directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
   - [§7.1](basic-concepts.md#71-application-startup-and-termination)  Application startup and termination
     - [§7.1.1](basic-concepts.md#711-general)  General
@@ -239,6 +240,7 @@
     - [§10.2.21](conversions.md#10221-anonymous-function-type-conversion)  Anonymous function type conversion
     - [§10.2.22](conversions.md#10222-implicit-collection-expression-conversions)  Implicit collection expression conversions
     - [§10.2.23](conversions.md#10223-implicit-inline-array-conversions)  Implicit inline array conversions
+    - [§10.2.24](conversions.md#10224-implicit-span-conversions)  Implicit span conversions
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
@@ -249,6 +251,7 @@
     - [§10.3.7](conversions.md#1037-unboxing-conversions)  Unboxing conversions
     - [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
     - [§10.3.9](conversions.md#1039-user-defined-explicit-conversions)  User-defined explicit conversions
+    - [§10.3.10](conversions.md#10310-explicit-span-conversions)  Explicit span conversions
   - [§10.4](conversions.md#104-standard-conversions)  Standard conversions
     - [§10.4.1](conversions.md#1041-general)  General
     - [§10.4.2](conversions.md#1042-standard-implicit-conversions)  Standard implicit conversions
@@ -297,6 +300,9 @@
     - [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)  Operator precedence and associativity
     - [§12.4.3](expressions.md#1243-operator-overloading)  Operator overloading
     - [§12.4.4](expressions.md#1244-unary-operator-overload-resolution)  Unary operator overload resolution
+      - [§12.4.4.1](expressions.md#12441-general)  General
+      - [§12.4.4.2](expressions.md#12442-instance-increment-operator-overload-resolution)  Instance increment operator overload resolution
+      - [§12.4.4.3](expressions.md#12443-candidate-instance-increment-operators)  Candidate instance increment operators
     - [§12.4.5](expressions.md#1245-binary-operator-overload-resolution)  Binary operator overload resolution
     - [§12.4.6](expressions.md#1246-candidate-user-defined-operators)  Candidate user-defined operators
     - [§12.4.7](expressions.md#1247-numeric-promotions)  Numeric promotions
@@ -482,7 +488,11 @@
       - [§12.24.3.2](expressions.md#122432-abridged-deconstructors)  Abridged deconstructors
     - [§12.24.4](expressions.md#12244-ref-assignment)  Ref assignment
     - [§12.24.5](expressions.md#12245-compound-assignment)  Compound assignment
+      - [§12.24.5.1](expressions.md#122451-general)  General
+      - [§12.24.5.2](expressions.md#122452-compound-assignment-operator-overload-resolution)  Compound assignment operator overload resolution
+      - [§12.24.5.3](expressions.md#122453-candidate-compound-assignment-operators)  Candidate compound assignment operators
     - [§12.24.6](expressions.md#12246-event-assignment)  Event assignment
+    - [§12.24.7](expressions.md#12247-null-conditional-assignment)  Null conditional assignment
   - [§12.25](expressions.md#1225-expression)  Expression
   - [§12.26](expressions.md#1226-constant-expressions)  Constant expressions
   - [§12.27](expressions.md#1227-boolean-expressions)  Boolean expressions
@@ -640,15 +650,17 @@
       - [§15.7.3.2](classes.md#15732-set-and-get-accessors)  Set and get accessors
       - [§15.7.3.3](classes.md#15733-init-accessors)  Init accessors
     - [§15.7.4](classes.md#1574-automatically-implemented-properties)  Automatically implemented properties
-    - [§15.7.5](classes.md#1575-accessibility)  Accessibility
-    - [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
-    - [§15.7.7](classes.md#1577-partial-properties)  Partial properties
+    - [§15.7.5](classes.md#1575-field-backed-property)  Field-backed property
+    - [§15.7.6](classes.md#1576-accessibility)  Accessibility
+    - [§15.7.7](classes.md#1577-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+    - [§15.7.8](classes.md#1578-partial-properties)  Partial properties
   - [§15.8](classes.md#158-events)  Events
     - [§15.8.1](classes.md#1581-general)  General
     - [§15.8.2](classes.md#1582-field-like-events)  Field-like events
     - [§15.8.3](classes.md#1583-event-accessors)  Event accessors
     - [§15.8.4](classes.md#1584-static-and-instance-events)  Static and instance events
     - [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+    - [§15.8.6](classes.md#1586-partial-events)  Partial events
   - [§15.9](classes.md#159-indexers)  Indexers
     - [§15.9.1](classes.md#1591-general)  General
     - [§15.9.2](classes.md#1592-indexer-and-property-differences)  Indexer and Property Differences
@@ -658,6 +670,8 @@
     - [§15.10.2](classes.md#15102-unary-operators)  Unary operators
     - [§15.10.3](classes.md#15103-binary-operators)  Binary operators
     - [§15.10.4](classes.md#15104-conversion-operators)  Conversion operators
+    - [§15.10.5](classes.md#15105-increment-operators)  Increment operators
+    - [§15.10.6](classes.md#15106-compound-assignment-operators)  Compound assignment operators
   - [§15.11](classes.md#1511-instance-constructors)  Instance constructors
     - [§15.11.1](classes.md#15111-general)  General
     - [§15.11.2](classes.md#15112-constructor-initializers)  Constructor initializers
@@ -665,46 +679,52 @@
     - [§15.11.4](classes.md#15114-constructor-execution)  Constructor execution
     - [§15.11.5](classes.md#15115-default-constructors)  Default constructors
     - [§15.11.6](classes.md#15116-primary-constructors)  Primary constructors
+    - [§15.11.7](classes.md#15117-partial-constructors)  Partial constructors
   - [§15.12](classes.md#1512-static-constructors)  Static constructors
   - [§15.13](classes.md#1513-finalizers)  Finalizers
-  - [§15.14](classes.md#1514-async-functions)  Async Functions
+  - [§15.14](classes.md#1514-extension-members)  Extension members
     - [§15.14.1](classes.md#15141-general)  General
-    - [§15.14.2](classes.md#15142-task-type-builder-pattern)  Task-type builder pattern
-    - [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
-    - [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
-    - [§15.14.5](classes.md#15145-task-builder-selection)  Task builder selection
-  - [§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)  Synchronous and asynchronous iterators
+    - [§15.14.2](classes.md#15142-extension-methods)  Extension methods
+    - [§15.14.3](classes.md#15143-extension-properties)  Extension properties
+    - [§15.14.4](classes.md#15144-extension-operators)  Extension operators
+  - [§15.15](classes.md#1515-async-functions)  Async Functions
     - [§15.15.1](classes.md#15151-general)  General
-    - [§15.15.2](classes.md#15152-enumerator-interfaces)  Enumerator interfaces
-    - [§15.15.3](classes.md#15153-enumerable-interfaces)  Enumerable interfaces
-    - [§15.15.4](classes.md#15154-yield-type)  Yield type
-    - [§15.15.5](classes.md#15155-enumerator-objects)  Enumerator objects
-      - [§15.15.5.1](classes.md#151551-general)  General
-      - [§15.15.5.2](classes.md#151552-advance-the-enumerator)  Advance the enumerator
-      - [§15.15.5.3](classes.md#151553-retrieve-the-current-value)  Retrieve the current value
-      - [§15.15.5.4](classes.md#151554-dispose-of-resources)  Dispose of resources
-    - [§15.15.6](classes.md#15156-enumerable-objects)  Enumerable objects
-      - [§15.15.6.1](classes.md#151561-general)  General
-      - [§15.15.6.2](classes.md#151562-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
-  - [§15.16](classes.md#1516-record-classes)  Record classes
+    - [§15.15.2](classes.md#15152-task-type-builder-pattern)  Task-type builder pattern
+    - [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
+    - [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+    - [§15.15.5](classes.md#15155-task-builder-selection)  Task builder selection
+  - [§15.16](classes.md#1516-synchronous-and-asynchronous-iterators)  Synchronous and asynchronous iterators
     - [§15.16.1](classes.md#15161-general)  General
-    - [§15.16.2](classes.md#15162-class-members)  Class members
-    - [§15.16.3](classes.md#15163-instance-constructors)  Instance constructors
-    - [§15.16.4](classes.md#15164-implicit-record-class-members)  Implicit record class members
-      - [§15.16.4.1](classes.md#151641-general)  General
-      - [§15.16.4.2](classes.md#151642-copy-constructors)  Copy constructors
-      - [§15.16.4.3](classes.md#151643-equality-members)  Equality members
-      - [§15.16.4.4](classes.md#151644-copy-and-clone-members)  Copy and clone members
-      - [§15.16.4.5](classes.md#151645-printing-members)  Printing members
-      - [§15.16.4.6](classes.md#151646-positional-record-class-members)  Positional record class members
-        - [§15.16.4.6.1](classes.md#1516461-general)  General
-        - [§15.16.4.6.2](classes.md#1516462-primary-constructor)  Primary constructor
-        - [§15.16.4.6.3](classes.md#1516463-properties)  Properties
-        - [§15.16.4.6.4](classes.md#1516464-deconstruct)  Deconstruct
-  - [§15.17](classes.md#1517-declaring-a-collection-type)  Declaring a collection type
+    - [§15.16.2](classes.md#15162-enumerator-interfaces)  Enumerator interfaces
+    - [§15.16.3](classes.md#15163-enumerable-interfaces)  Enumerable interfaces
+    - [§15.16.4](classes.md#15164-yield-type)  Yield type
+    - [§15.16.5](classes.md#15165-enumerator-objects)  Enumerator objects
+      - [§15.16.5.1](classes.md#151651-general)  General
+      - [§15.16.5.2](classes.md#151652-advance-the-enumerator)  Advance the enumerator
+      - [§15.16.5.3](classes.md#151653-retrieve-the-current-value)  Retrieve the current value
+      - [§15.16.5.4](classes.md#151654-dispose-of-resources)  Dispose of resources
+    - [§15.16.6](classes.md#15166-enumerable-objects)  Enumerable objects
+      - [§15.16.6.1](classes.md#151661-general)  General
+      - [§15.16.6.2](classes.md#151662-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
+  - [§15.17](classes.md#1517-record-classes)  Record classes
     - [§15.17.1](classes.md#15171-general)  General
-    - [§15.17.2](classes.md#15172-collection-construction)  Collection construction
-  - [§15.18](classes.md#1518-record-class-and-non-record-class-differences)  Record class and non-record class differences
+    - [§15.17.2](classes.md#15172-class-members)  Class members
+    - [§15.17.3](classes.md#15173-instance-constructors)  Instance constructors
+    - [§15.17.4](classes.md#15174-implicit-record-class-members)  Implicit record class members
+      - [§15.17.4.1](classes.md#151741-general)  General
+      - [§15.17.4.2](classes.md#151742-copy-constructors)  Copy constructors
+      - [§15.17.4.3](classes.md#151743-equality-members)  Equality members
+      - [§15.17.4.4](classes.md#151744-copy-and-clone-members)  Copy and clone members
+      - [§15.17.4.5](classes.md#151745-printing-members)  Printing members
+      - [§15.17.4.6](classes.md#151746-positional-record-class-members)  Positional record class members
+        - [§15.17.4.6.1](classes.md#1517461-general)  General
+        - [§15.17.4.6.2](classes.md#1517462-primary-constructor)  Primary constructor
+        - [§15.17.4.6.3](classes.md#1517463-properties)  Properties
+        - [§15.17.4.6.4](classes.md#1517464-deconstruct)  Deconstruct
+  - [§15.18](classes.md#1518-declaring-a-collection-type)  Declaring a collection type
+    - [§15.18.1](classes.md#15181-general)  General
+    - [§15.18.2](classes.md#15182-collection-construction)  Collection construction
+  - [§15.19](classes.md#1519-record-class-and-non-record-class-differences)  Record class and non-record class differences
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations
