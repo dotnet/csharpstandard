@@ -1609,14 +1609,14 @@ The following method names are reserved. While many have corresponding operators
 | `op_CheckedDivision` | checked division `/` |
 | `op_CheckedExplicit` | checked explicit (narrowing) coercion |
 | `op_CheckedIncrement` | static checked increment `++` |
-| `op_CheckedIncrementAssignment` | instance checked decrement `--` |
+| `op_CheckedIncrementAssignment` | instance checked increment `++` |
 | `op_CheckedMultiply` | checked multiply `*` |
 | `op_CheckedSubtraction` | checked subtraction `-` |
 | `op_CheckedSubtractionAssignment` | checked `-=` |
 | `op_CheckedUnaryNegation` | checked unary negation `-` |
 | `op_Comma` | (reserved) |
 | `op_Decrement` | static `--` |
-| `op_DecrementAssignment` | instance `++` |
+| `op_DecrementAssignment` | instance `--` |
 | `op_Division` | `/` |
 | `op_DivisionAssignment` | `/=` |
 | `op_CheckedDivisionAssignment` | checked `/=` |
@@ -5367,7 +5367,7 @@ operator_body
 
 The following categories of overloadable operators exist: unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), conversion operators ([§15.10.4](classes.md#15104-conversion-operators)), increment operators (§increment-operators), and compound assignment operators (§compound-assignment-operators).
 
-The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for `void` methods when the operator’s return type is `void`, and to the rules for value-returning methods otherwise, as described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
 For `extern` operators, the *operator_body* consists simply of a semicolon. For an abstract operator declaration in an interface ([§19.4.7](interfaces.md#1947-interface-operators)), the *operator_body* is a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
