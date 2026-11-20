@@ -4070,7 +4070,7 @@ Because `nameof` is not a keyword, a *nameof_expression* is always syntactically
 
 Simple name and member access lookups are performed on the *named_entity* at compile time, following the rules described in [§12.8.4](expressions.md#1284-simple-names) and [§12.8.7](expressions.md#1287-member-access). However, where the lookup described in [§12.8.4](expressions.md#1284-simple-names) and [§12.8.7](expressions.md#1287-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
 
-It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
+It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for *named_entity* to be the contextual keyword `field`. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
 
 A *nameof_expression* is a constant expression of type `string`, and has no effect at runtime. Specifically, its *named_entity* is not evaluated, and is ignored for the purposes of definite assignment analysis ([§9.4.4.22](variables.md#94422-general-rules-for-simple-expressions)). Its value is the last identifier of the *named_entity* before the optional final *type_argument_list*, transformed in the following way:
 
