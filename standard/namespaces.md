@@ -756,11 +756,12 @@ A compilation unit or a namespace body can contain *namespace_member_declaration
 
 ## 14.7 Type declarations
 
-A *type_declaration* is a *class_declaration* ([§15.2](classes.md#152-class-declarations)), a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)), an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)), an *enum_declaration* ([§20.2](enums.md#202-enum-declarations)), or a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)).
+A *type_declaration* is a *class_declaration* ([§15.2](classes.md#152-class-declarations)), a *record_class_declaration* (§rec-class-general), a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)), an *interface_declaration* ([§19.2](interfaces.md#192-interface-declarations)), an *enum_declaration* ([§20.2](enums.md#202-enum-declarations)), or a *delegate_declaration* ([§21.2](delegates.md#212-delegate-declarations)).
 
 ```ANTLR
 type_declaration
     : class_declaration
+    | record_class_declaration
     | struct_declaration
     | interface_declaration
     | enum_declaration
