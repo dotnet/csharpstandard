@@ -14,20 +14,18 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
-    : non_record_class_declaration
-    | record_class_declaration
-    ;
-
-non_record_class_declaration
     : attributes? class_modifier* 'partial'? 'class' identifier
         type_parameter_list? class_base? type_parameter_constraints_clause*
-        class_body
+        class_body ';'?
+    | attributes? class_modifier* 'partial'? 'record' identifier
+        type_parameter_list? delimited_parameter_list? record_class_base?
+        type_parameter_constraints_clause* record_class_body
     ;
 ```
 
-There are two kinds of class: ***non-record class***, as declared by *non_record_class_declaration*, and ***record class***, as declared by  *record_class_declaration*. A non-record class is the kind of class that C# has supported since the language’s inception. Record classes were added much later and are discussed in §rec-class. The differences between the two kinds are discussed in §rec-class-diffs.
+Record classes are discussed in §rec-class.
 
-A *non_record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
+A *class_declaration* using `class` consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)) and an optional semicolon. A declaration using `record` is described in §rec-class-general.
 
 A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -175,13 +173,13 @@ Two partial generic type declarations (in the same program) contribute to the sa
 
 #### 15.2.4.1 General
 
-A class declaration may include a *class_base* specification, which defines the direct base class of the class and the interfaces ([§19](interfaces.md#19-interfaces)) directly implemented by the class.
+A class declaration may include a *class_base* specification, or a *record_class_base* specification (§rec-class-class-base-specification) when declared using `record`, which defines the direct base class of the class and the interfaces ([§19](interfaces.md#19-interfaces)) directly implemented by the class. The rules of this subclause apply to both specifications.
 
 ```ANTLR
 class_base
-    : ':' class_type base_argument_list?
+    : ':' class_type
     | ':' interface_type_list
-    | ':' class_type base_argument_list? ',' interface_type_list
+    | ':' class_type ',' interface_type_list
     ;
 
 interface_type_list
@@ -189,15 +187,11 @@ interface_type_list
     ;
 ```
 
-*base_argument_list* is discussed in §rec-class-class-base-specification.
-
-A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
-
-It is an error for *class_base* to have a *base_argument_list* if the corresponding *class_declaration* does not contain a *delimited_parameter_list*.
-
 #### 15.2.4.2 Base classes
 
-When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§15.3.4](classes.md#1534-inheritance).
+When a *class_type* is included in the *class_base* or *record_class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no base specification, or if the base specification lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§15.3.4](classes.md#1534-inheritance).
+
+The direct base class of a record class shall be `object` or another record class. A class whose direct base class is a record class shall itself be a record class.
 
 > *Example*: In the following code
 >
@@ -349,7 +343,7 @@ It is not possible to derive from a sealed class.
 
 #### 15.2.4.3 Interface implementations
 
-A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
+A *class_base* or *record_class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
 The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interfaces. There shall only be one implementation of each member of any given interface.
 
@@ -764,11 +758,11 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-    : '{' class_member_declaration* '}' ';'?
+    : '{' class_member_declaration* '}'
     ;
 ```
 
-The *class_body*s `{…}` and `{…};` are equivalent.
+The optional semicolon following a *class_body* in a class declaration has no effect.
 
 ### 15.2.7 Partial type declarations
 
@@ -4904,7 +4898,7 @@ When a constructor declaration includes an `extern` modifier, the constructor is
 
 A *constructor_body* that is a *block* or expression body corresponds exactly to the *block* of an instance method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
-Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§15.11.5](classes.md#15115-default-constructors)).
+Instance constructors are not inherited. A class has the instance constructors declared in the class and those provided by the implementation. Default instance constructors are described in [§15.11.5](classes.md#15115-default-constructors); primary and copy constructors for record classes are described in §rec-class.
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) and through *constructor_initializer*s.
 
@@ -4913,7 +4907,7 @@ Instance constructors are invoked by *object_creation_expression*s ([§12.8.17.2
 All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
 
 - An instance constructor initializer of the form `base(`*argument_list*`)` (where *argument_list* is optional) causes an instance constructor from the direct base class to be invoked. That constructor is selected using *argument_list* and the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all the accessible instance constructors of the direct base class. If this set is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs.
-- An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all instance constructors declared in the class itself. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
+- An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all instance constructors of the class, including those provided by the implementation. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
 
 If an instance constructor has no constructor initializer, a constructor initializer of the form `base()` is implicitly provided.
 
@@ -5082,7 +5076,7 @@ Variable initializers are transformed into assignment statements, and these assi
 
 ### 15.11.5 Default constructors
 
-If a class contains no instance constructor declarations, a default instance constructor is automatically provided. That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public.
+If a class contains no instance constructor declarations, a default instance constructor is automatically provided, subject to the provisions for record class constructors (§rec-class-copyclone and §rec-class-pos-mem-pricon). That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public.
 
 > *Note*: Thus, the default constructor is always of the form
 >
@@ -5671,35 +5665,74 @@ An asynchronous enumerable object provides an implementation of the `GetAsyncEnu
 
 ### §rec-class-general General
 
-A record class is a specialized reference type that is optimized for storing data rather than behavior. It provides built-in functionality that would normally require significant “boilerplate” code in a non-record class, such as value-based equality and easy immutability.
+A ***record class*** is a class declared using `record`. The rules for classes apply, subject to the provisions of this subclause. Record classes provide built-in functionality for storing data, such as value-based equality and support for immutability.
 
-```ANTLR
-record_class_declaration
-    : attributes? class_modifier* 'partial'? 'record' identifier
-      type_parameter_list? delimited_parameter_list? class_base?
-      type_parameter_constraints_clause* record_class_body
-    ;
-```
-
-A *record_class_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
+A *class_declaration* using `record` consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* ([§15.6.2.1](classes.md#15621-general)), followed by an optional *record_class_base* specification (§rec-class-class-base-specification), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *record_class_body* (§rec-class-record-class-body).
 
 *class_modifier* shall not be `static`.
 
-A *record_class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
+A record class declaration having a *delimited_parameter_list* declares a ***positional record class***.
 
-At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
+All declarations contributing to a partial record class shall use the keyword `record`. At most one of those declarations may provide a *delimited_parameter_list*.
+
+> *Example*: Each of the following declarations is valid. In particular, the type parameter `T` is in scope in the parameter list of `Derived<T>`, and only one declaration of `Part` supplies a parameter list.
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordDeclarationSyntax"} -->
+> ```csharp
+> class C {}
+> class D {};
+> record R1 {}
+> record R2 {};
+> record R3;
+> record R4() {}
+> record R5() {};
+> record R6();
+> record Base<T>(T Value);
+> record Derived<T>(T Value) : Base<T>(Value);
+> partial record Part(int Value);
+> partial record Part {}
+> ```
+>
+> The following declarations violate the rules for partial record classes:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordPartialConsistency", expectedErrors:["CS0261","CS8863"]} -->
+> ```csharp
+> partial record Mixed;
+> partial class Mixed {}
+> partial record Lists(int X);
+> partial record Lists(int X);
+> ```
+>
+> *end example*
 
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### §rec-class-class-base-specification Class base specification
 
 ```ANTLR
+record_class_base
+    : ':' class_type base_argument_list?
+    | ':' interface_type_list
+    | ':' class_type base_argument_list? ',' interface_type_list
+    ;
+
 base_argument_list
     : '(' argument_list? ')'
     ;
 ```
 
-*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
+It is a compile-time error for a *record_class_base* to contain a *base_argument_list* unless the same declaration contains a *delimited_parameter_list*. The arguments select a constructor of the direct base class as specified in §rec-class-pos-mem-pricon.
+
+> *Example*: A parameter list in another partial declaration does not permit base arguments in this declaration:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordBaseArgumentsRequireParameters", expectedErrors:["CS9343"]} -->
+> ```csharp
+> record Base;
+> partial record Derived();
+> partial record Derived : Base() {}
+> ```
+>
+> *end example*
 
 ### §rec-class-record-class-body Record class body
 
@@ -5707,7 +5740,7 @@ The *record_class_body* of a record class identifies the explicitly declared mem
 
 ```ANTLR
 record_class_body
-    : class_body
+    : class_body ';'?
     | ';'
     ;
 ```
@@ -5754,7 +5787,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 > }
 > ````
 >
-> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
+> This declares a mutable class using `class`, with two read-write properties and a user-written copy constructor.
 >
 > In the following case,
 >
@@ -6169,7 +6202,7 @@ At runtime the primary constructor
 
 1. Stores the value of each parameter in the corresponding provided private field (see §rec-class-pos-mem-props).
 1. Executes the instance initializers appearing in *record_class_body*.
-1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
+1. Invokes the direct base class constructor with the arguments provided in the *record_class_base* clause, if present.
 
 Each reference to a parameter in user code is replaced with a reference to the corresponding provided field.
 
@@ -6177,14 +6210,14 @@ It is an error to reference a primary constructor parameter if the reference doe
 
 - a `nameof` argument.
 - an initializer of an instance field, property or event of the declaring type.
-- the `argument_list` of `class_base` of the declaring type.
+- the *argument_list* of the *record_class_base* of the declaring type.
 - the body of an instance method of the declaring type.
 - the body of an instance accessor of the declaring type.
 
-In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the `argument_list` of `class_base` of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
+In other words, primary constructor parameters are in scope throughout the declaring type body. They shadow members of the declaring type within an initializer of a field, property or event of the declaring type, or within the *argument_list* of the *record_class_base* of the declaring type. They are shadowed by members of the declaring type everywhere else. Thus, in the following declaration:
 
 ```csharp
-record class C(int i)
+record C(int i)
 {
     protected int i = i;
     public int I => i;
@@ -6201,12 +6234,12 @@ All instance member initializers in *record_class_body* become assignments in th
 
 A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
 
-A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
+A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *record_class_base*:
 
 - The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
 - The argument is not part of an expanded `params` argument;
 
-If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+If the record class being declared has a *record_class_base* containing a *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` with the same *argument_list*, if any, as that *base_argument_list*. Otherwise, the primary constructor implicitly invokes the parameterless constructor of the direct base class. Constructor selection is performed as specified in [§15.11.2](classes.md#15112-constructor-initializers).
 
 ##### §rec-class-pos-mem-props Properties
 
@@ -6267,15 +6300,3 @@ A positional record class ([§15.2.1](classes.md#1521-general)) with at least on
 > ```
 >
 > *end example*
-
-## §rec-class-diffs Record class and non-record class differences
-
-A record class differs from a non-record class in several important ways:
-
-- It is declared using the keyword `record` instead of `class`.
-- It has a number of members provided for it by the implementation, including a copy constructor.
-- Its declaration may contain a *delimited_parameter_list* having zero or more parameters, which results in the provision of a primary constructor having those parameters. For each parameter, the implementation shall provide field-like storage and a property with get and init accessor. A `Deconstruct` method is also provided.
-- If it is derived from other than `object`, it may pass arguments to its base type.
-- Its class body may be omitted.
-- It shall not have a member called `Clone`.
-- It shall not have an instance field with an unsafe type.
