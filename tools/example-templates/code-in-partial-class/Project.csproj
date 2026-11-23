@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <AssemblyName>$example-name</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>annotations</Nullable>
-    <LangVersion>14</LangVersion>
+    <LangVersion>15</LangVersion>
   </PropertyGroup>
 
 </Project>
