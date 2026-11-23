@@ -176,7 +176,7 @@ The ***base interface***s of an interface are the explicit base interfaces and t
 >
 > *end example*
 
-Members inherited from a constructed generic type are inherited after type substitution. That is, any constituent types in the member have the base class declaration’s type parameters replaced with the corresponding type arguments used in the *class_base* specification.
+Members inherited from a constructed generic type are inherited after type substitution. That is, any constituent types in the member have the base class declaration’s type parameters replaced with the corresponding type arguments used in the *class_base* or *record_class_base* specification.
 
 > *Example*: In the following code
 >

@@ -34,7 +34,7 @@ The attribute `AttributeUsageAttribute` ([§23.5.2](attributes.md#2352-the-attri
 
 `AttributeUsageAttribute` has a positional parameter ([§23.2.3](attributes.md#2323-positional-and-named-parameters)) that enables an attribute class to specify the kinds of program entities on which it can be used.
 
-> *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
+> *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s, *record_class_declaration*s, and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeUsage1", replaceEllipsis:true} -->
 > <!-- Maintenance Note: A version of this type exists in additional-files as "SimpleAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
@@ -545,7 +545,7 @@ A call to a conditional method is included if one or more of its associated cond
 
 A conditional method is subject to the following restrictions:
 
-- The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if `ConditionalAttribute` is specified on a method in an interface declaration.
+- The conditional method shall be a method in a *class_declaration*, *record_class_declaration*, or *struct_declaration*. A compile-time error occurs if `ConditionalAttribute` is specified on a method in an interface declaration.
 - The conditional method shall not be an accessor of a property, indexer or event.
 - The conditional method shall have a return type of `void`.
 - The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with `ConditionalAttribute`.
