@@ -719,10 +719,28 @@ Whenever a constructed type or generic method is referenced, the supplied type a
   - `A` is a value type, since all value types have a public default constructor ([§8.3.3](types.md#833-default-constructors)).
   - `A` is a type parameter having the constructor constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-  - `A` is a `class` that is not abstract and contains an explicitly declared public constructor with no parameters.
-  - `A` is not `abstract` and has a default constructor ([§15.11.5](classes.md#15115-default-constructors)).
+  - `A` is a class that is not abstract and has a public parameterless instance constructor, whether explicitly declared or provided by the implementation ([§15.11.5](classes.md#15115-default-constructors) and §rec-class-pos-mem-pricon).
 
 A compile-time error occurs if one or more of a type parameter’s constraints are not satisfied by the given type arguments.
+
+> *Example*: Both a default constructor and a parameterless primary constructor satisfy a constructor constraint:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordConstructorConstraint"} -->
+> ```csharp
+> public record Default;
+> public record Primary();
+> public class Factory<T> where T : class, new()
+> {
+>     public static T Create() => new T();
+> }
+> public class Test
+> {
+>     public object A() => Factory<Default>.Create();
+>     public object B() => Factory<Primary>.Create();
+> }
+> ```
+>
+> *end example*
 
 Since type parameters are not inherited, constraints are never inherited either.
 
@@ -817,7 +835,7 @@ The type `dynamic` is considered identical to `object` except in the following r
 - Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
   - the type in an *object_creation_expression* ([§12.8.17.2](expressions.md#128172-object-creation-expressions))
-  - a *class_base* ([§15.2.4](classes.md#1524-class-base-specification))
+  - a *class_base* ([§15.2.4](classes.md#1524-class-base-specification)) or *record_class_base* (§rec-class-class-base-specification)
   - a *predefined_type* in a *member_access* ([§12.8.7.1](expressions.md#12871-general))
   - the operand of the `typeof` operator
   - an attribute argument
