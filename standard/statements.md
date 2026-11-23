@@ -249,6 +249,10 @@ A label can be referenced from `goto` statements ([§13.10.4](statements.md#1310
 
 > *Note*: This means that `goto` statements can transfer control within blocks and out of blocks, but never into blocks. *end note*
 
+If the *statement* immediately nested within a *labeled_statement* is a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) or an *iteration_statement* ([§13.9](statements.md#139-iteration-statements)), the nested statement is said to be “labeled with the *identifier* of that *labeled_statement*.” A *break_statement* ([§13.10.2](statements.md#13102-the-break-statement)) or *continue_statement* ([§13.10.3](statements.md#13103-the-continue-statement)) may specify such an *identifier* to reference the containing labeled statement.
+
+> *Note*: Only the *statement* that is **immediately** nested within a *labeled_statement* is labeled with that identifier. For example, given `a: b: while (…) …`, only `b` labels the *iteration_statement*; `a` labels the inner *labeled_statement* `b: while (…) …`, which is not itself a *switch_statement* or *iteration_statement*. Consequently, `break a;` or `continue a;` appearing within the loop body does not target the `while` statement. *end note*
+
 Labels have their own declaration space and do not interfere with other identifiers.
 
 > *Example*: The example
@@ -1578,7 +1582,7 @@ Execution of jump statements is complicated by the presence of intervening `try`
 
 ### 13.10.2 The break statement
 
-The `break` statement exits the nearest enclosing `switch`, `while`, `do`, `for`, or `foreach` statement.
+The `break` statement exits the nearest enclosing *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) or *iteration_statement* ([§13.9](statements.md#139-iteration-statements)), or, if an *identifier* is specified, the nearest enclosing *switch_statement* or *iteration_statement* labeled with that *identifier* ([§13.5](statements.md#135-labeled-statements)).
 
 ```ANTLR
 break_statement
@@ -1586,9 +1590,7 @@ break_statement
     ;
 ```
 
-The target of a `break` statement is the end point of the nearest enclosing `switch`, `while`, `do`, `for`, or `foreach` statement. If a `break` statement is not enclosed by a `switch`, `while`, `do`, `for`, or `foreach` statement, a compile-time error occurs.
-
-When multiple `switch`, `while`, `do`, `for`, or `foreach` statements are nested within each other, a `break` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§13.10.4](statements.md#13104-the-goto-statement)) shall be used.
+The target of a `break` statement is the end point of the nearest enclosing statement as determined above. If no such enclosing statement exists, a compile-time error occurs.
 
 A `break` statement cannot exit a `finally` block ([§13.11](statements.md#1311-the-try-statement)). When a `break` statement occurs within a `finally` block, the target of the `break` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
 
@@ -1599,9 +1601,24 @@ A `break` statement is executed as follows:
 
 Because a `break` statement unconditionally transfers control elsewhere, the end point of a `break` statement is never reachable.
 
+> *Example*: A labeled `break` resolves to the nearest enclosing *switch_statement* or *iteration_statement* with the matching label:*
+>
+> ```csharp
+> outer: for (int i = 0; i < 10; i++)
+> {
+>     for (int j = 0; j < 10; j++)
+>     {
+>         if (i * j > 20)
+>             break outer; // exits the outer for-loop
+>     }
+> }
+> ```
+>
+> *end example*
+
 ### 13.10.3 The continue statement
 
-The `continue` statement starts a new iteration of the nearest enclosing `while`, `do`, `for`, or `foreach` statement.
+The `continue` statement starts a new iteration of the nearest enclosing *iteration_statement* ([§13.9](statements.md#139-iteration-statements)), or, if an *identifier* is specified, the nearest enclosing *iteration_statement* labeled with that *identifier* ([§13.5](statements.md#135-labeled-statements)).
 
 ```ANTLR
 continue_statement
@@ -1609,9 +1626,7 @@ continue_statement
     ;
 ```
 
-The target of a `continue` statement is the end point of the embedded statement of the nearest enclosing `while`, `do`, `for`, or `foreach` statement. If a `continue` statement is not enclosed by a `while`, `do`, `for`, or `foreach` statement, a compile-time error occurs.
-
-When multiple `while`, `do`, `for`, or `foreach` statements are nested within each other, a `continue` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§13.10.4](statements.md#13104-the-goto-statement)) shall be used.
+The target of a `continue` statement is the end point of the embedded statement of the nearest enclosing iteration_statement as determined above. If no such enclosing statement exists, a compile-time error occurs.
 
 A `continue` statement cannot exit a `finally` block ([§13.11](statements.md#1311-the-try-statement)). When a `continue` statement occurs within a `finally` block, the target of the `continue` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
 
@@ -1621,6 +1636,21 @@ A `continue` statement is executed as follows:
 - Control is transferred to the target of the `continue` statement.
 
 Because a `continue` statement unconditionally transfers control elsewhere, the end point of a `continue` statement is never reachable.
+
+> *Example*: A labeled `continue` resolves to the nearest enclosing *iteration_statement* with the matching label:
+>
+> ```csharp
+> outer: for (int i = 0; i < 10; i++)
+> {
+>     for (int j = 0; j < 10; j++)
+>     {
+>         if (ShouldSkip(i, j))
+>             continue outer; // continues the outer for-loop
+>     }
+> }
+> ```
+>
+> *end example*
 
 ### 13.10.4 The goto statement
 
