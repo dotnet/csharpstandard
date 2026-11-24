@@ -49,9 +49,13 @@ parenthesized_pattern
 
 For a *parenthesized_pattern* `(P)`, the *input type* of `P` is the input type of the parenthesized pattern. The parenthesized pattern is applicable to a type if and only if `P` is applicable to that type, matches a value if and only if `P` matches that value, and has the same *narrowed type* as `P`. Its definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
 
+When recognising the *type* of a *declaration_pattern*, *type_pattern*, *positional_pattern*, or *property_pattern*, a token sequence beginning with `(` is recognised as a *type* only if its initial *tuple_type* is immediately followed by `[` starting an array rank specifier. This restriction also applies to the *type* following `is` ([§12.14.1](expressions.md#12141-general)).
+
+A form consisting of `(`, exactly one *subpattern* of the form *pattern* (without an *identifier* `:` prefix), and `)`, with no preceding *type*, following *property_subpattern*, or following *simple_designation*, is recognised as a *parenthesized_pattern* rather than a *positional_pattern*. If its enclosed pattern is a *constant_pattern*, the form is instead recognised as a *constant_pattern* whose *constant_expression* is parenthesized.
+
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
-> *Note*: ANTLR makes the specified choice automatically due to the ordering of *constant_pattern* before *positional_pattern* in the alternatives of *pattern*. *end note*
+> *Note*: These restrictions concern syntactic recognition, not whether the type denoted by a name is a tuple type. Thus `ValueTuple<int, int> pair`, an eligible alias to that named type followed by a designation, `(int, int)[] pairs`, and `List<(int, int)> pairs` can be declaration patterns. The form `(1)` is a constant pattern, whereas `(var item)` is a parenthesized pattern. The forms `(var item) whole`, `(value: var item)`, and `(var item) {}` are positional patterns. *end note*
 
 The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
 
@@ -173,6 +177,8 @@ single_variable_designation
     : identifier
     ;
 ```
+
+The recognition of *type* is subject to [§11.2.1](patterns.md#1121-general).
 
 When recognising a *simple_designation* if both the *discard_designation* and *single_variable_designation* alternatives are applicable then the former shall be chosen.
 
@@ -324,27 +330,84 @@ subpattern
     ;
 ```
 
+The recognition of *type* and of a *positional_pattern* is subject to [§11.2.1](patterns.md#1121-general).
+
 Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
-If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: A tuple literal can be matched by patterns of several different forms, which are not interchangeable:
 >
-> - `(int, int) x` is a *declaration_pattern* with type `(int, int)` and *simple_designation* `x`.
+> - `(int, int) x` is a *positional_pattern* with two *type_pattern* subpatterns and the outer *simple_designation* `x`.
+> - `ValueTuple<int, int> x` is a *declaration_pattern*.
+> - `(int A, int B) x` is a *positional_pattern* with two *declaration_pattern* subpatterns introducing locals `A` and `B`, and the outer *simple_designation* `x`.
 > - `var (x, y)` is a *var_pattern* with a *tuple_designation*.
 > - `(int x, int y)` is a *positional_pattern*.
 > - `(int, int) (x, y)` is not a valid pattern.
 >
 > *end note*
 
-In order to extract the values to match against the patterns in the list,
+In order to extract the values to match against the patterns in the list, let *D* be *type* if present; otherwise let *D* be the static type of the input value, with a nullable value type replaced by its underlying type.
 
-1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
-2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+1. **Tuple form.** If *type* is omitted and *D* is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element of the non-null input value, unwrapped if necessary, is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and *D* contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
 3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
 4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
 
+In the tuple and Deconstruct forms, if *simple_designation* is a *single_variable_designation*, it introduces a local variable ([§9.2.9](variables.md#929-local-variables)) of type *D*. When the pattern matches, the variable is assigned the matched input value, converted to *D*. Tuple element names are those of *D*, rather than the names of variables declared in subpatterns. A *discard_designation* introduces no variable and does not bind the input value. Definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
+
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
 
+> *Example*: Bare tuple-looking syntax matches the elements, rather than testing for the corresponding tuple type. An outer designation preserves the input tuple's names and unwraps a nullable tuple:
+>
+> <!-- Example: {template:"standalone-console", name:"TuplePatternRecognition", inferOutput:true} -->
+> ```csharp
+> object value = ((object)1, (object)"text");
+> Console.WriteLine(value is (int, string));
+> Console.WriteLine(value is ValueTuple<int, string>);
+>
+> (int Left, int Right)? pair = (67, 69);
+> if (pair is (int A, int B) captured)
+> {
+>     Console.WriteLine($"{A},{B};{captured.Left},{captured.Right}");
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> False
+> 67,69;67,69
+> ```
+>
+> *end example*
+>
+> *Example*: An explicit pattern type determines the outer variable's type; deconstruction does not construct a tuple to assign to it:
+>
+> <!-- Example: {template:"standalone-console", name:"PositionalPatternOuterType", inferOutput:true} -->
+> ```csharp
+> object value = new Point(1, 2);
+> if (value is Point(var x, var y) captured)
+> {
+>     Console.WriteLine($"{ReferenceEquals(value, captured)}:{x + y}:{captured.X + captured.Y}");
+> }
+>
+> class Point
+> {
+>     public int X { get; }
+>     public int Y { get; }
+>     public Point(int x, int y) => (X, Y) = (x, y);
+>     public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True:3:3
+> ```
+>
+> *end example*
+>
 > *Example*: Here, we deconstruct an expression result and match the resulting values against the corresponding nested patterns:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PositionalPattern1", ignoredWarnings:["CS8321"]} -->
@@ -420,6 +483,8 @@ property_subpattern
     | '{' subpatterns ','? '}'
     ;
 ```
+
+The recognition of the optional *type* is subject to [§11.2.1](patterns.md#1121-general).
 
 It is an error if any *subpattern* of a *property_pattern* does not contain an *identifier*.
 

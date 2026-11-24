@@ -4430,7 +4430,7 @@ right thing, maybe not obviously for some, and so no change was made – making
 as it does not effect the resulting parse at all, but the prose gets messier. For C#9 this decision should be checked to be
 still valid after the new pattern changes.
 -->
-When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+The recognition of the *type* following `is` is subject to the type-recognition restriction in [§11.2.1](patterns.md#1121-general). When the same token sequence can be recognised both as “*relational_expression* `is` *type*” and as “*relational_expression* `is` *pattern*”, and *type* resolves to an accessible type, the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 The `is` operator is described in [§12.14.12](expressions.md#121412-the-is-operator) and the `as` operator is described in [§12.14.13](expressions.md#121413-the-as-operator).
 
