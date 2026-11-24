@@ -792,6 +792,45 @@ negated_pattern
 
 A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
 
+For a *negated_pattern* of the form `not P` or a *disjunctive_pattern* of the form `P or Q`, each immediate operand has the *input type* of the enclosing pattern. For a *conjunctive_pattern* of the form `P and Q`, the *input type* of `P` is the input type of the enclosing pattern, and the *input type* of `Q` is the *narrowed type* of `P`.
+
+A *logical_pattern* of one of these forms is *applicable to* a type `T` if and only if each operand is applicable to its input type, determined as above with `T` as the input type of the enclosing pattern.
+
+> *Example*: Conjunction narrows the input of its right operand; both operands of disjunction have the enclosing input type. Each of the following patterns is applicable to `object`:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPatternApplicability", inferOutput:true} -->
+> ```csharp
+> object value = "abc";
+> Console.WriteLine(value is string and { Length: 3 });
+> Console.WriteLine(value is string or int);
+> Console.WriteLine(value is not int);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> True
+> True
+> ```
+>
+> *end example*
+>
+> *Example*: Each of the following patterns has an operand that is not applicable to its input type:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"LogicalPatternInapplicability", expectedErrors:["CS8121", "CS8121", "CS8121", "CS8121"]} -->
+> ```csharp
+> class C
+> {
+>     static bool RightDisjunct(int value) => value is int or string;
+>     static bool LeftDisjunct(int value) => value is string or int;
+>     static bool Negation(int value) => value is not string;
+>     static bool NestedNegation(object value) => value is string and not int;
+> }
+> ```
+>
+> *end example*
+
 A declaration of a pattern variable shall satisfy both of the following conditions:
 
 - The declaration is not enclosed in a *disjunctive_pattern* of the form `P or Q`.
@@ -857,7 +896,7 @@ The definite-assignment effects of patterns are specified in [§9.4.4.34](variab
 >
 > *end example*
 
-In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
+The *narrowed type* of a pattern `P` is defined as follows:
 
 - If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
 - Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
@@ -866,7 +905,7 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 - Otherwise, if `P` is a constant pattern where the constant is not the null constant, the *narrowed type* is the type of expression `R` obtained using the expression-conversion steps in [Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern), with the constant pattern's expression as `E` and its input type as `T`. Only the steps determining `R` are used here.
 - Otherwise, if `P` is a relational pattern, the *narrowed type* is its comparison type ([Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern)).
 - Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
-- Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
+- Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern.
 - Otherwise, if `P` is a parenthesized pattern, its *narrowed type* is determined as specified in [§11.2.1](patterns.md#1121-general).
 - Otherwise the *narrowed type* of `P` is `P`'s input type.
 
