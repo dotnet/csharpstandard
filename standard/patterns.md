@@ -47,11 +47,37 @@ parenthesized_pattern
     ;
 ```
 
+For a *parenthesized_pattern* `(P)`, the *input type* of `P` is the input type of the parenthesized pattern. The parenthesized pattern is applicable to a type if and only if `P` is applicable to that type, matches a value if and only if `P` matches that value, and has the same *narrowed type* as `P`. Its definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
+
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: ANTLR makes the specified choice automatically due to the ordering of *constant_pattern* before *positional_pattern* in the alternatives of *pattern*. *end note*
 
 The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
+
+> *Example*: A parenthesized pattern preserves narrowing to the right-hand pattern of a conjunction. In the following example, `text` has type `string`, so its `Length` property can be accessed:
+>
+> <!-- Example: {template:"standalone-console", name:"ParenthesizedPatternNarrowing", inferOutput:true} -->
+> ```csharp
+> object value = "abc";
+> Console.WriteLine(value is (string) and { Length: 3 });
+> if (value is ((string)) and var text)
+> {
+>     Console.WriteLine(text.Length);
+> }
+> value = 42;
+> Console.WriteLine(value is (string));
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> 3
+> False
+> ```
+>
+> *end example*
 
 Some *pattern*s can result in the declaration of a local variable.
 
@@ -713,6 +739,7 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 - Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
 - Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
 - Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
+- Otherwise, if `P` is a parenthesized pattern, its *narrowed type* is determined as specified in [§11.2.1](patterns.md#1121-general).
 - Otherwise the *narrowed type* of `P` is `P`'s input type.
 
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
