@@ -798,13 +798,47 @@ In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed b
 - Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
 - Otherwise, if `P` is a recursive pattern that gives an explicit type, the *narrowed type* is that type.
 - Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* (§11.2.5), the *narrowed type* is the type `System.ITuple`.
-- Otherwise, if `P` is a constant pattern where the constant is not the null constant and where the expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
-- Otherwise, if `P` is a relational pattern where the constant expression has no *constant expression conversion* to the *input type*, the *narrowed type* is the type of the constant.
+- Otherwise, if `P` is a constant pattern where the constant is not the null constant, the *narrowed type* is the type of expression `R` obtained using the expression-conversion steps in [Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern), with the constant pattern's expression as `E` and its input type as `T`. Only the steps determining `R` are used here.
+- Otherwise, if `P` is a relational pattern, the *narrowed type* is its comparison type ([Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern)).
 - Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
 - Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern. Moreover, the *narrowed type* of the left pattern is the *input type* of the right pattern.
 - Otherwise, if `P` is a parenthesized pattern, its *narrowed type* is determined as specified in [§11.2.1](patterns.md#1121-general).
 - Otherwise the *narrowed type* of `P` is `P`'s input type.
 
+> *Example*: Narrowing accounts for numeric conversion of a constant and retains its type before boxing. The generic method below prints the inferred type of its argument, rather than its runtime type:
+>
+> <!-- Example: {template:"standalone-console", name:"ConvertedConstantPatternNarrowing", inferOutput:true} -->
+> ```csharp
+> double number = 1;
+> if (number is 1 and var constant)
+> {
+>     PrintType(constant);
+> }
+> if (number is < 2 and var relational)
+> {
+>     PrintType(relational);
+> }
+> object boxed = 1;
+> if (boxed is 1 and var unboxed)
+> {
+>     PrintType(unboxed);
+> }
+>
+> static void PrintType<T>(T value) => Console.WriteLine(typeof(T));
+> ```
+>
+> The output produced is:
+>
+> ```console
+> System.Double
+> System.Double
+> System.Int32
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
 
 When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar; as a result, the pattern operators `and`, `or`, and `not` within the pattern bind more tightly than the logical operators `&&`, `||`, and `!` outside the pattern.
