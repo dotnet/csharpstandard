@@ -598,15 +598,78 @@ relational_pattern
     ;
 ```
 
-The *relational_expression* in a *relational_pattern* is required to evaluate to a constant value.
+The *relational_expression* `E` in a *relational_pattern* is used to determine a converted constant value and a comparison type. A *default_literal* is not permitted as `E`, ignoring enclosing parentheses and null-forgiving operators.
 
-Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
+For an input type `T`, determine an expression `R` as follows. For these rules, parentheses are ignored and user-defined conversions are not considered.
 
-A *relational_pattern* is *applicable to* a type `T` if a suitable built-in binary relational operator is defined with both operands of type `T`, or if an explicit nullable or unboxing conversion exists from `T` to the type of the constant expression.
+- If `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), `R` is `E`, without a conversion to `T`.
+- Otherwise, implicitly convert `E` to `T` as if it were the right operand of a simple assignment to a variable of type `T` ([§12.23.2](expressions.md#12232-simple-assignment)), and let `A` be the resulting expression. An implicit identity conversion between identical types leaves `E` unchanged.
+  - If `T` is a nullable value type with underlying type `U`, and `A` is the result of an identity, enumeration, or nullable value type conversion and is not a null constant, `R` is the operand of that conversion converted to `U` by a standard conversion ([§10.4](conversions.md#104-standard-conversions)).
+  - Otherwise, if `A` is the result of a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) or an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), its operand has a constant value, and `A` does not have a constant value, `R` is that operand.
+  - Otherwise, `R` is `A`.
 
-It is a compile-time error if the expression evaluates to `double.NaN`, `float.NaN`, or a null constant.
+The ***comparison type*** `C` is the type of `R`, and the converted constant value `v` is the constant value of `R`.
 
-When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of the constant expression using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the constant expression.
+A *relational_pattern* is *applicable to* its input type `T` if all of the following conditions hold:
+
+- The conversions required above exist, and `R` has a type and a constant value.
+- `C` is one of `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, or an enum type.
+- `T` is pattern compatible with `C` ([§11.2.3](patterns.md#1123-declaration-pattern)) and is neither an open class type nor an open ref struct type ([§16.2.3](structs.md#1623-ref-modifier)).
+- If `T` is an enum type, `C` is an enum type.
+- If an explicit nullable conversion ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) exists from `T` to `C`, the underlying type of `T` is identity convertible with `C`.
+
+It is a compile-time error if `v` is `double.NaN`, `float.NaN`, or `null`.
+
+At runtime, the input value is tested against `C` using the rules of the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test fails, including when the input is `null`, the pattern does not match. Otherwise, let `e` be the input value, unwrapped or unboxed as necessary to obtain a value of type `C`. The pattern matches if the predefined comparison `e «op» v` evaluates to `true`, where «op» is the relational operator of the pattern. The comparison uses the predefined numeric or enumeration comparison operators ([§12.14](expressions.md#1214-relational-and-type-testing-operators)), including binary numeric promotion ([§12.4.7.3](expressions.md#12473-binary-numeric-promotions)) where required.
+
+> *Example*: The constant is converted before comparing values of the comparison type. This differs from selecting a binary operator for the original input and constant types:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPatternConversions", inferOutput:true} -->
+> ```csharp
+> int integer = 1;
+> Console.WriteLine(integer < 2L);
+> double number = 1;
+> Console.WriteLine(number is < 2);
+> int? optional = 1;
+> Console.WriteLine(optional is < 2);
+> optional = null;
+> Console.WriteLine(optional is < 2);
+> object boxed = (short)1;
+> Console.WriteLine(boxed is < 3);
+> Console.WriteLine(boxed is not < 3);
+> Console.WriteLine(boxed is >= 3);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> True
+> True
+> False
+> False
+> True
+> False
+> ```
+>
+> The boxed `short` does not pass the type test for the comparison type `int`. Negating that failed match produces `true`; using `>=` instead still requires the type test and produces `false`.
+>
+> In contrast, the following relational patterns generate compile-time errors because their constants cannot be implicitly converted to the comparison types `int`, `byte`, and `float`, respectively:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPatternConstantConversions", expectedErrors:["CS0266", "CS0031", "CS0664"], ignoredWarnings:["CS8794"]} -->
+> ```csharp
+> int integer = 1;
+> Console.WriteLine(integer is < 2L);
+> byte small = 1;
+> Console.WriteLine(small is < 300);
+> float single = 1;
+> Console.WriteLine(single is < 2D);
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 
 > *Example*:
 >
