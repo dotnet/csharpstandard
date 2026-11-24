@@ -999,8 +999,40 @@ For an expression *expr* of the form:
 *expr_operand* is *pattern*
 
 - The definite-assignment state of *v* before *expr_operand* is the same as the definite-assignment state of *v* before *expr*.
-- If the variable ‘v’ is declared in *pattern*, then the definite-assignment state of ‘v’ after *expr* is “definitely assigned when true”.
+- If *v* is declared in *pattern*, its definite-assignment state after *expr* is determined by the sets of variables definitely assigned when *pattern* matches and when it does not match, as defined below. It is definitely assigned when *expr* evaluates to `true` if and only if it belongs to the former set, and when *expr* evaluates to `false` if and only if it belongs to the latter set.
 - Otherwise the definite assignment state of ‘v’ after *expr* is the same as the definite assignment state of ‘v’ after *expr_operand*.
+
+For each pattern, the sets of variables definitely assigned when it matches and when it does not match contain only variables declared within that pattern. The sets are determined recursively as follows:
+
+- A parenthesized pattern has the same sets as its enclosed pattern.
+- For a negated pattern `not P`, the set for a match is the set for a non-match of `P`, and the set for a non-match is the set for a match of `P`.
+- For a conjunctive pattern `P and Q`, the set for a match is the union of the sets for a match of its operands, and the set for a non-match is the intersection of the sets for a non-match of its operands.
+- For a disjunctive pattern `P or Q`, the set for a match is the intersection of the sets for a match of its operands, and the set for a non-match is the union of the sets for a non-match of its operands.
+- For a declaration pattern, var pattern, positional pattern, or property pattern, the set for a match contains all variables declared within the pattern, and the set for a non-match is empty.
+- For any other pattern, both sets are empty.
+
+The restrictions on where pattern variables may be declared are specified in [§11.2](patterns.md#112-pattern-forms).
+
+> *Example*: A variable declared under one negation is not definitely assigned when the is-pattern expression is `true`. Under two negations, it is not definitely assigned when that expression is `false`:
+>
+> <!-- Example: {template:"standalone-console", name:"NegatedPatternDefiniteAssignment", expectedErrors:["CS0165", "CS0165"]} -->
+> ```csharp
+> object value = 42;
+> if (value is not int number)
+> {
+>     Console.WriteLine(number); // Error: number is not definitely assigned
+> }
+>
+> if (value is not not int repeated)
+> {
+> }
+> else
+> {
+>     Console.WriteLine(repeated); // Error: repeated is not definitely assigned
+> }
+> ```
+>
+> *end example*
 
 ## 9.5 Variable references
 

@@ -638,9 +638,70 @@ negated_pattern
 
 A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
 
-It is a compile-time error for a pattern variable to be declared beneath a `not` or `or` pattern operator.
+A declaration of a pattern variable shall satisfy both of the following conditions:
 
-> *Note*: Because neither `not` nor `or` can produce a definite assignment for a pattern variable, it is an error to declare one in those positions. *end note*
+- The declaration is not enclosed in a *disjunctive_pattern* of the form `P or Q`.
+- Each *negated_pattern* of the form `not P` that encloses the declaration is either the entire pattern of an is-pattern expression ([§12.14.12.2](expressions.md#1214122-the-is-pattern-operator)), or is nested within that pattern through only parenthesized patterns and other negated patterns.
+
+The definite-assignment effects of patterns are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
+
+> *Example*: A variable declared within a negated pattern can be definitely assigned when the pattern does not match. Parentheses and repeated negation are also permitted:
+>
+> <!-- Example: {template:"standalone-console", name:"IsNotPatternDeclarations", inferOutput:true} -->
+> ```csharp
+> PrintIfInt(42);
+> PrintIfInt("other");
+>
+> static void PrintIfInt(object value)
+> {
+>     if (value is not (int number))
+>     {
+>         return;
+>     }
+>     Console.WriteLine(number);
+>
+>     if (value is (not not int repeated) && repeated > 0)
+>     {
+>         Console.WriteLine(repeated);
+>     }
+>
+>     if (value is not (int positive and > 0) || positive > 100)
+>     {
+>         return;
+>     }
+>     Console.WriteLine(positive);
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> 42
+> 42
+> 42
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Declarations within disjunctions, within a negation nested beneath a conjunction, and within a negation in a switch expression are rejected:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PatternDeclarationRestrictions", expectedErrors:["CS8780", "CS8780", "CS8780"]} -->
+> ```csharp
+> class C
+> {
+>     static bool Disjunction(object value) => value is int number or string;
+>     static bool NestedNegation(object value) => value is {} and not int number;
+>     static int SwitchNegation(object value) => value switch
+>     {
+>         not int number => 0,
+>         _ => 1,
+>     };
+> }
+> ```
+>
+> *end example*
 
 In a *conjunctive_pattern*, the *input type* of the second pattern is narrowed by the *type narrowing* requirements of first pattern of the `and`. The *narrowed type* of a pattern `P` is defined as follows:
 

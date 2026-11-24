@@ -4852,7 +4852,7 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
-Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true` ([§9.4.4.34](variables.md#94434-is-pattern-expressions)).
+Every *single_variable_designation* of the pattern introduces a new local variable. Its definite-assignment state is determined as specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
 
 ### 12.14.13 The as operator
 
