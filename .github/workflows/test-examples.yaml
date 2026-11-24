@@ -34,12 +34,13 @@ jobs:
     # 10.0 for the tools themselves. (The closer we
     # are to the target language version we're standardising,
     # the better.)
-    - name: Setup .NET 8.0 and 10.0
+    - name: Setup .NET 8.0, 10.0, and 11.0
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: |
           8.0.x
           10.0.x
+          11.0.x
 
     - name: Extract and validate tests
       env:

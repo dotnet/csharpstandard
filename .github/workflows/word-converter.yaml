@@ -27,10 +27,10 @@ jobs:
     - name: Check out our repo
       uses: actions/checkout@v7.0.1
 
-    - name: Setup .NET 10.0
+    - name: Setup .NET 11.0
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 11.0.x
 
     - name: Run converter
       env:

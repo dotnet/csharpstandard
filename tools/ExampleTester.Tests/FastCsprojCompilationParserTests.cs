@@ -107,9 +107,10 @@ public static class FastCsprojCompilationParserTests
 
         result.CompilationOptions.Equals(sanitizedCompilationOptions).ShouldBeTrue();
 
-        var sanitizedParseOptions = msbuildCompilation.SyntaxTrees.First().Options;
+        var sanitizedParseOptions = msbuildCompilation.SyntaxTrees.First().Options as CSharpParseOptions;
 
-        sanitizedParseOptions = sanitizedParseOptions.WithFeatures(result.ParseOptions.Features);
+        sanitizedParseOptions = sanitizedParseOptions?.WithFeatures(result.ParseOptions.Features)
+            .WithPreprocessorSymbols(result.ParseOptions.PreprocessorSymbolNames);
         result.ParseOptions.Equals(sanitizedParseOptions).ShouldBeTrue();
 
         var sanitizedSyntaxTrees = msbuildCompilation.SyntaxTrees
@@ -126,7 +127,10 @@ public static class FastCsprojCompilationParserTests
         {
             var sanitizedGenerated = msbuildGenerated.WithRootAndOptions(
                 msbuildGenerated.GetRoot(),
-                ((CSharpParseOptions)msbuildGenerated.Options).WithFeatures(((CSharpParseOptions)fastGenerated.Options).Features));
+                ((CSharpParseOptions)msbuildGenerated.Options)
+                .WithFeatures(((CSharpParseOptions)fastGenerated.Options).Features).
+                WithPreprocessorSymbols(fastGenerated.Options.PreprocessorSymbolNames)).
+                WithChangedText(fastGenerated.GetText());
             fastGenerated.Options.ShouldBe(sanitizedGenerated.Options);
             fastGenerated.GetText().ToString().ShouldBe(sanitizedGenerated.GetText().ToString());
         }
@@ -158,7 +162,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
               </PropertyGroup>
 
             </Project>
@@ -168,9 +172,9 @@ public static class FastCsprojCompilationParserTests
         result.CompilationOptions.NullableContextOptions.ShouldBe(NullableContextOptions.Disable);
         result.AssemblyName.ShouldBe(Path.GetFileNameWithoutExtension(CsprojFileName));
         result.CompilationOptions.AllowUnsafe.ShouldBeFalse();
-        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp14); // Due to net10.0
-        ((int)result.ParseOptions.LanguageVersion).ShouldBe(1400);
-        result.CompilationOptions.WarningLevel.ShouldBe(10); // Due to net10.0
+        result.ParseOptions.LanguageVersion.ShouldBe(LanguageVersion.CSharp15); // Due to net11.0
+        ((int)result.ParseOptions.LanguageVersion).ShouldBe(1500);
+        result.CompilationOptions.WarningLevel.ShouldBe(11); // Due to net11.0
         result.GeneratedSources.ShouldBeEmpty();
     }
 
@@ -181,11 +185,11 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
               </PropertyGroup>
 
             </Project>
-            """).TargetFramework.ShouldBe("net10.0");
+            """).TargetFramework.ShouldBe("net11.0");
     }
 
     [Test]
@@ -195,7 +199,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
                 <OutputType>{outputType}</OutputType>
               </PropertyGroup>
 
@@ -215,7 +219,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
                 <Nullable>{nullable}</Nullable>
               </PropertyGroup>
 
@@ -236,7 +240,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
                 <AssemblyName>Xyz</AssemblyName>
               </PropertyGroup>
 
@@ -251,7 +255,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
                 <AllowUnsafeBlocks>{allowUnsafeBlocks}</AllowUnsafeBlocks>
               </PropertyGroup>
 
@@ -276,7 +280,7 @@ public static class FastCsprojCompilationParserTests
             <Project Sdk="Microsoft.NET.Sdk">
 
               <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
+                <TargetFramework>net11.0</TargetFramework>
                 <ImplicitUsings>{implicitUsings}</ImplicitUsings>
               </PropertyGroup>
 
@@ -297,7 +301,7 @@ public static class FastCsprojCompilationParserTests
                 global using System.Net.Http;
                 global using System.Threading;
                 global using System.Threading.Tasks;
-
+                
                 """);
         }
         else
