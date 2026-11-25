@@ -311,3 +311,8 @@ When an array creation expression includes both explicit dimension lengths and a
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: C# allows a trailing comma at the end of an *array_initializer*. This syntax provides flexibility in adding or deleting members from such a list, and simplifies machine generation of such lists. *end note*
+
+A warning shall be produced for a *variable_initializer* when all the following conditions are true:
+
+- The variable initializer represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
+- The primary constructor parameter is captured into the state of the enclosing type.
