@@ -618,18 +618,14 @@ discard_pattern
     ;
 ```
 
-Where the syntactic context permits a *pattern*, if the token `_` would resolve as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) to an accessible constant or to a type, then `_` is *not* treated as a *discard_pattern*. Instead:
+Where a *pattern* is expected, the token `_` is recognised as a *discard_pattern* without name lookup, with the following exceptions:
 
-- If `_` resolves to an accessible constant, the `_` is interpreted as a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern)) whose constant expression is that constant.
-- If `_` resolves to a type, then in the right-hand side of an `is` operator the construct *relational_expression* `is _` is interpreted as the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)) testing against that type. In any other syntactic context that admits a *pattern*, a bare `_` resolving to a type is not by itself a valid *pattern*; however, `_` may appear as the *type* of a *declaration_pattern* (e.g., `_ x`) or in other pattern forms that explicitly name a type.
+- If `_` is the entire right-hand operand of an `is` operator, the construct *relational_expression* `is _` is interpreted as the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)), and `_` shall resolve to an accessible type.
+- If `_` is the entire *pattern* of a *switch_label*, it is interpreted as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). If that name denotes a type, the pattern is a *type_pattern*; otherwise it is a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern)).
 
-This rule preserves backward compatibility with code that defined `_` as a type or identifier prior to the introduction of the discard pattern. If `_` resolves to anything other than an accessible constant or type (for example, a local variable, parameter, field, or method), the rule does not apply and `_` remains a *discard_pattern*.
+An identifier spelled `@_` or using a Unicode escape sequence to represent `_` is not a *discard_token* ([§6.4.3](lexical-structure.md#643-identifiers)) and is interpreted as an identifier.
 
-> *Note*: This is analogous to the rule for `var` in [§11.2.4](patterns.md#1124-var-pattern), except that for `_` an in-scope constant or type causes `_` to be interpreted as a reference to that declaration rather than producing an error. *end note*
-
-If, after applying the preceding rule, the token `_` is still a *discard_pattern*, it is a compile-time error for that *discard_pattern* to appear as the entire *pattern* of a *relational_expression* of the form *relational_expression* `is` *pattern*, or as the entire *pattern* of a *switch_label*. A *discard_pattern* may, however, appear as a *subpattern* of an enclosing pattern (for example, as a *subpattern* of a *positional_pattern* or *property_pattern*).
-
-> *Note*: In those cases, to match any expression, use a *var_pattern* with a discard `var _`. *end note*
+> *Note*: To match any expression in the contexts excluded above, use a *var_pattern* with a discard `var _` ([§11.2.4](patterns.md#1124-var-pattern)). A *pattern* consisting of `_` within a *parenthesized_pattern* or other enclosing pattern is a *discard_pattern*, as is the *pattern* `_` in a *switch_expression_arm*, regardless of an in-scope constant or type named `_`. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -667,9 +663,14 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The following illustrates how an in-scope constant named `_` changes the interpretation of an `_` arm in a `switch` expression. In `WithoutUnderscore`, the `_` arm is a *discard_pattern* and matches any value. In `WithUnderscore`, the in-scope constant `_` causes the `_` arm to be interpreted as a *constant_pattern* that matches only the value `0`.
+> *Example*: An in-scope constant named `_` does not change the interpretation of a `_` arm in a `switch` expression. Use `@_` to match that constant:
 >
+> <!-- Example: {template:"standalone-console", name:"DiscardPatternConstantLookup", inferOutput:true} -->
 > ```csharp
+> Console.WriteLine(WithoutUnderscore(2));
+> Console.WriteLine(WithUnderscore(0));
+> Console.WriteLine(WithUnderscore(2));
+>
 > static string WithoutUnderscore(int n) => n switch
 > {
 >     1 => "one",
@@ -682,10 +683,42 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 >     return n switch
 >     {
 >         1 => "one",
->         _ => "zero",
->         var x => "other: " + x,
+>         @_ => "zero",
+>         _ => "other",
 >     };
 > }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> other
+> zero
+> other
+> ```
+>
+> *end example*
+>
+> *Example*: A `_` that is the entire right-hand operand of `is` refers to a type for backward compatibility. Within parentheses or a `switch` expression, `_` is a discard. The escaped identifier `@_` can name the type in a pattern:
+>
+> <!-- Example: {template:"standalone-console", name:"DiscardPatternTypeLookup", expectedWarnings:["CS8513"], inferOutput:true} -->
+> ```csharp
+> object value = 1;
+> Console.WriteLine(value is _);
+> Console.WriteLine(value is (_));
+> Console.WriteLine(value switch { _ => "discard" });
+> Console.WriteLine(value switch { @_ => "type", var other => "other" });
+>
+> class _ {}
+> ```
+>
+> The output produced is:
+>
+> ```console
+> False
+> True
+> discard
+> other
 > ```
 >
 > *end example*
