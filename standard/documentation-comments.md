@@ -54,7 +54,36 @@ Although developers are free to create their own set of tags, a recommended set 
 
 - The `<param>` tag is used to describe parameters. If such a tag is used, the documentation generator must verify that the specified parameter exists and that all parameters are described in documentation comments. If such verification fails, the documentation generator issues a warning.
 
-- The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”). A code element that is an extension member within an extension block needs special notation. For example, an extension method `M` in an extension block `extension(int value)` inside type `T` must be referenced using `T.extension(int).M` (or `T.extension(System.Int32).M`).
+- The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”). A code element that is an extension member within an extension block needs special notation. For example:
+
+  > *Example*: Here is an extension indexer declaration:
+  >
+  > <!-- Example: {template:"standalone-lib", name:"ExtensionMembersCrefs", replaceEllipsis:true, customEllipsisReplacements: ["0", "new string(\"\")"]} -->
+  > ```csharp
+  > /// <see cref="E.extension(int).this[string]"/>
+  > /// <see cref="E.extension(int).get_Item(string)"/>
+  > /// <see cref="E.extension(int).get_Item"/>
+  > /// <see cref="E.extension(int).set_Item(string, int)"/>
+  > /// <see cref="E.extension(int).set_Item"/>
+  > /// <see cref="E.get_Item(int, string)"/>
+  > /// <see cref="E.get_Item"/>
+  > /// <see cref="E.set_Item(int, string, int)"/>
+  > /// <see cref="E.set_Item"/>
+  > public static class E
+  > {
+  >     extension(int i)
+  >     {
+  >         /// <summary></summary>
+  >         public int this[string s]
+  >         {
+  >             get => ...;
+  >             set => ...;
+  >         }
+  >     }
+  > }
+  > ```
+  >
+  > *end example*
 
 - The `<summary>` tag is intended to be used by a documentation viewer to display additional information about a type or member.
 - The `<include>` tag includes information from an external XML file.
