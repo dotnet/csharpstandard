@@ -348,14 +348,68 @@ Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a m
 In order to extract the values to match against the patterns in the list, let *D* be *type* if present; otherwise let *D* be the static type of the input value, with a nullable value type replaced by its underlying type.
 
 1. **Tuple form.** If *type* is omitted and *D* is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element of the non-null input value, unwrapped if necessary, is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
-2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and *D* contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
-3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or compile-time overload resolution for invoking `Deconstruct` ([§12.7](expressions.md#127-deconstruction)) on a value of type *D* with *n* `out` arguments whose types are to be inferred finds at least one applicable method, then this case applies. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+3. **ITuple form.** Otherwise, if *type* and *property_subpattern* are omitted, *simple_designation* is omitted or is a *discard_designation*, no *subpattern* in *subpatterns* has an *identifier* prefix, and *D* is `object` or `dynamic` or has an identity conversion, an implicit reference conversion, or a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
 4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
 
 In the tuple and Deconstruct forms, if *simple_designation* is a *single_variable_designation*, it introduces a local variable ([§9.2.9](variables.md#929-local-variables)) of type *D*. When the pattern matches, the variable is assigned the matched input value, converted to *D*. Tuple element names are those of *D*, rather than the names of variables declared in subpatterns. A *discard_designation* introduces no variable and does not bind the input value. Definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
 
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
 
+> *Example*: An implementing struct can be matched through `ITuple`, without a `Deconstruct` method. An outer discard is permitted, and variables may be declared within the subpatterns:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"ITupleFallbackValueType", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> Pair value = new Pair();
+> Console.WriteLine(value is (1, 2));
+> if (value is (int first, int second) _)
+> {
+>     Console.WriteLine(first + second);
+> }
+> Pair? optional = value;
+> Console.WriteLine(optional is (1, 2));
+> optional = null;
+> Console.WriteLine(optional is (1, 2));
+>
+> struct Pair : ITuple
+> {
+>     int ITuple.Length => 2;
+>     object ITuple.this[int index] => index + 1;
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> 3
+> True
+> False
+> ```
+>
+> *end example*
+>
+> *Example*: Neither a named outer designation nor a property clause is permitted for ITuple fallback. Both methods below produce compile-time errors:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ITupleFallbackRestrictions", expectedErrors:["CS1061", "CS8129", "CS1061", "CS8129"]} -->
+> ```csharp
+> using System.Runtime.CompilerServices;
+>
+> struct Pair : ITuple
+> {
+>     int ITuple.Length => 2;
+>     object ITuple.this[int index] => index + 1;
+>
+>     static bool Capture(Pair value) => value is (1, 2) whole;
+>     static bool Property(Pair value) => value is (1, 2) {};
+> }
+> ```
+>
+> *end example*
+>
 > *Example*: Bare tuple-looking syntax matches the elements, rather than testing for the corresponding tuple type. An outer designation preserves the input tuple's names and unwraps a nullable tuple:
 >
 > <!-- Example: {template:"standalone-console", name:"TuplePatternRecognition", inferOutput:true} -->
