@@ -57,7 +57,7 @@ If the input can be syntactically recognised as both a *constant_pattern* and a 
 
 > *Note*: These restrictions concern syntactic recognition, not whether the type denoted by a name is a tuple type. Thus `ValueTuple<int, int> pair`, an eligible alias to that named type followed by a designation, `(int, int)[] pairs`, and `List<(int, int)> pairs` can be declaration patterns. The form `(1)` is a constant pattern, whereas `(var item)` is a parenthesized pattern. The forms `(var item) whole`, `(value: var item)`, and `(var item) {}` are positional patterns. *end note*
 
-The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to enforce the order of evaluation among patterns combined using one of the *logical_pattern*s.
+The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to specify the grouping of patterns combined using pattern operators.
 
 > *Example*: A parenthesized pattern preserves narrowing to the right-hand pattern of a conjunction. In the following example, `text` has type `string`, so its `Length` property can be accessed:
 >
@@ -790,7 +790,7 @@ negated_pattern
 
 `not`, `and`, and `or` are collectively called ***pattern operators***.
 
-A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
+A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike `&&` and `||`, `and` and `or` do not guarantee left-to-right short-circuit evaluation. The evaluation-order rule in §11.2.1 applies; tests that cannot affect the result need not be performed.
 
 For a *negated_pattern* of the form `not P` or a *disjunctive_pattern* of the form `P or Q`, each immediate operand has the *input type* of the enclosing pattern. For a *conjunctive_pattern* of the form `P and Q`, the *input type* of `P` is the input type of the enclosing pattern, and the *input type* of `Q` is the *narrowed type* of `P`.
 
@@ -945,7 +945,7 @@ The *narrowed type* of a pattern `P` is defined as follows:
 <!-- markdownlint-enable MD028 -->
 > *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
 
-When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar; as a result, the pattern operators `and`, `or`, and `not` within the pattern bind more tightly than the logical operators `&&`, `||`, and `!` outside the pattern.
+When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar. An is-pattern expression binds more tightly than `&&` and `||`. Unary `!` retains its ordinary expression precedence: `!b is true or false` is parsed as `(!b) is (true or false)`.
 
 > *Example*:
 >
