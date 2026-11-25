@@ -6985,12 +6985,12 @@ The job of a ***collection-creation method*** is to create and initialize an ins
 First, the set of applicable collection-creation methods `CM` is determined.  It consists of methods that meet the following requirements:
 
 - Be directly declared in the builder type
+- Have the name designated by `CollectionBuilderAttribute`
 - Be static
 - Be accessible at its point of use
 - Its arity shall match that of the collection type
 - It shall have a single parameter of type `System.ReadOnlySpan<E>`, passed by value.
 - There shall be an implicit identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)), an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), or a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) from the method return type to the collection type.
-- It shall return an instance of the collection being built, which contains a copy of the data from the span parameter.
 
 Methods declared on base types or interfaces are ignored and not part of the `CM` set.
 
@@ -7010,11 +7010,18 @@ The construction of an instance of a collection type is described in §collectio
 
 The *collection_element*s of a *collection_expression* are evaluated in order, left to right. Each *collection_element* is evaluated exactly once, and any further references to the any elements refer to the results of this initial evaluation.
 
-A *spread_element* may be iterated before or after the subsequent elements in the *collection_expression* are evaluated.
+A *spread_element* may be iterated before or after the subsequent elements in the *collection_expression* are evaluated. Spread enumerations may be reordered under the well-behaved collection assumptions below. The resulting element sequence retains the order of the *collection_element*s and, within each spread, the order of enumeration.
 
 An unhandled exception thrown from any of the methods used during construction shall go uncaught and shall prevent further steps in the construction.
 
-`Length`, `Count`, and `GetEnumerator` are assumed to have no side effects.
+Collections used in collection expressions are assumed to be ***well-behaved***:
+
+- `Length` and `Count`, when used to determine the number of elements, agree with the number of elements produced by enumeration.
+- `Length`, `Count`, and `GetEnumerator` are assumed to have no side effects, and spread enumeration is assumed to have no side effects for the purpose of reordering enumerations.
+- An applicable `AddRange` operation produces the same final collection values as enumerating its argument and invoking the applicable `Add` method for each item, in order.
+- An applicable `CopyTo` operation produces the same element values, in the same order, as enumeration and individual addition or assignment to the destination.
+
+The construction steps may use these equivalences to optimize construction. The behavior of collection expressions using collections that are not well-behaved is undefined. These assumptions do not change the required left-to-right evaluation of element expressions or the disposal requirements below. Methods described as applicable are subject to ordinary member lookup, accessibility, and overload resolution.
 
 If the target type is a struct or class type that implements `System.Collections.IEnumerable`, and the target type does not have a collection-creation method (§declaring-a-collection-type-general), the construction of the collection instance steps are, as follows:
 
@@ -7052,8 +7059,17 @@ If the target type is an array, a `Span` or `ReadOnlySpan`, a type with a collec
     - An applicable `GetEnumerator` instance or extension method is invoked on the *spread_element*’s *expression*, and for each item from the enumerator, the initialization instance indexer is invoked to add the item at the current index. If the enumerator implements `IDisposable`, then `Dispose` shall be called after enumeration, regardless of any exceptions.
     - An applicable `CopyTo` instance or extension method is invoked on the *spread_element*’s *expression* with the initialization instance and `int` index as arguments.
 
-- If intermediate storage was allocated for the collection, a collection instance is allocated with the actual collection length and the values from the initialization instance are copied to the collection instance, or if a span is required the compiler may use a span of the actual collection length from the intermediate storage. Otherwise, the initialization instance is the collection instance.
-- If the target type has a collection-creation method, that method is invoked with the span instance.
+- For an array or span target, if intermediate storage was allocated, the result contains the actual collection length and the values from the initialization instance. A span may refer to the appropriate portion of the intermediate storage. Otherwise, the initialization instance is the result.
+- If the target type has a collection-creation method, that method is invoked with the span instance, and the result of the invocation is converted to the target type. The method shall return a collection that preserves the element values and their order from the span argument. Its storage or other representation shall keep those values safely available for the lifetime permitted by the result's safe-context (§collection-expressions), without depending on storage whose lifetime has ended. This is a behavioral obligation of the collection-creation method, not a condition used to determine its applicability. It does not require a physical copy of the span's storage.
+- For one of the five generic interface targets specified in §imp-collection-expression-conv, a result satisfying the interface contract below is produced from the element values. The initialization instance need not itself implement the target interface.
+
+For a target type of `System.Collections.Generic.ICollection<T>` or `System.Collections.Generic.IList<T>`, the result has the observable collection behavior of `System.Collections.Generic.List<T>`. It supports mutation through the generic and non-generic collection interfaces, with `ICollection<T>.IsReadOnly`, `System.Collections.IList.IsReadOnly`, and `System.Collections.IList.IsFixedSize` returning `false`. Mutating one result shall not change the contents of another independently constructed result.
+
+For a target type of `System.Collections.Generic.IEnumerable<T>`, `System.Collections.Generic.IReadOnlyCollection<T>`, or `System.Collections.Generic.IReadOnlyList<T>`, the result implements the target interface and the non-generic `System.Collections.ICollection` and `System.Collections.IList` interfaces. It may implement additional interfaces. `System.Collections.IList.IsReadOnly` and `System.Collections.IList.IsFixedSize` return `true`; `ICollection<T>.IsReadOnly` also returns `true` if that interface is implemented. Calls to mutation members of any implemented collection interface throw an exception.
+
+Interface results preserve the element values and their sequence, and their storage or other representation keeps those values available after construction, independently of the lifetime of intermediate storage or subsequent changes to spread-source collections. No particular implementing type or storage representation is required.
+
+An empty collection expression may use shared empty storage or an existing empty result, and storage allocation may be omitted, provided the result satisfies the requirements of its target type and required expression evaluation and the observable effects of construction methods are preserved. In particular, empty mutable interface results shall permit independent mutation; a shared immutable result cannot satisfy that contract. No result identity or sharing is guaranteed. The safe-context of an empty collection expression is specified in §collection-expressions.
 
 > *Note:* The compiler might delay adding elements to the collection (or delay iterating through *spread_element*s) until after evaluating subsequent elements. (When subsequent *spread_element*s have countable properties that would allow calculating the expected length of the collection before allocating the collection.) Conversely, the compiler might eagerly add elements to the collection (and eagerly iterate through *spread_element*s) when there is no advantage to delaying.
 >

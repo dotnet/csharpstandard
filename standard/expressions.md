@@ -3892,7 +3892,7 @@ A ***collection expression*** is a `[]`-delimited, comma-separated set of zero o
 
 ```ANTLR
 collection_expression
-    : '[' (collection_element (',' collection_element)*)? ']'
+    : '[' (collection_element (',' collection_element)* ','?)? ']'
     ;
 
 collection_element
@@ -3909,7 +3909,9 @@ spread_element
     ;
 ```
 
-On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). Any type that supports a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) may be a target type for a *collection_expression*. A type designated with `CollectionBuilderAttribute` may also be a target type (§declaring-a-collection-type-general).
+An unparenthesized *collection_element* that begins with `..` is interpreted as a *spread_element*, rather than an *expression_element* containing a range expression. A parenthesized range expression, such as `(..2)`, may be an *expression_element*.
+
+On its own, a *collection_expression* has no type, but, rather, it is target-typed; that is, depending on the context in which it is used, it is converted (§imp-collection-expression-conv) to the type of the target (presuming such a conversion is permitted). The valid target types and their constructibility requirements are specified in §imp-collection-expression-conv. These include certain types that support a *collection_initializer* ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)) and types with a collection-creation method (§declaring-a-collection-type-general).
 
 The *expression* of a *collection_element* need not be a constant. A *collection_expression* is not a compile-time constant, even if all its *collection_element*s are.
 
@@ -3948,6 +3950,16 @@ A *spread_element* causes the set of *collection_element*s designated by *expres
 > `colors2` contains five elements: `"black"`, `"red"`, `"white"`, `"blue"`, and `"yellow"`. `words` is created from two elements of type `string` plus all the elements of a `string[]` and a `List<string>`, in the order shown. And `things` is created from an `int`, a `double`, and all the elements of a `List<string>`. As shown, the types of the container from which a collection is copied is immaterial. And in the case of `numbers`, the element types need not be the same. *end example*
 
 If the *expression* in a *spread_element* is `[]`, that *spread_element* may be ignored, as it contributes no elements.
+
+The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) of a collection expression is determined as follows:
+
+- An empty collection expression `[]` has safe-context of caller-context.
+- A collection expression converted to `System.ReadOnlySpan<T>` has safe-context of caller-context if all its elements are constant expressions and `T` is `bool`, `sbyte`, `byte`, `short`, `ushort`, `char`, `int`, `uint`, `long`, `ulong`, `float`, or `double`.
+- Any other collection expression converted to `System.Span<T>` or `System.ReadOnlySpan<T>` has safe-context of declaration-block.
+- For a collection expression converted to a ref struct type with a collection-creation method, its safe-context is that of an invocation of that method ([§16.6.15.6](structs.md#166156-method-and-property-invocation)), with the collection expression converted to the method's `ReadOnlySpan<T>` parameter type as the argument. The preceding rules determine the argument's safe-context; whether the parameter is `scoped` determines whether that context contributes to the result.
+- Otherwise, the safe-context is caller-context.
+
+These contexts constrain the lifetime of the result independently of the storage strategy used to construct it (§collection-construction).
 
 ## 12.9 Unary operators
 
