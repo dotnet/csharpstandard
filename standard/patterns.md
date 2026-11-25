@@ -648,7 +648,7 @@ type_pattern
 
 A type pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T` (§11.2.3).
 
-The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is `dynamic`, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)), or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
 
 ### §relational-pattern-new-clause Relational pattern
 
