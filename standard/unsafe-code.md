@@ -18,14 +18,16 @@ An implementation that does not support unsafe code is required to diagnose any 
 
 ## 24.2 Unsafe contexts
 
-The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type, member, or local function, or by employing an *unsafe_statement*:
+The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type, member, or local function, by employing an *unsafe_statement*, or by including `unsafe` in a using alias or using static directive:
 
 - A declaration of a class, struct, interface, or delegate may include an `unsafe` modifier, in which case, the entire textual extent of that type declaration (including the body of the class, struct, or interface) is considered an unsafe context.
   > *Note*: If the *type_declaration* is partial, only that part is an unsafe context. *end note*
 - A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, static constructor, or local function may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
 - An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context. A local function declared within an unsafe context is itself unsafe.
+- A *using_alias_directive* ([§14.6.2](namespaces.md#1462-using-alias-directives)) or *global_using_alias_directive* ([§14.5.2](namespaces.md#1452-global-using-alias-directives)) may include `unsafe`, in which case, only the entire textual extent of its target *type* (not a target *namespace_name*) is considered an unsafe context.
+- A *using_static_directive* ([§14.6.4](namespaces.md#1464-using-static-directives)) or *global_using_static_directive* ([§14.5.4](namespaces.md#1454-global-using-static-directives)) may include `unsafe`, in which case, only the entire textual extent of its target *type_name* is considered an unsafe context.
 
-The associated grammar extensions are shown below and in subsequent subclauses.
+The associated grammar extensions are shown below, in subsequent subclauses, and in the using directive productions referenced above.
 
 ```ANTLR
 unsafe_modifier
