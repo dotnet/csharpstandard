@@ -78,9 +78,10 @@ These productions occur in contexts where a value can occur in an expression, an
 
 If a sequence of tokens can be parsed, in context, as one of the disambiguated productions including an optional *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), then the token immediately following the closing `>` token shall be examined and if it is:
 
-- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [ =>`; or
 - one of the relational operators `<  <=  >=  is as`; or
 - a contextual query keyword appearing inside a query expression.
+- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
@@ -604,13 +605,13 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'    | 'nameof'     | 'nint'      | 'notnull'   | 'nuint'
-    | 'on'     | 'orderby'    | 'partial'   | 'remove'    | 'select'
-    | 'set'    | 'unmanaged'  | 'value'     | 'var'       | 'when'
-    | 'where'  | 'yield'
+    : 'add'     | 'alias'      | 'and'        | 'ascending' | 'async'
+    | 'await'   | 'by'         | 'descending' | 'dynamic'   | 'equals'
+    | 'from'    | 'get'        | 'global'     | 'group'     | 'into'
+    | 'join'    | 'let'        | 'nameof'     | 'nint'      | 'not'
+    | 'notnull' | 'nuint'      | 'on'         | 'or'        | 'orderby'
+    | 'partial' | 'remove'     | 'select'     | 'set'       | 'unmanaged'
+    | 'value'   | 'var'        | 'when'       | 'where'     | 'yield'
     ;
 ```
 
@@ -623,6 +624,8 @@ In certain cases the grammar is not enough to distinguish contextual keyword usa
 Another example such disambiguation is the contextual keyword `await` ([§12.9.9.1](expressions.md#12991-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
+
+The recognition of `not`, `and`, and `or` as pattern operators is specified in [Logical pattern](patterns.md#logical-pattern-new-clause-logical-pattern).
 
 > *Note*: When used as contextual keywords, these identifiers cannot contain *Unicode_Escape_Sequence*s. *end note*
 

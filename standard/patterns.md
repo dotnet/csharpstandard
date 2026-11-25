@@ -27,18 +27,61 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : declaration_pattern
+    : logical_pattern
+    ;
+
+primary_pattern
+    : parenthesized_pattern
+    | declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
+    | type_pattern
+    | relational_pattern
+    ;
+
+parenthesized_pattern
+    : '(' pattern ')'
     ;
 ```
 
+For a *parenthesized_pattern* `(P)`, the *input type* of `P` is the input type of the parenthesized pattern. The parenthesized pattern is applicable to a type if and only if `P` is applicable to that type, matches a value if and only if `P` matches that value, and has the same *narrowed type* as `P`. Its definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
+
+When recognising the *type* of a *declaration_pattern*, *type_pattern*, *positional_pattern*, or *property_pattern*, a token sequence beginning with `(` is recognised as a *type* only if its initial *tuple_type* is immediately followed by `[` starting an array rank specifier. This restriction also applies to the *type* following `is` ([§12.14.1](expressions.md#12141-general)).
+
+A form consisting of `(`, exactly one *subpattern* of the form *pattern* (without an *identifier* `:` prefix), and `)`, with no preceding *type*, following *property_subpattern*, or following *simple_designation*, is recognised as a *parenthesized_pattern* rather than a *positional_pattern*. If its enclosed pattern is a *constant_pattern*, the form is instead recognised as a *constant_pattern* whose *constant_expression* is parenthesized.
+
 If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
-> *Note*: ANTLR makes the specified choice automatically due to the ordering of *constant_pattern* before *positional_pattern* in the alternatives of *pattern*. *end note*
+> *Note*: These restrictions concern syntactic recognition, not whether the type denoted by a name is a tuple type. Thus `ValueTuple<int, int> pair`, an eligible alias to that named type followed by a designation, `(int, int)[] pairs`, and `List<(int, int)> pairs` can be declaration patterns. The form `(1)` is a constant pattern, whereas `(var item)` is a parenthesized pattern. The forms `(var item) whole`, `(value: var item)`, and `(var item) {}` are positional patterns. *end note*
+
+The `'(' pattern ')'` production allows a pattern to be enclosed in parentheses to specify the grouping of patterns combined using pattern operators.
+
+> *Example*: A parenthesized pattern preserves narrowing to the right-hand pattern of a conjunction. In the following example, `text` has type `string`, so its `Length` property can be accessed:
+>
+> <!-- Example: {template:"standalone-console", name:"ParenthesizedPatternNarrowing", inferOutput:true} -->
+> ```csharp
+> object value = "abc";
+> Console.WriteLine(value is (string) and { Length: 3 });
+> if (value is ((string)) and var text)
+> {
+>     Console.WriteLine(text.Length);
+> }
+> value = 42;
+> Console.WriteLine(value is (string));
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> 3
+> False
+> ```
+>
+> *end example*
 
 Some *pattern*s can result in the declaration of a local variable.
 
@@ -134,6 +177,8 @@ single_variable_designation
     : identifier
     ;
 ```
+
+The recognition of *type* is subject to [§11.2.1](patterns.md#1121-general).
 
 When recognising a *simple_designation* if both the *discard_designation* and *single_variable_designation* alternatives are applicable then the former shall be chosen.
 
@@ -285,27 +330,138 @@ subpattern
     ;
 ```
 
+The recognition of *type* and of a *positional_pattern* is subject to [§11.2.1](patterns.md#1121-general).
+
 Given a match of an input value to the pattern *type* `(` *subpatterns* `)`, a method is selected by searching in *type* for accessible declarations of `Deconstruct` and selecting one among them using the same rules as for the deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)).
-If the input can be syntactically recognised as both a *constant_pattern* and a *positional_pattern* then the *constant_pattern* shall be chosen.
 
 > *Note*: A tuple literal can be matched by patterns of several different forms, which are not interchangeable:
 >
-> - `(int, int) x` is a *declaration_pattern* with type `(int, int)` and *simple_designation* `x`.
+> - `(int, int) x` is a *positional_pattern* with two *type_pattern* subpatterns and the outer *simple_designation* `x`.
+> - `ValueTuple<int, int> x` is a *declaration_pattern*.
+> - `(int A, int B) x` is a *positional_pattern* with two *declaration_pattern* subpatterns introducing locals `A` and `B`, and the outer *simple_designation* `x`.
 > - `var (x, y)` is a *var_pattern* with a *tuple_designation*.
 > - `(int x, int y)` is a *positional_pattern*.
 > - `(int, int) (x, y)` is not a valid pattern.
 >
 > *end note*
 
-In order to extract the values to match against the patterns in the list,
+In order to extract the values to match against the patterns in the list, let *D* be *type* if present; otherwise let *D* be the static type of the input value, with a nullable value type replaced by its underlying type.
 
-1. **Tuple form.** If *type* is omitted and the static type of the input value is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
-2. **Deconstruct form.** Otherwise, if either *type* is present, or *type* is omitted and the static type of the input value contains an accessible `Deconstruct` method ([§12.7](expressions.md#127-deconstruction)), then this case applies. Let *D* be *type* if *type* is present; otherwise let *D* be the static type of the input value. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
-3. **ITuple form.** Otherwise, if *type* is omitted, no *subpattern* has an *identifier*, and the static type of the input value is `object`, `System.Runtime.CompilerServices.ITuple`, or a type that has an implicit reference conversion to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
+1. **Tuple form.** If *type* is omitted and *D* is a tuple type ([§8.3.11](types.md#8311-tuple-types)) or if the input value is a tuple literal ([§12.8.6](expressions.md#1286-tuple-literals)), then this case applies. It is a compile-time error if *n* is not equal to the arity of that tuple type. At runtime, each tuple element of the non-null input value, unwrapped if necessary, is matched against the corresponding *subpattern*; the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the tuple element at the corresponding position in the tuple type.
+2. **Deconstruct form.** Otherwise, if either *type* is present, or compile-time overload resolution for invoking `Deconstruct` ([§12.7](expressions.md#127-deconstruction)) on a value of type *D* with *n* `out` arguments whose types are to be inferred finds at least one applicable method, then this case applies. A `Deconstruct` method is selected from *D* using the same overload-resolution rules as for a deconstructing assignment ([§12.23.3](expressions.md#12233-deconstructing-assignment)), with the additional requirement that its number of `out` parameters is equal to *n*; it is a compile-time error if no such method exists. If *type* is present, it is a compile-time error if the static type of the input value is not pattern compatible ([§11.2.3](patterns.md#1123-declaration-pattern)) with *type*; at runtime the input value is tested against *type* and, if that test fails, the positional pattern match fails. Otherwise, the input value is converted to *D* and the selected `Deconstruct` method is invoked with fresh variables receiving its `out` parameters. Each received value is matched against the corresponding *subpattern*, and the match succeeds if all of these succeed. If any *subpattern* has an *identifier*, that *identifier* shall name the parameter at the corresponding position of `Deconstruct`.
+3. **ITuple form.** Otherwise, if *type* and *property_subpattern* are omitted, *simple_designation* is omitted or is a *discard_designation*, no *subpattern* in *subpatterns* has an *identifier* prefix, and *D* is `object` or `dynamic` or has an identity conversion, an implicit reference conversion, or a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) to `System.Runtime.CompilerServices.ITuple`, then this case applies. At runtime, the input value is tested for being a non-`null` instance of `System.Runtime.CompilerServices.ITuple`; if that test fails, the positional pattern match fails. Otherwise, the value’s `Length` property is read and, if it is not equal to *n*, the positional pattern match fails. Otherwise, for each *i* from 1 to *n*, the value obtained by indexing the input value with *i* − 1 is matched against the *i*-th *subpattern*, and the match succeeds if all of these succeed.
 4. Otherwise, no case applies and the *positional_pattern* is a compile-time error.
+
+In the tuple and Deconstruct forms, if *simple_designation* is a *single_variable_designation*, it introduces a local variable ([§9.2.9](variables.md#929-local-variables)) of type *D*. When the pattern matches, the variable is assigned the matched input value, converted to *D*. Tuple element names are those of *D*, rather than the names of variables declared in subpatterns. A *discard_designation* introduces no variable and does not bind the input value. Definite-assignment effects are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
 
 The order in which subpatterns are matched at runtime is unspecified, and a failed match might not attempt to match all subpatterns.
 
+> *Example*: An implementing struct can be matched through `ITuple`, without a `Deconstruct` method. An outer discard is permitted, and variables may be declared within the subpatterns:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"ITupleFallbackValueType", inferOutput:true} -->
+> ```csharp
+> using System;
+> using System.Runtime.CompilerServices;
+>
+> Pair value = new Pair();
+> Console.WriteLine(value is (1, 2));
+> if (value is (int first, int second) _)
+> {
+>     Console.WriteLine(first + second);
+> }
+> Pair? optional = value;
+> Console.WriteLine(optional is (1, 2));
+> optional = null;
+> Console.WriteLine(optional is (1, 2));
+>
+> struct Pair : ITuple
+> {
+>     int ITuple.Length => 2;
+>     object ITuple.this[int index] => index + 1;
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> 3
+> True
+> False
+> ```
+>
+> *end example*
+>
+> *Example*: Neither a named outer designation nor a property clause is permitted for ITuple fallback. Both methods below produce compile-time errors:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ITupleFallbackRestrictions", expectedErrors:["CS1061", "CS8129", "CS1061", "CS8129"]} -->
+> ```csharp
+> using System.Runtime.CompilerServices;
+>
+> struct Pair : ITuple
+> {
+>     int ITuple.Length => 2;
+>     object ITuple.this[int index] => index + 1;
+>
+>     static bool Capture(Pair value) => value is (1, 2) whole;
+>     static bool Property(Pair value) => value is (1, 2) {};
+> }
+> ```
+>
+> *end example*
+>
+> *Example*: Bare tuple-looking syntax matches the elements, rather than testing for the corresponding tuple type. An outer designation preserves the input tuple's names and unwraps a nullable tuple:
+>
+> <!-- Example: {template:"standalone-console", name:"TuplePatternRecognition", inferOutput:true} -->
+> ```csharp
+> object value = ((object)1, (object)"text");
+> Console.WriteLine(value is (int, string));
+> Console.WriteLine(value is ValueTuple<int, string>);
+>
+> (int Left, int Right)? pair = (67, 69);
+> if (pair is (int A, int B) captured)
+> {
+>     Console.WriteLine($"{A},{B};{captured.Left},{captured.Right}");
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> False
+> 67,69;67,69
+> ```
+>
+> *end example*
+>
+> *Example*: An explicit pattern type determines the outer variable's type; deconstruction does not construct a tuple to assign to it:
+>
+> <!-- Example: {template:"standalone-console", name:"PositionalPatternOuterType", inferOutput:true} -->
+> ```csharp
+> object value = new Point(1, 2);
+> if (value is Point(var x, var y) captured)
+> {
+>     Console.WriteLine($"{ReferenceEquals(value, captured)}:{x + y}:{captured.X + captured.Y}");
+> }
+>
+> class Point
+> {
+>     public int X { get; }
+>     public int Y { get; }
+>     public Point(int x, int y) => (X, Y) = (x, y);
+>     public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True:3:3
+> ```
+>
+> *end example*
+>
 > *Example*: Here, we deconstruct an expression result and match the resulting values against the corresponding nested patterns:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PositionalPattern1", ignoredWarnings:["CS8321"]} -->
@@ -381,6 +537,8 @@ property_subpattern
     | '{' subpatterns ','? '}'
     ;
 ```
+
+The recognition of the optional *type* is subject to [§11.2.1](patterns.md#1121-general).
 
 It is an error if any *subpattern* of a *property_pattern* does not contain an *identifier*.
 
@@ -460,18 +618,14 @@ discard_pattern
     ;
 ```
 
-Where the syntactic context permits a *pattern*, if the token `_` would resolve as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) to an accessible constant or to a type, then `_` is *not* treated as a *discard_pattern*. Instead:
+Where a *pattern* is expected, the token `_` is recognised as a *discard_pattern* without name lookup, with the following exceptions:
 
-- If `_` resolves to an accessible constant, the `_` is interpreted as a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern)) whose constant expression is that constant.
-- If `_` resolves to a type, then in the right-hand side of an `is` operator the construct *relational_expression* `is _` is interpreted as the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)) testing against that type. In any other syntactic context that admits a *pattern*, a bare `_` resolving to a type is not by itself a valid *pattern*; however, `_` may appear as the *type* of a *declaration_pattern* (e.g., `_ x`) or in other pattern forms that explicitly name a type.
+- If `_` is the entire right-hand operand of an `is` operator, the construct *relational_expression* `is _` is interpreted as the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)), and `_` shall resolve to an accessible type.
+- If `_` is the entire *pattern* of a *switch_label*, it is interpreted as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). If that name denotes a type, the pattern is a *type_pattern*; otherwise it is a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern)).
 
-This rule preserves backward compatibility with code that defined `_` as a type or identifier prior to the introduction of the discard pattern. If `_` resolves to anything other than an accessible constant or type (for example, a local variable, parameter, field, or method), the rule does not apply and `_` remains a *discard_pattern*.
+An identifier spelled `@_` or using a Unicode escape sequence to represent `_` is not a *discard_token* ([§6.4.3](lexical-structure.md#643-identifiers)) and is interpreted as an identifier.
 
-> *Note*: This is analogous to the rule for `var` in [§11.2.4](patterns.md#1124-var-pattern), except that for `_` an in-scope constant or type causes `_` to be interpreted as a reference to that declaration rather than producing an error. *end note*
-
-If, after applying the preceding rule, the token `_` is still a *discard_pattern*, it is a compile-time error for that *discard_pattern* to appear as the entire *pattern* of a *relational_expression* of the form *relational_expression* `is` *pattern*, or as the entire *pattern* of a *switch_label*. A *discard_pattern* may, however, appear as a *subpattern* of an enclosing pattern (for example, as a *subpattern* of a *positional_pattern* or *property_pattern*).
-
-> *Note*: In those cases, to match any expression, use a *var_pattern* with a discard `var _`. *end note*
+> *Note*: To match any expression in the contexts excluded above, use a *var_pattern* with a discard `var _` ([§11.2.4](patterns.md#1124-var-pattern)). A *pattern* consisting of `_` within a *parenthesized_pattern* or other enclosing pattern is a *discard_pattern*, as is the *pattern* `_` in a *switch_expression_arm*, regardless of an in-scope constant or type named `_`. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -509,9 +663,14 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The following illustrates how an in-scope constant named `_` changes the interpretation of an `_` arm in a `switch` expression. In `WithoutUnderscore`, the `_` arm is a *discard_pattern* and matches any value. In `WithUnderscore`, the in-scope constant `_` causes the `_` arm to be interpreted as a *constant_pattern* that matches only the value `0`.
+> *Example*: An in-scope constant named `_` does not change the interpretation of a `_` arm in a `switch` expression. Use `@_` to match that constant:
 >
+> <!-- Example: {template:"standalone-console", name:"DiscardPatternConstantLookup", inferOutput:true} -->
 > ```csharp
+> Console.WriteLine(WithoutUnderscore(2));
+> Console.WriteLine(WithUnderscore(0));
+> Console.WriteLine(WithUnderscore(2));
+>
 > static string WithoutUnderscore(int n) => n switch
 > {
 >     1 => "one",
@@ -524,10 +683,492 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 >     return n switch
 >     {
 >         1 => "one",
->         _ => "zero",
->         var x => "other: " + x,
+>         @_ => "zero",
+>         _ => "other",
 >     };
 > }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> other
+> zero
+> other
+> ```
+>
+> *end example*
+>
+> *Example*: A `_` that is the entire right-hand operand of `is` refers to a type for backward compatibility. Within parentheses or a `switch` expression, `_` is a discard. The escaped identifier `@_` can name the type in a pattern:
+>
+> <!-- Example: {template:"standalone-console", name:"DiscardPatternTypeLookup", expectedWarnings:["CS8513"], inferOutput:true} -->
+> ```csharp
+> object value = 1;
+> Console.WriteLine(value is _);
+> Console.WriteLine(value is (_));
+> Console.WriteLine(value switch { _ => "discard" });
+> Console.WriteLine(value switch { @_ => "type", var other => "other" });
+>
+> class _ {}
+> ```
+>
+> The output produced is:
+>
+> ```console
+> False
+> True
+> discard
+> other
+> ```
+>
+> *end example*
+
+### §type-pattern-new-clause Type pattern
+
+A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
+
+```ANTLR
+type_pattern
+    : type
+    ;
+```
+
+A type pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T` (§11.2.3).
+
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is `dynamic`, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)), or a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). This pattern form never matches a `null` value.
+
+### §relational-pattern-new-clause Relational pattern
+
+A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
+
+```ANTLR
+relational_pattern
+    : '<'  relational_expression
+    | '<=' relational_expression
+    | '>'  relational_expression
+    | '>=' relational_expression
+    ;
+```
+
+The *relational_expression* `E` in a *relational_pattern* is used to determine a converted constant value and a comparison type. A *default_literal* is not permitted as `E`, ignoring enclosing parentheses and null-forgiving operators.
+
+For an input type `T`, determine an expression `R` as follows. For these rules, parentheses are ignored and user-defined conversions are not considered.
+
+- If `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), `R` is `E`, without a conversion to `T`.
+- Otherwise, implicitly convert `E` to `T` as if it were the right operand of a simple assignment to a variable of type `T` ([§12.23.2](expressions.md#12232-simple-assignment)), and let `A` be the resulting expression. An implicit identity conversion between identical types leaves `E` unchanged.
+  - If `T` is a nullable value type with underlying type `U`, and `A` is the result of an identity, enumeration, or nullable value type conversion and is not a null constant, `R` is the operand of that conversion converted to `U` by a standard conversion ([§10.4](conversions.md#104-standard-conversions)).
+  - Otherwise, if `A` is the result of a boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) or an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), its operand has a constant value, and `A` does not have a constant value, `R` is that operand.
+  - Otherwise, `R` is `A`.
+
+The ***comparison type*** `C` is the type of `R`, and the converted constant value `v` is the constant value of `R`.
+
+A *relational_pattern* is *applicable to* its input type `T` if all of the following conditions hold:
+
+- The conversions required above exist, and `R` has a type and a constant value.
+- `C` is one of `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, or an enum type.
+- `T` is pattern compatible with `C` ([§11.2.3](patterns.md#1123-declaration-pattern)) and is neither an open class type nor an open ref struct type ([§16.2.3](structs.md#1623-ref-modifier)).
+- If `T` is an enum type, `C` is an enum type.
+- If an explicit nullable conversion ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) exists from `T` to `C`, the underlying type of `T` is identity convertible with `C`.
+
+It is a compile-time error if `v` is `double.NaN`, `float.NaN`, or `null`.
+
+At runtime, the input value is tested against `C` using the rules of the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test fails, including when the input is `null`, the pattern does not match. Otherwise, let `e` be the input value, unwrapped or unboxed as necessary to obtain a value of type `C`. The pattern matches if the predefined comparison `e «op» v` evaluates to `true`, where «op» is the relational operator of the pattern. The comparison uses the predefined numeric or enumeration comparison operators ([§12.14](expressions.md#1214-relational-and-type-testing-operators)), including binary numeric promotion ([§12.4.7.3](expressions.md#12473-binary-numeric-promotions)) where required.
+
+> *Example*: The constant is converted before comparing values of the comparison type. This differs from selecting a binary operator for the original input and constant types:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPatternConversions", inferOutput:true} -->
+> ```csharp
+> int integer = 1;
+> Console.WriteLine(integer < 2L);
+> double number = 1;
+> Console.WriteLine(number is < 2);
+> int? optional = 1;
+> Console.WriteLine(optional is < 2);
+> optional = null;
+> Console.WriteLine(optional is < 2);
+> object boxed = (short)1;
+> Console.WriteLine(boxed is < 3);
+> Console.WriteLine(boxed is not < 3);
+> Console.WriteLine(boxed is >= 3);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> True
+> True
+> False
+> False
+> True
+> False
+> ```
+>
+> The boxed `short` does not pass the type test for the comparison type `int`. Negating that failed match produces `true`; using `>=` instead still requires the type test and produces `false`.
+>
+> In contrast, the following relational patterns generate compile-time errors because their constants cannot be implicitly converted to the comparison types `int`, `byte`, and `float`, respectively:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPatternConstantConversions", expectedErrors:["CS0266", "CS0031", "CS0664"], ignoredWarnings:["CS8794"]} -->
+> ```csharp
+> int integer = 1;
+> Console.WriteLine(integer is < 2L);
+> byte small = 1;
+> Console.WriteLine(small is < 300);
+> float single = 1;
+> Console.WriteLine(single is < 2D);
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(double.NaN));
+> Console.WriteLine(Classify(2.4));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -4.0 => "Too low",
+>     > 10.0 => "Too high",
+>     double.NaN => "Unknown",
+>     _ => "Acceptable",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> Too high
+> Unknown
+> Acceptable
+> ```
+>
+> *end example*
+
+### §logical-pattern-new-clause Logical pattern
+
+A *logical_pattern* is used to negate the result of a pattern match, or to combine the results of multiple pattern matches using conjunction (`and`) or disjunction (`or`).
+
+```ANTLR
+logical_pattern
+    : disjunctive_pattern
+    ;
+
+disjunctive_pattern
+    : disjunctive_pattern 'or' conjunctive_pattern
+    | conjunctive_pattern
+    ;
+
+conjunctive_pattern
+    : conjunctive_pattern 'and' negated_pattern
+    | negated_pattern
+    ;
+
+negated_pattern
+    : 'not' negated_pattern
+    | primary_pattern
+    ;
+```
+
+`not`, `and`, and `or` are collectively called ***pattern operators***.
+
+These operators are contextual keywords ([§6.4.4](lexical-structure.md#644-keywords)). In a *subpattern*, an *identifier* `:` prefix is recognised before its *pattern*. The following rules disambiguate operator and identifier uses within patterns:
+
+- At the start of a *negated_pattern*, `not` is recognised as the pattern operator rather than an identifier.
+- Where `and` or `or` could be a *simple_designation* in a pattern, it is recognised as a pattern operator instead if the following token is an *operand-start token*, as defined below. Otherwise, it is recognised as an identifier.
+
+For this purpose, an ***operand-start token*** is `{`, `<`, `<=`, `>`, `>=`, or a token that can be the first token of an *expression* according to the syntactic grammar, other than `+`, `-`, `*`, `&`, or `^`. Identifiers, including contextual keywords, are included without name lookup or consideration of whether the expression would be a constant expression.
+
+> *Example*: `and` and `or` can be designations, but a following operand can cause them to be recognised as operators:
+>
+> <!-- Example: {template:"standalone-console", name:"PatternOperatorRecognition", inferOutput:true} -->
+> ```csharp
+> object value = 1;
+> if (value is int and)
+> {
+>     Console.WriteLine(and);
+> }
+> if (value is int or)
+> {
+>     Console.WriteLine(or);
+> }
+> Console.WriteLine(value is int and > 0);
+> Console.WriteLine(value is not not int);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> 1
+> 1
+> True
+> True
+> ```
+>
+> *end example*
+
+A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike `&&` and `||`, `and` and `or` do not guarantee left-to-right short-circuit evaluation. The evaluation-order rule in §11.2.1 applies; tests that cannot affect the result need not be performed.
+
+For a *negated_pattern* of the form `not P` or a *disjunctive_pattern* of the form `P or Q`, each immediate operand has the *input type* of the enclosing pattern. For a *conjunctive_pattern* of the form `P and Q`, the *input type* of `P` is the input type of the enclosing pattern, and the *input type* of `Q` is the *narrowed type* of `P`.
+
+A *logical_pattern* of one of these forms is *applicable to* a type `T` if and only if each operand is applicable to its input type, determined as above with `T` as the input type of the enclosing pattern.
+
+> *Example*: Conjunction narrows the input of its right operand; both operands of disjunction have the enclosing input type. Each of the following patterns is applicable to `object`:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPatternApplicability", inferOutput:true} -->
+> ```csharp
+> object value = "abc";
+> Console.WriteLine(value is string and { Length: 3 });
+> Console.WriteLine(value is string or int);
+> Console.WriteLine(value is not int);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> True
+> True
+> True
+> ```
+>
+> *end example*
+>
+> *Example*: Each of the following patterns has an operand that is not applicable to its input type:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"LogicalPatternInapplicability", expectedErrors:["CS8121", "CS8121", "CS8121", "CS8121"]} -->
+> ```csharp
+> class C
+> {
+>     static bool RightDisjunct(int value) => value is int or string;
+>     static bool LeftDisjunct(int value) => value is string or int;
+>     static bool Negation(int value) => value is not string;
+>     static bool NestedNegation(object value) => value is string and not int;
+> }
+> ```
+>
+> *end example*
+
+A declaration of a pattern variable shall satisfy both of the following conditions:
+
+- The declaration is not enclosed in a *disjunctive_pattern* of the form `P or Q`.
+- Each *negated_pattern* of the form `not P` that encloses the declaration is either the entire pattern of an is-pattern expression ([§12.14.12.2](expressions.md#1214122-the-is-pattern-operator)), or is nested within that pattern through only parenthesized patterns and other negated patterns.
+
+The definite-assignment effects of patterns are specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
+
+> *Example*: A variable declared within a negated pattern can be definitely assigned when the pattern does not match. Parentheses and repeated negation are also permitted:
+>
+> <!-- Example: {template:"standalone-console", name:"IsNotPatternDeclarations", inferOutput:true} -->
+> ```csharp
+> PrintIfInt(42);
+> PrintIfInt("other");
+>
+> static void PrintIfInt(object value)
+> {
+>     if (value is not (int number))
+>     {
+>         return;
+>     }
+>     Console.WriteLine(number);
+>
+>     if (value is (not not int repeated) && repeated > 0)
+>     {
+>         Console.WriteLine(repeated);
+>     }
+>
+>     if (value is not (int positive and > 0) || positive > 100)
+>     {
+>         return;
+>     }
+>     Console.WriteLine(positive);
+> }
+> ```
+>
+> The output produced is:
+>
+> ```console
+> 42
+> 42
+> 42
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Declarations within disjunctions, within a negation nested beneath a conjunction, and within a negation in a switch expression are rejected:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PatternDeclarationRestrictions", expectedErrors:["CS8780", "CS8780", "CS8780"]} -->
+> ```csharp
+> class C
+> {
+>     static bool Disjunction(object value) => value is int number or string;
+>     static bool NestedNegation(object value) => value is {} and not int number;
+>     static int SwitchNegation(object value) => value switch
+>     {
+>         not int number => 0,
+>         _ => 1,
+>     };
+> }
+> ```
+>
+> *end example*
+
+The *narrowed type* of a pattern `P` is defined as follows:
+
+- If `P` is a type pattern, the *narrowed type* is the type of the type pattern's type.
+- Otherwise, if `P` is a declaration pattern, the *narrowed type* is the type of the declaration pattern's type.
+- Otherwise, if `P` specifies a *type* and is either a *positional_pattern* or a *property_pattern*, the *narrowed type* is that type.
+- Otherwise, if `P` is matched via the rules for `ITuple` in a *positional_pattern* (§11.2.5), the *narrowed type* is the type `System.Runtime.CompilerServices.ITuple`.
+- Otherwise, if `P` is a constant pattern where the constant is not the null constant, the *narrowed type* is the type of expression `R` obtained using the expression-conversion steps in [Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern), with the constant pattern's expression as `E` and its input type as `T`. Only the steps determining `R` are used here.
+- Otherwise, if `P` is a relational pattern, the *narrowed type* is its comparison type ([Relational pattern](patterns.md#relational-pattern-new-clause-relational-pattern)).
+- Otherwise, if `P` is an `or` pattern, the *narrowed type* is the common type of the *narrowed type* of the subpatterns if such a common type exists. For this purpose, the common type algorithm considers only identity, boxing, and implicit reference conversions, and it considers all subpatterns of a sequence of `or` patterns (ignoring parenthesized patterns).
+- Otherwise, if `P` is an `and` pattern, the *narrowed type* is the *narrowed type* of the right pattern.
+- Otherwise, if `P` is a parenthesized pattern, its *narrowed type* is determined as specified in [§11.2.1](patterns.md#1121-general).
+- Otherwise the *narrowed type* of `P` is `P`'s input type.
+
+> *Example*: Narrowing accounts for numeric conversion of a constant and retains its type before boxing. The generic method below prints the inferred type of its argument, rather than its runtime type:
+>
+> <!-- Example: {template:"standalone-console", name:"ConvertedConstantPatternNarrowing", inferOutput:true} -->
+> ```csharp
+> double number = 1;
+> if (number is 1 and var constant)
+> {
+>     PrintType(constant);
+> }
+> if (number is < 2 and var relational)
+> {
+>     PrintType(relational);
+> }
+> object boxed = 1;
+> if (boxed is 1 and var unboxed)
+> {
+>     PrintType(unboxed);
+> }
+>
+> static void PrintType<T>(T value) => Console.WriteLine(typeof(T));
+> ```
+>
+> The output produced is:
+>
+> ```console
+> System.Double
+> System.Double
+> System.Int32
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
+
+When a *pattern* appears on the right-hand-side of `is`, the extent of the pattern is determined by the grammar. An is-pattern expression binds more tightly than `&&` and `||`. Unary `!` retains its ordinary expression precedence: `!b is true or false` is parsed as `(!b) is (true or false)`.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(-100));
+> Console.WriteLine(Classify(5.7));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -40.0 => "Too low",
+>     >= -40.0 and < 0 => "Low",
+>     >= 0 and < 10.0 => "Acceptable",
+>     >= 10.0 and < 20.0 => "High",
+>     >= 20.0 => "Too high",
+>     double.NaN => "Unknown",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> High
+> Too low
+> Acceptable
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern2", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 1, 19)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 10, 9)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 5, 11)));
+>
+> static string GetCalendarSeason(DateTime date) => date.Month switch
+> {
+>     3 or 4 or 5 => "spring",
+>     6 or 7 or 8 => "summer",
+>     9 or 10 or 11 => "autumn",
+>     12 or 1 or 2 => "winter",
+>     _ => throw new ArgumentOutOfRangeException(nameof(date),
+>       $"Date with unexpected month: {date.Month}."),
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> winter
+> autumn
+> spring
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern3", inferOutput:true} -->
+> ```csharp
+> object msg = "msg";
+> object obj = 5;
+> bool flag = true;
+>
+> // This is parsed as: (msg is (not int) or string)
+> bool result = msg is not int or string;
+> Console.WriteLine($"msg (\"msg\"): msg is not int or string: {result}");
+>
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int or string && flag: {result}");
+>
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (true): obj is int || obj is string && flag: {result}");
+>
+> flag = false;
+> // This is parsed as: (obj is (int or string)) && flag
+> result = obj is int or string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int or string && flag: {result}");
+>
+> // This is parsed as: (obj is int) || ((obj is string) && flag)
+> result = obj is int || obj is string && flag;
+> Console.WriteLine($"obj (5), flag (false): obj is int || obj is string && flag: {result}");
+> ```
+>
+> The output produced is
+>
+> ```console
+> msg ("msg"): msg is not int or string: True
+> obj (5), flag (true): obj is int or string && flag: True
+> obj (5), flag (true): obj is int || obj is string && flag: True
+> obj (5), flag (false): obj is int or string && flag: False
+> obj (5), flag (false): obj is int || obj is string && flag: True
 > ```
 >
 > *end example*

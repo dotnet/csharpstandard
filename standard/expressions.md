@@ -4430,7 +4430,7 @@ right thing, maybe not obviously for some, and so no change was made – making
 as it does not effect the resulting parse at all, but the prose gets messier. For C#9 this decision should be checked to be
 still valid after the new pattern changes.
 -->
-When recognising a *relational_expression* ([§12.14.1](expressions.md#12141-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
+The recognition of the *type* following `is` is subject to the type-recognition restriction in [§11.2.1](patterns.md#1121-general). When the same token sequence can be recognised both as “*relational_expression* `is` *type*” and as “*relational_expression* `is` *pattern*”, and *type* resolves to an accessible type, the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 The `is` operator is described in [§12.14.12](expressions.md#121412-the-is-operator) and the `as` operator is described in [§12.14.13](expressions.md#121413-the-as-operator).
 
@@ -4852,7 +4852,7 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
-Every *single_variable_designation* of the pattern introduces a new local variable that is *definitely assigned* ([§9.4](variables.md#94-definite-assignment)) when the corresponding *relational_expression* tests `true` ([§9.4.4.34](variables.md#94434-is-pattern-expressions)).
+Every *single_variable_designation* of the pattern introduces a new local variable. Its definite-assignment state is determined as specified in [§9.4.4.34](variables.md#94434-is-pattern-expressions).
 
 ### 12.14.13 The as operator
 
