@@ -293,9 +293,11 @@ The *identifier* of a *global_using_alias_directive* shall be unique within the 
 
 Just like regular members, names introduced by *global_using_alias_directive*s are hidden by similarly named members in nested scopes.
 
-The order in which *global_using_alias_directive*s are written has no significance, and resolution of the *namespace_or_type_name* referenced by a *global_using_alias_directive* is not affected by the *global_using_alias_directive* itself or by other *global_using_directive*s or *using_directive*s in the program. In other words, the *namespace_or_type_name* of a *global_using_alias_directive* is resolved as if the immediately containing compilation unit had no *using_directive*s and the entire containing program had no *global_using_directive*s. A *global_using_alias_directive* may however be affected by *extern_alias_directive*s in the immediately containing compilation unit.
+The order in which *global_using_alias_directive*s are written has no significance, and resolution of the namespace or type referenced by a *global_using_alias_directive* is not affected by the *global_using_alias_directive* itself or by other *global_using_directive*s or *using_directive*s in the program. In other words, the namespace or type referenced by a *global_using_alias_directive* is resolved as if the immediately containing compilation unit had no *using_directive*s and the entire containing program had no *global_using_directive*s. A *global_using_alias_directive* may however be affected by *extern_alias_directive*s in the immediately containing compilation unit.
 
 A *global_using_alias_directive* can create an alias for any namespace or type.
+
+The restrictions on alias target types and the effect of `unsafe` are the same as for a *using_alias_directive* ([§14.6.2](namespaces.md#1462-using-alias-directives)).
 
 Accessing a namespace or type through an alias yields exactly the same result as accessing that namespace or type through its declared name.
 
@@ -352,7 +354,7 @@ Furthermore, when more than one namespace or type imported by *global_using_name
 >
 > *end example*
 
-The *namespace_name* referenced by a *global_using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *global_using_alias_directive*. Thus, *global_using_namespace_directive*s in the same program do not affect each other and can be written in any order.
+The *namespace_name* referenced by a *global_using_namespace_directive* is resolved in the same way as the namespace or type referenced by a *global_using_alias_directive*. Thus, *global_using_namespace_directive*s in the same program do not affect each other and can be written in any order.
 
 ### 14.5.4 Global using static directives
 
@@ -363,6 +365,8 @@ global_using_static_directive
     : 'global' using_static_directive
     ;
 ```
+
+The *type_name* referenced by a *global_using_static_directive* is resolved in the same way as the namespace or type referenced by a *global_using_alias_directive* ([§14.5.2](namespaces.md#1452-global-using-alias-directives)). The effect of `unsafe` is the same as for a *using_static_directive* ([§14.6.4](namespaces.md#1464-using-static-directives)).
 
 Within global attributes, top-level statements, and member declarations in a program that contains a *global_using_static_directive*, the accessible nested types and static members (except extension methods) contained directly in the declaration of the given type can be referenced directly.
 
@@ -601,7 +605,7 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 <!-- markdownlint-enable MD028 -->
 > *Note*: Allowing the creation of an alias to a *type* rather than just to a *type_name* (as was previously the restriction in earlier editions of this specification) allows both named and unnamed types to be aliased. *end note*
 
-The presence of `unsafe` permits pointer types ([§24.3](unsafe-code.md#243-pointer-types)) to be aliased. It causes the entire textual extent of the *type* (but not the *namespace_name*) to become an unsafe context.
+The presence of `unsafe` establishes an unsafe context for the target *type* ([§24.2](unsafe-code.md#242-unsafe-contexts)), permitting pointer types ([§24.3](unsafe-code.md#243-pointer-types)) to be aliased.
 
 > *Example*:
 >
@@ -997,7 +1001,7 @@ A *using_static_directive* only imports members and types declared directly in t
 
 Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.6.3](namespaces.md#1463-using-namespace-directives).
 
-The presence of `unsafe` permits pointer types ([§24.3](unsafe-code.md#243-pointer-types)) to be aliased. It causes the entire textual extent of the *type_name* to become an unsafe context.
+The presence of `unsafe` establishes an unsafe context for the target *type_name* ([§24.2](unsafe-code.md#242-unsafe-contexts)), permitting pointer types ([§24.3](unsafe-code.md#243-pointer-types)) within that target type syntax.
 
 ## 14.7 Namespace member declarations
 
