@@ -1046,6 +1046,13 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 A lambda expression `F` is compatible with an expression tree type `Expression<D>` if `F` is compatible with the delegate type `D`. This does not apply to anonymous methods, only lambda expressions.
 
+When a lambda expression `F` is converted to a delegate type `D` or an expression tree type `Expression<D>`, a warning may be issued if any corresponding parameter pair meets either of the following conditions:
+
+- The parameter in `F` has a *default_argument*, and the parameter in `D` has no default value or has a different default value.
+- The parameter in `F` has a `params` modifier, and the parameter in `D` does not.
+
+These warnings are considered after any applicable overload resolution has selected a function member; they do not affect compatibility or overload resolution. Invocation of a delegate of type `D` is governed by the default values and `params` modifiers of `D`.
+
 Anonymous functions may influence overload resolution, and participate in type inference. See [§12.6](expressions.md#126-function-members) for further details.
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types

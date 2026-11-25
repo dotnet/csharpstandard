@@ -5758,7 +5758,7 @@ A non-`static` local function or non-`static` anonymous function can capture sta
 > *Note*: A `static` anonymous function is not required to produce the same delegate instance on each evaluation. See [§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types). *end note*
 <!-- markdownlint-enable MD028 -->
 
-A *lambda_expression* shall not contain any *parameter_modifier*s with the `this` modifier.
+An anonymous function shall not contain any *parameter_modifier*s with the `this` modifier.
 
 An *anonymous_method_expression* shall not contain any *default_argument*s or *parameter_array*s.
 
@@ -5790,7 +5790,7 @@ An anonymous function with the `async` modifier is an async function and follows
 
 The parameters of an anonymous function in the form of a *lambda_expression* can be explicitly or implicitly typed. In an explicitly typed parameter list, the type of each parameter is explicitly stated. In an implicitly typed parameter list, the types of the parameters are inferred from the context in which the anonymous function occurs—specifically, when the anonymous function is converted to a compatible delegate type or expression tree type, that type provides the parameter types ([§10.7](conversions.md#107-anonymous-function-conversions)).
 
-In a *lambda_expression* with a single, implicitly typed parameter, the parentheses may be omitted from the parameter list, provided that *lambda_expression* has no *attributes* on the whole expression or on any of its *explicit_anonymous_function_parameter*s, and it has no explicit return type. In other words, an anonymous function of the form
+In a *lambda_expression* with a single, implicitly typed parameter, the parentheses may be omitted from the parameter list, provided that *lambda_expression* has no *attributes* on the whole expression or on its *implicit_anonymous_function_parameter*, and it has no explicit return type. In other words, an anonymous function of the form
 
 ```csharp
 ( «param» ) => «expr»
@@ -5804,7 +5804,7 @@ can be abbreviated to
 
 The parameter list of an anonymous function in the form of an *anonymous_method_expression* is optional. If given, the parameters shall be explicitly typed. If not, the anonymous function is convertible to a delegate with any parameter list not containing output parameters.
 
-It is a compile error for any *explicit_anonymous_function_parameter* of an anonymous function in the form of an *anonymous_method_expression* to have *attributes*.
+It is a compile-time error for any *fixed_parameter* of an *anonymous_method_expression* to have *attributes*.
 
 A *block* body of an anonymous function is always reachable ([§13.2](statements.md#132-end-points-and-reachability)).
 
@@ -5848,7 +5848,7 @@ The contextual keyword `var` shall not be used as an explicit return type in a *
 
 ### 12.22.2 Anonymous function signatures
 
-In an anonymous function parameter list, if two or more of the *identifier*s occurring directly in its *explicit_anonymous_function_parameter*s or *implicit_anonymous_function_parameter*s are *discard_token*s, each corresponding parameter is a ***discard parameter*** ([§9.2.9.2](variables.md#9292-discards)). All other parameters are non-discard parameters, whose names are specified by their *identifier*s.
+In an anonymous function parameter list, if two or more of the *identifier*s occurring directly in its *fixed_parameter*s, *parameter_array*s, or *implicit_anonymous_function_parameter*s are *discard_token*s, each corresponding parameter is a ***discard parameter*** ([§9.2.9.2](variables.md#9292-discards)). All other parameters are non-discard parameters, whose names are specified by their *identifier*s.
 
 The *anonymous_function_signature* of an anonymous function defines the names of the non-discard parameters and optionally the types and *attributes* of all the parameters for the anonymous function. The scope of the non-discard parameters of the anonymous function is the *anonymous_function_body* ([§7.6](basic-concepts.md#76-scopes)) and `nameof` expressions in attributes placed on the anonymous function or its parameters. Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.2](basic-concepts.md#72-declarations)). It is thus a compile-time error for the name of a non-discard parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
@@ -6242,7 +6242,7 @@ An anonymous function `F` shall always be converted to a delegate type `D` or 
 
 ### 12.22.8 Anonymous function type
 
-The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a method signature: the parameter types and ref kinds, default values, `params` modifiers, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
+The natural type of an anonymous function expression or method group is called an ***anonymous function type***. An anonymous function type represents a signature consisting of the parameter types and ref kinds, whether each parameter is required or optional, default values, `params` modifiers, and the return type and ref kind. An anonymous function type exists only at compile time and does not appear in source or metadata. Anonymous function expressions or method groups with the same signature have the same anonymous function type.
 
 An anonymous function expression has a ***natural type*** if its parameter list is present, its parameter types are explicit, and its return type is either explicit or can be inferred ([§12.6.3.14](expressions.md#126314-inferred-return-type)). For this purpose, a non-async anonymous function whose body is an expression classified as nothing, or a block with no `return` statements specifying expressions, has inferred return type `void`.
 
@@ -6302,7 +6302,7 @@ The delegate type for the anonymous function or method group with parameter type
 
 > *Note*: A future version of this specification might allow more signatures to bind to `System.Action<>` and `System.Func<>` types (e.g., if `ref struct` types are allowed type arguments). *end note*
 
-If two anonymous functions or method groups in the same compilation require synthesized delegate types with the same parameter types and modifiers, and the same return type and modifiers, the compiler shall use the same synthesized delegate type.
+If two anonymous functions or method groups in the same compilation require synthesized delegate types with the same parameter types and modifiers (including `params`), corresponding parameters that are either both required or both optional with the same default values, and the same return type and modifiers, the compiler shall use the same synthesized delegate type. Parameter names do not affect this comparison.
 
 > *Example*: Explicit return types can provide bounds even when parameter types have not yet been inferred. Anonymous function types can also provide bounds when there is no target delegate type:
 >
