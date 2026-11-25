@@ -1151,6 +1151,8 @@ For purposes of interface mapping, a class, interface, or struct member `A` matc
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
 - `A` and `B` are indexers, the type and parameter lists of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 
+In these parameter-list comparisons, corresponding `in` and `ref readonly` modifiers match as specified in [§7.5](basic-concepts.md#75-signatures-and-overloading).
+
 Notable implications of the interface-mapping algorithm are:
 
 - Explicit interface member implementations take precedence over other members in the same class or struct when determining the class or struct member that implements an interface member.

@@ -2305,7 +2305,7 @@ An output parameter implicitly has the `scoped` modifier.
 
 For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
-A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `ref readonly` or `in` modifier may have a *default_argument*; however, in the `ref readonly` case, a warning shall be issued. The *expression* in a *default_argument* shall be one of the following:
+A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `ref readonly` or `in` modifier may have a *default_argument*; however, in the `ref readonly` case, a warning may be issued. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
 - an expression of the form `new S()` where `S` is a value type and the expression invokes the implicit default constructor, rather than an explicitly declared parameterless instance constructor; the equivalent target-typed `new()` expression is also permitted
@@ -2396,7 +2396,7 @@ Input, output, and reference parameters are ***by-reference parameter***s. A by-
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
-When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. For a `ref readonly` parameter, either `ref` or `in` may precede that variable reference. However, when the parameter is a `ref readonly` or `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A writable reference parameter of struct type may also receive an *interpolated_string_handler_expression* through an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), without the `ref` keyword; the constructed handler temporary is passed by reference as specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
+When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) with an identity conversion to the parameter type. For an `in` or `ref readonly` parameter, either `ref` or `in` may precede that variable reference. An argument with the `ref` modifier shall reference a writable variable, even when the corresponding parameter is readonly. However, when the parameter is a `ref readonly` or `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. The permitted call-site warnings are specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). A writable reference parameter of struct type may also receive an *interpolated_string_handler_expression* through an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), without the `ref` keyword; the constructed handler temporary is passed by reference as specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
 
 By-reference parameters are not allowed on functions declared as an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)).
 
@@ -2418,7 +2418,7 @@ A parameter declared with a `ref` or `ref readonly` modifier is a ***reference p
 
 It is a compile-time error to modify the value of a `ref readonly` parameter.
 
-The argument corresponding to a `ref readonly` parameter may be a value, in which case, a variable having that value is created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+The argument corresponding to a `ref readonly` parameter may be a value. The parameter refers to an existing variable or a temporary storage location as specified in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). Recognition of this parameter modifier in metadata is described in [§23.5.1](attributes.md#2351-general).
 
 > *Example*: The example
 >

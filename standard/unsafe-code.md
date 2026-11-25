@@ -749,7 +749,7 @@ The case of *unary_expression* designating a method group is described immediate
 
 In an unsafe context, a method `M` is compatible with a *funcptr_type* `F` if all of the following are true:
 
-- `M` and `F` have the same number of parameters, and each parameter in `M` has the same `ref`, `out`, or `in` modifiers as the corresponding parameter in `F`.
+- `M` and `F` have the same number of parameters, and corresponding parameter modifiers are compatible according to the method-parameter rules of [§21.4](delegates.md#214-delegate-compatibility), with `F` in place of `D`. This method compatibility does not relax the matching of parameter modifiers for implicit conversions between function pointer types ([§24.5](unsafe-code.md#245-pointer-conversions)).
 - For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `M` to the corresponding parameter type in `F`.
 - For each by-reference parameter, the parameter type in `M` is the same as the corresponding parameter type in `F`.
 - If the return type is by value, an identity, implicit reference, or implicit pointer conversion exists from the return type of `F` to the return type of `M`.
@@ -761,10 +761,12 @@ An implicit conversion exists from a *unary_expression* whose target is a method
 
 - A single method `M` is selected corresponding to a method invocation of the form `E(A)` with the following modifications:
   - The arguments list `A` is a list of expressions, each classified as a variable and with the type and modifier of the corresponding *funcptr_parameter_list* of `F`.
+  - Corresponding parameter modifiers are matched using the method-parameter compatibility rules above, rather than the argument-modifier rules for an ordinary invocation.
   - The candidate methods are only those methods that are applicable in their normal form, not those applicable in their expanded form.
   - The candidate methods are only those methods that are static.
 - If the algorithm of overload resolution produces an error, then a compile-time error occurs. Otherwise, the algorithm produces a single best method `M` having the same number of parameters as `F` and the conversion is considered to exist.
 - The selected method `M` shall be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
+- For a successful conversion, a warning may be issued for each pair of corresponding parameters in `M` and `F` with differing compatible modifiers.
 - The result of the conversion is a function pointer of type `F`.
 
 ### 24.6.6 Pointer increment and decrement

@@ -584,11 +584,11 @@ The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input or `ref readonly` reference parameter and then passed as that, as determined by [§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). An *interpolated_string_handler_expression* converted to a struct handler can also be passed to a writable reference parameter through a temporary, as specified in those clauses.
 - The keyword `in` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) or is transformed into a `ref readonly` reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) and then passed as that. A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
-- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
+- The keyword `ref` optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) or an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). The variable shall be writable and definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed with the `ref` modifier. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 - The keyword `out`, optionally followed by `scoped`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 - The keyword `out`, optionally followed by `scoped`, followed by a *declaration_expression* ([§12.20](expressions.md#1220-declaration-expressions)), indicating that a new local variable is declared, and then passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). The newly-declared variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following the function member invocation. For a discussion of `scoped`, see [§9.7.3](variables.md#973-the-scoped-modifier).
 
-The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, an argument with value passing mode might be passed to an input or `ref readonly` reference parameter or, for an interpolated string handler conversion, to a writable reference parameter as described above.
+The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively (where both forms using the `out` keyword use the output passing mode). However, an argument with value passing mode might be passed to an input or `ref readonly` reference parameter or, for an interpolated string handler conversion, to a writable reference parameter as described above. An argument with reference passing mode may be passed to an input parameter.
 
 Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field cannot be treated as volatile by the invoked method.
 
@@ -619,6 +619,8 @@ The corresponding parameters for function member arguments are established as fo
 
 #### 12.6.2.3 Run-time evaluation of argument lists
 
+After a function member has been successfully selected, a warning may be issued for an argument passed with the `ref` modifier to an `in` parameter. For an argument passed without a modifier to a `ref readonly` parameter, a warning may be issued that `ref` or `in` should be specified when the argument is classified as a variable, or that a variable should be supplied when the argument is classified as a value. The warning to specify a modifier is suppressed for the receiver of an extension method invocation and for arguments supplied implicitly by a collection initializer or an interpolated string handler conversion.
+
 During the run-time processing of a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)), the expressions or variable references of an argument list are evaluated in order, from left to right, as follows:
 
 - For a value argument, if the parameter’s passing mode is value
@@ -640,7 +642,7 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      >
      > *end example*
 
-- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference is given as an output argument, or is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
+- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation, including when a reference argument is passed to an input parameter. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference is given as an output argument, or is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
 
 > *Note*: this run-time check is required due to array covariance ([§17.6](arrays.md#176-array-covariance)). *end note*
 <!-- markdownlint-disable MD028 -->
@@ -1085,6 +1087,7 @@ A function member is said to be an ***applicable function member*** with respect
     - The parameter is an input, reference, or output parameter, and an identity conversion exists between the argument type and parameter type.
   - The argument has value passing mode, the parameter is an input or `ref readonly` reference parameter, and an implicit conversion exists from the argument expression to the parameter type.
   - The argument has input passing mode, the parameter is a `ref readonly` reference parameter, and an identity conversion exists between the argument type and parameter type.
+  - The argument has reference passing mode, the parameter is an input parameter, and an identity conversion exists between the argument type and parameter type.
   - The argument has value passing mode, the parameter is a writable reference parameter of struct type, and an implicit interpolated string handler conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)) exists from the argument expression to the parameter type.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
@@ -1096,6 +1099,7 @@ For a function member that includes a parameter array, if the function member is
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, the corresponding parameter is an input or `ref readonly` reference parameter, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is input, the corresponding parameter is a `ref readonly` reference parameter, and the type of the argument expression is identical to the parameter type.
+  - the parameter-passing mode of the argument is reference, the corresponding parameter is an input parameter, and an identity conversion exists between the argument type and parameter type.
   - the parameter-passing mode of the argument is value, the corresponding parameter is a writable reference parameter of struct type, and an implicit interpolated string handler conversion exists from the argument expression to the parameter type.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
@@ -1231,7 +1235,7 @@ public static void M1(in int p1) { ... }
 
 Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
 
-> *Note*: No such choice need exist for arguments of input, output, or reference passing modes, as those arguments only match the exact same parameter passing modes. *end note*
+> *Note*: This preference for value passing mode does not select between parameters for an argument passed with `in`, `out`, or `ref`. *end note*
 
 #### 12.6.4.5 Better conversion from expression
 
@@ -5786,6 +5790,7 @@ explicit_anonymous_function_parameter
 
 anonymous_function_parameter_modifier
     : 'ref'
+    | ('ref' 'readonly')
     | 'out'
     | 'in'
     ;
@@ -5933,7 +5938,7 @@ The *anonymous_function_signature* of an anonymous function defines the names of
 >
 > *end example*
 
-If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
+If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types in the same order and compatible parameter modifiers as specified in [§10.7](conversions.md#107-anonymous-function-conversions). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
 
 Note that an *anonymous_function_signature* cannot include a parameter array. Nevertheless, an *anonymous_function_signature* may be compatible with a delegate type whose parameter list contains a parameter array.
 

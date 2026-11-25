@@ -639,7 +639,9 @@ Signatures are the enabling mechanism for ***overloading*** of members in classe
 - Overloading of indexers permits a class, struct, or interface to declare multiple indexers, provided their signatures are unique within that class, struct, or interface.
 - Overloading of operators permits a class or struct to declare multiple operators with the same name, provided their signatures are unique within that class or struct.
 
-Although *parameter_mode_modifier*s are considered part of a signature, members declared in a single type cannot differ in signature solely by those modifiers. A compile-time error occurs if two members are declared in the same type with signatures that would be the same if all parameters in both methods with `out` or `in` modifiers were changed to `ref` modifiers. For other purposes of signature matching (e.g., hiding or overriding), *parameter_mode_modifier*s are considered part of the signature and do not match each other.
+Although *parameter_mode_modifier*s are considered part of a signature, members declared in a single type cannot differ in signature solely by those modifiers. A compile-time error occurs if two members are declared in the same type with signatures that would be the same if all parameters in both members with `out`, `in`, or `ref readonly` modifiers were changed to `ref` modifiers.
+
+For hiding, overriding, and interface implementation, corresponding `in` and `ref readonly` parameter modifiers match each other; a warning may be issued at the declaration that uses a different modifier from the inherited or implemented member. Other differing *parameter_mode_modifier*s do not match for these purposes. The defining and implementing declarations of a partial method shall have matching parameter modifiers ([§15.6.9](classes.md#1569-partial-methods)).
 
 > *Note*: This restriction is to allow C# programs to be easily translated to run on a platform that does not provide a way to define methods that differ solely in their *parameter_mode_modifier*s. *end note*
 

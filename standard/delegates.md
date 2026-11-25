@@ -96,7 +96,7 @@ Except for instantiation, any operation that can be applied to a class or class 
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
-- `D` and `M` have the same number of parameters, and each parameter in `D` has the same by-reference parameter modifier as the corresponding parameter in `M`.
+- `D` and `M` have the same number of parameters. Corresponding parameter modifiers shall be the same, except that when `M` is a method, a `ref readonly` parameter in `M` may correspond to an `in` or `ref` parameter in `D`, and an `in` parameter in `M` may correspond to a `ref readonly` or `ref` parameter in `D`.
 - For each value parameter, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
 - For each by-reference parameter, the parameter type in `D` is the same as the parameter type in `M`.
 - One of the following is true:

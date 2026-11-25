@@ -1454,15 +1454,17 @@ For a variable `c` resulting from a ref-returning function invocation, `ref e1.M
 
 - The caller-context.
 - The safe-context ([§16.6.15](structs.md#16615-safe-context-constraint)) contributed by all argument expressions (including the receiver), excluding arguments corresponding to `scoped` parameters and excluding `out` arguments.
-- The ref-safe-context contributed by all `ref` and `ref readonly` arguments, excluding those corresponding to `scoped ref` parameters and excluding `out` arguments.
+- The ref-safe-context of the storage location passed for each argument corresponding to an input or reference parameter, excluding arguments corresponding to `scoped ref` parameters.
 
-If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by all arguments which are ref-to-ref-struct.
+If `M()` does return ref-to-ref-struct, the ref-safe-context is the narrowest ref-safe-context contributed by arguments which are ref-to-ref-struct, subject to the exclusions below.
+
+The storage location passed for an argument is determined by [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists). An explicit `ref` or `in` argument supplies the referenced variable’s ref-safe-context. An unmodified argument to an input or `ref readonly` parameter supplies the existing variable’s ref-safe-context when that variable is passed directly; otherwise, the temporary storage location supplies the nearest enclosing context ([§9.7.2.7](variables.md#9727-values)).
 
 For the purpose of these rules, a given argument `expr` passed to parameter `p`:
 
 1. If `p` is `scoped ref`, then `expr` does not contribute ref-safe-context.
-2. If `p` is `scoped`, then `expr` does not contribute safe-context.
-3. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
+1. If `p` is `scoped`, then `expr` does not contribute safe-context.
+1. If `p` is `out`, then `expr` does not contribute ref-safe-context or safe-context.
 
 > *Example*: the last bullet is necessary to handle code such as
 >
