@@ -2948,6 +2948,7 @@ A candidate extension indexer is applicable with respect to receiver `E` and arg
 The same scopes examined for extension method invocation are traversed, including the current and enclosing lexical scopes and `using` namespace or `using static` imports.
 
 Considering each scope in turn:
+
 - Extension blocks in non-generic static class declarations in the current scope are considered.
 - The indexers in those extension blocks comprise the candidate set.
 - Candidates that are not accessible are removed from the set.
@@ -2960,6 +2961,7 @@ Using this single best indexer, the indexer access is then processed as a static
 Depending on the context in which it is used, an indexer access causes invocation of either the get accessor or the set accessor of the indexer. If the indexer access is the target of an assignment, the set accessor static implementation method is invoked to assign a new value. In all other cases, the get accessor static implementation method is invoked to obtain the current value. Either way, the invocation uses generic arguments inferred during the applicability check and the receiver as the first argument.
 
 An extension implicit `System.Index` (or `System.Range`) indexer access is applicable if:
+
 1. The *element_access* has a single argument that is of type `System.Index` (or `System.Range`), and
 1. An applicable `Length` or `Count` (instance or extension) property is found on the receiver type, and
 1. An applicable `this[int]` (or `Slice(int, int)`) (instance or extension) indexer is found on the receiver type.
