@@ -2894,7 +2894,9 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
 
 #### 12.8.12.5 Indexer access
 
-For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not contain `out` or `ref` arguments.
+##### §indexer-access-general General
+
+For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement,  or have as an extension, one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not contain `out` or `ref` arguments.
 
 The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
@@ -2903,7 +2905,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
   - If `I` is not applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)), then `I` is removed from the set.
   - If `I` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)), then all indexers declared in a base type of `S` are removed from the set.
   - If `I` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)) and `S` is a class type other than `object`, all indexers declared in an interface are removed from the set.
-- If the resulting set of candidate indexers is empty, then no applicable indexers exist, and a binding-time error occurs.
+- If the resulting set of candidate indexers is empty, an attempt is made to process the construct as an extension indexer access as described in §extension-indexer-access. If no applicable indexers exist a binding-time error occurs.
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
 - The accessors of the best indexer are checked:
   - If the indexer access is the target of an assignment then the indexer shall have a set or ref get accessor, otherwise, a binding-time error occurs;
@@ -2923,6 +2925,44 @@ The runtime processing of the indexer access consists of the following steps:
 - Using the best indexer determined at binding-time:
   - If the indexer access is the target of an assignment, the set accessor or ref get accessor is invoked to assign a new value ([§12.24.2](expressions.md#12242-simple-assignment)).
   - In all other cases, the get accessor or ref get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+##### §extension-indexer-access Extension indexer access
+
+If the normal processing of an indexer access (§indexer-access-general) finds no applicable indexer, an attempt is made to process the construct as an extension indexer access, as follows.
+
+1. Attempt to bind using the instance indexers declared (or inherited) on the receiver type. If an applicable candidate is found, overload resolution can proceed.
+1. Otherwise, attempt to bind using the implicit instance indexers declared (or inherited) on the receiver type. If an applicable candidate is found, overload resolution    can proceed.
+1. Otherwise, attempt to bind as an extension indexer access. If this process finds an applicable candidate, overload resolution can proceed.
+1. Otherwise, attempt to bind as an extension implicit indexer access. If this process finds an applicable candidate, overload resolution can proceed
+
+Extension indexers are not considered when the receiver is a *base_access*.
+
+> *Note*: An *element_access* is only processed as an indexer access if the receiver
+is a variable or value, so extension indexers are never considered when the
+receiver is a type. *end note*
+
+Given an *element_access* `E[A]`, the objective is to identify an extension indexer.
+
+A candidate extension indexer is applicable with respect to receiver `E` and argument list `A` if an expanded signature, comprised of the type parameters of the extension block and a parameter list combining the extension parameter with the indexer's parameters, is applicable with respect to an argument list combining the receiver `E` with the argument list `A`.
+
+The same scopes examined for extension method invocation are traversed, including the current and enclosing lexical scopes and `using` namespace or `using static` imports.
+
+Considering each scope in turn:
+- Extension blocks in non-generic static class declarations in the current scope are considered.
+- The indexers in those extension blocks comprise the candidate set.
+- Candidates that are not accessible are removed from the set.
+- Candidates that are not applicable (as defined above) are removed from the set.
+- If the resulting set of candidate indexers is empty, then processing moves to the next scope. If the end of the final scope is reached without finding any candidates, an attempt is made to see if there is an extension implicit indexer.
+- Overload resolution is applied to the candidate set. If a single best indexer cannot be identified, the extension indexer access is ambiguous, and a compile-time error occurs.
+
+Using this single best indexer, the indexer access is then processed as a static method invocation.  
+
+Depending on the context in which it is used, an indexer access causes invocation of either the get accessor or the set accessor of the indexer. If the indexer access is the target of an assignment, the set accessor static implementation method is invoked to assign a new value. In all other cases, the get accessor static implementation method is invoked to obtain the current value. Either way, the invocation uses generic arguments inferred during the applicability check and the receiver as the first argument.
+
+An extension implicit `System.Index` (or `System.Range`) indexer access is applicable if:
+1. The *element_access* has a single argument that is of type `System.Index` (or `System.Range`), and
+1. An applicable `Length` or `Count` (instance or extension) property is found on the receiver type, and
+1. An applicable `this[int]` (or `Slice(int, int)`) (instance or extension) indexer is found on the receiver type.
 
 ### 12.8.13 Null Conditional Element Access
 
