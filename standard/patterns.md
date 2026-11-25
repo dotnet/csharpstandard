@@ -790,6 +790,41 @@ negated_pattern
 
 `not`, `and`, and `or` are collectively called ***pattern operators***.
 
+These operators are contextual keywords ([§6.4.4](lexical-structure.md#644-keywords)). In a *subpattern*, an *identifier* `:` prefix is recognised before its *pattern*. The following rules disambiguate operator and identifier uses within patterns:
+
+- At the start of a *negated_pattern*, `not` is recognised as the pattern operator rather than an identifier.
+- Where `and` or `or` could be a *simple_designation* in a pattern, it is recognised as a pattern operator instead if the following token is an *operand-start token*, as defined below. Otherwise, it is recognised as an identifier.
+
+For this purpose, an ***operand-start token*** is `{`, `<`, `<=`, `>`, `>=`, or a token that can be the first token of an *expression* according to the syntactic grammar, other than `+`, `-`, `*`, `&`, or `^`. Identifiers, including contextual keywords, are included without name lookup or consideration of whether the expression would be a constant expression.
+
+> *Example*: `and` and `or` can be designations, but a following operand can cause them to be recognised as operators:
+>
+> <!-- Example: {template:"standalone-console", name:"PatternOperatorRecognition", inferOutput:true} -->
+> ```csharp
+> object value = 1;
+> if (value is int and)
+> {
+>     Console.WriteLine(and);
+> }
+> if (value is int or)
+> {
+>     Console.WriteLine(or);
+> }
+> Console.WriteLine(value is int and > 0);
+> Console.WriteLine(value is not not int);
+> ```
+>
+> The output produced is:
+>
+> ```console
+> 1
+> 1
+> True
+> True
+> ```
+>
+> *end example*
+
 A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike `&&` and `||`, `and` and `or` do not guarantee left-to-right short-circuit evaluation. The evaluation-order rule in §11.2.1 applies; tests that cannot affect the result need not be performed.
 
 For a *negated_pattern* of the form `not P` or a *disjunctive_pattern* of the form `P or Q`, each immediate operand has the *input type* of the enclosing pattern. For a *conjunctive_pattern* of the form `P and Q`, the *input type* of `P` is the input type of the enclosing pattern, and the *input type* of `Q` is the *narrowed type* of `P`.

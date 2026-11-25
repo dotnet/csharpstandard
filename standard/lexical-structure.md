@@ -625,6 +625,8 @@ Another example such disambiguation is the contextual keyword `await` ([§12.9.9
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
+The recognition of `not`, `and`, and `or` as pattern operators is specified in [Logical pattern](patterns.md#logical-pattern-new-clause-logical-pattern).
+
 > *Note*: When used as contextual keywords, these identifiers cannot contain *Unicode_Escape_Sequence*s. *end note*
 
 ### 6.4.5 Literals
