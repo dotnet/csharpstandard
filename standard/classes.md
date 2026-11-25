@@ -6492,6 +6492,7 @@ extension_body
 extension_member_declaration
     : method_declaration
     | property_declaration
+    | indexer_declaration
     | operator_declaration
     ;
 ```
@@ -6663,6 +6664,29 @@ An original-style extension method can be rewritten in the new style.
 > *end example*
 
 An extension property may not have an `init` accessor.
+
+### §Extension-indexers Extension indexers
+
+> *Example*: Here is an extension indexer declaration:
+>
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMembersDecls4", replaceEllipsis:true, customEllipsisReplacements: ["true", "new string(\"\")"]} -->
+> ```csharp
+> static class BitExtensions
+> {
+>     extension<T>(T t)
+>     {
+>         public bool this[int index]
+>         {
+>             get => ...;
+>             set => ...;
+>         }
+>     }
+> }
+> ```
+>
+> *end example*
+
+As an indexer is required to be an instance member, an extension block that declares an indexer shall provide a named receiver parameter.
 
 ### 15.14.4 Extension operators
 
