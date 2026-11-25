@@ -217,9 +217,9 @@ An instance member definition or accessor of an instance property, indexer, or e
 
 As with a non-record class, a non-record struct with a *delimited_parameter_list* has a primary constructor (§prim-constructor) provided by the implementation. The semantics of the non-record class version apply here as well and are augmented by the text in this subclause.
 
-In the case of a non-record class, the implementation shall provide a private, init-only field for each parameter. However, for a non-record struct, the storage is read-write and provided in some unspecified manner.
+Capture and access to captured parameters follow §prim-constructor, including the restrictions for readonly structs and readonly members. A primary constructor parameter does not by itself cause a property to be provided.
 
-Instance field declarations for a non-record struct are permitted to include variable initializers. If there is no primary constructor, the instance initializers execute as part of the parameterless constructor. Otherwise, at runtime the primary constructor executes the instance initializers appearing in the *struct_body*.
+Instance field declarations for a non-record struct are permitted to include variable initializers. Instance constructors execute these initializers according to [§16.6.8.1](structs.md#16681-field-initializers) and [§16.6.9](structs.md#1669-constructors), whether or not the struct has a primary constructor. A primary constructor initializes any retained storage for captured parameters and then executes the instance initializers in the *struct_body* in textual order ([§15.5.6.1](classes.md#15561-general)); it does not invoke a base class constructor. Every other explicitly declared instance constructor shall chain to the primary constructor as specified in §prim-constructor. Execution of the implicitly provided default parameterless constructor and default initialization ([§16.6.5](structs.md#1665-default-values)), including default initialization of array elements ([§17.3](arrays.md#173-array-creation)), do not execute instance initializers.
 
 ## 16.4 Record structs
 
@@ -238,8 +238,6 @@ record_struct_declaration
 A *record_struct_declaration* consists of an optional set of *attributes* ([§23](attributes.md#23-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `record`, followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *delimited_parameter_list* specification ([§15.6.2.1](classes.md#15621-general)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)).
 
 A *record_struct_declaration* having a *delimited_parameter_list* declares a ***positional record struct***.
-
-At most only one *record_struct_declaration* containing `partial` may provide a *delimited_parameter_list*.
 
 The parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 

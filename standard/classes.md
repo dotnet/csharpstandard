@@ -223,9 +223,9 @@ interface_type_list
     ;
 ```
 
-*argument_list* corresponds to the base class’s positional member list *delimited_parameter_list*.
+The *argument_list* in a *base_argument_list* supplies arguments to a constructor of the direct base class, selected as specified in [§15.11.2](classes.md#15112-constructor-initializers). The base class need not have a primary constructor.
 
-A warning shall be produced for an in or by-value argument in a *base_argument_list* when all the following conditions are true:
+A warning may be produced for an `in` or by-value argument in a *base_argument_list* when all the following conditions are true:
 
 - The argument represents an implicit or explicit identity conversion of a primary constructor parameter (§prim-constructor);
 - The argument is not part of an expanded params argument;
@@ -827,6 +827,8 @@ The *class_body*s `{}`, `{};`, and `;` are equivalent, and the *class_body*s `{�
 The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
+
+At most one partial type declaration of a partial class or struct may provide a *delimited_parameter_list*, including an empty list. This rule applies to all types, including `record` types, regardless of the parameter lists’ signatures.
 
 For a partial type, either all parts shall include the `file` modifier and be declared in the same compilation unit, or no part shall include the `file` modifier.
 
@@ -5632,7 +5634,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 
 ### §prim-constructor Primary constructors
 
-For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor whose signature corresponds to the value parameters, if any, of the type declaration. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor, to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
+For a class type with a *delimited_parameter_list* the implementation shall provide a public constructor with the parameters of that list. Its signature is determined as for an explicitly declared instance constructor ([§15.11.1](classes.md#15111-general)), including the parameter types and parameter-passing modes. This constructor is called the ***primary constructor*** for that type, and causes the implicitly declared default constructor to be suppressed. It is an error to have a primary constructor and an explicit constructor with the same signature in the type. If the type declaration does not include a *delimited_parameter_list*, no primary constructor is provided.
 
 Consider the following:
 
@@ -5674,15 +5676,15 @@ Based on the class’s *delimited_parameter_list*, a primary constructor with th
 public Person(string firstName, string lastName);
 ```
 
-As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor, as is required by all user-defined constructors.
+As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor. Every explicitly declared instance constructor shall have a `this` constructor initializer that invokes the primary constructor or another explicitly declared instance constructor, so that the primary constructor is ultimately invoked. The rules for resolving constructor initializers and for circular constructor dependencies ([§15.11.2](classes.md#15112-constructor-initializers)) apply. The copy constructor of a record class is an exception ([§15.16.6.2](classes.md#151662-copy-constructors)).
 
 At runtime the primary constructor
 
-1. Stores the value of each parameter in some unspecified manner.
-1. Executes the instance initializers appearing in *class_body*.
-1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present.
+1. Initializes the retained storage for captured parameters, if any, to the corresponding parameter values.
+1. Executes the instance initializers appearing in *class_body*, in the order specified in [§15.11.3](classes.md#15113-instance-variable-initializers).
+1. Invokes the direct base class constructor as specified in [§15.11.2](classes.md#15112-constructor-initializers), using the arguments in the *base_argument_list* of *class_base*, if present, and otherwise an implicit `base()` initializer.
 
-Each reference to a parameter in user code is replaced with a reference to the corresponding storage place.
+References to a captured parameter access its retained storage. A parameter used only during initialization does not require retained instance storage; such uses access the constructor parameter instead.
 
 It is an error to reference a primary constructor parameter if the reference does not occur within one of the following:
 
@@ -5704,30 +5706,32 @@ class C(int i)
 
 the initializer for the field `i` references the parameter `i`, whereas the body of the property `I` references the field `i`.
 
-A warning shall be produced if a parameter of the primary constructor is not read.
-
 Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
 
 All instance member initializers in *class_body* become assignments in the primary constructor.
 
-A warning shall be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
+A warning may be issued on the usage of an identifier when a base member shadows a primary constructor parameter if that primary constructor parameter was not passed to the base type via its constructor.
 
 A primary constructor parameter is considered to be passed to the base type via its constructor when all the following conditions are true for an argument in *class_base*:
 
 - The argument represents an implicit or explicit identity conversion of a primary constructor parameter;
 - The argument is not part of an expanded `params` argument;
 
-If the class being declared has a *class_base* containing *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` that corresponds to the *class_base*’s *delimited_parameter_list*, if any.
+If the class being declared has a *class_base* containing a *base_argument_list*, the primary constructor shall have a *constructor_initializer* of the form `: base (` … `)` with the same *argument_list*, if any, as that *base_argument_list*.
 
 A parameter in a *delimited_parameter_list* can be declared `ref`, `in`, or `out`.
 
-If a primary constructor parameter is referenced from within an instance member, and the reference is not a `nameof` argument, it shall be captured into the state of the enclosing type, so that it remains accessible after the termination of the constructor. Access to captured parameters within a readonly member have similar restrictions as access to instance fields in the same context.
-Capturing is not permitted for a parameter that has ref-like type, and capturing is not permitted for ref, in, or out parameters.
-A warning shall be issued for primary constructor parameters under the following circumstances:
+If a primary constructor parameter is referenced from the body of an instance method or instance accessor, and the reference is not within a `nameof` argument, it shall be captured into the state of the enclosing type, so that it remains accessible after the termination of the constructor. Such capture requires retained storage in an unspecified manner; neither a particular name nor a particular layout is required. Captured parameters are mutable, except that in a readonly struct they have the same restrictions as readonly instance fields. Within a readonly struct member, access to captured parameters has the same restrictions as access to instance fields in that context. Uses in instance member initializers or base constructor arguments do not by themselves require capture into the state of the enclosing type.
+
+Capturing is not permitted for a parameter that has ref-like type, and capturing is not permitted for `ref`, `in`, or `out` parameters.
+A warning may be issued for primary constructor parameters under the following circumstances:
 
 - For a by-value parameter, if the parameter is not captured and is not read within any instance initializers or base initializer.
-- For an in parameter, if the parameter is not read within any instance initializers or base initializer.
-- For a ref parameter, if the parameter is not read or written to within any instance initializers or base initializer.
+- For an `in` parameter, if the parameter is not read within any instance initializers or base initializer.
+- For a `ref` parameter, if the parameter is neither read nor written to within any instance initializers or base initializer.
+
+An `out` parameter shall be definitely assigned as required for an explicitly declared instance constructor ([§9.2.7](variables.md#927-output-parameters)).
+
 A *class_declaration* may have a `method:` attribute target, which shall apply to the corresponding primary constructor, if any. If the class has no *delimited_parameter_list*, this attribute shall be ignored and a warning produced.
 
 ## 15.12 Static constructors
@@ -6438,8 +6442,6 @@ A *record_class_declaration* consists of an optional set of *attributes* ([§23]
 
 A *record_class_declaration* having a *delimited_parameter_list* declares a ***positional record class***.
 
-At most only one partial type declaration of a partial record class may provide a *delimited_parameter_list*.
-
 Parameters in *delimited_parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### 15.16.4 Class members
@@ -6879,7 +6881,7 @@ As well as providing the members described in the preceding subclauses, position
 
 ##### 15.16.6.6.2 Primary constructor
 
-The primary constructor of a record class is like that of a non-record class (§prim-constructor), with the following difference: Each parameter value is stored in a corresponding private instance field having a corresponding property with set and get accessors.
+The primary constructor of a record class follows §prim-constructor, with the additional member synthesis specified in [§15.16.6.6.3](classes.md#1516663-properties). Any provided auto-property has `get` and `init` accessors and is initialized to the corresponding parameter value; matching explicitly declared or inherited members prevent synthesis as specified in [§15.16.6.1](classes.md#151661-general) and [§15.16.6.6.3](classes.md#1516663-properties).
 
 ##### 15.16.6.6.3 Properties
 
