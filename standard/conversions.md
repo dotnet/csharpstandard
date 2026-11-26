@@ -481,6 +481,25 @@ A warning shall be issued for an implicit conversion of a method group to `objec
 >
 > *end example*
 
+### §ImplicitInlineArrayConversions Implicit inline array conversions
+
+The implicit inline array (§InlineArray) conversions are:
+
+- From an expression designating a writable inline array variable with element type `T` to `System.Span<T>`.
+- From an expression designating a writable inline array variable with element type `T` to `System.ReadOnlySpan<T>`.
+- From an expression designating a readonly inline array variable with element type `T` to `System.ReadOnlySpan<T>`.
+
+The resulting span contains all elements of the designated inline array, in order, and refers to its storage. For ref-safety analysis, the safe-context of the conversion is that of a method invocation ([§16.6.15.6](structs.md#166156-method-and-property-invocation)) with the corresponding signature:
+
+```csharp
+static System.Span<T> Convert(ref «InlineArrayType» array)
+static System.ReadOnlySpan<T> Convert(in «InlineArrayType» array)
+```
+
+The modeled invocation passes the designated variable as a reference argument for `System.Span<T>`, or as an input argument for `System.ReadOnlySpan<T>`. The actual storage's ref-safe-context contributes to the resulting span's safe-context, together with the safe-context of the argument, under the invocation rules. In particular, a conversion does not extend the lifetime of local or temporary storage. These signatures specify the conversion's ref-safety semantics, not a requirement to declare or invoke such methods.
+
+The conversion of an inline array to `System.Span<T>` or `System.ReadOnlySpan<T>` ignores any declared operators in the inline array type that might otherwise appear to be applicable. See §InlineArray for more information.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
@@ -725,6 +744,7 @@ The following implicit conversions are classified as standard implicit conversio
 - Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
 - Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
 - Implicit conversions involving type parameters ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit inline array conversions (§ImplicitInlineArrayConversions)
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
