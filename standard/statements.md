@@ -1205,6 +1205,18 @@ In addition, the following modifications are made to the steps in [§13.9.5.1](s
 
 Before the process described in [§13.9.5.1](statements.md#13951-general), the following steps are taken:
 
+- If the type `X` of *expression* is an inline array type (§InlineArray) with element type `U`, the statement is bound and executed as iteration over the following span, before looking up any enumeration pattern or enumerable interface on `X`:
+  - For a writable variable, a `System.Span<U>` obtained by the implicit inline array conversion (§ImplicitInlineArrayConversions).
+  - For a readonly variable, a `System.ReadOnlySpan<U>` obtained by that conversion.
+  - For a value, a `System.ReadOnlySpan<U>` over a copy of the value. The copy has the lifetime of the statement and is not accessible to user code.
+
+  For inline array iteration with a reference iteration variable, *expression* shall designate a variable: a writable variable for `ref` iteration, or a writable or readonly variable for `ref readonly` iteration.
+
+  The remaining binding and execution rules apply to the selected span rather than `X`. The collection type `C` and enumerator type `E` are those of that span. The iteration type is `ref U` for a writable variable, `ref readonly U` for a readonly variable, and `U` for a value; thus the element type of an implicitly typed iteration variable is `U`. The iteration-variable conversion and reference-binding rules below apply. In particular, writable reference iteration accesses the original elements, readonly reference iteration permits only reading them, and value iteration obtains an element value on each iteration.
+
+  The inline array expression is evaluated exactly once, before iteration begins. A variable receiver retains its designated storage, so modifications to its elements can be observed by subsequent iterations. A value receiver is copied once, and iteration uses that copy. Elements are visited in increasing index order from zero through the declared length minus one. The contexts of element references and values are determined by inline array element access (§InlineArrayElementAccess), with references into the value copy limited to its lifetime.
+
+  This semantic equivalence does not require span or enumerator local variables in the generated code. A synchronous value iteration over an inline array can occur in an async method or iterator. The existing restrictions on reference iteration variables in async methods and iterators ([§13.6.2.4](statements.md#13624-explicitly-typed-ref-local-variable-declarations)) still apply, and a reference returned by a call shall not be preserved across an `await` or `yield` boundary.
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the element type of the array `X` ([§17.2.3](arrays.md#1723-arrays-and-the-generic-collection-interfaces)).
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 

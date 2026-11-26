@@ -483,7 +483,7 @@ The method can be declared explicitly. It is an error if the explicit declaratio
 
 ## §InlineArray Inline arrays
 
-A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute) is an ***inline array type***, which is a managed type. An instance of that type is an ***inline array***, a structure that contains a contiguous block of a given number of elements of the same type, and nothing else. It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
+A struct type decorated with the attribute `System.Runtime.CompilerServices.InlineArrayAttribute` (§InlineArrayAttribute) is an ***inline array type***. An instance of that type is an ***inline array***, whose layout repeats the storage of its single instance field to contain a contiguous block of the specified number of elements of that field's type. The first element occupies the same storage as the instance field. Managed and unmanaged classification follows the ordinary rules for struct types ([§8.8](types.md#88-unmanaged-types)). It’s the safe-code equivalent of unsafe-code’s fixed-size buffer ([§24.8](unsafe-code.md#248-fixed-size-buffers)).
 
 With some limitations (see later below), an inline array can be used like an array ([§17](arrays.md#17-arrays)).
 
@@ -526,7 +526,7 @@ buffer[^2]        = >3<
 buffer[1..^0][0]  = >1<
 ```
 
-The attribute constructor requires a positive-valued `int` argument that indicates the number of elements in each inline array created from this type, in this case, five. The struct type shall declare exactly one instance field, whose type becomes that of the inline array’s elements. The accessibility of the instance field has no impact on the program’s ability to access the inline array via its struct-instance name, in this case, `buffer`.
+The attribute constructor requires a positive-valued `int` argument that indicates the number of elements in each inline array created from this type, in this case, five. The target shall be a struct type declared without `record`, and shall have a layout other than explicit layout (specified by `System.Runtime.InteropServices.StructLayoutAttribute` with `System.Runtime.InteropServices.LayoutKind.Explicit`). The struct type shall have exactly one instance field, whose type becomes that of the inline array’s elements. The accessibility of the instance field has no impact on the program’s ability to access the inline array via its struct-instance name, in this case, `buffer`.
 
 There are a number of restrictions on the instance field’s declaration:
 
@@ -536,15 +536,13 @@ There are a number of restrictions on the instance field’s declaration:
 
 `buffer` is an instance of `Buffer`, and contains an array of five `int` with element `buffer[0]` occupying the same memory as `buffer._element0`. However, unlike an array type, which has a public `Length` property, `buffer` is not derived from `System.Array`, and has no such member.
 
-> *Note*: One could add a public `Length` property to `Buffer` (which returns `sizeof(Buffer)/sizeof(int)`, but that property would have to be an unsafe member. Alternatively, one could perform an implicit conversion to `System.Span<int>` or `System.ReadOnlySpan<int>` and use their `Length` property. *end note*
+> *Note*: One could add a public `Length` property to `Buffer` (for example, returning the constant `5`). An implementation using `sizeof(Buffer)/sizeof(int)` requires an unsafe context; a `Length` property is not inherently unsafe. Alternatively, one could perform an implicit conversion to `System.Span<int>` or `System.ReadOnlySpan<int>` and use its `Length` property. *end note*
 
-An inline array is a collection; as such, it can be iterated over by a `foreach` statement, as shown.
+An inline array can be iterated over by a synchronous `foreach` statement as specified in [§13.9.5.2](statements.md#13952-synchronous-foreach), as shown.
 
 The elements of the inline array can be accessed for read or write via subscripting (§InlineArrayElementAccess).
 
 A list pattern ([§11.2.11](patterns.md#11211-list-pattern)) shall not be used in the context of an inline array.
-
-An inline array type is a valid constructible collection target type for a collection literal.
 
 Any indexers or `Slice` methods declared for an inline array type that have signatures matching those defined for non-inline array processing, shall not be used during inline array element access.
 > *Example*: Consider the following:

@@ -1742,7 +1742,7 @@ This attribute indicates that the current type has one or more required members 
 
 ### §InlineArrayAttribute The InlineArray attribute
 
-This attribute is used to identify a non-record struct as an inline array type. For further information and examples of its use, see §InlineArray.
+This attribute is used to identify a struct type as an inline array type. The declaration conditions, including the restriction on `record struct` declarations, are specified in §InlineArray.
 
 ## 23.6 Attributes for interoperation
 
