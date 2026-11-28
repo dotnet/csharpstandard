@@ -67,6 +67,7 @@ class_modifier
     | 'sealed'
     | 'static'
     | 'file'
+    | 'closed'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -83,7 +84,15 @@ It is a compile-time error for any of the `public`, `protected`, `internal`, and
 
 When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.4.2](basic-concepts.md#742-declared-accessibility)).
 
-The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
+The `abstract`, `sealed`, `static`, and `closed` modifiers are discussed in the following subclauses.
+
+The `closed` modifier requires all classes directly derived from a ***closed class*** to be declared in the same assembly and module as that closed class. (`closed` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) that has special meaning when used as a *class_modifier*.)
+
+A closed class is implicitly abstract and may not be declared so explicitly. A closed class may not have a `sealed` or `static` modifier.
+
+A class derived from a closed class is not itself closed unless explicitly declared to be.
+
+If a generic class is directly derived from a closed class, all of that generic class’s type parameters shall be used in its *class_base*.
 
 The `file` modifier specifies that the type being declared is local to its parent compilation unit. A compilation unit containing a `file`-modified type shall not also contain a type declaration having the same name but without the `file` modifier. (`file` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) that has special meaning when used as a top-level type modifier.)
 
@@ -180,6 +189,20 @@ A *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) is per
 In any other context, it is a compile-time error to reference a static class.
 
 > *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§15.3.7](classes.md#1537-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
+
+#### §closed-classes Closed classes
+
+Declaring a class to be closed indicates that a set of classes directly derived from that class is complete, allowing consuming code to rely on that for exhaustiveness in a *switch expression* ([§12.12](expressions.md#1212-switch-expression)). However, when a closed class has no subclasses, an empty switch over it is not considered exhaustive.
+
+Exhaustiveness of a switch over a closed class type is determined by checking if the switch is exhaustive over the set of subclasses of the input closed class type. This set of subclasses `S` is determined in the following way:
+
+1. For a given closed type `C`, let `C₀` be its original definition.
+1. For each subclass declaration `S₀` whose base type has original definition `C₀`, determine if a construction `S` exists which has base type `C` (see [§19.6.3](interfaces.md#1963-uniqueness-of-implemented-interfaces)).
+1. If such an `S` exists, it is included in the set of subclasses.
+
+A closed class is said to have a ***sealed hierarchy***, if all its subclasses are either sealed or have a sealed hierarchy. That is, all the classes in the expanded hierarchy are either sealed or closed.
+
+When a closed class has a sealed hierarchy, an interface convertibility restriction is introduced. This prevents attempting a conversion to interface type, which could never possibly succeed.
 
 ### 15.2.3 Type parameters
 
