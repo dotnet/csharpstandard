@@ -624,7 +624,7 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 ```ANTLR
 contextual_keyword
     : 'add'      | 'alias'      | 'allows'     | 'and'       | 'ascending'
-    | 'async'    | 'await'      | 'by'         | 'Cdecl'     | 'descending'
+    | 'async'    | 'await'      | 'by'         | 'Cdecl'     | 'closed'    | 'descending'
     | 'dynamic'  | 'equals'     | 'extension'  | 'field'     | 'Fastcall'
     | 'file'     | 'from'       | 'get'        | 'global'    | 'group'
     | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
