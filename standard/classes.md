@@ -1008,7 +1008,7 @@ A class ***inherits*** the members of its direct base class. Inheritance means t
 
 - A class can declare virtual methods, properties, indexers, and events, and derived classes can override the implementation of these function members. This enables classes to exhibit polymorphic behavior wherein the actions performed by a function member invocation vary depending on the run-time type of the instance through which that function member is invoked.
 
-The inherited members of a constructed class type are the members of the immediate base class type ([§15.2.4.2](classes.md#15242-base-classes)), which is found by substituting the type arguments of the constructed type for each occurrence of the corresponding type parameters in the *base_class_specification*. These members, in turn, are transformed by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the *base_class_specification*.
+The inherited members of a constructed class type are the members of the immediate base class type ([§15.2.4.2](classes.md#15242-base-classes)), which is found by substituting the type arguments of the constructed type for each occurrence of the corresponding type parameters in the *class_base* specification. These members, in turn, are transformed by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the *class_base* specification.
 
 > *Example*:
 >
